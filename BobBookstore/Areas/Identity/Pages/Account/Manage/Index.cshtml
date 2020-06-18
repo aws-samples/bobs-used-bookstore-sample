@@ -1,0 +1,48 @@
+﻿@page
+@using Microsoft.AspNetCore.Identity
+@using Amazon.Extensions.CognitoAuthentication
+
+@inject SignInManager<CognitoUser> SignInManager
+@inject UserManager<CognitoUser> UserManager
+
+@model IndexModel
+@{
+    ViewData["Title"] = "Profile";
+    ViewData["ActivePage"] = ManageNavPages.Index;
+}
+
+<h4>Hello @UserManager.GetUserName(User)!</h4>
+<partial name="_StatusMessage" model="Model.StatusMessage" />
+<div class="row">
+    <div class="col-md-6">
+        <form id="profile-form" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Username"></label>
+                <input asp-for="Username" class="form-control" disabled />
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Input.EmailAddress"></label>
+                <input asp-for="Input.EmailAddress" class="form-control" disabled />
+                @*<span asp-validation-for="Input.EmailAddress" class="text-danger"></span>*@
+            </div>
+            @*<button id="update-profile-button" type="submit" class="btn btn-primary">Save</button>*@
+        </form>
+    </div>
+</div>
+
+<div>
+    <h4>Manage your account</h4>
+    <hr />
+    <div class="row">
+        <div class="col-md-3">
+            <partial name="_ManageNav" />
+        </div>
+
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
