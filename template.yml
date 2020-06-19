@@ -1,0 +1,89 @@
+AWSTemplateFormatVersion: 2010-09-09
+Conditions:
+  UseSubnet: !Not [!Equals [!Ref 'SubnetId', subnet-none]]
+  IsBurstableInstanceType: !Equals [!Select [0, !Split ['.', !Ref InstanceType]], t3]
+Transform:
+- AWS::CodeStar
+Parameters:
+  ProjectId:
+    Type: String
+    Description: AWS CodeStar project ID used to name project resources and create roles.
+  InstanceType:
+    Type: String
+    Description: The type of Amazon EC2 Linux instances that will be launched for this project.
+  WebAppInstanceProfile:
+     Type: String
+     Description: The IAM role that will be created for the Amazon EC2 Linux instances.
+  ImageId:
+    Type: String
+    Description: The Amazon EC2 Linux instance Amazon Machine Image (AMI), which designates the configuration of the new instance.
+  KeyPairName:
+    Type: String
+    Description: The name of an existing Amazon EC2 key pair in the region where the project is created, which you can use to SSH into the new Amazon EC2 Linux instances.
+  VpcId:
+    Type: String
+    Description: The ID of the Amazon Virtual Private Cloud (VPC) to use for Amazon EC2 instances.
+  SubnetId:
+    Type: String
+    Description: The name of the VPC subnet to use for Amazon EC2 instances launched for this project.
+  Stage:
+    Type: String
+    Description: The name for a project pipeline stage, such as Staging or Prod, for which resources are provisioned and deployed.
+    Default: ''
+Resources:
+  WebApp01:
+    Description: The installation and configuration commands this project will use to create instances that support this sample web application.
+    Properties:
+      CreditSpecification:
+        CPUCredits: !If [IsBurstableInstanceType, unlimited, !Ref 'AWS::NoValue']
+      IamInstanceProfile: !Ref 'WebAppInstanceProfile'
+      ImageId: !Ref 'ImageId'
+      InstanceType: !Ref 'InstanceType'
+      KeyName: !Ref 'KeyPairName'
+      NetworkInterfaces:
+      - AssociatePublicIpAddress: true
+        DeviceIndex: 0
+        GroupSet:
+        - !Ref 'WebAppSG'
+        SubnetId: !If
+        - UseSubnet
+        - !Ref 'SubnetId'
+        - !Ref 'AWS::NoValue'
+      Tags:
+      - Key: Environment
+        Value: !Sub '${ProjectId}-WebApp${Stage}'
+      - Key: Name
+        Value: !Sub '${ProjectId}-WebApp${Stage}'
+      UserData:
+        Fn::Base64:
+          Fn::Sub: |
+            #!/bin/bash -ex
+            # Install Ruby
+            yum -y install ruby-2.0.0.648-29.amzn2
+            # Install the AWS CodeDeploy Agent
+            cd /home/ec2-user/
+            wget https://aws-codedeploy-${AWS::Region}.s3.amazonaws.com/latest/codedeploy-agent.noarch.rpm
+            yum -y install codedeploy-agent.noarch.rpm
+            # Install the Amazon CloudWatch Logs Agent
+            yum install -y awslogs-1.1.4
+            mkdir -p /var/awslogs/etc/config
+            cp codedeploy_logs.conf /var/awslogs/etc/config/
+            sed -i 's/us-east-1/${AWS::Region}/g' /etc/awslogs/awscli.conf
+            # Start the service logs
+            systemctl start awslogsd
+    Type: AWS::EC2::Instance
+  WebAppSG:
+    Description: The default Amazon EC2 security group that will be created for the Amazon EC2 Linux instances.
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Enable HTTP access via port 80 and SSH access via port 22.
+      SecurityGroupIngress:
+      - IpProtocol: tcp
+        FromPort: '80'
+        ToPort: '80'
+        CidrIp: 0.0.0.0/0
+      - IpProtocol: tcp
+        FromPort: '22'
+        ToPort: '22'
+        CidrIp: 0.0.0.0/0
+      VpcId: !Ref 'VpcId'

@@ -1,0 +1,7 @@
+#!/bin/bash
+
+# Stop apache
+systemctl stop httpd.service
+
+# Stop dotnet application
+systemctl stop kestrel-aspnetcoreapp.service

@@ -1,0 +1,10 @@
+#!/bin/bash
+
+cd /home/ec2-user/
+
+# Install dotnet core
+rpm -Uvh https://packages.microsoft.com/config/centos/7/packages-microsoft-prod.rpm
+yum -y install dotnet-sdk-3.1
+
+# First time running dotnet tool requires setting up package cache
+dotnet nuget

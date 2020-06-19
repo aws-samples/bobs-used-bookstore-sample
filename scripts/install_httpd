@@ -1,0 +1,16 @@
+#!/bin/bash
+
+# Install apache
+yum -y install httpd-2.4.41
+
+# Set file and folder permissions
+chgrp -R apache /home/ec2-user/
+find /home/ec2-user/ -type d -exec chmod g+rx {} +
+find /home/ec2-user/ -type f -exec chmod g+r {} +
+chown -R ec2-user /home/ec2-user/
+find /home/ec2-user/ -type d -exec chmod u+rwx {} +
+find /home/ec2-user/ -type f -exec chmod u+rw {} +
+
+# Override the existing site configuration
+HTTPD_CONF=/etc/httpd/conf.d/virtualhost.conf
+cp /home/ec2-user/aspnetcoreapp/virtualhost.conf $HTTPD_CONF

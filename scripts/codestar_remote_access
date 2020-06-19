@@ -1,0 +1,9 @@
+#!/bin/bash
+
+# Install AWS CodeStar remote access management
+# Allows project members to remotely access Amazon EC2 instances running Linux associated with the project
+wget -O /usr/local/bin/get_authorized_keys https://awscodestar-templates-common.s3.amazonaws.com/us-east-1/python3/get_authorized_keys
+chmod 755 /usr/local/bin/get_authorized_keys
+sed -i '/AuthorizedKeysCommand /s/.*/AuthorizedKeysCommand \/usr\/local\/bin\/get_authorized_keys/g' /etc/ssh/sshd_config
+sed -i '/AuthorizedKeysCommandUser /s/.*/AuthorizedKeysCommandUser root/g' /etc/ssh/sshd_config
+service sshd restart

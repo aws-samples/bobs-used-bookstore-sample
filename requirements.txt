@@ -1,0 +1,4 @@
+awscli==1.18.23
+boto3==1.12.23
+boto==2.49.0
+pycryptodome==3.9.7

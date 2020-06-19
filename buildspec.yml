@@ -1,0 +1,26 @@
+version: 0.2
+phases:
+  install:
+    runtime-versions:
+      dotnet: 3.1
+  pre_build:
+    commands:
+      - dotnet restore BOBS-Backend/BOBS-Backend.csproj
+  build:
+    commands:
+      - dotnet publish -c release -o ./build_output BOBS-Backend/BOBS-Backend.csproj
+  post_build:
+    commands:
+
+      # Do not remove this statement. This command is required for AWS CodeStar projects.
+      # Update the AWS Partition, AWS Region, account ID and project ID in the project ARN in template-configuration.json file so AWS CloudFormation can tag project resources.
+      - sed -i.bak 's/\$PARTITION\$/'${PARTITION}'/g;s/\$AWS_REGION\$/'${AWS_REGION}'/g;s/\$ACCOUNT_ID\$/'${ACCOUNT_ID}'/g;s/\$PROJECT_ID\$/'${PROJECT_ID}'/g' template-configuration.json
+artifacts:
+  files:
+    - template.yml
+    - BOBS-Backend/bin/**/*
+    - BOBS-Backend/wwwroot/**/*
+    - scripts/**/*
+    - appspec.yml
+    - requirements.txt
+    - template-configuration.json

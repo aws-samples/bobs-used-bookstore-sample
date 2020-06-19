@@ -1,0 +1,12 @@
+#!/bin/bash
+
+cd /home/ec2-user
+
+# Install python3
+yum -y install python3-3.7.6-1.amzn2.0.1
+
+# Install pip
+yum -y install python3-pip-9.0.3
+
+# Install awscli and python dev libraries
+pip3 install --user -r requirements.txt

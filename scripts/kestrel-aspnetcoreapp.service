@@ -1,0 +1,15 @@
+[Unit]
+Description=AWS CodeStar Sample ASP.NET Core Web Application
+
+[Service]
+WorkingDirectory=/home/ec2-user/aspnetcoreapp/
+ExecStart=/usr/bin/dotnet /home/ec2-user/aspnetcoreapp/AspNetCoreWebApplication.dll
+Restart=always
+# Restart service after 10 seconds if dotnet service crashes
+RestartSec=10
+SyslogIdentifier=aspnetcoreapp
+User=apache
+Environment=ASPNETCORE_ENVIRONMENT=Production 
+
+[Install]
+WantedBy=multi-user.target
