@@ -422,6 +422,6 @@ C:\Users\bleffew\Frontend-Bobs-Used-Books\BobBookstore\obj\Debug\netcoreapp3.1\s
 C:\Users\bleffew\Frontend-Bobs-Used-Books\BobBookstore\obj\Debug\netcoreapp3.1\BobBookstore.dll
 C:\Users\bleffew\Frontend-Bobs-Used-Books\BobBookstore\obj\Debug\netcoreapp3.1\BobBookstore.pdb
 C:\Users\bleffew\Frontend-Bobs-Used-Books\BobBookstore\obj\Debug\netcoreapp3.1\BobBookstore.genruntimeconfig.cache
-C:\Users\bleffew\Frontend-Bobs-Used-Books\BobBookstore\obj\Debug\netcoreapp3.1\Razor\Views\Home\Search.cshtml.g.cs
 C:\Users\bleffew\Frontend-Bobs-Used-Books\BobBookstore\obj\Debug\netcoreapp3.1\Razor\Views\Home\Book.cshtml.g.cs
 C:\Users\bleffew\Frontend-Bobs-Used-Books\BobBookstore\obj\Debug\netcoreapp3.1\Razor\Views\Home\Cart.cshtml.g.cs
+C:\Users\bleffew\Frontend-Bobs-Used-Books\BobBookstore\obj\Debug\netcoreapp3.1\Razor\Views\Search\Index.cshtml.g.cs
