@@ -5,4 +5,12 @@
     <RootNamespace>BOBS_Backend</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Amazon.Extensions.CognitoAuthentication" Version="1.0.3" />
+    <PackageReference Include="AWSSDK.CognitoIdentity" Version="3.3.101.98" />
+    <PackageReference Include="AWSSDK.CognitoIdentityProvider" Version="3.3.110.2" />
+    <PackageReference Include="AWSSDK.Core" Version="3.3.107.12" />
+    <PackageReference Include="AWSSDK.SecurityToken" Version="3.3.105.16" />
+  </ItemGroup>
+
 </Project>
