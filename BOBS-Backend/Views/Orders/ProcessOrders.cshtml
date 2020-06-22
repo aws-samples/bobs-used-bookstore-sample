@@ -1,0 +1,102 @@
+﻿@page
+<div class="container">
+    <div class="text-center">
+        <h2>Process Order</h2>
+    </div>
+
+    <div class="progress" style="height: 20px; margin-top:25px; margin-bottom:45px;">
+        <div id="order-status-progress-bar" class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+    </div>
+
+    <div class="row">
+        <div class="text-right col-5">
+            <h3>Status:</h3>
+        </div>
+        <div class="text-left col-4">
+            <h3 id="order-process-text">Ready to Deliver</h3>
+        </div>
+        <div class="col-3 text-right">
+            <button onclick="updateStatus()" type="button" class="btn btn-primary">Update Status</button>
+        </div>
+    </div>
+
+    <div class="row" style="margin-top:35px">
+        <div class="text-left col-2">
+            <h4>Order Details:</h4>
+        </div>
+        <div class="text-left col-10">
+            <h4>OrderID: 2332r23r2fefwef234r4</h4>
+        </div>
+    </div>
+
+    <div class="row" style="margin-top:35px">
+
+        <div class="dropdown col-4 text-left">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Order Cost
+            </button>
+            <div class="dropdown-menu p-4" aria-labelledby="dropdownMenuButton">
+                <p>
+                    Total Cost: $143.80
+                </p>
+                <p>
+                    Subtotal: $130
+                </p>
+                <p>
+                    Shipping Cost: $13.80
+                </p>
+            </div>
+        </div>
+
+        <div class="col-8">
+            <p>CustomerID: 33dehfdhjejfh</p>
+            <p>Customer Email: moisthebest@amazon.com</p>
+            <p>Address: 125 Amazon Main Road Seatlle WA 77777</p>
+        </div>
+    </div>
+
+    <div class="row" style="margin-top:35px">
+
+        <div class="dropdown col-4 text-left">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Order List
+            </button>
+            <div class="dropdown-menu p-4" aria-labelledby="dropdownMenuButton">
+                <p>
+                    Game of Thrones: fiuwfhiuew
+                </p>
+                <p>
+                    Little Red Riding Hood: hffhwkjref
+                </p>
+                <p>
+                    Learn How To Cook: ehi23ih24
+                </p>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row" style="margin-top:35px">
+        <div class="col-12">
+            <h4>Expected Delivery Date: 1/21/2020</h4>
+        </div>
+
+    </div>
+</div>
+
+<script>
+            function updateStatus()
+            {
+                var elem = document.getElementById("order-status-progress-bar");
+                var text = document.getElementById("order-process-text");
+                var percentOfProgress = Number(elem.style.width.replace(/[^\d\.\-]/g, ''));
+                if (percentOfProgress >= 100) {
+                    text.innerHTML = "Still Delivered";
+                }
+                else
+                {
+                    percentOfProgress += 25;
+                    elem.style.width = percentOfProgress + "%";
+                }
+            }
+</script>

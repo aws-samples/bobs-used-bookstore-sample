@@ -1,0 +1,39 @@
+﻿@page
+    <div class="container">
+        <div class="text-center">
+            <h2>Manage Orders</h2>
+        </div>
+        <div class="row" style="margin:15px;">
+            <div class="col-12">
+                <div class="btn-group">
+                    <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Filter By
+                    </button>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="#">Delivery Date</a>
+                        <a class="dropdown-item" href="#">Something Else 1</a>
+                        <a class="dropdown-item" href="#">Something Else 2</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+        @for (var i = 0; i < 9; i++)
+        {
+            <div class="col-4" style="margin-top:20px;">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Order Details</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">Order ID: DJeewlfhjkewf</h6>
+                        <p class="card-text">Customer ID:wfkhjwehjfweljk</p>
+                        <p class="card-text">Expected Delivery Date: 1/20/2020</p>
+                        <a asp-controller="Orders" asp-action="ProcessOrders" class="card-link">See More Details</a>
+                    </div>
+                </div>
+            </div>
+        }
+        </div>
+
+    </div>
+
