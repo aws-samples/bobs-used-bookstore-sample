@@ -425,3 +425,4 @@ C:\Users\bleffew\Frontend-Bobs-Used-Books\BobBookstore\obj\Debug\netcoreapp3.1\B
 C:\Users\bleffew\Frontend-Bobs-Used-Books\BobBookstore\obj\Debug\netcoreapp3.1\Razor\Views\Home\Book.cshtml.g.cs
 C:\Users\bleffew\Frontend-Bobs-Used-Books\BobBookstore\obj\Debug\netcoreapp3.1\Razor\Views\Home\Cart.cshtml.g.cs
 C:\Users\bleffew\Frontend-Bobs-Used-Books\BobBookstore\obj\Debug\netcoreapp3.1\Razor\Views\Search\Index.cshtml.g.cs
+C:\Users\bleffew\Frontend-Bobs-Used-Books\BobBookstore\obj\Debug\netcoreapp3.1\Razor\Views\Cart\Index.cshtml.g.cs
