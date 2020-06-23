@@ -25,7 +25,6 @@ namespace BobBookstore
         {
             services.AddControllersWithViews();
             services.AddCognitoIdentity();
-            services.ConfigureApplicationCookie(options => options.LoginPath = "/Identity/Account/Login");
             services.AddRazorPages();
         }
 
