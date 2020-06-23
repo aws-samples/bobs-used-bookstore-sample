@@ -9525,20 +9525,25 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\bleffew\\.nuget\\packages\\": {}
+    "C:\\Users\\yiminp\\.nuget\\packages\\": {},
+    "C:\\Microsoft\\Xamarin\\NuGet\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\bleffew\\Frontend-Bobs-Used-Books\\BobBookstore\\BobBookstore.csproj",
+      "projectUniqueName": "D:\\Users\\yiminp\\Desktop\\Bob\\Frontend-Bobs-Used-Books\\BobBookstore\\BobBookstore.csproj",
       "projectName": "BobBookstore",
-      "projectPath": "C:\\Users\\bleffew\\Frontend-Bobs-Used-Books\\BobBookstore\\BobBookstore.csproj",
-      "packagesPath": "C:\\Users\\bleffew\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\bleffew\\Frontend-Bobs-Used-Books\\BobBookstore\\obj\\",
+      "projectPath": "D:\\Users\\yiminp\\Desktop\\Bob\\Frontend-Bobs-Used-Books\\BobBookstore\\BobBookstore.csproj",
+      "packagesPath": "C:\\Users\\yiminp\\.nuget\\packages\\",
+      "outputPath": "D:\\Users\\yiminp\\Desktop\\Bob\\Frontend-Bobs-Used-Books\\BobBookstore\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Microsoft\\Xamarin\\NuGet\\"
+      ],
       "configFilePaths": [
-        "D:\\Users\\bleffew\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        "D:\\Users\\yiminp\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
       ],
       "originalTargetFrameworks": [
         "netcoreapp3.1"
@@ -9602,12 +9607,6 @@
         ],
         "assetTargetFallback": true,
         "warn": true,
-        "downloadDependencies": [
-          {
-            "name": "Microsoft.AspNetCore.App.Ref",
-            "version": "[3.1.2, 3.1.2]"
-          }
-        ],
         "frameworkReferences": {
           "Microsoft.AspNetCore.App": {
             "privateAssets": "none"
@@ -9616,7 +9615,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.300\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.301\\RuntimeIdentifierGraph.json"
       }
     }
   }

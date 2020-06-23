@@ -37,18 +37,25 @@ namespace BobBookstore.Areas.Identity.Pages.Account.Manage
 
         public class AccountModel
         {
+            //[Required]
             [Display(Name ="Address")]
             public string Address { get; set; }
+            //[Required]
             [Display(Name = "Birth Date ")]
             public string BirthDate { get; set; }
+            //[Required]
             [Display(Name = "Gender")]
             public string Gender { get; set; }
+            //[Required]
             [Display(Name = "Phone Number")]
             public string PhoneNumber { get; set; }
-            [Display(Name = "Family Name")]
+            //[Required]
+            [Display(Name = "Last Name")]
             public string FamilyName { get; set; }
-            [Display(Name = "Given Name")]
+            //[Required]
+            [Display(Name = "First Name")]
             public string GivenName { get; set; }
+            //[Required]
             [Display(Name = "Nick Name")]
             public string NickName { get; set; }
             
@@ -65,9 +72,11 @@ namespace BobBookstore.Areas.Identity.Pages.Account.Manage
             var phoneNumber = user.Attributes[CognitoAttribute.PhoneNumber.AttributeName];
             var familyName = user.Attributes[CognitoAttribute.FamilyName.AttributeName];
             var givenName = user.Attributes[CognitoAttribute.GivenName.AttributeName];
+           
             
 
             Username = userName;
+            
             Input = new AccountModel()
             {
                 Address = address,
@@ -78,30 +87,38 @@ namespace BobBookstore.Areas.Identity.Pages.Account.Manage
                 PhoneNumber=phoneNumber,
                 FamilyName=familyName
             };
+            if (Input.FamilyName == "default")
+            {
+                Input.FamilyName = "";
+            }
+
+            if (Input.Address == "default")
+            {
+                Input.Address = "";
+            }
+            if (Input.Gender == "default")
+            {
+                Input.Gender = string.Empty;
+            }
+            if (Input.NickName == "default")
+            {
+                Input.NickName = string.Empty;
+            }
+            if (Input.GivenName == "default")
+            {
+                Input.GivenName = "";
+            }
+            if (Input.BirthDate == "0000-00-00")
+            {
+                Input.BirthDate = "";
+            }
+            if (Input.PhoneNumber == "+01234567890")
+            {
+                Input.PhoneNumber = "";
+            }
         }
 
-        /*public async Task<IActionResult> OnGetAsync()
-        {
-            var user = await _userManager.GetUserAsync(User);
-            
-            user.Attributes[CognitoAttribute.Address.AttributeName] = "ssssss";
-            //await user.UpdateAttributesAsync(user.Attributes);
-            var result = await _userManager.UpdateAsync(user);
-            Console.WriteLine("cool");
-            if (user == null)
-            {
-                return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
-            }
-           Input = new AccountModel()
-            {
-                Address = user.Attributes[CognitoAttribute.Address.AttributeName]
-            };
-
-
-
-
-            return Page();
-        }*/
+        
         public async Task<IActionResult> OnGetAsync()
         {
             var user = await _userManager.GetUserAsync(User);
@@ -111,8 +128,8 @@ namespace BobBookstore.Areas.Identity.Pages.Account.Manage
             }
 
             await LoadAsync(user);
-
-            //user.Attributes.Add(CognitoAttribute.Address.AttributeName, "2251 pimmit dr");
+            
+            
             return Page();
         }
 
@@ -131,7 +148,35 @@ namespace BobBookstore.Areas.Identity.Pages.Account.Manage
                 await LoadAsync(user);
                 return Page();
             }
-
+            
+            if (string.IsNullOrWhiteSpace(Input.FamilyName))
+            {
+                Input.FamilyName = "default";
+            }
+            if (string.IsNullOrWhiteSpace(Input.Address))
+            {
+                Input.Address = "default";
+            }
+            if (string.IsNullOrWhiteSpace(Input.Gender))
+            {
+                Input.Gender = "default";
+            }
+            if (string.IsNullOrWhiteSpace(Input.GivenName))
+            {
+                Input.GivenName = "default";
+            }
+            if (string.IsNullOrWhiteSpace(Input.BirthDate))
+            {
+                Input.BirthDate = "0000-00-00";
+            }
+            if (string.IsNullOrWhiteSpace(Input.PhoneNumber))
+            {
+                Input.PhoneNumber = "+01234567890";
+            }
+            if (string.IsNullOrWhiteSpace(Input.NickName))
+            {
+                Input.NickName = "default";
+            }
             user.Attributes[CognitoAttribute.Address.AttributeName] = Input.Address;
             user.Attributes[CognitoAttribute.BirthDate.AttributeName] = Input.BirthDate;
             user.Attributes[CognitoAttribute.Gender.AttributeName] = Input.Gender;
@@ -141,7 +186,14 @@ namespace BobBookstore.Areas.Identity.Pages.Account.Manage
             user.Attributes[CognitoAttribute.GivenName.AttributeName] = Input.GivenName;
             
             var result = await _userManager.UpdateAsync(user);
-
+            if(!result.Succeeded)
+           
+            {
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, error.Description);
+                }
+            }
             return RedirectToPage();
         }
     }

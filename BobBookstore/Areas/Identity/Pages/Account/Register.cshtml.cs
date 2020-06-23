@@ -51,7 +51,7 @@ namespace BobBookstore.Areas.Identity.Pages.Account
             public string Email { get; set; }
 
             [Required]
-            [Display(Name = "UserName")]
+            [Display(Name = "Username")]
             public string UserName { get; set; }
 
             [Required]
@@ -64,6 +64,15 @@ namespace BobBookstore.Areas.Identity.Pages.Account
             [Display(Name = "Confirm password")]
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
+
+            [Required]
+            [EmailAddress]
+            [Display(Name = "First name")]
+            public string FirstName { get; set; }
+            [Required]
+            [EmailAddress]
+            [Display(Name = "Last name")]
+            public string LastName { get; set; }
         }
 
         public void OnGet(string returnUrl = null)
@@ -83,9 +92,15 @@ namespace BobBookstore.Areas.Identity.Pages.Account
                 user.Attributes.Add(CognitoAttribute.Gender.AttributeName, "default");
                 user.Attributes.Add(CognitoAttribute.NickName.AttributeName, "default");
                 user.Attributes.Add(CognitoAttribute.PhoneNumber.AttributeName, "+01234567890");
-                user.Attributes.Add(CognitoAttribute.FamilyName.AttributeName, "default");
-                user.Attributes.Add(CognitoAttribute.GivenName.AttributeName, "default");
-                
+                user.Attributes.Add(CognitoAttribute.FamilyName.AttributeName, Input.LastName);
+                user.Attributes.Add(CognitoAttribute.GivenName.AttributeName, Input.FirstName);
+                var existuser = await _userManager.FindByEmailAsync(Input.Email);
+                if (existuser!=null)
+                {
+                    //throw new InvalidOperationException("E-mail address has been used");
+                    ModelState.AddModelError(string.Empty, "E-mail address has been used");
+                    return Page();
+                }
 
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)

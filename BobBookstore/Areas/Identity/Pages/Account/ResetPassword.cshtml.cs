@@ -31,7 +31,7 @@ namespace BobBookstore.Areas.Identity.Pages.Account
         public InputModel Input { get; set; }
         public string HandlerName { get; set; }
         public string ReturnUrl { get; set; }
-
+        public string inputEmail { get; set; }
         public class InputModel
         {
             [Required]
@@ -39,12 +39,12 @@ namespace BobBookstore.Areas.Identity.Pages.Account
             [Display(Name = "Email")]
             public string Email { get; set; }
 
-            [Required]
+            //[Required]
             [DataType(DataType.Text)]
             [Display(Name = "Reset Token")]
             public string ResetToken { get; set; }
 
-            [Required]
+            //[Required]
             [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
             [DataType(DataType.Password)]
             [Display(Name = "New password")]
@@ -104,9 +104,9 @@ namespace BobBookstore.Areas.Identity.Pages.Account
                 throw new InvalidOperationException($"Unable to retrieve user.");
             }
             var a = await _userManager.ResetPasswordAsync(user);
-            HandlerName = "First";
+            ModelState.AddModelError(string.Empty, "Now please enter your Token and new password");
             return Page();
         }
-        
+
     }
 }
