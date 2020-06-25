@@ -19,6 +19,5 @@ namespace BOBS_Backend.Models.Customer
 
         public DateTime DateOfBirth { get; set; }
 
-        public Order.Order Order { get; set; }
     }
 }

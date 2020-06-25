@@ -29,6 +29,5 @@ namespace BOBS_Backend.Models.Customer
 
         public Customer Customer { get; set; }
 
-        public Order.Order Order { get; set; }
     }
 }

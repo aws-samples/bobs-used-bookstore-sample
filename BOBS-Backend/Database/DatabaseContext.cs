@@ -25,21 +25,10 @@ namespace BOBS_Backend.Database
 
         public DbSet<Order> Order { get; set; }
         public DbSet<OrderDetail> OrderDetail { get; set; }
-        public DbSet<OrderStatus> orderStatus { get; set; }
+        public DbSet<OrderStatus> OrderStatus { get; set; }
 
         public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options) { }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<Customer>()
-                .HasOne<Order>(c => c.Order)
-                .WithOne(ca => ca.Customer)
-                .HasForeignKey<Order>(ca => ca.Customer_Id);
 
-            modelBuilder.Entity<Address>()
-                .HasOne<Order>(a => a.Order)
-                .WithOne(aa => aa.Address)
-                .HasForeignKey<Order>(ca => ca.Address_Id);
-        }
     }
 }

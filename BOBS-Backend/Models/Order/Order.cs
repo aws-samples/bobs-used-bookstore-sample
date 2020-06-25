@@ -21,11 +21,7 @@ namespace BOBS_Backend.Models.Order
 
         public OrderStatus OrderStatus { get; set; }
 
-        public long Customer_Id { get; set; }
-
         public Customer.Customer Customer { get; set; }
-
-        public long Address_Id { get; set; }
 
         public Address Address { get; set; }
     }

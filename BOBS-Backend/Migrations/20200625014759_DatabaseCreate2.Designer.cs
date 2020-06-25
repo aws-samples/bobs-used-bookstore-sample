@@ -4,14 +4,16 @@ using BOBS_Backend.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace BOBS_Backend.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20200625014759_DatabaseCreate2")]
+    partial class DatabaseCreate2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -203,10 +205,10 @@ namespace BOBS_Backend.Migrations
                         .HasColumnType("bigint")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<long?>("Address_Id")
+                    b.Property<long>("Address_Id")
                         .HasColumnType("bigint");
 
-                    b.Property<long?>("Customer_Id")
+                    b.Property<long>("Customer_Id")
                         .HasColumnType("bigint");
 
                     b.Property<string>("DeliveryDate")
@@ -223,9 +225,11 @@ namespace BOBS_Backend.Migrations
 
                     b.HasKey("Order_Id");
 
-                    b.HasIndex("Address_Id");
+                    b.HasIndex("Address_Id")
+                        .IsUnique();
 
-                    b.HasIndex("Customer_Id");
+                    b.HasIndex("Customer_Id")
+                        .IsUnique();
 
                     b.HasIndex("OrderStatus_Id");
 
@@ -316,12 +320,16 @@ namespace BOBS_Backend.Migrations
             modelBuilder.Entity("BOBS_Backend.Models.Order.Order", b =>
                 {
                     b.HasOne("BOBS_Backend.Models.Customer.Address", "Address")
-                        .WithMany()
-                        .HasForeignKey("Address_Id");
+                        .WithOne("Order")
+                        .HasForeignKey("BOBS_Backend.Models.Order.Order", "Address_Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("BOBS_Backend.Models.Customer.Customer", "Customer")
-                        .WithMany()
-                        .HasForeignKey("Customer_Id");
+                        .WithOne("Order")
+                        .HasForeignKey("BOBS_Backend.Models.Order.Order", "Customer_Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("BOBS_Backend.Models.Order.OrderStatus", "OrderStatus")
                         .WithMany()
