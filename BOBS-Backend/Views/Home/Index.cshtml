@@ -1,24 +1,9 @@
 ﻿@{
     ViewData["Title"] = "Home";
 }
-@model BOBS_Backend.Models.AdminUser;
 
-<div class="container text-sm-center">
-    <form class="form-signin" asp-action="WelcomePage">
-
-        <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
-        <label for="inputEmail" class="sr-only">Username</label>
-        <input type="text" class="form-control" placeholder="Username" asp-for="Username" required autofocus>
-        <label for="inputPassword" class="sr-only">Password</label>
-        <input type="password" id="inputPassword" class="form-control" placeholder="Password" asp-for="password" required>
-        <div>
-            <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
-
-        </div>
-        <div>
-            @Html.ActionLink("Register", "RegisterPage", "Home", null, new { @class = "btn btn-primary btn-large btn-block" })
-
-        </div>
-    </form>
-
+<div class="container align-content-center">
+    <div class=" container">
+        @Html.ActionLink("Login/Register", "WelcomePage", "Home", null, new { @class = "btn-group-sm btn btn-outline-light btn btn-primary" })
+    </div>
 </div>
