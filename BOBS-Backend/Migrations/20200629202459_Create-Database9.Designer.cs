@@ -4,14 +4,16 @@ using BOBS_Backend.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace BOBS_Backend.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20200629202459_Create-Database9")]
+    partial class CreateDatabase9
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -29,9 +31,6 @@ namespace BOBS_Backend.Migrations
                     b.Property<string>("AudoBook_Url")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Back_Url")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Front_Url")
                         .HasColumnType("nvarchar(max)");
 
@@ -40,9 +39,6 @@ namespace BOBS_Backend.Migrations
 
                     b.Property<long>("ISBN")
                         .HasColumnType("bigint");
-
-                    b.Property<string>("Left_Url")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
