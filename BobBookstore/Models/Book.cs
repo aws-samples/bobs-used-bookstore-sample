@@ -14,6 +14,7 @@ namespace BobBookstore.Models
         public int PublisherID { get; set; }
         public string Name { get; set; }
         public int TypeID { get; set; }
+        public int GenreID { get; set; }
         public int PriceID { get; set; }
         public int ISBN { get; set; }
     }
