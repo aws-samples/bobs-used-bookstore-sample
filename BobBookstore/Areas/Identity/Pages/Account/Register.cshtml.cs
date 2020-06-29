@@ -66,11 +66,9 @@ namespace BobBookstore.Areas.Identity.Pages.Account
             public string ConfirmPassword { get; set; }
 
             [Required]
-            [EmailAddress]
             [Display(Name = "First name")]
             public string FirstName { get; set; }
             [Required]
-            [EmailAddress]
             [Display(Name = "Last name")]
             public string LastName { get; set; }
         }
@@ -88,6 +86,12 @@ namespace BobBookstore.Areas.Identity.Pages.Account
                 var user = _pool.GetUser(Input.UserName);
                 user.Attributes.Add(CognitoAttribute.Email.AttributeName, Input.Email);
                 user.Attributes.Add(CognitoAttribute.Address.AttributeName, "default");
+                user.Attributes.Add("custom:AddressLine1", "default");
+                user.Attributes.Add("custom:AddressLine2", "default");
+                user.Attributes.Add("custom:City", "default");
+                user.Attributes.Add("custom:State", "default");
+                user.Attributes.Add("custom:Country", "default");
+                user.Attributes.Add("custom:ZipCode", "default");
                 user.Attributes.Add(CognitoAttribute.BirthDate.AttributeName, "0000-00-00");
                 user.Attributes.Add(CognitoAttribute.Gender.AttributeName, "default");
                 user.Attributes.Add(CognitoAttribute.NickName.AttributeName, "default");
