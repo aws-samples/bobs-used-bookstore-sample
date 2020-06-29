@@ -26,5 +26,7 @@ namespace BobBookstore.Data
         public DbSet<Price> Prices { get; set; }
         public DbSet<Publisher> Publishers { get; set; }
         public DbSet<Models.Type> Types { get; set; }
+        public DbSet<Cart> Cart { get; set; }
+        public DbSet<CartItem> CartItems { get; set; }
     }
 }
