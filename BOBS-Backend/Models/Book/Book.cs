@@ -21,6 +21,17 @@ namespace BOBS_Backend.Models.Book
 
         public Genre Genre { get; set; }
 
+        public string Front_Url { get; set; }
+        
+        public string Back_Url { get; set; }
+
+        public string Left_Url { get; set; }
+        public string Right_Url { get; set; }
+
+        public string AudioBook_Url { get; set; }
+
+        public string Summary { get; set; } 
+
 
 
     }

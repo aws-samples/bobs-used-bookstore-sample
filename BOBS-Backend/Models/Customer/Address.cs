@@ -14,6 +14,8 @@ namespace BOBS_Backend.Models.Customer
         [Key]
         public long Address_Id { get; set; }
 
+        public bool IsPrimary { get; set; }
+
         public string AddressLine1 { get; set; }
 
         public string AddressLine2 { get; set; }
