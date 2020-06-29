@@ -11,6 +11,8 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using BOBS_Backend.Repository;
 using BOBS_Backend.Repository.Implementations;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 
 namespace BOBS_Backend
 {
@@ -32,6 +34,28 @@ namespace BOBS_Backend
             services.AddTransient<IOrderDetailRepository, OrderDetailRepository>();
             services.AddTransient<IOrderRepository, OrderRepository>();
             services.AddTransient<IOrderStatusRepository, OrderStatusRepository>();
+            services.AddAuthentication(options =>
+            {
+                // uses cookies on local machine for maintaining authentication
+                options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
+            })
+       .AddCookie()
+       .AddOpenIdConnect(options =>
+       {
+           // sets the OpenId connect options for cognito hosted UI
+           options.ResponseType = Configuration["Authentication:Cognito:ResponseType"];
+           options.MetadataAddress = Configuration["Authentication:Cognito:MetadataAddress"];
+           options.ClientId = Configuration["Authentication:Cognito:ClientId"];
+           options.SignedOutRedirectUri = "https://localhost:44373/Home/logout";
+
+
+
+
+
+
+       });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -51,7 +75,7 @@ namespace BOBS_Backend
             app.UseStaticFiles();
 
             app.UseRouting();
-
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
