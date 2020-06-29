@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BobBookstore.Models
 {
-    public class OrderDetails
+    public class OrderDetail
     {
         [Required]
         public int ID { get; set; }
