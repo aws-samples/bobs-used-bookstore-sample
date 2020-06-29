@@ -8,7 +8,7 @@
         <button class="btn btn-sm btn-block btn-primary btn-outline-light" type="button">Add Inventory</button>
     </div>
     <div class=" container small">
-        <button class="btn btn-sm btn-block btn-primary btn-outline-light" type="button">Manage Order</button>
+        @Html.ActionLink("Manage Orders", "Index", "Orders", null, new { @class = "btn btn-primary btn-large btn-block btn-outline-light" })
     </div>
     <div class="container small">
         <button class="btn btn-sm btn-block btn-primary btn-outline-light" type="button">Manage Inventory</button>
