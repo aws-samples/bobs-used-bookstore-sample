@@ -58,8 +58,20 @@ namespace BobBookstore.Areas.Identity.Pages.Account.Manage
             //[Required]
             [Display(Name = "Nick Name")]
             public string NickName { get; set; }
-            
+            [Display(Name = "Address Line 1")]
+            public string AddressLine1 { get; set; }
+            [Display(Name = "Address Line 2")]
+            public string AddressLine2 { get; set; }
+            [Display(Name = "City")]
+            public string City { get; set; }
 
+            [Display(Name = "State")]
+            public string State { get; set; }
+
+            [Display(Name = "Country")]
+            public string Country { get; set; }
+            [Display(Name = "Zip Code")]
+            public string ZipCode { get; set; }
 
         }
         private async Task LoadAsync(CognitoUser user)
@@ -72,20 +84,33 @@ namespace BobBookstore.Areas.Identity.Pages.Account.Manage
             var phoneNumber = user.Attributes[CognitoAttribute.PhoneNumber.AttributeName];
             var familyName = user.Attributes[CognitoAttribute.FamilyName.AttributeName];
             var givenName = user.Attributes[CognitoAttribute.GivenName.AttributeName];
-           
+            var addressLine1 = user.Attributes["custom:AddressLine1"];
+            var addressLine2 = user.Attributes["custom:AddressLine2"];
+            var city = user.Attributes["custom:City"];
+            var state = user.Attributes["custom:State"];
+            var Country = user.Attributes["custom:Country"];
+            var zipCode = user.Attributes["custom:ZipCode"];
             
 
             Username = userName;
-            
+
             Input = new AccountModel()
             {
                 Address = address,
-                BirthDate=birthDate,
-                GivenName=givenName,
-                Gender=gender,
-                NickName=nickName,
-                PhoneNumber=phoneNumber,
-                FamilyName=familyName
+                BirthDate = birthDate,
+                GivenName = givenName,
+                Gender = gender,
+                NickName = nickName,
+                PhoneNumber = phoneNumber,
+                FamilyName = familyName,
+                AddressLine1=addressLine1,
+                AddressLine2= addressLine2,
+                City=city,
+                State=state,
+                Country=Country,
+                ZipCode=zipCode
+                
+                
             };
             if (Input.FamilyName == "default")
             {
@@ -115,6 +140,31 @@ namespace BobBookstore.Areas.Identity.Pages.Account.Manage
             if (Input.PhoneNumber == "+01234567890")
             {
                 Input.PhoneNumber = "";
+            }
+           
+            if (Input.AddressLine1=="default")
+            {
+                Input.AddressLine1 = "";
+            }
+            if (Input.AddressLine2 == "default")
+            {
+                Input.AddressLine2 = "";
+            }
+            if (Input.City == "default")
+            {
+                Input.City = "";
+            }
+            if (Input.State == "default")
+            {
+                Input.State = "";
+            }
+            if (Input.Country == "default")
+            {
+                Input.Country = "";
+            }
+            if (Input.ZipCode == "default")
+            {
+                Input.ZipCode = "";
             }
         }
 
@@ -177,6 +227,31 @@ namespace BobBookstore.Areas.Identity.Pages.Account.Manage
             {
                 Input.NickName = "default";
             }
+            if (string.IsNullOrWhiteSpace(Input.AddressLine1))
+            {
+                Input.AddressLine1 = "default";
+            }
+            if (string.IsNullOrWhiteSpace(Input.AddressLine2))
+            {
+                Input.AddressLine2 = "default";
+            }
+            if (string.IsNullOrWhiteSpace(Input.City))
+            {
+                Input.City = "default";
+            }
+            if (string.IsNullOrWhiteSpace(Input.State))
+            {
+                Input.State = "default";
+            }
+            if (string.IsNullOrWhiteSpace(Input.Country))
+            {
+                Input.Country = "default";
+            }
+            if (string.IsNullOrWhiteSpace(Input.ZipCode))
+            {
+                Input.ZipCode = "default";
+            }
+           
             user.Attributes[CognitoAttribute.Address.AttributeName] = Input.Address;
             user.Attributes[CognitoAttribute.BirthDate.AttributeName] = Input.BirthDate;
             user.Attributes[CognitoAttribute.Gender.AttributeName] = Input.Gender;
@@ -184,6 +259,12 @@ namespace BobBookstore.Areas.Identity.Pages.Account.Manage
             user.Attributes[CognitoAttribute.PhoneNumber.AttributeName] = Input.PhoneNumber;
             user.Attributes[CognitoAttribute.FamilyName.AttributeName] = Input.FamilyName;
             user.Attributes[CognitoAttribute.GivenName.AttributeName] = Input.GivenName;
+            user.Attributes["custom:AddressLine1"] = Input.AddressLine1;
+            user.Attributes["custom:AddressLine2"] = Input.AddressLine2;
+            user.Attributes["custom:City"] = Input.City;
+            user.Attributes["custom:State"] = Input.State;
+            user.Attributes["custom:Country"] = Input.Country;
+            user.Attributes["custom:ZipCode"] = Input.ZipCode;
             
             var result = await _userManager.UpdateAsync(user);
             if(!result.Succeeded)
