@@ -28,7 +28,7 @@ namespace BOBS_Backend.Models.Book
         public string Left_Url { get; set; }
         public string Right_Url { get; set; }
 
-        public string AudoBook_Url { get; set; }
+        public string AudioBook_Url { get; set; }
 
         public string Summary { get; set; } 
 
