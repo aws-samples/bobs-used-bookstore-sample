@@ -8,9 +8,11 @@ using BOBS_Backend.Repository;
 using BOBS_Backend.ViewModel.ManageOrders;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BOBS_Backend.Controllers
 {
+    [Authorize]
     public class OrdersController : Controller
     {
         private IOrderDetailRepository _orderDetail;
