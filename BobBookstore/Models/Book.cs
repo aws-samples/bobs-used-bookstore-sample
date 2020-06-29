@@ -9,13 +9,12 @@ namespace BobBookstore.Models
 {
     public class Book
     {
-        [Required]
-        public int ID { get; set; }
-        public int PublisherID { get; set; }
+        [Key]
+        public int Book_Id { get; set; }
+        public Publisher Publisher { get; set; }
         public string Name { get; set; }
-        public int TypeID { get; set; }
-        public int GenreID { get; set; }
-        public int PriceID { get; set; }
-        public int ISBN { get; set; }
+        public Type Type { get; set; }
+        public Genre Genre { get; set; }
+        public long ISBN { get; set; }
     }
 }

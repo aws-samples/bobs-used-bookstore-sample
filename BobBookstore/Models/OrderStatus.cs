@@ -8,8 +8,8 @@ namespace BobBookstore.Models
 {
     public class OrderStatus
     {
-        [Required]
-        public int ID { get; set; }
+        [Key]
+        public long OrderStatus_Id { get; set; }
         public string Status { get; set; }
     }
 }

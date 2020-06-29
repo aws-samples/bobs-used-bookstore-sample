@@ -8,8 +8,8 @@ namespace BobBookstore.Models
 {
     public class Type
     {
-        [Required]
-        public int ID { get; set; }
-        public string Name { get; set; }
+        [Key]
+        public long Type_Id { get; set; }
+        public string TypeName { get; set; }
     }
 }

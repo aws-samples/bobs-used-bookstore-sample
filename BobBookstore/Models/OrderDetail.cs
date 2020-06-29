@@ -8,12 +8,12 @@ namespace BobBookstore.Models
 {
     public class OrderDetail
     {
-        [Required]
-        public int ID { get; set; }
-        public int OrderID { get; set; }
-        public int BookID { get; set; }
-        public int PriceID { get; set; }
-        public int Price { get; set; }
+        [Key]
+        public long OrderStatus_Id { get; set; }
+        public Order Order { get; set; }
+        public Book Book { get; set; }
+        public Price Price_Id { get; set; }
+        public double Price { get; set; }
         public int Quantity { get; set; }
     }
 }

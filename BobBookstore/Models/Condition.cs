@@ -8,8 +8,8 @@ namespace BobBookstore.Models
 {
     public class Condition
     {
-        [Required]
-        public int ID { get; set; }
-        public string condition { get; set; }
+        [Key]
+        public long Condition_Id { get; set; }
+        public string ConditionName { get; set; }
     }
 }

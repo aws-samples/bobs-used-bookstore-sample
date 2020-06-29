@@ -9,8 +9,8 @@ namespace BobBookstore.Models
 {
     public class Genre
     {
-        [Required]
-        public int ID { get; set; }
+        [Key]
+        public int Genre_Id { get; set; }
         public string Name { get; set; }
     }
 }

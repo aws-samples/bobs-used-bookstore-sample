@@ -8,11 +8,11 @@ namespace BobBookstore.Models
 {
     public class Price
     {
-        [Required]
-        public int ID { get; set; }
-        public int BookID { get; set; }
-        public int ConditionID { get; set; }
-        public int price { get; set; }
+        [Key]
+        public int Price_Id { get; set; }
+        public Book Book { get; set; }
+        public Condition Condition { get; set; }
+        public double ItemPrice { get; set; }
         public int Quantity { get; set; }
     }
 }
