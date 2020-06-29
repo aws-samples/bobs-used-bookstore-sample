@@ -19,25 +19,25 @@ namespace BOBS_Backend.Repository.Implementations
         }
 
 
-        public OrderDetail FindOrderDetailById(long id)
+        public async Task<OrderDetail> FindOrderDetailById(long id)
         {
-            var orderDetail = _context.OrderDetail
+            var orderDetail = await _context.OrderDetail
                                     .Where(x => x.OrderDetail_Id == id)
                                     .Include(o => o.Book)
                                     .Include(o => o.Price)
-                                    .First();
+                                    .FirstAsync();
 
             return orderDetail;
         }
 
 
-        public IEnumerable<OrderDetail> FindOrderDetailByOrderId(long orderId)
+        public async Task<List<OrderDetail>> FindOrderDetailByOrderId(long orderId)
         {
-            var orderDetails = _context.OrderDetail
+            var orderDetails = await _context.OrderDetail
                                     .Where(x => x.Order.Order_Id == orderId)
                                     .Include(o => o.Book)
                                     .Include(o => o.Price)
-                                    .ToList();
+                                    .ToListAsync();
 
             return orderDetails;
         }

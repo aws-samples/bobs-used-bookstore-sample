@@ -9,8 +9,8 @@ namespace BOBS_Backend.Repository
     public interface IOrderDetailRepository
     {
 
-        OrderDetail FindOrderDetailById(long id);
+        Task<OrderDetail> FindOrderDetailById(long id);
 
-        IEnumerable<OrderDetail> FindOrderDetailByOrderId(long orderId);
+        Task<List<OrderDetail>> FindOrderDetailByOrderId(long orderId);
     }
 }

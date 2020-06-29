@@ -1,9 +1,16 @@
-﻿@model BOBS_Backend.ViewModel.ManageOrders.PartialOrder;
-@{ 
+﻿@{ 
     ViewData["Title"] = "Hello World";
 }
+@model BOBS_Backend.ViewModel.ProcessOrders.ProcessOrderViewModel;
 @{ 
     var fullOrder = (BOBS_Backend.ViewModel.ManageOrders.PartialOrder)ViewData["FullOrder"];
+
+    var orderStatus = (List<BOBS_Backend.Models.Order.OrderStatus>)ViewData["OrderStatus"];
+
+    var orderStatusWidth = "0";
+    
+
+    if (fullOrder.Order.OrderStatus.OrderStatus_Id == 1) orderStatusWidth = "25%";
 }
 
 <div class="container">
@@ -11,8 +18,8 @@
         <h2>Process Order</h2>
     </div>
 
-    <div class="progress" style="height: 20px; margin-top:25px; margin-bottom:45px;">
-        <div id="order-status-progress-bar" class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+    <div class="progress" style="height: 20px;  margin-top:25px; margin-bottom:45px;">
+        <div id="order-status-progress-bar" style="width:@orderStatusWidth;" class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
     </div>
 
     <div class="row">
@@ -23,7 +30,18 @@
             <h3 id="order-process-text">@fullOrder.Order.OrderStatus.Status</h3>
         </div>
         <div class="col-3 text-right">
-            <button onclick="updateStatus()" type="button" class="btn btn-primary">Update Status</button>
+            <form class="input-group mb-3" asp-controller="Orders" asp-action="ProcessOrders" method="get">
+                <select asp-for="OrderId" class="invisible" >
+                    <option selected value="@fullOrder.Order.Order_Id">id</option>
+                </select>
+                <select asp-for="Status" class="col-5 custom-select" id="inputGroupSelect01">
+                    @foreach (var status in orderStatus)
+                    {
+                        <option value="@status.OrderStatus_Id ">@status.Status</option>
+                    }
+                </select>
+                <button class="btn btn-outline-secondary" type="submit">Submit</button>
+            </form>
         </div>
     </div>
 
@@ -60,7 +78,7 @@
 
         <div class="col-8">
             <p>CustomerID: @fullOrder.Order.Customer.Customer_Id</p>
-            <p>Customer Email: Forgot to Add This In</p>
+            <p>Customer Email: @fullOrder.Order.Customer.Email</p>
             @{ var fullAddress = fullOrder.Order.Address.AddressLine1 + ", " + fullOrder.Order.Address.City + ", " + fullOrder.Order.Address.State + ", " + fullOrder.Order.Address.ZipCode;}
             <p>Address: @fullAddress</p>
         </div>
@@ -91,20 +109,3 @@
 
     </div>
 </div>
-
-<script>
-            function updateStatus()
-            {
-                var elem = document.getElementById("order-status-progress-bar");
-                var text = document.getElementById("order-process-text");
-                var percentOfProgress = Number(elem.style.width.replace(/[^\d\.\-]/g, ''));
-                if (percentOfProgress >= 100) {
-                    text.innerHTML = "Still Delivered";
-                }
-                else
-                {
-                    percentOfProgress += 25;
-                    elem.style.width = percentOfProgress + "%";
-                }
-            }
-</script>

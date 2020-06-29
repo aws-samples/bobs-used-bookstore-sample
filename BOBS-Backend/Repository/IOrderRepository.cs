@@ -8,18 +8,18 @@ namespace BOBS_Backend.Repository
 {
     public interface IOrderRepository
     {
-        Order FindOrderById(long id);
+        Task<Order> FindOrderById(long id);
 
-        IEnumerable<Order> GetAllOrders();
+        Task<List<Order>> GetAllOrders();
 
-        IEnumerable<Order> FilterList(string filterValue, string searchString);
+        Task<List<Order>> FilterList(string filterValue, string searchString);
 
-        IEnumerable<Order> FilterOrderByOrderId(string searchString);
+        Task<List<Order>> FilterOrderByOrderId(string searchString);
 
-        IEnumerable<Order> FilterOrderByCustomerId(string searchString);
+        Task<List<Order>> FilterOrderByCustomerId(string searchString);
 
-        IEnumerable<Order> FilterOrderByEmail(string searchString);
+        Task<List<Order>> FilterOrderByEmail(string searchString);
 
-        IEnumerable<Order> FilterOrderByState(string searchString);
+        Task<List<Order>> FilterOrderByState(string searchString);
     }
 }

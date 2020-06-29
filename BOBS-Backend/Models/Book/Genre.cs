@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace BOBS_Backend.Models.Book
 {
-    public class Genere
+    public class Genre
     {
 
         [Key]
-        public long Genere_Id { get; set; }
+        public long Genre_Id { get; set; }
 
         public string Name { get; set; }
     }

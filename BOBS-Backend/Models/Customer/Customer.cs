@@ -23,7 +23,7 @@ namespace BOBS_Backend.Models.Customer
 
         public DateTime DateOfBirth { get; set; }
 
-        public long Phone { get; set; }
+        public string Phone { get; set; }
 
     }
 }

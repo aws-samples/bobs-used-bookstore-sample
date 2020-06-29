@@ -18,133 +18,133 @@ namespace BOBS_Backend.Repository.Implementations
             _context = context;
         }
 
-        public Order FindOrderById(long id)
+        public async Task<Order> FindOrderById(long id)
         {
-            var order = _context.Order
+            var order = await _context.Order
                             .Where(order => order.Order_Id == id)
                             .Include(order => order.Customer)
                             .Include(order => order.Address)
                             .Include(order => order.OrderStatus)
-                            .First();
+                            .FirstAsync();
 
             return order;
         }
 
-        public IEnumerable<Order> GetAllOrders()
+        public async Task<List<Order>> GetAllOrders()
         {
-            var orders = _context.Order
+            var orders = await _context.Order
                             .Include(order => order.Customer)
                             .Include(order => order.Address)
                             .Include(order => order.OrderStatus)
-                            .ToList();
+                            .ToListAsync();
 
             return orders;
         }
 
-        public IEnumerable<Order> FilterOrderByOrderId(string searchString)
+        public async Task<List<Order>> FilterOrderByOrderId(string searchString)
         {
             try
             {
                 long value = long.Parse(searchString);
 
-                var orders = _context.Order
+                var orders = await _context.Order
                                 .Include(order => order.Customer)
                                 .Include(order => order.Address)
                                 .Include(order => order.OrderStatus)
                                 .Where(order => order.Order_Id == value)
-                                .ToList();
+                                .ToListAsync();
                 return orders;
             }
             catch
             {
-                IEnumerable<Order> orders = null;
+                List<Order> orders = null;
                 return orders;
             }
         }
 
-        public IEnumerable<Order> FilterOrderByCustomerId(string searchString)
+        public async Task<List<Order>> FilterOrderByCustomerId(string searchString)
         {
             try
             {
                 long value = long.Parse(searchString);
 
-                var orders = _context.Order
+                var orders = await _context.Order
                                 .Include(order => order.Customer)
                                 .Include(order => order.Address)
                                 .Include(order => order.OrderStatus)
                                 .Where(order => order.Customer.Customer_Id == value)
-                                .ToList();
+                                .ToListAsync();
                 return orders;
             }
             catch
             {
-                IEnumerable<Order> orders = null;
+                List<Order> orders = null;
                 return orders;
             }
       
             
         }
 
-        public IEnumerable<Order> FilterOrderByUsername(string searchString)
+        public async Task<List<Order>> FilterOrderByUsername(string searchString)
         {
 
-            var orders = _context.Order
+            var orders =  await _context.Order
                             .Include(order => order.Customer)
                             .Include(order => order.Address)
                             .Include(order => order.OrderStatus)
                             .Where(order => order.Customer.Username.Contains(searchString))
-                            .ToList();
+                            .ToListAsync();
             return orders;
         }
 
-        public IEnumerable<Order> FilterOrderByEmail(string searchString)
+        public async Task<List<Order>> FilterOrderByEmail(string searchString)
         {
 
-            var orders = _context.Order
+            var orders = await _context.Order
                             .Include(order => order.Customer)
                             .Include(order => order.Address)
                             .Include(order => order.OrderStatus)
                             .Where(order => order.Customer.Email.Contains(searchString))
-                            .ToList();
+                            .ToListAsync();
             return orders;
         }
 
-        public IEnumerable<Order> FilterOrderByState(string searchString)
+        public async Task<List<Order>> FilterOrderByState(string searchString)
         {
 
-            var orders = _context.Order
+            var orders = await _context.Order
                             .Include(order => order.Customer)
                             .Include(order => order.Address)
                             .Include(order => order.OrderStatus)
                             .Where(order => order.Address.State.Contains(searchString))
-                            .ToList();
+                            .ToListAsync();
             return orders;
         }
 
-        public IEnumerable<Order> FilterList(string filterValue, string searchString)
+        public async Task<List<Order>> FilterList(string filterValue, string searchString)
         {
-            IEnumerable<Order> orders;
+            List<Order> orders;
 
             switch(filterValue)
             {
                 case "Order Id":
-                    orders = FilterOrderByOrderId(searchString);
+                    orders = await FilterOrderByOrderId(searchString);
                     break;
 
                 case "Customer Id":
-                    orders = FilterOrderByCustomerId(searchString);
+                    orders = await FilterOrderByCustomerId(searchString);
                     break;
 
                 case "Username":
-                    orders = FilterOrderByUsername(searchString);
+                    orders = await FilterOrderByUsername(searchString);
                     break;
 
                 case "Email":
-                    orders = FilterOrderByEmail(searchString);
+                    orders = await FilterOrderByEmail(searchString);
                     break;
 
                 case "State":
-                    orders = FilterOrderByState(searchString);
+                    orders = await FilterOrderByState(searchString);
                     break;
 
                 default:

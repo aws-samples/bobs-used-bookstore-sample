@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BOBS_Backend.Database;
+using BOBS_Backend.Models.Order;
 using BOBS_Backend.Repository;
 using BOBS_Backend.ViewModel.ManageOrders;
 using Microsoft.AspNetCore.Mvc;
@@ -14,21 +15,22 @@ namespace BOBS_Backend.Controllers
     {
         private IOrderDetailRepository _orderDetail;
         private IOrderRepository _order;
-        private DatabaseContext _context;
-        public OrdersController(DatabaseContext context,IOrderDetailRepository orderDetail, IOrderRepository order)
+        private IOrderStatusRepository _orderStatus;
+   
+        public OrdersController(IOrderDetailRepository orderDetail, IOrderRepository order, IOrderStatusRepository orderStatus)
         {
             _orderDetail = orderDetail;
             _order = order;
-            _context = context;
+            _orderStatus = orderStatus;
         }
         
-        public IActionResult Index(string filterValue, string searchString)
+        public async Task<IActionResult> Index(string filterValue, string searchString)
         {
 
        
             if ( (String.IsNullOrEmpty(searchString)  && String.IsNullOrEmpty(filterValue)) || filterValue.Contains("All Orders"))
             {
-                var orders = _order.GetAllOrders();
+                var orders = await _order.GetAllOrders();
 
                 ViewData["AllOrders"] = orders;
 
@@ -37,7 +39,7 @@ namespace BOBS_Backend.Controllers
             else if (!String.IsNullOrEmpty(searchString) && !String.IsNullOrEmpty(filterValue))
             {
 
-                var orders = _order.FilterList(filterValue, searchString);
+                var orders = await _order.FilterList(filterValue, searchString);
 
                 ViewData["AllOrders"] = orders;
                 return View();
@@ -57,17 +59,28 @@ namespace BOBS_Backend.Controllers
             return View();
         }
 
-        public IActionResult ProcessOrders(long orderId)
+
+        public async Task<IActionResult> ProcessOrders(long orderId, long status)
         {
+ 
             if(string.IsNullOrEmpty(orderId.ToString()))
             {
                 return RedirectToAction("Error");
             }
             else
             {
-                var order = _order.FindOrderById(orderId);
+             
 
-                var orderDetails = _orderDetail.FindOrderDetailByOrderId(orderId);
+                var orderStatus = await _orderStatus.GetOrderStatuses();
+
+                var order = await _order.FindOrderById(orderId);
+
+                if(status != 0)
+                {
+                    order = await _orderStatus.UpdateOrderStatus(order, status);
+                }
+
+                var orderDetails = await _orderDetail.FindOrderDetailByOrderId(orderId);
 
                 PartialOrder fullOrder = new PartialOrder();
 
@@ -75,6 +88,8 @@ namespace BOBS_Backend.Controllers
                 fullOrder.OrderDetails = orderDetails;
 
                 ViewData["FullOrder"] = fullOrder;
+
+                ViewData["OrderStatus"] = orderStatus;
 
                 return View();
             }

@@ -19,7 +19,7 @@ namespace BOBS_Backend.Models.Book
 
         public string Name { get; set; }
 
-        public Genere Genere { get; set; }
+        public Genre Genre { get; set; }
 
 
 

@@ -14,7 +14,7 @@ namespace BOBS_Backend.Database
 
         public DbSet<Book> Book { get; set; }
         public DbSet<Condition> Condition { get; set; }
-        public DbSet<Genere> Genere { get; set; }
+        public DbSet<Genre> Genre { get; set; }
         public DbSet<Price> Price { get; set; }
         public DbSet<Models.Book.Type> Type { get; set; }
 
