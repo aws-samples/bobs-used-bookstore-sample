@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using BOBS_Backend.Models;
-using BOBS_Backend.Controllers.LoginActions;
+using Microsoft.AspNetCore.Authorization;
 namespace BOBS_Backend.Controllers
 {
     public class HomeController : Controller
@@ -22,41 +22,15 @@ namespace BOBS_Backend.Controllers
         {
             return View();
         }
-        [HttpPost]
-        public IActionResult WelcomePage([Bind] BOBS_Backend.Models.AdminUser ad)
+        [Authorize]
+        public IActionResult WelcomePage()
         {
-            VerifyLogin auth = new VerifyLogin();
-            TempData["Username"] = ad.Username;
-            bool res = auth.authenticate(ad.Username, ad.password);
-            if (res)
-            {
-
-                return View();
-            }
-            else
-            {
-
-                return RedirectToAction("Index");
-            }
-
+            return View();
         }
-        
-        public IActionResult RegisterPage([Bind] BOBS_Backend.Models.AdminUser ad)
+        public IActionResult Logout()
         {
-            ViewData["Register"] = null;
-            RegisterAdmin regAdmin = new RegisterAdmin();
-            bool res = regAdmin.Register(ad.Username, ad.password, ad.email);
-            if (res)
-            {
-                return RedirectToAction("Index");
-            }
-            else
-            {
-                ViewData["Register"] = "Error in Registering";
-                return View();
-            }
+            return View();
         }
-
         public IActionResult Privacy()
         {
             return View();
