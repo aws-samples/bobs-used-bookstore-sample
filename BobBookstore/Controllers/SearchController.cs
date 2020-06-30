@@ -17,19 +17,15 @@ namespace BobBookstore.Controllers
             _context = context;
         }
 
-        public async Task<IActionResult> Index(int? id)
+        public IActionResult Index()
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            return View();
+        }
 
-            var book = await _context.Books.FirstOrDefaultAsync(m => m.Book_Id == id);
-            if (book == null)
-            {
-                return NotFound();
-            }
-            return View(book);
+        [HttpGet]
+        public async Task<IActionResult> GetAll()
+        {
+            return Json(new { data = await _context.Books.ToListAsync() });
         }
     }
 }
