@@ -9,7 +9,9 @@ namespace BOBS_Backend.Repository
 {
     public interface IOrderStatusRepository
     {
-
+        /*
+         *  Order Status Repository
+         */
         Task<List<OrderStatus>> GetOrderStatuses();
 
         Task<OrderStatus> FindOrderStatusById(long id);

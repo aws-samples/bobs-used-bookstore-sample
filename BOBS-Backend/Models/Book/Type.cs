@@ -8,7 +8,9 @@ namespace BOBS_Backend.Models.Book
 {
     public class Type
     {
-
+        /*
+         * Type Model
+         */
         [Key]
         public long Type_Id { get; set; }
 

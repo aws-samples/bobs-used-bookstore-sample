@@ -5,20 +5,27 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using BOBS_Backend.Repository.OrdersInterface;
 
-namespace BOBS_Backend.Repository.Implementations
+namespace BOBS_Backend.Repository.Implementations.OrderImplementations
 {
     public class OrderDetailRepository : IOrderDetailRepository
     {
 
+        /*
+         * Repository with all the functions assoicated with the Order Detail Model
+         * 
+         */
+
         private DatabaseContext _context;
 
+        // Set up conncection to Database
         public OrderDetailRepository(DatabaseContext context)
         {
             _context = context;
         }
 
-
+        // Finds One instance of Order Detail Model by Order Detail Id
         public async Task<OrderDetail> FindOrderDetailById(long id)
         {
             var orderDetail = await _context.OrderDetail
@@ -30,7 +37,7 @@ namespace BOBS_Backend.Repository.Implementations
             return orderDetail;
         }
 
-
+        // Finds a List of Order Details by the assoicated Order Id
         public async Task<List<OrderDetail>> FindOrderDetailByOrderId(long orderId)
         {
             var orderDetails = await _context.OrderDetail

@@ -8,7 +8,9 @@ namespace BOBS_Backend.Models.Book
 {
     public class Genre
     {
-
+        /*
+         * Genere Model
+         */
         [Key]
         public long Genre_Id { get; set; }
 

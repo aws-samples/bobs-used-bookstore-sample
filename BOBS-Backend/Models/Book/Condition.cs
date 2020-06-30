@@ -8,6 +8,9 @@ namespace BOBS_Backend.Models.Book
 {
     public class Condition
     {
+        /*
+         * Condition Model
+         */
 
         [Key]
         public long Condition_Id { get; set; }

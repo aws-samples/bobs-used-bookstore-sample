@@ -8,9 +8,12 @@
     var orderStatus = (List<BOBS_Backend.Models.Order.OrderStatus>)ViewData["OrderStatus"];
 
     var orderStatusWidth = "0";
-    
+
 
     if (fullOrder.Order.OrderStatus.OrderStatus_Id == 1) orderStatusWidth = "25%";
+    else if (fullOrder.Order.OrderStatus.OrderStatus_Id == 2) orderStatusWidth = "50%";
+    else if (fullOrder.Order.OrderStatus.OrderStatus_Id == 3) orderStatusWidth = "75%";
+    else if (fullOrder.Order.OrderStatus.OrderStatus_Id == 4) orderStatusWidth = "100%";
 }
 
 <div class="container">
@@ -23,15 +26,21 @@
     </div>
 
     <div class="row">
-        <div class="text-right col-5">
+        <div class="text-left col-2">
+            <a asp-controller="Orders" asp-action="Index" class="card-link"> 
+                <svg class="bi bi-chevron-left" width="24" height="24" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z" /></svg>
+                Manage Orders
+            </a>
+        </div>
+        <div class="text-right col-4">
             <h3>Status:</h3>
         </div>
-        <div class="text-left col-4">
+        <div class="text-left col-3">
             <h3 id="order-process-text">@fullOrder.Order.OrderStatus.Status</h3>
         </div>
         <div class="col-3 text-right">
             <form class="input-group mb-3" asp-controller="Orders" asp-action="ProcessOrders" method="get">
-                <select asp-for="OrderId" class="invisible" >
+                <select asp-for="OrderId" class="invisible">
                     <option selected value="@fullOrder.Order.Order_Id">id</option>
                 </select>
                 <select asp-for="Status" class="col-5 custom-select" id="inputGroupSelect01">

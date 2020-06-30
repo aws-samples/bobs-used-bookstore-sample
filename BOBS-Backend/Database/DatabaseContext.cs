@@ -1,6 +1,7 @@
 ﻿using BOBS_Backend.Models.Book;
 using BOBS_Backend.Models.Customer;
 using BOBS_Backend.Models.Order;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -11,6 +12,9 @@ namespace BOBS_Backend.Database
 {
     public class DatabaseContext : DbContext
     {
+        /*
+         * This file contains all the tables (i.e. structure and name) used in the SQL Server
+         */
 
         public DbSet<Book> Book { get; set; }
         public DbSet<Condition> Condition { get; set; }

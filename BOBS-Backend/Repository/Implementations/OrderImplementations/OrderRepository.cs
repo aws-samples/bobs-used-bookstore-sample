@@ -5,19 +5,26 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using BOBS_Backend.Repository.OrdersInterface;
 
-namespace BOBS_Backend.Repository.Implementations
+namespace BOBS_Backend.Repository.Implementations.OrderImplementations
 {
     public class OrderRepository : IOrderRepository
     {
+        /*
+         * Order Repository contains all functions associated with Order Model
+         */
 
         private DatabaseContext _context;
 
+
+        // Set up connection to Database 
         public OrderRepository(DatabaseContext context)
         {
             _context = context;
         }
 
+        // Find Single Order by the Order Id
         public async Task<Order> FindOrderById(long id)
         {
             var order = await _context.Order
@@ -30,6 +37,8 @@ namespace BOBS_Backend.Repository.Implementations
             return order;
         }
 
+
+        // Find All the Orders in the Table
         public async Task<List<Order>> GetAllOrders()
         {
             var orders = await _context.Order
@@ -41,6 +50,7 @@ namespace BOBS_Backend.Repository.Implementations
             return orders;
         }
 
+        // Returns a List of Orders filtered by the Order Id
         public async Task<List<Order>> FilterOrderByOrderId(string searchString)
         {
             try
@@ -62,6 +72,7 @@ namespace BOBS_Backend.Repository.Implementations
             }
         }
 
+        // Returns a List of Orders filtered by the Customer Id
         public async Task<List<Order>> FilterOrderByCustomerId(string searchString)
         {
             try
@@ -85,6 +96,7 @@ namespace BOBS_Backend.Repository.Implementations
             
         }
 
+        // Returns a List of Orders filtered by the Customer Username
         public async Task<List<Order>> FilterOrderByUsername(string searchString)
         {
 
@@ -97,6 +109,7 @@ namespace BOBS_Backend.Repository.Implementations
             return orders;
         }
 
+        // Returns a List of Orders filtered by the Customer Email
         public async Task<List<Order>> FilterOrderByEmail(string searchString)
         {
 
@@ -109,6 +122,7 @@ namespace BOBS_Backend.Repository.Implementations
             return orders;
         }
 
+        // Returns a List of Orders filtered by the Address State
         public async Task<List<Order>> FilterOrderByState(string searchString)
         {
 
@@ -121,6 +135,7 @@ namespace BOBS_Backend.Repository.Implementations
             return orders;
         }
 
+        // With User input determines which Feature to filter by and navigates to respective function
         public async Task<List<Order>> FilterList(string filterValue, string searchString)
         {
             List<Order> orders;

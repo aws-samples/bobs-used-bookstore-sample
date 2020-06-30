@@ -10,9 +10,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using BOBS_Backend.Repository;
-using BOBS_Backend.Repository.Implementations;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using BOBS_Backend.Repository.OrdersInterface;
+using BOBS_Backend.Repository.Implementations.OrderImplementations;
 
 namespace BOBS_Backend
 {

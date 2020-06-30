@@ -10,6 +10,11 @@ namespace BOBS_Backend.Models.Order
 {
     public class Order
     {
+        /*
+         * Order Model
+         * Object reference indicates relationship to other tables
+         */
+
         [Key]
         public long Order_Id { get; set; }
 
@@ -19,10 +24,13 @@ namespace BOBS_Backend.Models.Order
 
         public string DeliveryDate { get; set; }
 
+        // One to Many Relationship with OrderStatus Table
         public OrderStatus OrderStatus { get; set; }
 
+        // Many to One Relationship with Customer Table
         public Customer.Customer Customer { get; set; }
 
+        // Many to One Relationship with Address Table 
         public Address Address { get; set; }
     }
 }

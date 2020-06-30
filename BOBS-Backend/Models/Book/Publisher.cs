@@ -8,6 +8,9 @@ namespace BOBS_Backend.Models.Book
 {
     public class Publisher
     {
+        /*
+         * Publisher Model
+         */
         [Key]
         public long Publisher_Id { get; set; }
 
