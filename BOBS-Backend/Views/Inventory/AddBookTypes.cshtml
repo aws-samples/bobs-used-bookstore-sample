@@ -1,0 +1,27 @@
+﻿@model BOBS_Backend.Models.Book.Type
+
+    <div>
+        <div>
+            <div>
+                <h1>
+                    <span>Submit the Book Details</span>
+                </h1>
+            </div>
+            <form enctype="multipart/form-data" asp-controller="Inventory" asp-action="AddBookTypes" method="post" style="padding-bottom: 0px;">
+                <div asp-validation-summary="All"></div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label class="form-check-label" asp-for="Type_Id">Book Type ID</label>
+                        <input class="form-control" asp-for="Type_Id" required />
+                    </div>
+                    <div class="form-group">
+                        <label class="form-check-label" asp-for="TypeName">Book Type</label>
+                        <input class="form-control" asp-for="TypeName" required />
+                    </div>
+                    <div class="form-group">
+                        <button class="btn btn-outline-primary" type="submit">Submit</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>

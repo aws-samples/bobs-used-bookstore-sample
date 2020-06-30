@@ -1,0 +1,27 @@
+﻿@model BOBS_Backend.Models.Book.Genre
+
+<div>
+    <div>
+        <div>
+            <h1>
+                <span>Add A New Genre Category to the DataBase</span>
+            </h1>
+        </div>
+        <form enctype="multipart/form-data" asp-controller="Inventory" asp-action="AddGenres" method="post" style="padding-bottom: 0px;">
+            <div asp-validation-summary="All"></div>
+            <div class="panel-body">
+                <div class="form-group">
+                    <label class="form-check-label" asp-for="Genre_Id">Genre ID</label>
+                    <input class="form-control" asp-for="Genre_Id" required />
+                </div>
+                <div class="form-group">
+                    <label class="form-check-label" asp-for="Name">Genre Name</label>
+                    <input class="form-control" asp-for="Name" required />
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-outline-primary" type="submit">Submit</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

@@ -31,6 +31,8 @@ namespace BOBS_Backend
             services.AddControllersWithViews();
             services.AddDbContext<Database.DatabaseContext>(option => option.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
+            services.AddTransient<IInventory, Inventory>();
+
             services.AddTransient<IOrderDetailRepository, OrderDetailRepository>();
             services.AddTransient<IOrderRepository, OrderRepository>();
             services.AddTransient<IOrderStatusRepository, OrderStatusRepository>();
