@@ -48,9 +48,7 @@ namespace BOBS_Backend
            options.ResponseType = Configuration["Authentication:Cognito:ResponseType"];
            options.MetadataAddress = Configuration["Authentication:Cognito:MetadataAddress"];
            options.ClientId = Configuration["Authentication:Cognito:ClientId"];
-           options.SignedOutRedirectUri = "https://localhost:44373/Home/logout";
-
-
+           
 
 
 

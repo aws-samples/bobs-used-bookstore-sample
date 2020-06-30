@@ -3,9 +3,9 @@
 }
 @if (User.Identity.IsAuthenticated) { 
     <div class="container align-content-center">
-        <div class=" container">
+        
             @Html.ActionLink("Manage", "WelcomePage", "Home", null, new { @class = "btn-group-sm btn btn-outline-light btn btn-primary" })
-        </div>
+        
     </div>
 
 }
