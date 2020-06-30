@@ -8,8 +8,8 @@ namespace BobBookstore.Models
 {
     public class Customer
     {
-        [Key]
-        public long Customer_Id { get; set; }
+        [Required]
+        public int ID { get; set; }
         public string UserName { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
@@ -17,7 +17,7 @@ namespace BobBookstore.Models
         public string Email { get; set; }
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
-        public DateTime DateOfBirth { get; set; }
+        public string DOB { get; set; }
         [DataType(DataType.PhoneNumber)]
         public string Phone { get; set; }
     }

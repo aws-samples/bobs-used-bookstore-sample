@@ -9,13 +9,12 @@ namespace BobBookstore.Models
     public class Order
     {
         [Required]
-        [Key]
-        public long Order_Id { get; set; }
-        public Address Address { get; set; }
-        public Customer Customer { get; set; }
-        public double Subtotal { get; set; }
-        public double Tax { get; set; }
-        public OrderStatus OrderStatus { get; set; }
+        public int ID { get; set; }
+        public int AddressID { get; set; }
+        public int CustomerID { get; set; }
+        public int Subtotal { get; set; }
+        public int Tax { get; set; }
+        public int OrderStatusID { get; set; }
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public string DeliveryDate { get; set; }

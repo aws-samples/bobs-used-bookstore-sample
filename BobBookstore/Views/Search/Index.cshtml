@@ -1,5 +1,4 @@
-﻿@model IEnumerable<BobBookstore.Models.Book>
-@{
+﻿@{
     ViewData["Title"] = "Index";
 }
 
@@ -7,31 +6,9 @@
 
 <p>Books</p>
 
-
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                Name
-            </th>
-            <th>
-                ISBN
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ISBN)
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
-
+<form>
+    <p>
+        <input type="text" />
+        <input type="submit" value="Filter" />
+    </p>
+</form>

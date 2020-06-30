@@ -8,11 +8,11 @@ namespace BobBookstore.Models
 {
     public class Address
     {
-        [Key]
-        public long Address_Id { get; set; }
-        public Customer Customer { get; set; }
-        public string AddressLine1 { get; set; }
-        public string AddressLine2 { get; set; }
+        [Required]
+        public int ID { get; set; }
+        public int CustomerID { get; set; }
+        public string Line1 { get; set; }
+        public string Line2 { get; set; }
         public string City { get; set; }
         public string State { get; set; }
         public string Country { get; set; }
