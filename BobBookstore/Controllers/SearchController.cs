@@ -17,9 +17,9 @@ namespace BobBookstore.Controllers
             _context = context;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> IndexAsync()
         {
-            return View();
+            return View(await _context.Books.ToListAsync());
         }
 
         [HttpGet]
