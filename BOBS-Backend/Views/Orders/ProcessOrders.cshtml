@@ -1,0 +1,111 @@
+﻿@{ 
+    ViewData["Title"] = "Hello World";
+}
+@model BOBS_Backend.ViewModel.ProcessOrders.ProcessOrderViewModel;
+@{ 
+    var fullOrder = (BOBS_Backend.ViewModel.ManageOrders.PartialOrder)ViewData["FullOrder"];
+
+    var orderStatus = (List<BOBS_Backend.Models.Order.OrderStatus>)ViewData["OrderStatus"];
+
+    var orderStatusWidth = "0";
+    
+
+    if (fullOrder.Order.OrderStatus.OrderStatus_Id == 1) orderStatusWidth = "25%";
+}
+
+<div class="container">
+    <div class="text-center">
+        <h2>Process Order</h2>
+    </div>
+
+    <div class="progress" style="height: 20px;  margin-top:25px; margin-bottom:45px;">
+        <div id="order-status-progress-bar" style="width:@orderStatusWidth;" class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+    </div>
+
+    <div class="row">
+        <div class="text-right col-5">
+            <h3>Status:</h3>
+        </div>
+        <div class="text-left col-4">
+            <h3 id="order-process-text">@fullOrder.Order.OrderStatus.Status</h3>
+        </div>
+        <div class="col-3 text-right">
+            <form class="input-group mb-3" asp-controller="Orders" asp-action="ProcessOrders" method="get">
+                <select asp-for="OrderId" class="invisible" >
+                    <option selected value="@fullOrder.Order.Order_Id">id</option>
+                </select>
+                <select asp-for="Status" class="col-5 custom-select" id="inputGroupSelect01">
+                    @foreach (var status in orderStatus)
+                    {
+                        <option value="@status.OrderStatus_Id ">@status.Status</option>
+                    }
+                </select>
+                <button class="btn btn-outline-secondary" type="submit">Submit</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="row" style="margin-top:35px">
+        <div class="text-left col-2">
+            <h4>Order Details:</h4>
+        </div>
+        <div class="text-left col-10">
+            <h4>OrderID: @fullOrder.Order.Order_Id</h4>
+        </div>
+    </div>
+
+    <div class="row" style="margin-top:35px">
+
+        <div class="dropdown col-4 text-left">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Order Cost
+            </button>
+            <div class="dropdown-menu p-4" aria-labelledby="dropdownMenuButton">
+                <p>
+                    @{ 
+                        var total = fullOrder.Order.Subtotal + fullOrder.Order.Tax;
+                    }
+                    Total Cost: $@total
+                </p>
+                <p>
+                    Subtotal: $@fullOrder.Order.Subtotal
+                </p>
+                <p>
+                    Shipping Cost: $@fullOrder.Order.Tax
+                </p>
+            </div>
+        </div>
+
+        <div class="col-8">
+            <p>CustomerID: @fullOrder.Order.Customer.Customer_Id</p>
+            <p>Customer Email: @fullOrder.Order.Customer.Email</p>
+            @{ var fullAddress = fullOrder.Order.Address.AddressLine1 + ", " + fullOrder.Order.Address.City + ", " + fullOrder.Order.Address.State + ", " + fullOrder.Order.Address.ZipCode;}
+            <p>Address: @fullAddress</p>
+        </div>
+    </div>
+
+    <div class="row" style="margin-top:35px">
+
+        <div class="dropdown col-4 text-left">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Order List
+            </button>
+            <div class="dropdown-menu p-4" aria-labelledby="dropdownMenuButton">
+                @foreach (var orderDetail in fullOrder.OrderDetails)
+                {
+                    <p>
+                        Book Name: @orderDetail.Book.Name
+                    </p>
+                }
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row" style="margin-top:35px">
+        <div class="col-12">
+            <h4>Expected Delivery Date: @DateTime.Parse(fullOrder.Order.DeliveryDate).ToString("MM/dd/yyyy")</h4>
+        </div>
+
+    </div>
+</div>

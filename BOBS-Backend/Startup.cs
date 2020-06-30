@@ -8,8 +8,12 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.EntityFrameworkCore;
+using BOBS_Backend.Repository;
+using BOBS_Backend.Repository.Implementations;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+
 namespace BOBS_Backend
 {
     public class Startup
@@ -25,6 +29,11 @@ namespace BOBS_Backend
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+            services.AddDbContext<Database.DatabaseContext>(option => option.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddTransient<IOrderDetailRepository, OrderDetailRepository>();
+            services.AddTransient<IOrderRepository, OrderRepository>();
+            services.AddTransient<IOrderStatusRepository, OrderStatusRepository>();
             services.AddAuthentication(options =>
             {
                 // uses cookies on local machine for maintaining authentication
@@ -32,21 +41,19 @@ namespace BOBS_Backend
                 options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
             })
-     .AddCookie()
-     .AddOpenIdConnect(options =>
-     {
+       .AddCookie()
+       .AddOpenIdConnect(options =>
+       {
            // sets the OpenId connect options for cognito hosted UI
            options.ResponseType = Configuration["Authentication:Cognito:ResponseType"];
-         options.MetadataAddress = Configuration["Authentication:Cognito:MetadataAddress"];
-         options.ClientId = Configuration["Authentication:Cognito:ClientId"];
-         options.SignedOutRedirectUri = "https://localhost:44336/Home/logout";
+           options.MetadataAddress = Configuration["Authentication:Cognito:MetadataAddress"];
+           options.ClientId = Configuration["Authentication:Cognito:ClientId"];
+           
 
 
 
 
-
-
-     });
+       });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
