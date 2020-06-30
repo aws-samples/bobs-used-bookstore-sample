@@ -11,6 +11,7 @@ namespace BOBS_Backend.Database
 {
     public class DatabaseContext : DbContext
     {
+        internal object book;
 
         public DbSet<Book> Book { get; set; }
         public DbSet<Condition> Condition { get; set; }
@@ -24,11 +25,12 @@ namespace BOBS_Backend.Database
 
         public DbSet<Address> Address { get; set; }
         public DbSet<Customer> Customer { get; set; }
-
+        public DbSet<Publisher> Publisher { get; set; }
 
         public DbSet<Order> Order { get; set; }
         public DbSet<OrderDetail> OrderDetail { get; set; }
         public DbSet<OrderStatus> OrderStatus { get; set; }
+        public IEnumerable<object> Books { get; internal set; }
 
         public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options) { }
 
