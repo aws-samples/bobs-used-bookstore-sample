@@ -4,6 +4,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BobBookstore.Models;
+using BobBookstore.Models.Customer;
+using BobBookstore.Models.Order;
+using BobBookstore.Models.Book;
 
 namespace BobBookstore.Data
 {
@@ -14,9 +18,18 @@ namespace BobBookstore.Data
         {
         }
 
-        public DbSet<Address> Addresses { get; set; }
-        public DbSet<Book> Books { get; set; }
-        public DbSet<Customer> Customers { get; set; }
-        public DbSet<Order> Orders { get; set; }
+        public DbSet<Address> Address { get; set; }
+        public DbSet<Book> Book { get; set; }
+        public DbSet<Condition> Condition { get; set; }
+        public DbSet<Customer> Customer { get; set; }
+        public DbSet<Genre> Genre { get; set; }
+        public DbSet<Order> Order { get; set; }
+        //public DbSet<OrderDetail> OrderDetail { get; set; }
+        public DbSet<OrderStatus> OrderStatus { get; set; }
+        public DbSet<Price> Price { get; set; }
+        public DbSet<Publisher> Publisher { get; set; }
+        public DbSet<Models.Book.Type> Type { get; set; }
+        public DbSet<BobBookstore.Models.Carts.Cart> Cart { get; set; }
+        public DbSet<BobBookstore.Models.Carts.CartItem> CartItem { get; set; }
     }
 }

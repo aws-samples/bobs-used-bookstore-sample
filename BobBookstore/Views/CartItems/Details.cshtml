@@ -1,0 +1,18 @@
+﻿@model BobBookstore.Models.Carts.CartItem
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>CartItem</h4>
+    <hr />
+    <dl class="row">
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.CartItem_Id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>
