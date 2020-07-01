@@ -16,9 +16,15 @@ namespace BobBookstore.Controllers
         {
             _context = context;
         }
-        public async Task<IActionResult> IndexAsync()
+        public async Task<IActionResult> IndexAsync(string searchString)
         {
-            return View(await _context.Book.ToListAsync());
+            var books = from m in _context.Book select m;
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                books = books.Where(s => s.Name.Contains(searchString));
+            }
+            return View(await books.ToListAsync());
         }
     }
 }
