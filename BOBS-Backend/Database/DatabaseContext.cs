@@ -18,7 +18,7 @@ namespace BOBS_Backend.Database
         public DbSet<Genre> Genre { get; set; }
         public DbSet<Price> Price { get; set; }
 
-        public DbSet<Publisher> Publisher { get; set; }
+       
 
         public DbSet<Models.Book.Type> Type { get; set; }
 

@@ -10,7 +10,14 @@ using BOBS_Backend.Models.Book;
 using BOBS_Backend.ViewModel;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Internal;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Formats;
+using SixLabors.ImageSharp.Formats.Gif;
+using SixLabors.ImageSharp.Formats.Jpeg;
+using SixLabors.ImageSharp.Formats.Png;
+using SixLabors.ImageSharp.Processing;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -92,13 +99,16 @@ namespace BOBS_Backend
         {
             "jpg", "jpeg", "png", "gif"
         };
-
+           
+            
             var fileExt = Path.GetExtension(file.FileName).TrimStart('.');
+            // resize the image
+            var resizeStream = await ResizeImage(file, fileExt);
             if (_validImageExtensions.Contains(fileExt))
             {
                 using (var fileStream = new FileStream(Path.Combine(dir, filename), FileMode.Create, FileAccess.Write))
                 {
-                    file.CopyTo(fileStream);
+                    resizeStream.CopyTo(fileStream);
                 }
                 s3Client = new AmazonS3Client("AKIA6DYNIKQLFG4HU2LU", "4RM8WQL3tH4+c7RgIQ/LPBHqt6ESwleokqsDx1Gf" ,bucketRegion);
 
@@ -112,6 +122,52 @@ namespace BOBS_Backend
 
             }
             return url;
+        }
+        public async Task<Stream> ResizeImage(IFormFile file,string fileExt)
+        {
+            // create new memory stream.
+            Stream result = new MemoryStream();
+            int new_size = 200;
+            // create new image variable
+            using var img = SixLabors.ImageSharp.Image.Load(file.OpenReadStream());
+            // set height and width proportional
+            var div = img.Width / new_size;
+            var hgt = Convert.ToInt32(Math.Round((decimal)(img.Height / div)));
+            
+            // change size of image
+            img.Mutate(x => x.Resize(200, hgt));
+            //get the extension encoder
+            IImageEncoder encoder = selectEncoder(fileExt);
+            img.Save(result, encoder);
+            result.Position = 0;
+            
+            return result;
+           
+            
+        }
+
+        public IImageEncoder selectEncoder(string extension)
+        {
+            IImageEncoder encoder = null;
+            // get the encoder based on file extension
+            switch (extension)
+            {
+                case "png":
+                    encoder = new PngEncoder();
+                    break;
+                case "jpeg":
+                    encoder = new JpegEncoder();
+                    break;
+                case "jpg":
+                    encoder = new JpegEncoder();
+                    break;
+                case "gif":
+                    encoder = new GifEncoder();
+                    break;
+                default:
+                    break;
+            }
+            return encoder;
         }
 
         public async Task<bool> IsBook(string bucket, string key)
