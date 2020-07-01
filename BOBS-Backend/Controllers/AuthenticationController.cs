@@ -17,7 +17,7 @@ namespace BOBS_Backend.Controllers
             // the cognito logout URL; should be the same as the signout URL on cognito
             string redirecturl = "https://localhost:44336/Home/logout";
             // Cognito  user pool domain URL 
-            string url = "https://loginsampledomain.auth.us-west-2.amazoncognito.com/logout?client_id=5f2rnsqn8prl48cre728iqb5ut&logout_uri=";
+            string url = "https://bobsbackendbookstore.auth.us-east-1.amazoncognito.com/logout?client_id=2mmc0skfqcm9chekpvpa8cp8tv&logout_uri=";
             string logout_url = url + redirecturl;
             // redirects to the response from the cognito logout endpoint
             HttpContext.Response.Redirect(logout_url);

@@ -32,6 +32,8 @@ namespace BOBS_Backend
             services.AddControllersWithViews();
             services.AddDbContext<Database.DatabaseContext>(option => option.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
+            services.AddTransient<IInventory, Inventory>();
+
             services.AddTransient<IOrderDetailRepository, OrderDetailRepository>();
             services.AddTransient<IOrderRepository, OrderRepository>();
             services.AddTransient<IOrderStatusRepository, OrderStatusRepository>();
@@ -49,9 +51,7 @@ namespace BOBS_Backend
            options.ResponseType = Configuration["Authentication:Cognito:ResponseType"];
            options.MetadataAddress = Configuration["Authentication:Cognito:MetadataAddress"];
            options.ClientId = Configuration["Authentication:Cognito:ClientId"];
-           options.SignedOutRedirectUri = "https://localhost:44373/Home/logout";
-
-
+           
 
 
 
