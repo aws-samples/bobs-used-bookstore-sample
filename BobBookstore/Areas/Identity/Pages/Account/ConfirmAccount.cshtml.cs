@@ -6,6 +6,8 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Amazon.AspNetCore.Identity.Cognito;
 using Amazon.Extensions.CognitoAuthentication;
+using BobBookstore.Data;
+using BobBookstore.Models.Customer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -17,9 +19,11 @@ namespace BobBookstore.Areas.Identity.Pages.Account
     public class ConfirmAccountModel : PageModel
     {
         private readonly CognitoUserManager<CognitoUser> _userManager;
-        public ConfirmAccountModel(UserManager<CognitoUser> userManager)
+        private readonly UsedBooksContext _context;
+        public ConfirmAccountModel(UserManager<CognitoUser> userManager, UsedBooksContext context)
         {
             _userManager = userManager as CognitoUserManager<CognitoUser>;
+            _context = context;
         }
         [BindProperty]
         public InputModel Input { get; set; }
@@ -52,13 +56,34 @@ namespace BobBookstore.Areas.Identity.Pages.Account
                 }
 
                 var result = await _userManager.ConfirmSignUpAsync(user, Input.Code, true);
-                
+
                 if (!result.Succeeded)
                 {
                     throw new InvalidOperationException($"Error confirming account for user with ID '{userId}':");
                 }
                 else
                 {
+                    //[Bind("Customer_Id,Username,FirstName,LastName,Email,DateOfBirth,Phone")]
+                    //var customer_Id = Convert.ToInt32(user.UserID);
+                    //var userName = user.Attributes[CognitoAttribute.UserName.AttributeName];
+                    var userName = await _userManager.GetUserNameAsync(user);
+                    var firstName = user.Attributes[CognitoAttribute.GivenName.AttributeName];
+                    var lastName = user.Attributes[CognitoAttribute.FamilyName.AttributeName];
+                    var email = user.Attributes[CognitoAttribute.Email.AttributeName];
+                    var dateOfBirth = user.Attributes[CognitoAttribute.BirthDate.AttributeName];
+                    var phone = user.Attributes[CognitoAttribute.PhoneNumber.AttributeName];
+                    var customer = new Customer()
+                    {
+                        Username = userName,
+                        FirstName = firstName,
+                        LastName = lastName,
+                        Email = email,
+                        Phone = phone
+                    };
+                    _context.Add(customer);
+                    await _context.SaveChangesAsync();
+
+
                     return returnUrl != null ? LocalRedirect(returnUrl) : Page() as IActionResult;
                 }
             }
