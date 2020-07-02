@@ -3,14 +3,17 @@
 }
 @model BOBS_Backend.ViewModel.ProcessOrders.ProcessOrderViewModel;
 @{ 
-    var fullOrder = (BOBS_Backend.ViewModel.ManageOrders.PartialOrder)ViewData["FullOrder"];
+    var fullOrder = Model.FullOrder;
 
-    var orderStatus = (List<BOBS_Backend.Models.Order.OrderStatus>)ViewData["OrderStatus"];
+    var orderStatus = Model.Statuses;
 
     var orderStatusWidth = "0";
-    
+
 
     if (fullOrder.Order.OrderStatus.OrderStatus_Id == 1) orderStatusWidth = "25%";
+    else if (fullOrder.Order.OrderStatus.OrderStatus_Id == 2) orderStatusWidth = "50%";
+    else if (fullOrder.Order.OrderStatus.OrderStatus_Id == 3) orderStatusWidth = "75%";
+    else if (fullOrder.Order.OrderStatus.OrderStatus_Id == 4) orderStatusWidth = "100%";
 }
 
 <div class="container">
@@ -23,81 +26,45 @@
     </div>
 
     <div class="row">
-        <div class="text-right col-5">
-            <h3>Status:</h3>
+        <div class="text-left col-2">
+            <a asp-controller="Orders" asp-action="Index" class="card-link"> 
+                <svg class="bi bi-chevron-left" width="24" height="24" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z" /></svg>
+                Manage Orders
+            </a>
         </div>
-        <div class="text-left col-4">
-            <h3 id="order-process-text">@fullOrder.Order.OrderStatus.Status</h3>
+        <div class="text-center col-7">
+            <h3>Status: @fullOrder.Order.OrderStatus.Status</h3>
         </div>
         <div class="col-3 text-right">
-            <form class="input-group mb-3" asp-controller="Orders" asp-action="ProcessOrders" method="get">
-                <select asp-for="OrderId" class="invisible" >
-                    <option selected value="@fullOrder.Order.Order_Id">id</option>
-                </select>
-                <select asp-for="Status" class="col-5 custom-select" id="inputGroupSelect01">
-                    @foreach (var status in orderStatus)
-                    {
-                        <option value="@status.OrderStatus_Id ">@status.Status</option>
-                    }
-                </select>
-                <button class="btn btn-outline-secondary" type="submit">Submit</button>
-            </form>
+            <partial name="./Shared/_UpdateOrderStatus" model="Model"/>
         </div>
     </div>
 
     <div class="row" style="margin-top:35px">
-        <div class="text-left col-2">
+        <div class="text-left col-12">
             <h4>Order Details:</h4>
         </div>
-        <div class="text-left col-10">
-            <h4>OrderID: @fullOrder.Order.Order_Id</h4>
-        </div>
     </div>
 
     <div class="row" style="margin-top:35px">
 
-        <div class="dropdown col-4 text-left">
-            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Order Cost
-            </button>
-            <div class="dropdown-menu p-4" aria-labelledby="dropdownMenuButton">
-                <p>
-                    @{ 
-                        var total = fullOrder.Order.Subtotal + fullOrder.Order.Tax;
-                    }
-                    Total Cost: $@total
-                </p>
-                <p>
-                    Subtotal: $@fullOrder.Order.Subtotal
-                </p>
-                <p>
-                    Shipping Cost: $@fullOrder.Order.Tax
-                </p>
-            </div>
+        <div class="col-4">
+            <partial name="./Shared/_OrderInfo" model="fullOrder"/>
         </div>
 
         <div class="col-8">
-            <p>CustomerID: @fullOrder.Order.Customer.Customer_Id</p>
-            <p>Customer Email: @fullOrder.Order.Customer.Email</p>
-            @{ var fullAddress = fullOrder.Order.Address.AddressLine1 + ", " + fullOrder.Order.Address.City + ", " + fullOrder.Order.Address.State + ", " + fullOrder.Order.Address.ZipCode;}
-            <p>Address: @fullAddress</p>
+            <partial name="./Shared/_CustomerInfo" model="fullOrder"/>
         </div>
     </div>
 
     <div class="row" style="margin-top:35px">
 
-        <div class="dropdown col-4 text-left">
-            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Order List
-            </button>
-            <div class="dropdown-menu p-4" aria-labelledby="dropdownMenuButton">
-                @foreach (var orderDetail in fullOrder.OrderDetails)
-                {
-                    <p>
-                        Book Name: @orderDetail.Book.Name
-                    </p>
-                }
-            </div>
+        <div class="col-6">
+            <partial name="./Shared/_BookList" model="fullOrder"/>
+        </div>
+
+        <div class="col-5">
+            <partial name="./Shared/_AddressInfo" model="fullOrder"/>
         </div>
 
     </div>

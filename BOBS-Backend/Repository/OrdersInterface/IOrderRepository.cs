@@ -4,10 +4,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace BOBS_Backend.Repository
+namespace BOBS_Backend.Repository.OrdersInterface
 {
     public interface IOrderRepository
     {
+
+        /*
+         * Order Detail Repository Interface
+         */
+
         Task<Order> FindOrderById(long id);
 
         Task<List<Order>> GetAllOrders();

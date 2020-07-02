@@ -1,0 +1,13 @@
+﻿@model BOBS_Backend.ViewModel.ManageOrders.PartialOrder;
+    <div class="card">
+        <div class="card-header">
+            Address Info
+        </div>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">Address Line 1: @Model.Order.Address.AddressLine1</li>
+            <li class="list-group-item">City: @Model.Order.Address.City</li>
+            <li class="list-group-item">State: @Model.Order.Address.State</li>
+            <li class="list-group-item">Country: @Model.Order.Address.Country</li>
+            <li class="list-group-item">Zip Code: @Model.Order.Address.ZipCode</li>
+        </ul>
+    </div>

@@ -8,6 +8,9 @@ namespace BOBS_Backend.Models.Order
 {
     public class OrderStatus
     {
+        /*
+         * OrderStatus Model 
+         */
 
         [Key]
         public long OrderStatus_Id { get; set; }

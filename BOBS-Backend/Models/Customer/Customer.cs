@@ -9,6 +9,9 @@ namespace BOBS_Backend.Models.Customer
 {
     public class Customer
     {
+        /*
+         * Customer Model
+         */
 
         [Key]
         public long Customer_Id { get; set; }

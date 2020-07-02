@@ -10,6 +10,9 @@ namespace BOBS_Backend.Models.Book
 {
     public class Condition
     {
+        /*
+         * Condition Model
+         */
 
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long Condition_Id { get; set; }

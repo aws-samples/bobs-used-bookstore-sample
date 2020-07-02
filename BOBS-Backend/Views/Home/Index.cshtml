@@ -1,9 +1,19 @@
 ﻿@{
     ViewData["Title"] = "Home";
 }
+@if (User.Identity.IsAuthenticated) { 
+    <div class="container align-content-center">
+        
+            @Html.ActionLink("Manage", "WelcomePage", "Home", null, new { @class = "btn-group-sm btn btn-outline-light btn btn-primary" })
+        
+    </div>
 
+}
+
+else{
 <div class="container align-content-center">
     <div class=" container">
         @Html.ActionLink("Login/Register", "WelcomePage", "Home", null, new { @class = "btn-group-sm btn btn-outline-light btn btn-primary" })
     </div>
 </div>
+}

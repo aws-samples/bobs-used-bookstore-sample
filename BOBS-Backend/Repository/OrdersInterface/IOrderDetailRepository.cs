@@ -4,10 +4,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace BOBS_Backend.Repository
+namespace BOBS_Backend.Repository.OrdersInterface
 {
     public interface IOrderDetailRepository
     {
+        /*
+         * Order Detail Repository Interface
+         */
 
         Task<OrderDetail> FindOrderDetailById(long id);
 
