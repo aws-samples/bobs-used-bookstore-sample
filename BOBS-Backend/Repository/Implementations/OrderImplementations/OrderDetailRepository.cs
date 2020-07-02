@@ -31,7 +31,13 @@ namespace BOBS_Backend.Repository.Implementations.OrderImplementations
             var orderDetail = await _context.OrderDetail
                                     .Where(x => x.OrderDetail_Id == id)
                                     .Include(o => o.Book)
+                                        .ThenInclude(b => b.Genre)
+                                    .Include(o => o.Book)
+                                        .ThenInclude(b => b.Publisher)
+                                    .Include(o => o.Book)
+                                        .ThenInclude(b => b.Type)
                                     .Include(o => o.Price)
+                                        .ThenInclude(p => p.Condition)
                                     .FirstAsync();
 
             return orderDetail;
@@ -43,7 +49,13 @@ namespace BOBS_Backend.Repository.Implementations.OrderImplementations
             var orderDetails = await _context.OrderDetail
                                     .Where(x => x.Order.Order_Id == orderId)
                                     .Include(o => o.Book)
+                                        .ThenInclude(b => b.Genre)
+                                    .Include(o => o.Book)
+                                        .ThenInclude(b => b.Publisher)
+                                    .Include(o => o.Book)
+                                        .ThenInclude(b => b.Type)
                                     .Include(o => o.Price)
+                                        .ThenInclude(p => p.Condition)
                                     .ToListAsync();
 
             return orderDetails;

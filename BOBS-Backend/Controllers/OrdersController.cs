@@ -10,6 +10,7 @@ using BOBS_Backend.ViewModel.ManageOrders;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
+using BOBS_Backend.ViewModel.ProcessOrders;
 
 namespace BOBS_Backend.Controllers
 {
@@ -85,16 +86,17 @@ namespace BOBS_Backend.Controllers
 
                 var orderDetails = await _orderDetail.FindOrderDetailByOrderId(orderId);
 
+                ProcessOrderViewModel viewModel = new ProcessOrderViewModel();
+
                 PartialOrder fullOrder = new PartialOrder();
 
                 fullOrder.Order = order;
                 fullOrder.OrderDetails = orderDetails;
 
-                ViewData["FullOrder"] = fullOrder;
+                viewModel.Statuses = orderStatus;
+                viewModel.FullOrder = fullOrder;
 
-                ViewData["OrderStatus"] = orderStatus;
-
-                return View();
+                return View(viewModel);
             }
 
 

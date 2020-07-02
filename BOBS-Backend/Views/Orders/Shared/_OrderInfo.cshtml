@@ -1,0 +1,15 @@
+﻿@model BOBS_Backend.ViewModel.ManageOrders.PartialOrder;
+<div class="card" style="width: 18rem;">
+    <div class="card-header">
+        Order Info
+    </div>
+    @{
+        var total = Model.Order.Subtotal + Model.Order.Tax;
+    }
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item">Order Id: @Model.Order.Order_Id</li>
+        <li class="list-group-item">Total Cost: $@total</li>
+        <li class="list-group-item">Subtotal: $@Model.Order.Subtotal</li>
+        <li class="list-group-item">Tax: $@Model.Order.Tax</li>
+    </ul>
+</div>
