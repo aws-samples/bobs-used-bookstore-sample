@@ -8,12 +8,21 @@
         
     </div>
 
+
 }
 
 else{
-<div class="container align-content-center">
-    <div class=" container">
-        @Html.ActionLink("Login/Register", "WelcomePage", "Home", null, new { @class = "btn-group-sm btn btn-outline-light btn btn-primary" })
-    </div>
+<div class="container align-content-center text-center">
+    
+        <div class="cover-container d-flex h-100 p-3 mx-auto flex-column">
+            
+            <main role="main" class="inner cover">
+                <h1 class="cover-heading">Bob's Used Bookstore.</h1>
+                <p class="lead">
+                    @Html.ActionLink("Login/Register", "WelcomePage", "Home", null, new { @class = "btn-group-sm btn btn-outline-light btn btn-primary" })
+                </p>
+            </main>
+        </div>
+
 </div>
 }

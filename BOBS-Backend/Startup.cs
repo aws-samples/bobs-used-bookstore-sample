@@ -10,10 +10,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using BOBS_Backend.Repository;
+using BOBS_Backend.Repository.Implementations;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
-using BOBS_Backend.Repository.OrdersInterface;
-using BOBS_Backend.Repository.Implementations.OrderImplementations;
+using Microsoft.AspNetCore.Http;
 
 namespace BOBS_Backend
 {
@@ -43,8 +43,16 @@ namespace BOBS_Backend
                 options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
                 options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
+                
+                
             })
-       .AddCookie()
+       .AddCookie(options =>
+       {
+           options.Cookie.Name = "BobsAdminCookie";
+           options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
+           
+
+       })
        .AddOpenIdConnect(options =>
        {
            // sets the OpenId connect options for cognito hosted UI
@@ -52,7 +60,10 @@ namespace BOBS_Backend
            options.MetadataAddress = Configuration["Authentication:Cognito:MetadataAddress"];
            options.ClientId = Configuration["Authentication:Cognito:ClientId"];
            
-
+           options.Authority = "https://bobsbackendbookstore.auth.us-east-1.amazoncognito.com";
+           options.GetClaimsFromUserInfoEndpoint = true;
+           options.TokenValidationParameters.ValidateIssuer = true;
+           
 
 
 

@@ -5,14 +5,10 @@ using Amazon.S3;
 using Amazon.S3.Transfer;
 using BOBS_Backend.Database;
 using BOBS_Backend.DataModel;
-using BOBS_Backend.Models;
 using BOBS_Backend.Models.Book;
-using BOBS_Backend.ViewModel;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Internal;
-using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats;
 using SixLabors.ImageSharp.Formats.Gif;
 using SixLabors.ImageSharp.Formats.Jpeg;
@@ -22,7 +18,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -135,7 +130,7 @@ namespace BOBS_Backend
             var hgt = Convert.ToInt32(Math.Round((decimal)(img.Height / div)));
             
             // change size of image
-            img.Mutate(x => x.Resize(200, hgt));
+            img.Mutate(x => x.Resize(new_size, hgt));
             //get the extension encoder
             IImageEncoder encoder = selectEncoder(fileExt);
             img.Save(result, encoder);
