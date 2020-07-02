@@ -4,14 +4,16 @@ using BobBookstore.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace BobBookstore.Migrations
 {
     [DbContext(typeof(UsedBooksContext))]
-    partial class UsedBooksContextModelSnapshot : ModelSnapshot
+    [Migration("20200701175229_Genre-Foreign-Key")]
+    partial class GenreForeignKey
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -35,10 +37,7 @@ namespace BobBookstore.Migrations
                     b.Property<string>("Front_Url")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<long>("Genre_Id")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("Genre_Id1")
+                    b.Property<long?>("Genre_Id")
                         .HasColumnType("bigint");
 
                     b.Property<long>("ISBN")
@@ -65,8 +64,6 @@ namespace BobBookstore.Migrations
                     b.HasKey("Book_Id");
 
                     b.HasIndex("Genre_Id");
-
-                    b.HasIndex("Genre_Id1");
 
                     b.HasIndex("Publisher_Id");
 
@@ -333,13 +330,7 @@ namespace BobBookstore.Migrations
                 {
                     b.HasOne("BobBookstore.Models.Book.Genre", "Genre")
                         .WithMany()
-                        .HasForeignKey("Genre_Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("BobBookstore.Models.Book.Genre", null)
-                        .WithMany()
-                        .HasForeignKey("Genre_Id1");
+                        .HasForeignKey("Genre_Id");
 
                     b.HasOne("BobBookstore.Models.Book.Publisher", "Publisher")
                         .WithMany()

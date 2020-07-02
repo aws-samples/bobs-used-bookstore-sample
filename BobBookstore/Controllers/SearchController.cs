@@ -18,12 +18,14 @@ namespace BobBookstore.Controllers
         }
         public async Task<IActionResult> IndexAsync(string searchString)
         {
-            var books = from m in _context.Book select m;
+            var books = from m in _context.Book join n in _context.Genre on m.Genre_Id equals n.Genre_Id
+                        select m;
 
             if (!String.IsNullOrEmpty(searchString))
             {
                 books = books.Where(s => s.Name.Contains(searchString));
             }
+
             return View(await books.ToListAsync());
         }
     }

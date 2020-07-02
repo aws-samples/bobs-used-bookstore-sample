@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -19,7 +20,9 @@ namespace BobBookstore.Models.Book
 
         public string Name { get; set; }
 
-        public Genre Genre { get; set; }
+        [ForeignKey("Genre")]
+        public long Genre_Id { get; set; }
+        public virtual Genre Genre { get; set; }
 
         public string Front_Url { get; set; }
 

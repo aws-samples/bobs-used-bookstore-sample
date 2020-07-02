@@ -7,7 +7,7 @@
 
 <p>Books</p>
 
-<form asp-controller="Search" asp-action="Index">
+<form asp-controller="Search" asp-action="Index" method="get">
     <p>
         <input type="text" name="SearchString" />
         <input type="submit" value="Filter" />
@@ -22,6 +22,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.ISBN)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Genre)
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -34,6 +37,9 @@
             </td>
             <td>
                 @Html.DisplayFor(modelitem => item.ISBN)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Genre.Name)
             </td>
             <td>
                 Details

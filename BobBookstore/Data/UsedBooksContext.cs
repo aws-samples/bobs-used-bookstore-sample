@@ -31,5 +31,10 @@ namespace BobBookstore.Data
         public DbSet<Models.Book.Type> Type { get; set; }
         public DbSet<BobBookstore.Models.Carts.Cart> Cart { get; set; }
         public DbSet<BobBookstore.Models.Carts.CartItem> CartItem { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Book>().HasOne<Genre>();
+        }
     }
 }
