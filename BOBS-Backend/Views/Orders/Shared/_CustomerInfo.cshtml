@@ -1,0 +1,11 @@
+﻿@model  BOBS_Backend.ViewModel.ManageOrders.PartialOrder;
+    <div class="card" style="width:25rem;">
+        <div class="card-header">
+            Customer Info
+        </div>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">Customer Id: @Model.Order.Customer.Customer_Id</li>
+            <li class="list-group-item">Customer Name: @Model.Order.Customer.FirstName @Model.Order.Customer.LastName</li>
+            <li class="list-group-item">Email: @Model.Order.Customer.Email</li>
+        </ul>
+    </div>

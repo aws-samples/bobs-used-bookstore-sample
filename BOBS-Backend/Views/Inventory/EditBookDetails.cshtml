@@ -1,12 +1,17 @@
 ﻿@model BOBS_Backend.ViewModel.BooksViewModel
 @{
     ViewData["Title"] = "Checkout";
+    var types = (List<BOBS_Backend.Models.Book.Type>)ViewData["Types"];
+    var publishers = (List<BOBS_Backend.Models.Book.Publisher>)ViewData["Publishers"];
+    var genres = (List<BOBS_Backend.Models.Book.Genre>)ViewData["Genres"];
+    var conditions = (List<BOBS_Backend.Models.Book.Condition>)ViewData["Conditions"];
+
 }
 
 <div>
     <div>
         <div>
-            <h1>
+            <h1 style="margin-top:35px">
                 <span>Submit the Book Details</span>
             </h1>
         </div>
@@ -30,8 +35,50 @@
                     <input class="form-control" asp-for="quantity" required />
                 </div>
                 <div class="form-group">
-                    <label class="form-check-label" asp-for="publisherId">Publisher Id</label>
-                    <input class="form-control" asp-for="publisherId" required />
+                    <label class="form-check-label" asp-for="PublisherName">Publisher Name</label>
+                    <select class="custom-select" asp-for="PublisherName">
+                        <option value="">Select the Publisher</option>
+                        @foreach (var publisher in publishers)
+                        {
+                            <option value="@publisher.Name">@publisher.Name</option>
+                        }
+                    </select>
+                </div>
+                <a asp-action="AddPublishers" asp-controller="Inventory">Click here if you don't find the Publisher in the list above</a>
+                <div class="form-group">
+                    <label class="form-check-label" asp-for="genre">Genre</label>
+                    <select class="custom-select" asp-for="genre">
+                        <option value="">Select the Genre</option>
+                        @foreach (var genre in genres)
+                        {
+                            <option value="@genre.Name">@genre.Name</option>
+                        }
+
+                    </select>
+                </div>
+                <a asp-action="AddGenres" asp-controller="Inventory">Click here if you don't find the Genre in the list above</a>
+                <div class="form-group">
+                    <label class="form-check-label" asp-for="BookType">Book Type</label>
+                    <select class="custom-select" asp-for="BookType">
+                        <option value="">Select the Book Type</option>
+                        @foreach (var type in types)
+                        {
+                            <option value="@type.TypeName">@type.TypeName</option>
+                        }
+
+                    </select>
+                </div>
+                <a asp-action="AddBookTypes" asp-controller="Inventory">Click here if you don't find the BookType in the list above</a>
+                <div class="form-group">
+                    <label class="form-check-label" asp-for="BookCondition">Book Condition</label>
+                    <select class="custom-select" asp-for="BookCondition">
+                        <option value="">Select the Book Condition</option>
+                        @foreach (var condition in conditions)
+                        {
+                            <option value="@condition.ConditionName">@condition.ConditionName</option>
+                        }
+
+                    </select>
                 </div>
                 <div class="form-group row">
                     <label asp-for="FrontPhoto" class="col-sm-2 col-form-label"></label>

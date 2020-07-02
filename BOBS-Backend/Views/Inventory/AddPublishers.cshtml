@@ -4,16 +4,13 @@
     <div>
         <div>
             <h1>
-                <span>Add a New Publisher to the DataBase</span>
+                <span>@ViewData["Status"]</span>
             </h1>
         </div>
         <form enctype="multipart/form-data" asp-controller="Inventory" asp-action="AddPublishers" method="post" style="padding-bottom: 0px;">
             <div asp-validation-summary="All"></div>
             <div class="panel-body">
-                <div class="form-group">
-                    <label class="form-check-label" asp-for="Publisher_Id">Publisher ID</label>
-                    <input class="form-control" asp-for="Publisher_Id" required />
-                </div>
+               
                 <div class="form-group">
                     <label class="form-check-label" asp-for="Name">Publisher Name</label>
                     <input class="form-control" asp-for="Name" required />

@@ -5,21 +5,25 @@ using Amazon.S3;
 using Amazon.S3.Transfer;
 using BOBS_Backend.Database;
 using BOBS_Backend.DataModel;
+using BOBS_Backend.Models;
 using BOBS_Backend.Models.Book;
+using BOBS_Backend.ViewModel;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore.Internal;
-using SixLabors.ImageSharp.Formats;
-using SixLabors.ImageSharp.Formats.Gif;
-using SixLabors.ImageSharp.Formats.Jpeg;
-using SixLabors.ImageSharp.Formats.Png;
-using SixLabors.ImageSharp.Processing;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Processing;
+using SixLabors.ImageSharp.Formats;
+using SixLabors.ImageSharp.Formats.Gif;
+using SixLabors.ImageSharp.Formats.Jpeg;
+using SixLabors.ImageSharp.Formats.Png;
 
 namespace BOBS_Backend
 {
@@ -27,7 +31,7 @@ namespace BOBS_Backend
     {
         public DatabaseContext _context;
         private IHostingEnvironment _env;
-       // private readonly BOBS_Backend.ViewModel. _booksview;
+        //   private readonly BOBS_Backend.ViewModel. _booksview;
         private const string photosBucketName = "bookcoverpictures";
         private const string audioBucketName = "audiosummary";
         private static readonly RegionEndpoint bucketRegion = RegionEndpoint.USEast1;
@@ -51,8 +55,8 @@ namespace BOBS_Backend
 
         public void SaveBook(Book book)
         {
-            var books = _context.Book.Find(book.ISBN);
-            if (books == null)
+           var books = _context.Book.Where(temp => temp.Name == book.Name && temp.Type == book.Type).ToList();
+            if (books.Count == 0)
             {
                 _context.Book.Add(book);
                 _context.SaveChanges();
@@ -69,18 +73,16 @@ namespace BOBS_Backend
 
         public void SavePublisherDetails(Publisher publisher)
         {
-            var publishers = _context.Publisher.Find(publisher.Publisher_Id);
+            var publishers = _context.Publisher.Find(publisher.Name);
             if (publishers == null)
             {
                 _context.Publisher.Add(publisher);
                 _context.SaveChanges();
             }
         }
-
-
         public IEnumerable<BookDetails> GetAllBooks()
         {
-            var booker = (from booke in _context.Book join price in _context.Price on booke.Book_Id equals price.Book.Book_Id select new BookDetails { BookName = booke.Name, Price = price.ItemPrice, Genre = booke.Genre, BookCondition = price.Condition, BookType = booke.Type, Quantity = price.Quantiy, front_url = booke.Front_Url, back_url = booke.Back_Url, left_url = booke.Left_Url, right_url = booke.Right_Url }).ToList();
+            var booker = (from booke in _context.Book join price in _context.Price on booke.Book_Id equals price.Book.Book_Id select new BookDetails { Publisher = booke.Publisher, BookName = booke.Name, Price = price.ItemPrice, Genre = booke.Genre, BookCondition = price.Condition, BookType = booke.Type, Quantity = price.Quantiy, front_url = booke.Front_Url, back_url = booke.Back_Url, left_url = booke.Left_Url, right_url = booke.Right_Url }).ToList();
             return booker;
         }
 
@@ -94,18 +96,18 @@ namespace BOBS_Backend
         {
             "jpg", "jpeg", "png", "gif"
         };
-           
-            
+
             var fileExt = Path.GetExtension(file.FileName).TrimStart('.');
-            // resize the image
+
             var resizeStream = await ResizeImage(file, fileExt);
+
             if (_validImageExtensions.Contains(fileExt))
             {
                 using (var fileStream = new FileStream(Path.Combine(dir, filename), FileMode.Create, FileAccess.Write))
                 {
                     resizeStream.CopyTo(fileStream);
                 }
-                s3Client = new AmazonS3Client("AKIA6DYNIKQLFG4HU2LU", "4RM8WQL3tH4+c7RgIQ/LPBHqt6ESwleokqsDx1Gf" ,bucketRegion);
+                s3Client = new AmazonS3Client("AKIA6DYNIKQLFG4HU2LU", "4RM8WQL3tH4+c7RgIQ/LPBHqt6ESwleokqsDx1Gf", bucketRegion);
 
 
                 var fileTransferUtility = new TransferUtility(s3Client);
@@ -118,7 +120,8 @@ namespace BOBS_Backend
             }
             return url;
         }
-        public async Task<Stream> ResizeImage(IFormFile file,string fileExt)
+
+        public async Task<Stream> ResizeImage(IFormFile file, string fileExt)
         {
             // create new memory stream.
             Stream result = new MemoryStream();
@@ -128,17 +131,17 @@ namespace BOBS_Backend
             // set height and width proportional
             var div = img.Width / new_size;
             var hgt = Convert.ToInt32(Math.Round((decimal)(img.Height / div)));
-            
+
             // change size of image
-            img.Mutate(x => x.Resize(new_size, hgt));
+            img.Mutate(x => x.Resize(200, hgt));
             //get the extension encoder
             IImageEncoder encoder = selectEncoder(fileExt);
             img.Save(result, encoder);
             result.Position = 0;
-            
+
             return result;
-           
-            
+
+
         }
 
         public IImageEncoder selectEncoder(string extension)
@@ -148,15 +151,19 @@ namespace BOBS_Backend
             switch (extension)
             {
                 case "png":
+                case "PNG":
                     encoder = new PngEncoder();
                     break;
                 case "jpeg":
+                case "JPEG":
                     encoder = new JpegEncoder();
                     break;
                 case "jpg":
+                case "JPG":
                     encoder = new JpegEncoder();
                     break;
                 case "gif":
+                case "GIF":
                     encoder = new GifEncoder();
                     break;
                 default:
@@ -238,68 +245,147 @@ namespace BOBS_Backend
             return response.ModerationLabels.Count == 0;
         }
 
-        public IEnumerable<BookDetails> GetRequestedBooks(string BookName , Publisher Publisher , Condition BookCondition , BOBS_Backend.Models.Book.Type type)
+        public IEnumerable<BookDetails> GetRequestedBooks(string BookName, string Publisher, string BookCondition, string type , string genre , string Searchfilter)
         {
-
-            var books = _context.Book.Where(books => books.Name.Contains(BookName));
-            if (BookName is null)
+            List<BookDetails> detail = new List<BookDetails>();
+            if ( BookName!= null)
             {
-              
-                var booker = (from booke in _context.Book join price in _context.Price on booke.Book_Id equals price.Book.Book_Id join publish in _context.Publisher on booke.Publisher.Publisher_Id equals publish.Publisher_Id where booke.Name.Contains(BookName) select new BookDetails { BookName = booke.Name, Price = price.ItemPrice, Publisher = publish.Name, Genre = booke.Genre, BookCondition = price.Condition, BookType = booke.Type, Quantity = price.Quantiy, front_url = booke.Front_Url, back_url = booke.Back_Url, left_url = booke.Left_Url, right_url = booke.Right_Url }).ToList();
+
+                var booker = (from booke in _context.Book join price in _context.Price on booke.Book_Id equals price.Book.Book_Id  where booke.Name.Contains(BookName) select new BookDetails { BookName = booke.Name, Price = price.ItemPrice, Publisher = booke.Publisher, Genre = booke.Genre, BookCondition = price.Condition, BookType = booke.Type, Quantity = price.Quantiy, front_url = booke.Front_Url, back_url = booke.Back_Url, left_url = booke.Left_Url, right_url = booke.Right_Url }).ToList();
                 return booker;
             }
 
-            var bookrie = (from booke in _context.Book join price in _context.Price on booke.Book_Id equals price.Book.Book_Id join publish in _context.Publisher on booke.Publisher.Publisher_Id equals publish.Publisher_Id where booke.Name.Contains(BookName) select new BookDetails { BookName = booke.Name, Price = price.ItemPrice, Publisher = publish.Name, Genre = booke.Genre, BookCondition = price.Condition, BookType = booke.Type, Quantity = price.Quantiy, front_url = booke.Front_Url, back_url = booke.Back_Url, left_url = booke.Left_Url, right_url = booke.Right_Url }).ToList();
-            return bookrie;
+            if (Publisher!=null)
+            {
+
+                var booker = (from booke in _context.Book join price in _context.Price on booke.Book_Id equals price.Book.Book_Id where booke.Publisher.Name == Publisher select new BookDetails { BookName = booke.Name, Price = price.ItemPrice, Publisher = booke.Publisher, Genre = booke.Genre, BookCondition = price.Condition, BookType = booke.Type, Quantity = price.Quantiy, front_url = booke.Front_Url, back_url = booke.Back_Url, left_url = booke.Left_Url, right_url = booke.Right_Url }).ToList();
+                return booker;
+            }
+
+            if (genre!=null)
+            {
+
+                var booker = (from booke in _context.Book join price in _context.Price on booke.Book_Id equals price.Book.Book_Id where booke.Genre.Name == genre select new BookDetails { BookName = booke.Name, Price = price.ItemPrice, Publisher = booke.Publisher, Genre = booke.Genre, BookCondition = price.Condition, BookType = booke.Type, Quantity = price.Quantiy, front_url = booke.Front_Url, back_url = booke.Back_Url, left_url = booke.Left_Url, right_url = booke.Right_Url }).ToList();
+                return booker;
+            }
+
+            if (BookCondition != "Condition")
+            {
+
+                var booker = (from booke in _context.Book join price in _context.Price on booke.Book_Id equals price.Book.Book_Id where price.Condition.ConditionName == BookCondition select new BookDetails { BookName = booke.Name, Price = price.ItemPrice, Publisher = booke.Publisher, Genre = booke.Genre, BookCondition = price.Condition, BookType = booke.Type, Quantity = price.Quantiy, front_url = booke.Front_Url, back_url = booke.Back_Url, left_url = booke.Left_Url, right_url = booke.Right_Url }).ToList();
+                return booker;
+            }
+
+            if (type != "Type")
+            {
+
+                var booker = (from booke in _context.Book join price in _context.Price on booke.Book_Id equals price.Book.Book_Id where booke.Type.TypeName == type select new BookDetails { BookName = booke.Name, Price = price.ItemPrice, Publisher = booke.Publisher, Genre = booke.Genre, BookCondition = price.Condition, BookType = booke.Type, Quantity = price.Quantiy, front_url = booke.Front_Url, back_url = booke.Back_Url, left_url = booke.Left_Url, right_url = booke.Right_Url }).ToList();
+                return booker;
+            }
+
+            return detail;
         }
 
 
-        public void AddPublishers(BOBS_Backend.Models.Book.Publisher publishers)
+        public int AddPublishers(BOBS_Backend.Models.Book.Publisher publishers)
         {
-            _context.Publisher.Add(publishers);
+
+            var publishName = _context.Publisher.Where(publisher => publisher.Name == publishers.Name).ToList();
+
+            if (publishName.Count == 0 )
+            {
+                _context.Publisher.Add(publishers);
+                _context.SaveChanges();
+                return 0;
+            }
+                return 1;
+            
+        }
+
+        public int AddGenres(BOBS_Backend.Models.Book.Genre genres)
+        {
+
+            var genreName = _context.Genre.Where(genre => genre.Name == genres.Name).ToList();
+
+            if (genreName.Count == 0)
+            {
+                _context.Genre.Add(genres);
+                _context.SaveChanges();
+                return 0;
+            }
+                return 1;
+           
+        }
+
+        //Saving an added book to the Inventory
+        public int AddBookTypes(BOBS_Backend.Models.Book.Type booktype)
+        {
+
+            var typeName = _context.Type.Where(type => type.TypeName == booktype.TypeName).ToList();
+            var typeId = _context.Type.Where(type => type.Type_Id == booktype.Type_Id).ToList();
+
+            if (typeName.Count == 0 )
+            {
+                _context.Type.Add(booktype);
+                _context.SaveChanges();
+                return 0;
+            }
+                return 1;
+          
+        }
+
+
+
+        public int AddBookConditions(BOBS_Backend.Models.Book.Condition bookcondition)
+        {
+            _context.Condition.Add(bookcondition);
             _context.SaveChanges();
+
+            var conditionName = _context.Condition.Where(condition => condition.ConditionName == bookcondition.ConditionName).ToList();
+
+            if (conditionName.Count == 0 )
+            {
+                _context.Condition.Add(bookcondition);
+                _context.SaveChanges();
+                return 0;
+            }
+                return 1;
+            
         }
 
-        public void AddGenres(BOBS_Backend.Models.Book.Genre genres)
-        {
-            _context.Genre.Add(genres);
-            _context.SaveChanges();
-        }
-
-        public void AddBookTypes(BOBS_Backend.Models.Book.Type booktype)
-        {
-            _context.Type.Add(booktype);
-            _context.SaveChanges();
-        }
-
-        public IEnumerable<Publisher> GetAllPublishers()
+        //For Displaying All the existing Publishers in the drop down menu for AddInventory and Search Pages
+        public List<BOBS_Backend.Models.Book.Publisher> GetAllPublishers()
         {
 
-            var publishers = _context.Publisher;
+            var publishers = _context.Publisher.ToList();
             return publishers;
         }
 
-        public IEnumerable<Genre> GetGenres()
+        //For Displaying All the existing Genres in the drop down menu for AddInventory and Search Pages
+        public List<BOBS_Backend.Models.Book.Genre> GetGenres()
         {
 
-            var genres = _context.Genre;
+            var genres = _context.Genre.ToList();
             return genres;
         }
-         
-        public List<string> GetTypes()
+
+        //For Displaying All the existing Book Types in the drop down menu for AddInventory and Search Pages
+        public List<BOBS_Backend.Models.Book.Type> GetTypes()
         {
-            List<string> typelist = new List<string>();
-            var types = _context.Type;
+            var typelist = _context.Type.ToList();
+            return typelist;
 
-            foreach( var i in types)
-            {
-                typelist.Add(i.TypeName);
-            }
+        }
 
-            return typelist; ;
+        //For Displaying All the existing BookConditions in the drop down menu for AddInventory and Search Pages
+        public List<BOBS_Backend.Models.Book.Condition> GetConditions()
+        {
+            var conditions = _context.Condition.ToList();
+            return conditions;
 
         }
     }
+  
 }
 
 
