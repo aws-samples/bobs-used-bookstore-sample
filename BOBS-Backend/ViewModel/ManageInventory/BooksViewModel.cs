@@ -7,7 +7,6 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.AspNetCore.Http;
 using BOBS_Backend.DataModel;
-using BOBS_Backend.Models;
 using Microsoft.EntityFrameworkCore.Internal;
 using BOBS_Backend.Database;
 
@@ -21,9 +20,9 @@ namespace BOBS_Backend.ViewModel
         public long BookId { get; set; }
         public long publisherId { get; set; }
         public string PublisherName { get; set; }
-        public BOBS_Backend.Models.Book.Type BookType { get; set; }
-        public BOBS_Backend.Models.Book.Genre genre { get; set; }
-        public BOBS_Backend.Models.Book.Condition BookCondition { get; set; }
+        public string BookType { get; set; }
+        public string genre { get; set; }
+        public string BookCondition { get; set; }
         public long PriceId { get; set; }
         public double price { get; set; }
         public int quantity { get; set; }
@@ -35,6 +34,8 @@ namespace BOBS_Backend.ViewModel
         public IFormFile RightSidePhoto { get; set; }
 
         public List<string> booktypes { get; set; }
+
+        public string Summary { get; set; }
 
     }
 }

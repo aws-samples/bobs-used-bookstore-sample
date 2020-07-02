@@ -1,5 +1,157 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model BOBS_Backend.ViewModel.FetchBooksViewModel
 @{
+    ViewData["Title"] = "Checkout";
+    var types = (List<BOBS_Backend.Models.Book.Type>)ViewData["Types"];
+    var publishers = (List<BOBS_Backend.Models.Book.Publisher>)ViewData["Publishers"];
+    var genres = (List<BOBS_Backend.Models.Book.Genre>)ViewData["Genres"];
+    var conditions = (List<BOBS_Backend.Models.Book.Condition>)ViewData["Conditions"];
+    var count = @Model.Books.Count();
+
 }
+    @if (Model.searchfilter != "")
+    {
+    <form enctype="multipart/form-data" asp-controller="Inventory" asp-action="Search" method="post" style="padding-bottom: 0px;">
+        <div class="form-group">
+            <select  class="custom-select" asp-for="searchfilter">
+                <option  value="">Filter By</option>
+                <option value="BookName">Book Name</option>
+                <option value="Publisher">Publisher</option>
+                <option value="Genre">Genre</option>
+                <option value="Condition">Condition</option>
+                <option value="Type">Type</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <button style="align-self" type="submit">Submit</button>
+        </div>
+    </form>
+    }
+    <form enctype="multipart/form-data" asp-controller="Inventory" asp-action="Search" method="post" style="padding-bottom: 0px;">
+        @if (Model.searchfilter == "BookName")
+        {
+            <div class="form-group">
+                <label class="checkout__input-label" asp-for="BookName">Book Name</label>
+                <input class="form-control checkout__subject-input" asp-for="BookName" required />
+            </div>
+            <div class="form-group">
+                <button style="align-self" type="submit">Submit</button>
+            </div>
+
+        }
+        @if (Model.searchfilter == "Publisher")
+        {
+            <div class="form-group">
+                <label class="form-check-label" asp-for="publisher">Filter By Publisher Name</label>
+                <select class="custom-select" asp-for="publisher">
+                    <option value="">Select the Publisher</option>
+                    @foreach (var publisher in publishers)
+                    {
+                        <option value="@publisher.Name">@publisher.Name</option>
+                    }
+                </select>
+            </div>
+            <div class="form-group">
+                <button style="align-self" type="submit">Submit</button>
+            </div>
+        }
+        @if (Model.searchfilter == "Genre")
+        {
+            <div class="form-group">
+                <label class="form-check-label" asp-for="genre">Filter By Genre</label>
+                <select class="custom-select" asp-for="genre">
+                    <option value="">Select the Genre</option>
+                    @foreach (var genre in genres)
+                    {
+                        <option value="@genre.Name">@genre.Name</option>
+                    }
+
+                </select>
+            </div>
+            <div class="form-group">
+                <button style="align-self" type="submit">Submit</button>
+            </div>
+        }
+        @if (Model.searchfilter == "Type")
+        {
+            <div class="form-group">
+                <label class="form-check-label" asp-for="BookType">Filter By Book Type</label>
+                <select class="custom-select" asp-for="BookType">
+                    <option value="">Select the Book Type</option>
+                    @foreach (var type in types)
+                    {
+                        <option value="@type.TypeName">@type.TypeName</option>
+                    }
+
+                </select>
+            </div>
+            <div class="form-group">
+                <button style="align-self" type="submit">Submit</button>
+            </div>
+        }
+        @if (Model.searchfilter == "Type")
+        {
+            <div class="form-group">
+                <label class="form-check-label" asp-for="Condition">Filter By Book Condition</label>
+                <select class="custom-select" asp-for="Condition">
+                    <option value="">Select the Book Condition</option>
+                    @foreach (var condition in conditions)
+                    {
+                        <option value="@condition.ConditionName">@condition.ConditionName</option>
+                    }
+
+                </select>
+            </div>
+            <div class="form-group">
+                <button style="align-self" type="submit">Submit</button>
+            </div>
+        }
+        
+        @if (count != 0)
+        {
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="row">BookName</th>
+                            <th scope="row">Publisher</th>
+                            <th scope="row">Genre</th>
+                            <th scope="row">BookType</th>
+                            <th scope="row">BookCondition</th>
+                            <th scope="row">Price</th>
+                            <th scope="row">Quantity</th>
+                            <th scope="row">Front Cover</th>
+                            <th scope="row">Back Cover</th>
+                            <th scope="row">Left Cover</th>
+                            <th scope="row">Right Cover</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var book in Model.Books)
+                        {
+                        <th scope="row"></th>
+                        <tr>
+                            <td>@book.BookName</td>
+                            <td>@book.Publisher.Name</td>
+                            <td>@book.Genre.Name</td>
+                            <td>@book.BookType.TypeName</td>
+                            <td>@book.BookCondition.ConditionName</td>
+                            <td>$@book.Price</td>
+                            <td>@book.Quantity</td>
+                            <td><img src="@book.front_url" /></td>
+                            <td>
+                                <form asp-controller="Home" asp-action="Index" method="post">
+                                    <button class="btn pull-right" type="submit">Back</button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            { <h1>Sorry , Could'nt find any relevant books. Try again !!</h1>
+
+            }
+    </form>

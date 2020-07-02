@@ -1,6 +1,7 @@
 ﻿using Amazon.Auth.AccessControlPolicy;
 using BOBS_Backend.DataModel;
 using BOBS_Backend.Models;
+using BOBS_Backend.Models.Book;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,14 +13,14 @@ namespace BOBS_Backend.ViewModel
     public class FetchBooksViewModel
     {
         public string BookName { get; set; }
-
-        public Condition condition { get; set; }
-
-        public BOBS_Backend.Models.Book.Type BookType { get; set; }
-
-        public BOBS_Backend.Models.Book.Publisher publisher { get; set; }
+        public string publisher { get; set; }
+        public string BookType { get; set; }
+        public string genre { get; set; }
+        public string Condition { get; set; }
 
         public IEnumerable<BookDetails> Books { get; set; }
+
+        public string searchfilter { get; set; }
 
     }
 }

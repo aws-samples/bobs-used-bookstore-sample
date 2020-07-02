@@ -26,6 +26,7 @@
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
 	<PackageReference Include="AWSSDK.Rekognition" Version="3.3.106" />
 	<PackageReference Include="AWSSDK.S3" Version="3.3.111.14" />
+	<PackageReference Include="SixLabors.ImageSharp" Version="1.0.0-rc0003" />
   </ItemGroup>
 
 </Project>
