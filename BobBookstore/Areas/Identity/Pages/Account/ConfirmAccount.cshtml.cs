@@ -63,9 +63,7 @@ namespace BobBookstore.Areas.Identity.Pages.Account
                 }
                 else
                 {
-                    //[Bind("Customer_Id,Username,FirstName,LastName,Email,DateOfBirth,Phone")]
-                    //var customer_Id = Convert.ToInt32(user.UserID);
-                    //var userName = user.Attributes[CognitoAttribute.UserName.AttributeName];
+                    //this part is to add customer information into the DB,birthday need to be convert
                     var userName = await _userManager.GetUserNameAsync(user);
                     var firstName = user.Attributes[CognitoAttribute.GivenName.AttributeName];
                     var lastName = user.Attributes[CognitoAttribute.FamilyName.AttributeName];

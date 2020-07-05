@@ -5,11 +5,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using Amazon.AspNetCore.Identity.Cognito;
 using Amazon.Extensions.CognitoAuthentication;
+using BobBookstore.Data;
+using BobBookstore.Models.Customer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.View;
 
 namespace BobBookstore.Areas.Identity.Pages.Account.Manage
 {
@@ -18,6 +21,7 @@ namespace BobBookstore.Areas.Identity.Pages.Account.Manage
     {
         private readonly CognitoUserManager<CognitoUser> _userManager;
         private readonly SignInManager<CognitoUser> _signInManager;
+        private readonly UsedBooksContext _context;
 
         [BindProperty]
         public AccountModel Input { get; set; }
@@ -29,10 +33,12 @@ namespace BobBookstore.Areas.Identity.Pages.Account.Manage
 
         public ManageAccountModel(
             UserManager<CognitoUser> userManager,
-            SignInManager<CognitoUser> signInManager)
+            SignInManager<CognitoUser> signInManager,
+            UsedBooksContext context)
         {
             _userManager = userManager as CognitoUserManager<CognitoUser>;
             _signInManager = signInManager;
+            _context = context;
         }
 
         public class AccountModel
@@ -70,6 +76,7 @@ namespace BobBookstore.Areas.Identity.Pages.Account.Manage
 
             [Display(Name = "Country")]
             public string Country { get; set; }
+            [Range(0, int.MaxValue, ErrorMessage = "Please enter valid integer Number")]
             [Display(Name = "Zip Code")]
             public string ZipCode { get; set; }
 
@@ -187,7 +194,7 @@ namespace BobBookstore.Areas.Identity.Pages.Account.Manage
         {
             var user = await _userManager.GetUserAsync(User);
             
-            
+
             if (user == null)
             {
                 return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
@@ -264,6 +271,7 @@ namespace BobBookstore.Areas.Identity.Pages.Account.Manage
             user.Attributes["custom:City"] = Input.City;
             user.Attributes["custom:State"] = Input.State;
             user.Attributes["custom:Country"] = Input.Country;
+            
             user.Attributes["custom:ZipCode"] = Input.ZipCode;
             
             var result = await _userManager.UpdateAsync(user);
@@ -274,6 +282,86 @@ namespace BobBookstore.Areas.Identity.Pages.Account.Manage
                 {
                     ModelState.AddModelError(string.Empty, error.Description);
                 }
+            }
+            //input customer information into the DB
+            else
+            {
+
+                var email = user.Attributes[CognitoAttribute.Email.AttributeName];
+                var customer = from m in _context.Customer
+                               select m;
+                customer = customer.Where(s => s.Email==email);
+                //customer =customer.Where(s=>s.Username.)
+                
+                long id=0;
+                foreach (var m in customer)
+                {
+                    if(m.Email==email)
+                    {
+                        id = m.Customer_Id;
+                    }
+                       
+                }
+                //get customer information
+                var recentCustomer = await _context.Customer.FindAsync(id);
+                var address = from m in _context.Address
+                              select m;
+                address = address.Where(s => s.Customer==recentCustomer);
+                Address recentAddress = new Address();
+                foreach (var add in address)
+                {
+                    //addressId = add.Address_Id;
+                    recentAddress = add;
+                }
+                //var recentAddress =await  _context.Address.FindAsync(addressId);
+                recentAddress.AddressLine1 = Input.AddressLine1;
+                recentAddress.AddressLine2 = Input.AddressLine2;
+                recentAddress.City = Input.City;
+                recentAddress.Country = Input.Country;
+                recentAddress.ZipCode = Convert.ToInt32(Input.ZipCode);
+                recentAddress.State = Input.State;
+                recentAddress.Customer = recentCustomer;
+                recentAddress.IsPrimary = true;
+                _context.Update(recentAddress);
+                await _context.SaveChangesAsync();
+
+                //if (address==null)
+                //{
+                //    var recentAddress = new Address()
+                //    {
+                //        AddressLine1 = Input.AddressLine1,
+                //        AddressLine2 = Input.AddressLine2,
+                //        City = Input.City,
+                //        Country = Input.Country,
+                //        Customer = recentCustomer,
+                //        ZipCode = Convert.ToInt32(Input.ZipCode),
+                //        IsPrimary=true,
+                //        State=Input.State
+                //    };
+                //    _context.Add(recentAddress);
+                //    await _context.SaveChangesAsync();
+                //}
+                //else
+                //{
+                //    long addressId=0;
+                //    Address recentAddress = new Address();
+                //    foreach (var add in address)
+                //    {
+                //        //addressId = add.Address_Id;
+                //        recentAddress = add;
+                //    }
+                //    //var recentAddress =await  _context.Address.FindAsync(addressId);
+                //    recentAddress.AddressLine1 = Input.AddressLine1;
+                //    recentAddress.AddressLine2 = Input.AddressLine2;
+                //    recentAddress.City = Input.City;
+                //    recentAddress.Country = Input.Country;
+                //    recentAddress.ZipCode = Convert.ToInt32(Input.ZipCode);
+                //    recentAddress.State = Input.State;
+                //    recentAddress.Customer = recentCustomer;
+                //    _context.Update(recentAddress);
+                //    await _context.SaveChangesAsync();
+                //}
+
             }
             return RedirectToPage();
         }
