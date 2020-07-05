@@ -1,4 +1,5 @@
 ﻿using BOBS_Backend.Models.Order;
+using BOBS_Backend.ViewModel.ManageOrders;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +16,7 @@ namespace BOBS_Backend.Repository.OrdersInterface
 
         Task<Order> FindOrderById(long id);
 
-        Task<List<Order>> GetAllOrders();
+        Task<ManageOrderViewModel> GetAllOrders(int pageNum);
 
         Task<List<Order>> FilterList(string filterValue, string searchString);
 

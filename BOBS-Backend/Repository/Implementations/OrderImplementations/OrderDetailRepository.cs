@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using BOBS_Backend.Repository.OrdersInterface;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
 namespace BOBS_Backend.Repository.Implementations.OrderImplementations
 {
@@ -24,6 +25,8 @@ namespace BOBS_Backend.Repository.Implementations.OrderImplementations
         {
             _context = context;
         }
+
+  
 
         // Finds One instance of Order Detail Model by Order Detail Id
         public async Task<OrderDetail> FindOrderDetailById(long id)
@@ -46,6 +49,7 @@ namespace BOBS_Backend.Repository.Implementations.OrderImplementations
         // Finds a List of Order Details by the assoicated Order Id
         public async Task<List<OrderDetail>> FindOrderDetailByOrderId(long orderId)
         {
+
             var orderDetails = await _context.OrderDetail
                                     .Where(x => x.Order.Order_Id == orderId)
                                     .Include(o => o.Book)

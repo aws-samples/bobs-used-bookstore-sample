@@ -6,6 +6,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using BOBS_Backend.Repository.OrdersInterface;
+using BOBS_Backend.ViewModel.ManageOrders;
+using System.Reflection.PortableExecutable;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace BOBS_Backend.Repository.Implementations.OrderImplementations
 {
@@ -16,6 +19,7 @@ namespace BOBS_Backend.Repository.Implementations.OrderImplementations
          */
 
         private DatabaseContext _context;
+        private readonly int _ordersPerPage = 30;
 
 
         // Set up connection to Database 
@@ -39,15 +43,30 @@ namespace BOBS_Backend.Repository.Implementations.OrderImplementations
 
 
         // Find All the Orders in the Table
-        public async Task<List<Order>> GetAllOrders()
+        public async Task<ManageOrderViewModel> GetAllOrders(int pageNum)
         {
+
+            ManageOrderViewModel viewModel = new ManageOrderViewModel();
+
+            var totalPages = (_context.Order.Count() / _ordersPerPage) + 1 ;
+
             var orders = await _context.Order
                             .Include(order => order.Customer)
                             .Include(order => order.Address)
                             .Include(order => order.OrderStatus)
+                            .Skip((pageNum - 1) * _ordersPerPage)
+                            .Take(_ordersPerPage)
                             .ToListAsync();
 
-            return orders;
+            int[] pages = Enumerable.Range(1, totalPages).ToArray();
+
+            viewModel.Orders = orders;
+            viewModel.Pages = pages;
+            viewModel.HasPreviousPages = (pageNum > 1);
+            viewModel.CurrentPage = pageNum;
+            viewModel.HasNextPages = (pageNum < totalPages);
+
+            return viewModel;
         }
 
         // Returns a List of Orders filtered by the Order Id

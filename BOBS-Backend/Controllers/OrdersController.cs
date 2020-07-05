@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 using BOBS_Backend.ViewModel.ProcessOrders;
+using System.Runtime.InteropServices;
 
 namespace BOBS_Backend.Controllers
 {
@@ -27,18 +28,32 @@ namespace BOBS_Backend.Controllers
             _order = order;
             _orderStatus = orderStatus;
         }
-        
-        public async Task<IActionResult> Index(string filterValue, string searchString)
-        {
 
+        //public List<string> GetFilterName()
+        //{
+        //    List<string> filterName = new List<string>();
+
+        //    filterName.Add("Order Id");
+        //    filterName.Add("Order Status");
+        //    filterName.Add("Customer Id");
+        //    filterName.Add("First Name");
+        //    filterName.Add("Last Name");
+        //    filterName.Add("Email");
+        //    filterName.Add("Phone");
+        //    filterName.Add("Order Id");
+        //}
+        
+        public async Task<IActionResult> Index(string filterValue, string searchString, int pageNum)
+        {
+            if (pageNum == 0) pageNum++;
        
             if ( (String.IsNullOrEmpty(searchString)  && String.IsNullOrEmpty(filterValue)) || filterValue.Contains("All Orders"))
             {
-                var orders = await _order.GetAllOrders();
+                var orders = await _order.GetAllOrders(pageNum);
 
                 ViewData["AllOrders"] = orders;
 
-                return View();
+                return View(orders);
             }
             else if (!String.IsNullOrEmpty(searchString) && !String.IsNullOrEmpty(filterValue))
             {

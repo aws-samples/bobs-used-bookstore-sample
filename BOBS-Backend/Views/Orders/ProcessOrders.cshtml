@@ -26,17 +26,17 @@
     </div>
 
     <div class="row">
-        <div class="text-left col-2">
+        <div class="text-left col-3">
             <a asp-controller="Orders" asp-action="Index" class="card-link"> 
                 <svg class="bi bi-chevron-left" width="24" height="24" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z" /></svg>
                 Manage Orders
             </a>
         </div>
-        <div class="text-center col-7">
+        <div class="text-center col-6">
             <h3>Status: @fullOrder.Order.OrderStatus.Status</h3>
         </div>
         <div class="col-3 text-right">
-            <partial name="./Shared/_UpdateOrderStatus" model="Model"/>
+            <partial name="./Partials/_UpdateOrderStatus" model="Model"/>
         </div>
     </div>
 
@@ -48,25 +48,24 @@
 
     <div class="row" style="margin-top:35px">
 
-        <div class="col-4">
-            <partial name="./Shared/_OrderInfo" model="fullOrder"/>
+        <div class="col-3">
+            <partial name="./Partials/_OrderInfo" model="fullOrder" />
         </div>
 
-        <div class="col-8">
-            <partial name="./Shared/_CustomerInfo" model="fullOrder"/>
+        <div class="col-5">
+            <partial name="./Partials/_CustomerInfo" model="fullOrder" />
+        </div>
+
+        <div class="col-4">
+            <partial name="./Partials/_AddressInfo" model="fullOrder" />
         </div>
     </div>
 
     <div class="row" style="margin-top:35px">
 
-        <div class="col-6">
-            <partial name="./Shared/_BookList" model="fullOrder"/>
+        <div class="col-12">
+            <partial name="./Partials/_BookList" model="fullOrder" />
         </div>
-
-        <div class="col-5">
-            <partial name="./Shared/_AddressInfo" model="fullOrder"/>
-        </div>
-
     </div>
 
     <div class="row" style="margin-top:35px">

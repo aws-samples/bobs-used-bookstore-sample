@@ -4,8 +4,8 @@
     ViewData["Title"] = "Hello";
 }
 @{
-    var orders = (IEnumerable<BOBS_Backend.Models.Order.Order>)ViewData["AllOrders"];
-  
+    var orders = Model.Orders;
+
 }
 <div class="container">
     <div class="text-center">
@@ -13,7 +13,7 @@
     </div>
     <div class="row" style="margin:15px;">
         <div class="col-12">
-            <form class="input-group mb-3" asp-controller="Orders" asp-action="Index" method="get">
+            @*<form class="input-group mb-3" asp-controller="Orders" asp-action="Index" method="get">
                 <select class="col-2 custom-select" id="inputGroupSelect01" asp-for="FilterValue">
                     <option selected value="Empty">Filter By</option>
                     <option value="All Orders">All Orders</option>
@@ -25,7 +25,7 @@
                 </select>
                 <input type="text" asp-for="SearchString" class="form-control" aria-label="Text input with dropdown button">
                 <button class="btn btn-outline-secondary" type="submit">Submit</button>
-            </form>
+            </form>*@
         </div>
     </div>
 
@@ -63,6 +63,55 @@
             }
         }
 
+    </div>
+
+    <div class="row d-flex justify-content-center" style="margin-top:35px;">
+        
+        <ul class="list-group-horizontal list-group text-center">
+            @if (Model.HasPreviousPages)
+            {
+                var prevPag = new Dictionary<string, string>
+                    {
+                        {"filterValue",""},
+                        {"searchString",""},
+                        {"pageNum",Model.CurrentPage-1+""}
+                     };
+
+                <a asp-controller="Orders" asp-action="Index" asp-all-route-data="prevPag" style=" padding:.50rem; padding-right:.2s5rem">
+                    Previous
+                </a>
+            }
+            @foreach (var page in Model.Pages)
+            {
+                if (Model.CurrentPage == page)
+                {
+                    <li class="list-group-item" style="border:none; padding:.50rem;"><span>@(page)</span></li>
+                }
+                else
+                {
+                    var pag = new Dictionary<string, string>
+                    {
+                        {"filterValue",""},
+                        {"searchString",""},
+                        {"pageNum",page+""}
+                     };
+                    <li class="list-group-item" style="border:none; padding:.50rem;"><a asp-controller="Orders" asp-action="Index" asp-all-route-data="pag">@(page)</a></li>
+                }
+            }
+            @if (Model.HasNextPages)
+            {
+                var nextPag = new Dictionary<string, string>
+                    {
+                        {"filterValue",""},
+                        {"searchString",""},
+                        {"pageNum",Model.CurrentPage+1+""}
+                     };
+
+                <a asp-controller="Orders" asp-action="Index" asp-all-route-data="nextPag" style=" padding:.50rem; padding-right:.2s5rem">
+                    Next
+                </a>
+            }
+        </ul>
     </div>
 
 </div>
