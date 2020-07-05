@@ -1,4 +1,4 @@
-﻿@model IEnumerable<BobBookstore.Models.Book.Book>
+﻿@model IEnumerable<BobBookstore.Models.ViewModels.BookViewModel>
 @{
     ViewData["Title"] = "Index";
 }
@@ -17,15 +17,17 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Name)
+                @Html.DisplayNameFor(model => model.BookName)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.ISBN)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Genre)
+                @Html.DisplayNameFor(model => model.GenreName)
             </th>
-            <th></th>
+            <th>
+                @Html.DisplayNameFor(model => model.TypeName)
+            </th>
         </tr>
     </thead>
     <tbody>
@@ -33,16 +35,22 @@
         {
         <tr>
             <td>
-                @Html.DisplayFor(modelitem => item.Name)
+                @Html.DisplayFor(modelitem => item.BookName)
             </td>
             <td>
                 @Html.DisplayFor(modelitem => item.ISBN)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Genre.Name)
+                @Html.DisplayFor(modelItem => item.GenreName)
             </td>
             <td>
-                Details
+                @Html.DisplayFor(modelitem => item.TypeName) 
+            </td>
+            <td>
+                <form asp-controller="Search" asp-action="Detail" method="get">
+                    <input type="hidden" name="id" value="@item.BookId" />
+                    <input type="submit" value="details" />
+                </form>
             </td>
         </tr>
         }
