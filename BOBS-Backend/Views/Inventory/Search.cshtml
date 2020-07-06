@@ -8,150 +8,63 @@
     var count = @Model.Books.Count();
 
 }
-    @if (Model.searchfilter != "")
+@if (Model.searchfilter != "")
+{
+    <div class="container">
+        <div class="text-center">
+            <h2>Search For Books</h2>
+        </div>
+        <div class="row" style="margin:15px;">
+            <div class="col-12">
+                <form enctype="multipart/form-data" class="input-group mb-3" asp-controller="Inventory" asp-action="Search" method="post" style="padding-bottom: 0px;">
+                    <select class="col-2 custom-select" id="inputGroupSelect01" asp-for="searchby">
+                        <option selected value="">Filter By</option>
+                        <option value="BookName">Book Name</option>
+                        <option value="Publisher">Publisher</option>
+                        <option value="Genre">Genre</option>
+                        <option value="Condition">Condition</option>
+                        <option value="Type">Type</option>
+                    </select>
+                    <input type="text" asp-for="searchfilter" class="form-control" aria-label="Text input with dropdown button">
+                    <button class="btn btn-outline-secondary" type="submit">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+ }
+   
+    @if (count != 0)
     {
-    <form enctype="multipart/form-data" asp-controller="Inventory" asp-action="Search" method="post" style="padding-bottom: 0px;">
-        <div class="form-group">
-            <select  class="custom-select" asp-for="searchfilter">
-                <option  value="">Filter By</option>
-                <option value="BookName">Book Name</option>
-                <option value="Publisher">Publisher</option>
-                <option value="Genre">Genre</option>
-                <option value="Condition">Condition</option>
-                <option value="Type">Type</option>
-            </select>
+        <div class="container">
+            <div class="row border-top-2">
+                @foreach (var book in Model.Books)
+                {                  
+                   <div class="col-4" style="margin-top:20px;">
+                        <div class="card" style="width: 20rem;">
+                            <img class="card-img-top" src="@book.front_url" alt="Card image cap">
+                            <div class="card-body">
+                                <h5 class="card-title">@book.BookName</h5>
+                                <p class="card-text"></p>
+                            </div>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item">Publisher : @book.Publisher.Name</li>
+                                <li class="list-group-item">Genre     : @book.Genre.Name</li>
+                                <li class="list-group-item">Type      : @book.BookType.TypeName</li>
+                                <li class="list-group-item">Condition : @book.BookCondition.ConditionName</li>
+                                <li class="list-group-item">Price     : $@book.Price</li>
+                                <li class="list-group-item">Quantity  : @book.Quantity</li>
+                            </ul>
+                            <div class="card-body">
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
         </div>
 
-        <div class="form-group">
-            <button style="align-self" type="submit">Submit</button>
-        </div>
-    </form>
+     }
+    else
+    { <h1>Sorry , Could'nt find any relevant books. Try again !!</h1>
+
     }
-    <form enctype="multipart/form-data" asp-controller="Inventory" asp-action="Search" method="post" style="padding-bottom: 0px;">
-        @if (Model.searchfilter == "BookName")
-        {
-            <div class="form-group">
-                <label class="checkout__input-label" asp-for="BookName">Book Name</label>
-                <input class="form-control checkout__subject-input" asp-for="BookName" required />
-            </div>
-            <div class="form-group">
-                <button style="align-self" type="submit">Submit</button>
-            </div>
 
-        }
-        @if (Model.searchfilter == "Publisher")
-        {
-            <div class="form-group">
-                <label class="form-check-label" asp-for="publisher">Filter By Publisher Name</label>
-                <select class="custom-select" asp-for="publisher">
-                    <option value="">Select the Publisher</option>
-                    @foreach (var publisher in publishers)
-                    {
-                        <option value="@publisher.Name">@publisher.Name</option>
-                    }
-                </select>
-            </div>
-            <div class="form-group">
-                <button style="align-self" type="submit">Submit</button>
-            </div>
-        }
-        @if (Model.searchfilter == "Genre")
-        {
-            <div class="form-group">
-                <label class="form-check-label" asp-for="genre">Filter By Genre</label>
-                <select class="custom-select" asp-for="genre">
-                    <option value="">Select the Genre</option>
-                    @foreach (var genre in genres)
-                    {
-                        <option value="@genre.Name">@genre.Name</option>
-                    }
-
-                </select>
-            </div>
-            <div class="form-group">
-                <button style="align-self" type="submit">Submit</button>
-            </div>
-        }
-        @if (Model.searchfilter == "Type")
-        {
-            <div class="form-group">
-                <label class="form-check-label" asp-for="BookType">Filter By Book Type</label>
-                <select class="custom-select" asp-for="BookType">
-                    <option value="">Select the Book Type</option>
-                    @foreach (var type in types)
-                    {
-                        <option value="@type.TypeName">@type.TypeName</option>
-                    }
-
-                </select>
-            </div>
-            <div class="form-group">
-                <button style="align-self" type="submit">Submit</button>
-            </div>
-        }
-        @if (Model.searchfilter == "Type")
-        {
-            <div class="form-group">
-                <label class="form-check-label" asp-for="Condition">Filter By Book Condition</label>
-                <select class="custom-select" asp-for="Condition">
-                    <option value="">Select the Book Condition</option>
-                    @foreach (var condition in conditions)
-                    {
-                        <option value="@condition.ConditionName">@condition.ConditionName</option>
-                    }
-
-                </select>
-            </div>
-            <div class="form-group">
-                <button style="align-self" type="submit">Submit</button>
-            </div>
-        }
-        
-        @if (count != 0)
-        {
-            <div class="table-responsive">
-                <table class="table table-hover">
-                    <thead>
-                        <tr>
-                            <th scope="row">BookName</th>
-                            <th scope="row">Publisher</th>
-                            <th scope="row">Genre</th>
-                            <th scope="row">BookType</th>
-                            <th scope="row">BookCondition</th>
-                            <th scope="row">Price</th>
-                            <th scope="row">Quantity</th>
-                            <th scope="row">Front Cover</th>
-                            <th scope="row">Back Cover</th>
-                            <th scope="row">Left Cover</th>
-                            <th scope="row">Right Cover</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var book in Model.Books)
-                        {
-                        <th scope="row"></th>
-                        <tr>
-                            <td>@book.BookName</td>
-                            <td>@book.Publisher.Name</td>
-                            <td>@book.Genre.Name</td>
-                            <td>@book.BookType.TypeName</td>
-                            <td>@book.BookCondition.ConditionName</td>
-                            <td>$@book.Price</td>
-                            <td>@book.Quantity</td>
-                            <td><img src="@book.front_url" /></td>
-                            <td>
-                                <form asp-controller="Home" asp-action="Index" method="post">
-                                    <button class="btn pull-right" type="submit">Back</button>
-                                </form>
-                            </td>
-                        </tr>
-                    }
-                        </tbody>
-                    </table>
-                </div>
-            }
-            else
-            { <h1>Sorry , Could'nt find any relevant books. Try again !!</h1>
-
-            }
-    </form>

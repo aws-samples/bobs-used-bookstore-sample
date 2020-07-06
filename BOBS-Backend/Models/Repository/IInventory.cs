@@ -34,7 +34,7 @@ namespace BOBS_Backend
 
         public Task<bool> IsBook(string bucket, string key);
 
-        public IEnumerable<BookDetails> GetRequestedBooks(string BookName, string Publisher, string BookCondition, string type , string genre , string Searchfilter);
+        public IEnumerable<BookDetails> GetRequestedBooks(string searchby, string Searchfilter);
 
         public int AddPublishers(BOBS_Backend.Models.Book.Publisher publishers);
 
@@ -56,6 +56,7 @@ namespace BOBS_Backend
 
         public  Task<Stream> ResizeImage(IFormFile file, string fileExt);
 
+        public BookDetails GetBookDetails(long bookid, long priceid);
 
 
     }

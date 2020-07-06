@@ -96,7 +96,7 @@ namespace BOBS_Backend.Controllers
                        
                 }
 
-                return RedirectToAction("Home/WelcomePage");
+                return RedirectToAction("Search");
             }
             return View(bookview);
         }
@@ -113,12 +113,6 @@ namespace BOBS_Backend.Controllers
         {
             BOBS_Backend.ViewModel.FetchBooksViewModel books = new BOBS_Backend.ViewModel.FetchBooksViewModel();
             books.Books = _Inventory.GetAllBooks();
-            
-
-            ViewData["Types"] = _Inventory.GetTypes();
-            ViewData["Publishers"] = _Inventory.GetAllPublishers();
-            ViewData["Genres"] = _Inventory.GetGenres();
-            ViewData["Conditions"] = _Inventory.GetConditions();
             return View(books);
         }
 
@@ -126,30 +120,13 @@ namespace BOBS_Backend.Controllers
         [HttpPost]
         public IActionResult Search(BOBS_Backend.ViewModel.FetchBooksViewModel filteredbooks)
         {
-            if(filteredbooks.searchfilter == "")
+            if(filteredbooks.searchfilter == " ")
             {
                 return RedirectToAction("Search");
             }
 
-            if (filteredbooks.searchfilter != "" && filteredbooks.publisher == null && filteredbooks.BookType == null && filteredbooks.BookName == null && filteredbooks.BookType == null && filteredbooks.Condition == null && filteredbooks.genre ==null)
-            {
-                BOBS_Backend.ViewModel.FetchBooksViewModel book = new BOBS_Backend.ViewModel.FetchBooksViewModel();
-                book.Books = _Inventory.GetAllBooks();
-                book.searchfilter = filteredbooks.searchfilter;
-                ViewData["Types"] = _Inventory.GetTypes();
-                ViewData["Publishers"] = _Inventory.GetAllPublishers();
-                ViewData["Genres"] = _Inventory.GetGenres();
-                ViewData["Conditions"] = _Inventory.GetConditions();
-                return View(book);
-            }
-
             BOBS_Backend.ViewModel.FetchBooksViewModel books = new BOBS_Backend.ViewModel.FetchBooksViewModel();
-            books.Books = _Inventory.GetRequestedBooks(filteredbooks.BookName, filteredbooks.publisher, filteredbooks.Condition, filteredbooks.BookType , filteredbooks.genre , filteredbooks.searchfilter);
-
-            ViewData["Types"] = _Inventory.GetTypes();
-            ViewData["Publishers"] = _Inventory.GetAllPublishers();
-            ViewData["Genres"] = _Inventory.GetGenres();
-            ViewData["Conditions"] = _Inventory.GetConditions();
+            books.Books = _Inventory.GetRequestedBooks(filteredbooks.searchby, filteredbooks.searchfilter);         
             return View(books);
 
         }
@@ -261,13 +238,6 @@ namespace BOBS_Backend.Controllers
 
         }
 
-        public IActionResult GetAllTypes()
-        {
-
-            _Inventory.GetTypes();
-            return View();
-
-        }
-
+       
     }
 }

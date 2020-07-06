@@ -55,7 +55,7 @@ namespace BOBS_Backend
 
         public void SaveBook(Book book)
         {
-           var books = _context.Book.Where(temp => temp.Name == book.Name && temp.Type == book.Type).ToList();
+            var books = _context.Book.Where(temp => temp.Name == book.Name && temp.Type == book.Type).ToList();
             if (books.Count == 0)
             {
                 _context.Book.Add(book);
@@ -245,41 +245,41 @@ namespace BOBS_Backend
             return response.ModerationLabels.Count == 0;
         }
 
-        public IEnumerable<BookDetails> GetRequestedBooks(string BookName, string Publisher, string BookCondition, string type , string genre , string Searchfilter)
+        public IEnumerable<BookDetails> GetRequestedBooks(string searchby, string searchfilter)
         {
             List<BookDetails> detail = new List<BookDetails>();
-            if ( BookName!= null)
+            if (searchby == "BookName")
             {
 
-                var booker = (from booke in _context.Book join price in _context.Price on booke.Book_Id equals price.Book.Book_Id  where booke.Name.Contains(BookName) select new BookDetails { BookName = booke.Name, Price = price.ItemPrice, Publisher = booke.Publisher, Genre = booke.Genre, BookCondition = price.Condition, BookType = booke.Type, Quantity = price.Quantiy, front_url = booke.Front_Url, back_url = booke.Back_Url, left_url = booke.Left_Url, right_url = booke.Right_Url }).ToList();
+                var booker = (from booke in _context.Book join price in _context.Price on booke.Book_Id equals price.Book.Book_Id where booke.Name.Contains(searchfilter) select new BookDetails { BookName = booke.Name, Price = price.ItemPrice, Publisher = booke.Publisher, Genre = booke.Genre, BookCondition = price.Condition, BookType = booke.Type, Quantity = price.Quantiy, front_url = booke.Front_Url, back_url = booke.Back_Url, left_url = booke.Left_Url, right_url = booke.Right_Url }).ToList();
                 return booker;
             }
 
-            if (Publisher!=null)
+            if (searchby == "Publisher")
             {
 
-                var booker = (from booke in _context.Book join price in _context.Price on booke.Book_Id equals price.Book.Book_Id where booke.Publisher.Name == Publisher select new BookDetails { BookName = booke.Name, Price = price.ItemPrice, Publisher = booke.Publisher, Genre = booke.Genre, BookCondition = price.Condition, BookType = booke.Type, Quantity = price.Quantiy, front_url = booke.Front_Url, back_url = booke.Back_Url, left_url = booke.Left_Url, right_url = booke.Right_Url }).ToList();
+                var booker = (from booke in _context.Book join price in _context.Price on booke.Book_Id equals price.Book.Book_Id where booke.Publisher.Name.Contains(searchfilter) select new BookDetails { BookName = booke.Name, Price = price.ItemPrice, Publisher = booke.Publisher, Genre = booke.Genre, BookCondition = price.Condition, BookType = booke.Type, Quantity = price.Quantiy, front_url = booke.Front_Url, back_url = booke.Back_Url, left_url = booke.Left_Url, right_url = booke.Right_Url }).ToList();
                 return booker;
             }
 
-            if (genre!=null)
+            if (searchby == "Genre")
             {
 
-                var booker = (from booke in _context.Book join price in _context.Price on booke.Book_Id equals price.Book.Book_Id where booke.Genre.Name == genre select new BookDetails { BookName = booke.Name, Price = price.ItemPrice, Publisher = booke.Publisher, Genre = booke.Genre, BookCondition = price.Condition, BookType = booke.Type, Quantity = price.Quantiy, front_url = booke.Front_Url, back_url = booke.Back_Url, left_url = booke.Left_Url, right_url = booke.Right_Url }).ToList();
+                var booker = (from booke in _context.Book join price in _context.Price on booke.Book_Id equals price.Book.Book_Id where booke.Genre.Name.Contains(searchfilter) select new BookDetails { BookName = booke.Name, Price = price.ItemPrice, Publisher = booke.Publisher, Genre = booke.Genre, BookCondition = price.Condition, BookType = booke.Type, Quantity = price.Quantiy, front_url = booke.Front_Url, back_url = booke.Back_Url, left_url = booke.Left_Url, right_url = booke.Right_Url }).ToList();
                 return booker;
             }
 
-            if (BookCondition != "Condition")
+            if (searchby == "Condition")
             {
 
-                var booker = (from booke in _context.Book join price in _context.Price on booke.Book_Id equals price.Book.Book_Id where price.Condition.ConditionName == BookCondition select new BookDetails { BookName = booke.Name, Price = price.ItemPrice, Publisher = booke.Publisher, Genre = booke.Genre, BookCondition = price.Condition, BookType = booke.Type, Quantity = price.Quantiy, front_url = booke.Front_Url, back_url = booke.Back_Url, left_url = booke.Left_Url, right_url = booke.Right_Url }).ToList();
+                var booker = (from booke in _context.Book join price in _context.Price on booke.Book_Id equals price.Book.Book_Id where price.Condition.ConditionName.Contains(searchfilter) select new BookDetails { BookName = booke.Name, Price = price.ItemPrice, Publisher = booke.Publisher, Genre = booke.Genre, BookCondition = price.Condition, BookType = booke.Type, Quantity = price.Quantiy, front_url = booke.Front_Url, back_url = booke.Back_Url, left_url = booke.Left_Url, right_url = booke.Right_Url }).ToList();
                 return booker;
             }
 
-            if (type != "Type")
+            if (searchby == "Type")
             {
 
-                var booker = (from booke in _context.Book join price in _context.Price on booke.Book_Id equals price.Book.Book_Id where booke.Type.TypeName == type select new BookDetails { BookName = booke.Name, Price = price.ItemPrice, Publisher = booke.Publisher, Genre = booke.Genre, BookCondition = price.Condition, BookType = booke.Type, Quantity = price.Quantiy, front_url = booke.Front_Url, back_url = booke.Back_Url, left_url = booke.Left_Url, right_url = booke.Right_Url }).ToList();
+                var booker = (from booke in _context.Book join price in _context.Price on booke.Book_Id equals price.Book.Book_Id where booke.Type.TypeName.Contains(searchfilter) select new BookDetails { BookName = booke.Name, Price = price.ItemPrice, Publisher = booke.Publisher, Genre = booke.Genre, BookCondition = price.Condition, BookType = booke.Type, Quantity = price.Quantiy, front_url = booke.Front_Url, back_url = booke.Back_Url, left_url = booke.Left_Url, right_url = booke.Right_Url }).ToList();
                 return booker;
             }
 
@@ -292,14 +292,14 @@ namespace BOBS_Backend
 
             var publishName = _context.Publisher.Where(publisher => publisher.Name == publishers.Name).ToList();
 
-            if (publishName.Count == 0 )
+            if (publishName.Count == 0)
             {
                 _context.Publisher.Add(publishers);
                 _context.SaveChanges();
                 return 0;
             }
-                return 1;
-            
+            return 1;
+
         }
 
         public int AddGenres(BOBS_Backend.Models.Book.Genre genres)
@@ -313,8 +313,8 @@ namespace BOBS_Backend
                 _context.SaveChanges();
                 return 0;
             }
-                return 1;
-           
+            return 1;
+
         }
 
         //Saving an added book to the Inventory
@@ -324,14 +324,14 @@ namespace BOBS_Backend
             var typeName = _context.Type.Where(type => type.TypeName == booktype.TypeName).ToList();
             var typeId = _context.Type.Where(type => type.Type_Id == booktype.Type_Id).ToList();
 
-            if (typeName.Count == 0 )
+            if (typeName.Count == 0)
             {
                 _context.Type.Add(booktype);
                 _context.SaveChanges();
                 return 0;
             }
-                return 1;
-          
+            return 1;
+
         }
 
 
@@ -343,14 +343,14 @@ namespace BOBS_Backend
 
             var conditionName = _context.Condition.Where(condition => condition.ConditionName == bookcondition.ConditionName).ToList();
 
-            if (conditionName.Count == 0 )
+            if (conditionName.Count == 0)
             {
                 _context.Condition.Add(bookcondition);
                 _context.SaveChanges();
                 return 0;
             }
-                return 1;
-            
+            return 1;
+
         }
 
         //For Displaying All the existing Publishers in the drop down menu for AddInventory and Search Pages
@@ -384,8 +384,19 @@ namespace BOBS_Backend
             return conditions;
 
         }
+
+        public BookDetails GetBookDetails(long bookid, long priceid)
+        {
+
+            var booker = (from booke in _context.Book join price in _context.Price on booke.Book_Id equals price.Book.Book_Id where booke.Book_Id == bookid && price.Price_Id == priceid select new BookDetails { BookName = booke.Name, Price = price.ItemPrice, Publisher = booke.Publisher, Genre = booke.Genre, BookCondition = price.Condition, BookType = booke.Type, Quantity = price.Quantiy, front_url = booke.Front_Url, back_url = booke.Back_Url, left_url = booke.Left_Url, right_url = booke.Right_Url }).ToList();
+
+
+            return booker[0];
+
+
+        }
+
     }
-  
 }
 
 
