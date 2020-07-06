@@ -33,7 +33,8 @@ namespace BobBookstore.Controllers
 
             if (!String.IsNullOrEmpty(searchString))
             {
-                books = books.Where(s => s.BookName.Contains(searchString) || s.GenreName.Contains(searchString));
+                books = books.Where(s => s.BookName.Contains(searchString) || s.GenreName.Contains(searchString)
+                                    || s.TypeName.Contains(searchString));
             }
 
             return View(await books.ToListAsync());
