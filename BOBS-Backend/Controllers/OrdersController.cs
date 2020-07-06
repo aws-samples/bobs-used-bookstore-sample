@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 using BOBS_Backend.ViewModel.ProcessOrders;
+using System.Runtime.InteropServices;
 
 namespace BOBS_Backend.Controllers
 {
@@ -27,31 +28,39 @@ namespace BOBS_Backend.Controllers
             _order = order;
             _orderStatus = orderStatus;
         }
-        
-        public async Task<IActionResult> Index(string filterValue, string searchString)
-        {
 
+        
+        public async Task<IActionResult> Index(string filterValue, string searchString, int pageNum)
+        {
+            if (pageNum == 0) pageNum++;
        
             if ( (String.IsNullOrEmpty(searchString)  && String.IsNullOrEmpty(filterValue)) || filterValue.Contains("All Orders"))
             {
-                var orders = await _order.GetAllOrders();
+                var orders = await _order.GetAllOrders(pageNum);
 
-                ViewData["AllOrders"] = orders;
-
-                return View();
+                return View(orders);
             }
             else if (!String.IsNullOrEmpty(searchString) && !String.IsNullOrEmpty(filterValue))
             {
 
-                var orders = await _order.FilterList(filterValue, searchString);
+                var orders = await _order.FilterList(filterValue, searchString,pageNum);
 
-                ViewData["AllOrders"] = orders;
-                return View();
+                return View(orders);
             }
             else
             {
+                ManageOrderViewModel viewModel = new ManageOrderViewModel();
 
-                return View();
+                int[] pages = Enumerable.Range(1, 1).ToArray();
+
+                viewModel.Orders = null;
+                viewModel.FilterValue = filterValue;
+                viewModel.SearchString = searchString;
+                viewModel.Pages = pages;
+                viewModel.HasPreviousPages = false;
+                viewModel.CurrentPage = 1;
+                viewModel.HasNextPages = false;
+                return View(viewModel);
             }
 
 

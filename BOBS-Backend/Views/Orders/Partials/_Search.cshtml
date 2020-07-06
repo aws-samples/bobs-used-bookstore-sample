@@ -1,0 +1,64 @@
+﻿@model BOBS_Backend.ViewModel.ManageOrders.ManageOrderViewModel;
+
+<style>
+    .filter-pill {
+        padding: .6em;
+    }
+</style>
+
+<div class="col-12">
+    <form id="hello" class="input-group mb-3" asp-controller="Orders" asp-action="Index" method="get">
+        <select class="col-2 custom-select" asp-for="FilterValue">
+            <option disabled>Order Info</option>
+            <option value="Order Id">Order Id</option>
+
+            <option disabled>Order Status</option>
+            <option value="Status">Status</option>
+
+            <option disabled>Customer Info</option>
+            <option value="Customer Id">Customer Id</option>
+            <option value="Username">Username</option>
+            <option value="First Name">First Name</option>
+            <option value="Last Name">Last Name</option>
+            <option value="Email">Email</option>
+            <option value="Phone">Phone</option>
+
+            <option disabled>Address Info</option>
+            <option value="City">City</option>
+            <option value="State">State</option>
+            <option value="Zip Code">Zip Code</option>
+        </select>
+
+        <input type="text" asp-for="SearchString" class="form-control" aria-label="Text input with dropdown button">
+        <button class="btn btn-outline-secondary" type="submit">Submit</button>
+
+    </form>
+</div>
+
+<div class="col-12" style="margin-top:15px;">
+    @functions {
+        public static Dictionary<string,string> retrievePill(string filterValue, string searchString)
+        {
+           var pill = new Dictionary<string, string>
+            {
+                {"filterValue",filterValue},
+                {"searchString",searchString },
+            };
+
+            return pill;
+        }
+    }
+    @{ 
+        var allOrdersPill = retrievePill("", "");
+
+        var pendingPill = retrievePill("Status", "Pending");
+
+        var enRoutePill = retrievePill("Status", "En Route");
+
+    }
+
+    <h5>Common Filters</h5>
+    <a asp-controller="Orders" asp-action="Index" asp-all-route-data="allOrdersPill" class="col-1 filter-pill badge badge-pill badge-primary">All Orders</a>
+    <a asp-controller="Orders" asp-action="Index" asp-all-route-data="pendingPill" class="col-1 filter-pill badge badge-pill badge-primary">Pending</a>
+    <a asp-controller="Orders" asp-action="Index" asp-all-route-data="enRoutePill" class="col-1 filter-pill badge badge-pill badge-primary">En Route</a>
+</div>
