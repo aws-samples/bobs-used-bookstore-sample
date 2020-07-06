@@ -13,11 +13,9 @@
             <div class="carousel-item active">
                 <img class="first-slide" width="100%" height="400px" src="~/css/Images/bgBlack.jpg" alt="First slide">
                 <div class="container">
-                    <div class="carousel-caption text-left">
-                        <h1>Some Statement.</h1>
-                        <p>
-                            o, at adhuc novum oportere est, cetero perpetua ex est. Nam scaevola postulant id. Est eu dicta discere, ea singulis reprehendunt mea. No nam dicunt maluisset.
-                        </p>
+                    <div class="carousel-caption text-center">
+                        <h1>Manage all your books here</h1>
+  
                         <p>
                             @Html.ActionLink("Manage", "WelcomePage", "Home", null, new { @class = "btn-group-sm btn btn-outline-light btn btn-primary" })
                         </p>
@@ -40,13 +38,11 @@ else
             <div class="carousel-item active">
                 <img class="first-slide" width="100%" height="400px" src="~/css/Images/bgBlack.jpg" alt="First slide">
                 <div class="container">
-                    <div class="carousel-caption text-left">
-                        <h1>Some Statement.</h1>
+                    <div class="carousel-caption text-center">
+                        <h1>Get the right Book for you</h1>
+                        <p></p>
                         <p>
-                            o, at adhuc novum oportere est, cetero perpetua ex est. Nam scaevola postulant id. Est eu dicta discere, ea singulis reprehendunt mea. No nam dicunt maluisset.
-                        </p>
-                        <p>
-                            @Html.ActionLink("Login", "WelcomePage", "Home", null, new { @class = "btn-group-sm btn btn-outline-light btn btn-primary" })
+                            @Html.ActionLink("Register", "WelcomePage", "Home", null, new { @class = "btn-group-sm btn btn-outline-light btn btn-primary" })
                         </p>
                     </div>
                 </div>
@@ -55,11 +51,10 @@ else
                 <img class="second-slide" width="100%" height="400px" src="~/css/Images/book2.jpg" alt="Second slide">
                 <div class="container">
                     <div class="carousel-caption">
-                        <h1>Another Statement.</h1>
+                        <h1>We have the best collection of Books.</h1>
                         <p>
-                            o, at adhuc novum oportere est, cetero perpetua ex est. Nam scaevola postulant id. Est eu dicta discere, ea singulis reprehendunt mea. No nam dicunt maluisset.
+                            @Html.ActionLink("Register", "WelcomePage", "Home", null, new { @class = "btn-group-sm btn btn-outline-light btn btn-primary" })
                         </p>
-                        <p><a class="btn btn-lg btn-primary" href="#" role="button">Learn more</a></p>
                     </div>
                 </div>
             </div>
@@ -67,9 +62,11 @@ else
                 <img class="third-slide" width="100%" height="400px" src="~/css/Images/book1.jpg" alt="Third slide">
                 <div class="container">
                     <div class="carousel-caption text-left">
-                        <h1>last one</h1>
-                        <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
-                        <p><a class="btn btn-lg btn-primary" href="#" role="button">Browse gallery</a></p>
+                        <h1>Already a Member?</h1>
+
+                        <p>
+                            @Html.ActionLink("Login", "WelcomePage", "Home", null, new { @class = "btn-group-sm btn btn-outline-light btn btn-primary" })
+                        </p>
                     </div>
                 </div>
             </div>
