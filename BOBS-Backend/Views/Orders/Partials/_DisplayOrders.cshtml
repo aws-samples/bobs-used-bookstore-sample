@@ -23,13 +23,13 @@ else
 
 
         <div class="col-4" style="margin-top:20px;">
-            <div class="card">
+            <div style="border-radius:.65rem" class="card">
                 <div class="card-body">
                     <h5 class="card-title">Order Details</h5>
                     <h6 class="card-subtitle mb-2 text-muted">Order ID: @order.Order_Id</h6>
                     <p class="card-text">Customer ID: @order.Customer.Customer_Id</p>
                     <p class="card-text">Expected Delivery Date: @DateTime.Parse(order.DeliveryDate).ToString("MM/dd/yyyy")</p>
-                    <a asp-controller="Orders" asp-action="ProcessOrders" asp-all-route-data="param" class="card-link">See More Details </a>
+                    <a asp-controller="Orders" asp-action="ProcessOrders" asp-all-route-data="param">See More Details </a>
                 </div>
             </div>
         </div>
