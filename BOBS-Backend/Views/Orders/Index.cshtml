@@ -4,67 +4,30 @@
     ViewData["Title"] = "Hello";
 }
 @{
-    var orders = (IEnumerable<BOBS_Backend.Models.Order.Order>)ViewData["AllOrders"];
-  
+    var orders = Model.Orders;
+
 }
+
 <div class="container">
     <div class="text-center">
         <h2>Manage Orders</h2>
     </div>
     <div class="row" style="margin:15px;">
-        <div class="col-12">
-            <form class="input-group mb-3" asp-controller="Orders" asp-action="Index" method="get">
-                <select class="col-2 custom-select" id="inputGroupSelect01" asp-for="FilterValue">
-                    <option selected value="Empty">Filter By</option>
-                    <option value="All Orders">All Orders</option>
-                    <option value="Order Id">Order Id</option>
-                    <option value="Customer Id">Customer Id</option>
-                    <option value="Username">Username</option>
-                    <option value="Email">Email</option>
-                    <option value="State">State</option>
-                </select>
-                <input type="text" asp-for="SearchString" class="form-control" aria-label="Text input with dropdown button">
-                <button class="btn btn-outline-secondary" type="submit">Submit</button>
-            </form>
-        </div>
+        <partial name="./Partials/_Search" model="Model"/>
+
     </div>
 
     <div class="row">
-
-        @if ((orders == null) || (!orders.Any()))
-        {
-            <div class="text-center col-12">
-                <h2>No Results Returned</h2>
-                <p>It seems that no search results have been returned. Try changing your search query or the filter category</p>
-            </div>
-        }
-        else
-        {
-            @foreach (var order in orders)
-            {
-
-                var param = new Dictionary<string, string>
-                {
-                    {"orderId",order.Order_Id + ""}
-                };
-
-
-                <div class="col-4" style="margin-top:20px;">
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title">Order Details</h5>
-                            <h6 class="card-subtitle mb-2 text-muted">Order ID: @order.Order_Id</h6>
-                            <p class="card-text">Customer ID: @order.Customer.Customer_Id</p>
-                            <p class="card-text">Expected Delivery Date: @DateTime.Parse(order.DeliveryDate).ToString("MM/dd/yyyy")</p>
-                            <a asp-controller="Orders" asp-action="ProcessOrders" asp-all-route-data="param" class="card-link">See More Details </a>
-                        </div>
-                    </div>
-                </div>
-            }
-        }
-
+        <partial name="./Partials/_DisplayOrders" model="orders"/>
+        
     </div>
 
-</div>
+    <div class="row d-flex justify-content-center" style="margin-top:35px;">
 
+        <partial name="./Partials/_Pagination" model="Model" />
+    </div>
+
+
+
+</div>
 

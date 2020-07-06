@@ -1,0 +1,31 @@
+﻿@model BOBS_Backend.DataModel.BookDetails
+
+@{
+
+    var details = (BOBS_Backend.DataModel.BookDetails)ViewData["BookDetails"];
+}
+
+<div class="container">
+    <div class="row border-top-2">       
+            <div class="col-4" style="margin-top:20px;">
+                <div class="card" style="width: 20rem;">
+                    <img class="card-img-top" src="@details.front_url" alt="Card image cap">
+                    <div class="card-body">
+                        <h5 class="card-title">@details.BookName</h5>
+                        <p class="card-text"></p>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">Publisher : @details.Publisher.Name</li>
+                        <li class="list-group-item">Genre     : @details.Genre.Name</li>
+                        <li class="list-group-item">Type      : @details.BookType.TypeName</li>
+                        <li class="list-group-item">Condition : @details.BookCondition.ConditionName</li>
+                        <li class="list-group-item">Price     : $@details.Price</li>
+                        <li class="list-group-item">Quantity  :@details.Quantity</li>
+                    </ul>
+                    <div class="card-body">
+                        <a href="#" class="card-link">Card link</a>
+                    </div>
+                </div>
+            </div>
+    </div>
+</div>

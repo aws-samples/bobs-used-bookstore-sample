@@ -22,5 +22,7 @@ namespace BOBS_Backend.ViewModel
 
         public string searchfilter { get; set; }
 
+        public string searchby { get; set; }
+
     }
 }

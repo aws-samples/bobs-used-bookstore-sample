@@ -24,6 +24,9 @@ using SixLabors.ImageSharp.Formats;
 using SixLabors.ImageSharp.Formats.Gif;
 using SixLabors.ImageSharp.Formats.Jpeg;
 using SixLabors.ImageSharp.Formats.Png;
+using Amazon.Polly;
+using Amazon.Polly.Model;
+
 
 namespace BOBS_Backend
 {
@@ -55,7 +58,7 @@ namespace BOBS_Backend
 
         public void SaveBook(Book book)
         {
-           var books = _context.Book.Where(temp => temp.Name == book.Name && temp.Type == book.Type).ToList();
+            var books = _context.Book.Where(temp => temp.Name == book.Name && temp.Type == book.Type).ToList();
             if (books.Count == 0)
             {
                 _context.Book.Add(book);
@@ -114,13 +117,33 @@ namespace BOBS_Backend
 
                 await fileTransferUtility.UploadAsync(Path.Combine(dir, filename), photosBucketName);
 
-                url = String.Concat("https://ddkveyb1synl2.cloudfront.net/", file.FileName);
-                return url;
+
+                bool check = await IsImageSafe(photosBucketName, filename);
+
+                if (check)
+                {
+                    if (await IsBook(photosBucketName, filename))
+                    {
+                        url = String.Concat("https://ddkveyb1synl2.cloudfront.net/", file.FileName);
+                        return url;
+
+                    }
+                    else
+                    {
+                        return $"NotABook";
+
+                    }
+                }
+
+                else
+                {
+                    return $"PolicyViolation";
+                }
 
             }
-            return url;
+              return $"InvalidFileType";
         }
-
+        
         public async Task<Stream> ResizeImage(IFormFile file, string fileExt)
         {
             // create new memory stream.
@@ -174,7 +197,7 @@ namespace BOBS_Backend
 
         public async Task<bool> IsBook(string bucket, string key)
         {
-            AmazonRekognitionClient rekognitionClient = new AmazonRekognitionClient(bucketRegion);
+            AmazonRekognitionClient rekognitionClient = new AmazonRekognitionClient("AKIA6DYNIKQLFG4HU2LU", "4RM8WQL3tH4+c7RgIQ/LPBHqt6ESwleokqsDx1Gf", bucketRegion);
 
             DetectLabelsRequest detectlabelsRequest = new DetectLabelsRequest()
             {
@@ -202,6 +225,7 @@ namespace BOBS_Backend
 
             if (c >= 1)
             {
+                
                 return true;
             }
 
@@ -214,7 +238,7 @@ namespace BOBS_Backend
 
         public async Task<bool> IsImageSafe(string bucket, string key)
         {
-            var RekognitionClient = new AmazonRekognitionClient(bucketRegion);
+            var RekognitionClient = new AmazonRekognitionClient("AKIA6DYNIKQLFG4HU2LU", "4RM8WQL3tH4+c7RgIQ/LPBHqt6ESwleokqsDx1Gf", bucketRegion);
             var response = await RekognitionClient.DetectModerationLabelsAsync(new DetectModerationLabelsRequest
             {
                 Image = new Amazon.Rekognition.Model.Image
@@ -229,57 +253,50 @@ namespace BOBS_Backend
 
             if (response.ModerationLabels.Count > 0)
             {
-                var sb = new StringBuilder();
-                foreach (var label in response.ModerationLabels)
-                {
-                    if (sb.Length > 0)
-                        sb.Append(", ");
-                    if (!string.IsNullOrEmpty(label.ParentName))
-                    {
-                        sb.Append(label.ParentName + "/");
-                    }
-
-                    sb.Append($"{label.Name}:{label.Confidence}");
-                }
+                return false;
             }
-            return response.ModerationLabels.Count == 0;
+            
+            else 
+            {
+                 return true;
+            }              
         }
 
-        public IEnumerable<BookDetails> GetRequestedBooks(string BookName, string Publisher, string BookCondition, string type , string genre , string Searchfilter)
+        public IEnumerable<BookDetails> GetRequestedBooks(string searchby, string searchfilter)
         {
             List<BookDetails> detail = new List<BookDetails>();
-            if ( BookName!= null)
+            if (searchby == "BookName")
             {
 
-                var booker = (from booke in _context.Book join price in _context.Price on booke.Book_Id equals price.Book.Book_Id  where booke.Name.Contains(BookName) select new BookDetails { BookName = booke.Name, Price = price.ItemPrice, Publisher = booke.Publisher, Genre = booke.Genre, BookCondition = price.Condition, BookType = booke.Type, Quantity = price.Quantiy, front_url = booke.Front_Url, back_url = booke.Back_Url, left_url = booke.Left_Url, right_url = booke.Right_Url }).ToList();
+                var booker = (from booke in _context.Book join price in _context.Price on booke.Book_Id equals price.Book.Book_Id where booke.Name.Contains(searchfilter) select new BookDetails { BookName = booke.Name, Price = price.ItemPrice, Publisher = booke.Publisher, Genre = booke.Genre, BookCondition = price.Condition, BookType = booke.Type, Quantity = price.Quantiy, front_url = booke.Front_Url, back_url = booke.Back_Url, left_url = booke.Left_Url, right_url = booke.Right_Url }).ToList();
                 return booker;
             }
 
-            if (Publisher!=null)
+            if (searchby == "Publisher")
             {
 
-                var booker = (from booke in _context.Book join price in _context.Price on booke.Book_Id equals price.Book.Book_Id where booke.Publisher.Name == Publisher select new BookDetails { BookName = booke.Name, Price = price.ItemPrice, Publisher = booke.Publisher, Genre = booke.Genre, BookCondition = price.Condition, BookType = booke.Type, Quantity = price.Quantiy, front_url = booke.Front_Url, back_url = booke.Back_Url, left_url = booke.Left_Url, right_url = booke.Right_Url }).ToList();
+                var booker = (from booke in _context.Book join price in _context.Price on booke.Book_Id equals price.Book.Book_Id where booke.Publisher.Name.Contains(searchfilter) select new BookDetails { BookName = booke.Name, Price = price.ItemPrice, Publisher = booke.Publisher, Genre = booke.Genre, BookCondition = price.Condition, BookType = booke.Type, Quantity = price.Quantiy, front_url = booke.Front_Url, back_url = booke.Back_Url, left_url = booke.Left_Url, right_url = booke.Right_Url }).ToList();
                 return booker;
             }
 
-            if (genre!=null)
+            if (searchby == "Genre")
             {
 
-                var booker = (from booke in _context.Book join price in _context.Price on booke.Book_Id equals price.Book.Book_Id where booke.Genre.Name == genre select new BookDetails { BookName = booke.Name, Price = price.ItemPrice, Publisher = booke.Publisher, Genre = booke.Genre, BookCondition = price.Condition, BookType = booke.Type, Quantity = price.Quantiy, front_url = booke.Front_Url, back_url = booke.Back_Url, left_url = booke.Left_Url, right_url = booke.Right_Url }).ToList();
+                var booker = (from booke in _context.Book join price in _context.Price on booke.Book_Id equals price.Book.Book_Id where booke.Genre.Name.Contains(searchfilter) select new BookDetails { BookName = booke.Name, Price = price.ItemPrice, Publisher = booke.Publisher, Genre = booke.Genre, BookCondition = price.Condition, BookType = booke.Type, Quantity = price.Quantiy, front_url = booke.Front_Url, back_url = booke.Back_Url, left_url = booke.Left_Url, right_url = booke.Right_Url }).ToList();
                 return booker;
             }
 
-            if (BookCondition != "Condition")
+            if (searchby == "Condition")
             {
 
-                var booker = (from booke in _context.Book join price in _context.Price on booke.Book_Id equals price.Book.Book_Id where price.Condition.ConditionName == BookCondition select new BookDetails { BookName = booke.Name, Price = price.ItemPrice, Publisher = booke.Publisher, Genre = booke.Genre, BookCondition = price.Condition, BookType = booke.Type, Quantity = price.Quantiy, front_url = booke.Front_Url, back_url = booke.Back_Url, left_url = booke.Left_Url, right_url = booke.Right_Url }).ToList();
+                var booker = (from booke in _context.Book join price in _context.Price on booke.Book_Id equals price.Book.Book_Id where price.Condition.ConditionName.Contains(searchfilter) select new BookDetails { BookName = booke.Name, Price = price.ItemPrice, Publisher = booke.Publisher, Genre = booke.Genre, BookCondition = price.Condition, BookType = booke.Type, Quantity = price.Quantiy, front_url = booke.Front_Url, back_url = booke.Back_Url, left_url = booke.Left_Url, right_url = booke.Right_Url }).ToList();
                 return booker;
             }
 
-            if (type != "Type")
+            if (searchby == "Type")
             {
 
-                var booker = (from booke in _context.Book join price in _context.Price on booke.Book_Id equals price.Book.Book_Id where booke.Type.TypeName == type select new BookDetails { BookName = booke.Name, Price = price.ItemPrice, Publisher = booke.Publisher, Genre = booke.Genre, BookCondition = price.Condition, BookType = booke.Type, Quantity = price.Quantiy, front_url = booke.Front_Url, back_url = booke.Back_Url, left_url = booke.Left_Url, right_url = booke.Right_Url }).ToList();
+                var booker = (from booke in _context.Book join price in _context.Price on booke.Book_Id equals price.Book.Book_Id where booke.Type.TypeName.Contains(searchfilter) select new BookDetails { BookName = booke.Name, Price = price.ItemPrice, Publisher = booke.Publisher, Genre = booke.Genre, BookCondition = price.Condition, BookType = booke.Type, Quantity = price.Quantiy, front_url = booke.Front_Url, back_url = booke.Back_Url, left_url = booke.Left_Url, right_url = booke.Right_Url }).ToList();
                 return booker;
             }
 
@@ -292,14 +309,14 @@ namespace BOBS_Backend
 
             var publishName = _context.Publisher.Where(publisher => publisher.Name == publishers.Name).ToList();
 
-            if (publishName.Count == 0 )
+            if (publishName.Count == 0)
             {
                 _context.Publisher.Add(publishers);
                 _context.SaveChanges();
                 return 0;
             }
-                return 1;
-            
+            return 1;
+
         }
 
         public int AddGenres(BOBS_Backend.Models.Book.Genre genres)
@@ -313,8 +330,8 @@ namespace BOBS_Backend
                 _context.SaveChanges();
                 return 0;
             }
-                return 1;
-           
+            return 1;
+
         }
 
         //Saving an added book to the Inventory
@@ -324,14 +341,14 @@ namespace BOBS_Backend
             var typeName = _context.Type.Where(type => type.TypeName == booktype.TypeName).ToList();
             var typeId = _context.Type.Where(type => type.Type_Id == booktype.Type_Id).ToList();
 
-            if (typeName.Count == 0 )
+            if (typeName.Count == 0)
             {
                 _context.Type.Add(booktype);
                 _context.SaveChanges();
                 return 0;
             }
-                return 1;
-          
+            return 1;
+
         }
 
 
@@ -343,14 +360,14 @@ namespace BOBS_Backend
 
             var conditionName = _context.Condition.Where(condition => condition.ConditionName == bookcondition.ConditionName).ToList();
 
-            if (conditionName.Count == 0 )
+            if (conditionName.Count == 0)
             {
                 _context.Condition.Add(bookcondition);
                 _context.SaveChanges();
                 return 0;
             }
-                return 1;
-            
+            return 1;
+
         }
 
         //For Displaying All the existing Publishers in the drop down menu for AddInventory and Search Pages
@@ -384,8 +401,145 @@ namespace BOBS_Backend
             return conditions;
 
         }
+
+        public BookDetails GetBookDetails(long bookid, long priceid)
+        {
+
+            var booker = (from booke in _context.Book join price in _context.Price on booke.Book_Id equals price.Book.Book_Id where booke.Book_Id == bookid && price.Price_Id == priceid select new BookDetails { BookName = booke.Name, Price = price.ItemPrice, Publisher = booke.Publisher, Genre = booke.Genre, BookCondition = price.Condition, BookType = booke.Type, Quantity = price.Quantiy, front_url = booke.Front_Url, back_url = booke.Back_Url, left_url = booke.Left_Url, right_url = booke.Right_Url }).ToList();
+
+
+            return booker[0];
+
+
+        }
+
+
+        public int AddToTables(BooksViewModel bookview)
+        {
+            string front_url = "" , back_url = "" , left_url = "" , right_url = "" , AudioBookUrl = "";
+            if (bookview.FrontPhoto != null)
+            {
+                 front_url = UploadtoS3(bookview.FrontPhoto).Result;
+            }
+
+            if (bookview.BackPhoto != null)
+            {
+                 back_url = UploadtoS3(bookview.BackPhoto).Result;
+            }
+
+            if (bookview.LeftSidePhoto != null)
+            {
+                 left_url = UploadtoS3(bookview.LeftSidePhoto).Result;
+            }
+
+            if (bookview.RightSidePhoto != null)
+            {
+                 right_url = UploadtoS3(bookview.RightSidePhoto).Result;
+            }
+
+            if(checkIfViolation(front_url) == true || checkIfViolation(back_url) == true || checkIfViolation (left_url) == true || checkIfViolation(right_url) == true)
+            {
+                return 0;
+            }
+
+            if(bookview.Summary != null)
+            {
+                AudioBookUrl = GenerateAudioSummary(bookview.BookName ,bookview.Summary, "fr-CA", VoiceId.Emma);
+            }
+
+            Book book = new Book();
+            Price price = new Price();
+
+            var publisherdata = _context.Publisher.Where(publisher => publisher.Name == bookview.PublisherName).ToList();
+            var genredata = _context.Genre.Where(genre => genre.Name == bookview.genre).ToList();
+            var typedata = _context.Type.Where(type => type.TypeName == bookview.BookType).ToList();
+            var conditiondata = _context.Condition.Where(condition => condition.ConditionName == bookview.BookCondition).ToList();
+
+            book.Name = bookview.BookName;
+            book.Type = typedata[0];
+            book.Genre = genredata[0];
+            book.ISBN = bookview.ISBN;
+            book.Publisher = publisherdata[0];
+            book.Front_Url = front_url;
+            book.Back_Url = back_url;
+            book.Left_Url = left_url;
+            book.Right_Url = right_url;
+            book.Summary = bookview.Summary;
+            book.AudioBook_Url = AudioBookUrl;
+
+            price.Condition = conditiondata[0];
+            price.ItemPrice = bookview.price;
+            price.Book = book;
+            price.Quantiy = bookview.quantity;
+
+            var books = _context.Book.Where(temp => temp.Name == book.Name && temp.Type == book.Type && temp.Publisher == book.Publisher && temp.Genre == book.Genre).ToList();
+            if (books.Count == 0)
+            {
+               SaveBook(book);
+
+            }
+
+            else
+            {
+
+                var prices = _context.Price.Where(p => p.Condition == price.Condition && p.Book == book).ToList();
+                if (prices.Count == 0)
+                {
+                    SavePrice(price);
+                }
+
+                else
+                {
+                    var output = _context.Price.SingleOrDefault(p => p.Condition == price.Condition && p.Book == book);
+                    output.Quantiy = bookview.quantity;
+                    _context.SaveChanges();
+                }
+
+            }
+
+            return 1;
+        }
+
+
+        public bool checkIfViolation(string input)
+        {
+
+            if (input == "NotABook" || input == "PolicyViolation" || input == "InvalidFileType")
+            {
+                return true;
+            }
+
+            else
+            {
+                return false;
+            }
+        }
+
+        public string GenerateAudioSummary(string BookName, string Summary, string targetLanguageCode, VoiceId voice)
+        {
+            using (var client = new AmazonPollyClient("AKIA6DYNIKQLFG4HU2LU", "4RM8WQL3tH4+c7RgIQ/LPBHqt6ESwleokqsDx1Gf", bucketRegion))
+            {
+                var request = new Amazon.Polly.Model.SynthesizeSpeechRequest();
+                request.LanguageCode = targetLanguageCode;
+                request.Text = Summary;
+                request.OutputFormat = OutputFormat.Mp3;
+                request.VoiceId = voice;
+                var response = client.SynthesizeSpeechAsync(request).GetAwaiter().GetResult();
+
+                string outputFileName = $".\\-{targetLanguageCode}.mp3";
+                FileStream output = File.Open(outputFileName, FileMode.Create);
+                response.AudioStream.CopyTo(output);
+                output.Close();
+                s3Client = new AmazonS3Client("AKIA6DYNIKQLFG4HU2LU", "4RM8WQL3tH4+c7RgIQ/LPBHqt6ESwleokqsDx1Gf", bucketRegion);
+                var fileTransferUtility = new TransferUtility(s3Client);
+                fileTransferUtility.UploadAsync(outputFileName, audioBucketName);
+
+                var url = String.Concat("https://d3iukz826t8vlr.cloudfront.net/", BookName);
+                return url;
+            }
+        }
+
     }
-  
 }
 
 

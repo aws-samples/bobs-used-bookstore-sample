@@ -5,8 +5,12 @@
     var publishers = (List<BOBS_Backend.Models.Book.Publisher>)ViewData["Publishers"];
     var genres = (List<BOBS_Backend.Models.Book.Genre>)ViewData["Genres"];
     var conditions = (List<BOBS_Backend.Models.Book.Condition>)ViewData["Conditions"];
+    var errorstatus = (string)ViewData["ErrorStatus"];
+    var error = (string)ViewData["Error"];
 
 }
+
+
 
 <div>
     <div>
@@ -14,6 +18,16 @@
             <h1 style="margin-top:35px">
                 <span>Submit the Book Details</span>
             </h1>
+            @if (errorstatus == "Yes")
+            {
+                <div>
+                    <li> "Please re-upload the photos as they violate one or more of our content policies "</li>
+                    <li>"1) Photo must be  of type .jpg or .png or .gif"</li>
+                    <li>"2) Photo content must not contain profanity"</li>
+                    <li>"3) Photo must be that of a book"</li>
+                </div>
+
+            }
         </div>
         <form enctype="multipart/form-data" asp-controller="Inventory" asp-action="EditBookDetails" method="post" style="padding-bottom: 0px;">
             <div asp-validation-summary="All"></div>
@@ -115,6 +129,10 @@
                             <label class="custom-file-label">Choose File...</label>
                         </div>
                     </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-check-label" asp-for="Summary">Summary</label>
+                    <textarea class="form-control" asp-for="Summary" placeholder=" Please enter the Book Summary / Description"></textarea>
                 </div>
                 <div class="form-group">
                     <button class="btn btn-outline-primary" type="submit">Submit</button>
