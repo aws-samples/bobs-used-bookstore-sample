@@ -1,14 +1,50 @@
 ﻿@{
     ViewData["Title"] = "Welcome Page";
 }
-<h1 class="text-md-center">Welcome @TempData["Username"]</h1>
+<h1 class="text-md-center">Welcome @User.Claims.FirstOrDefault(c=> c.Type.Equals("cognito:username"))?.Value</h1>
+<div class="card-group">
+    <div class="card bg-light mb-3">
+       
+        <div class="card-body">
+            <h5 class="card-title">Order ID: 1234</h5>
+            <p class="card-text card-subtitle mb-2 text-muted">Expected Delivery: 7/10/20</p>
+            <p class="card-text">Customer ID: 12</p>
+            <p class="card-text">Status: En-route</p>
+            
+            <a href="#" class="card-link">See Details</a>
+        </div>
+    </div>
+    <div class="card bg-light mb-3" >
+        
+        <div class="card-body">
+            <h5 class="card-title">Order ID: 123</h5>
+            <p class="card-text card-subtitle mb-2 text-muted">Expected Delivery: 8/2/20</p>
+            <p class="card-text">Customer ID: 1</p>
+            <p class="card-text">Status: Pending</p>
+
+            <a href="#" class="card-link">See Details</a>
+        </div>
+    </div>
+    <div class="card bg-light mb-3">
+       
+        <div class="card-body">
+            <h5 class="card-title">Order ID:345</h5>
+            <p class="card-text card-subtitle mb-2 text-muted">Expected Delivery: 10/2/20</p>
+            <p class="card-text">Customer ID: 4</p>
+            <p class="card-text">Status: Just Placed</p>
+            <a href="#" class="card-link">See Details</a>
+        </div>
+    </div>
+</div>
+
+
+
+
+
 
 <div class="container align-content-center">
     <div class=" container small">
         @Html.ActionLink("Add Inventory", "EditBookDetails", "Inventory", null, new { @class = "btn btn-primary btn-large btn-block btn-outline-light" })
-    </div>
-    <div class=" container small">
-        @Html.ActionLink("Manage Orders", "Index", "Orders", null, new { @class = "btn btn-primary btn-large btn-block btn-outline-light" })
     </div>
    
     <div class=" container small">

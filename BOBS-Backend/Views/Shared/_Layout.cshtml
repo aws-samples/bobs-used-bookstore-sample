@@ -9,7 +9,7 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-lg navbar-toggleable-sm navbar-dark bg-light border-bottom box-shadow mb-3">
             <div class="container">
                 
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
@@ -19,25 +19,39 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link text-dark" asp-controller="Home"asp-action="Index">Bob's Used Bookstore</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
-                        @if (User.Identity.IsAuthenticated)
-                        {
+                       @if (User.Identity.IsAuthenticated)
+                       {
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Orders" asp-action="Index">Manage Orders</a>
                         </li>
-                        }
+                       }
                     </ul>
                 </div>
                 <div class="nav navbar-nav navbar-right">
                     <ul class="nav navbar-nav navbar-right">
-                        @if (User.Identity.IsAuthenticated)
-                        {
-                            <li><a asp-controller="Authentication" asp-action="SignOut">Logout</a></li>
-                        }
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle text-dark" id="navbarDropdownMenuLink-333" data-toggle="dropdown"
+                               aria-haspopup="true" aria-expanded="false">
+                                Profile
+                            </a>
+                            <div class="dropdown-menu dropdown-default" aria-labelledby="navbarDropdownMenuLink-333">
+                                @if (User.Identity.IsAuthenticated)
+                                {
+                                    <a class="dropdown-item">My Account</a>
+                                    <a class="dropdown-item" asp-controller="Authentication" asp-action="SignOut">Logout</a>
+                                }
+                                else { 
+                                    <a class="dropdown-item" asp-controller="Home" asp-action="WelcomePage">Login</a>
+                                
+                                }
+</div>
+                        </li>
+                       
 
                     </ul>
                 </div>

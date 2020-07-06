@@ -12,5 +12,10 @@ namespace BOBS_Backend.Models.AdminUser
         public string group { get; set; }
 
     }
+
+    public class CreateUser
+    {
+       
+    }
    
 }
