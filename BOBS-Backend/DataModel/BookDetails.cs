@@ -11,6 +11,8 @@ namespace BOBS_Backend.DataModel
     {
         public string BookName { get; set; }
 
+        public long BookId { get; set; }
+
         public Publisher Publisher { get; set; }
 
         public Condition BookCondition { get; set; }

@@ -10,7 +10,8 @@ using Microsoft.AspNetCore.Http;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats;
 using SixLabors.ImageSharp.Processing;
-
+using Amazon.Polly;
+using Amazon.Polly.Model;
 
 
 namespace BOBS_Backend
@@ -34,7 +35,7 @@ namespace BOBS_Backend
 
         public Task<bool> IsBook(string bucket, string key);
 
-        public IEnumerable<BookDetails> GetRequestedBooks(string BookName, string Publisher, string BookCondition, string type , string genre , string Searchfilter);
+        public IEnumerable<BookDetails> GetRequestedBooks(string searchby, string Searchfilter);
 
         public int AddPublishers(BOBS_Backend.Models.Book.Publisher publishers);
 
@@ -56,7 +57,13 @@ namespace BOBS_Backend
 
         public  Task<Stream> ResizeImage(IFormFile file, string fileExt);
 
+        public BookDetails GetBookDetails(long bookid, long priceid);
 
+        public int AddToTables(ViewModel.BooksViewModel bookview);
+
+        public bool checkIfViolation(string input);
+
+        public string GenerateAudioSummary(string BookName, string Summary, string targetLanguageCode, VoiceId voice);
 
     }
 }
