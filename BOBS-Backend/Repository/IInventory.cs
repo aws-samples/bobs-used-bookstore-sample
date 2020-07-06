@@ -10,7 +10,8 @@ using Microsoft.AspNetCore.Http;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats;
 using SixLabors.ImageSharp.Processing;
-
+using Amazon.Polly;
+using Amazon.Polly.Model;
 
 
 namespace BOBS_Backend
@@ -58,6 +59,11 @@ namespace BOBS_Backend
 
         public BookDetails GetBookDetails(long bookid, long priceid);
 
+        public int AddToTables(ViewModel.BooksViewModel bookview);
+
+        public bool checkIfViolation(string input);
+
+        public string GenerateAudioSummary(string BookName, string Summary, string targetLanguageCode, VoiceId voice);
 
     }
 }

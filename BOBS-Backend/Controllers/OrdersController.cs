@@ -69,8 +69,7 @@ namespace BOBS_Backend.Controllers
             }
             else
             {
-             
-
+            
                 var orderStatus = await _orderStatus.GetOrderStatuses();
 
                 var order = await _order.FindOrderById(orderId);
