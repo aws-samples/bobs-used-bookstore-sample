@@ -20,8 +20,6 @@ namespace BobBookstore.Models.Book
 
         public string Name { get; set; }
 
-        [ForeignKey("Genre")]
-        public long Genre_Id { get; set; }
         public virtual Genre Genre { get; set; }
 
         public string Front_Url { get; set; }
