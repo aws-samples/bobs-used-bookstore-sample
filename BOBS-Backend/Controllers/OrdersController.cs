@@ -29,19 +29,6 @@ namespace BOBS_Backend.Controllers
             _orderStatus = orderStatus;
         }
 
-        //public List<string> GetFilterName()
-        //{
-        //    List<string> filterName = new List<string>();
-
-        //    filterName.Add("Order Id");
-        //    filterName.Add("Order Status");
-        //    filterName.Add("Customer Id");
-        //    filterName.Add("First Name");
-        //    filterName.Add("Last Name");
-        //    filterName.Add("Email");
-        //    filterName.Add("Phone");
-        //    filterName.Add("Order Id");
-        //}
         
         public async Task<IActionResult> Index(string filterValue, string searchString, int pageNum)
         {
@@ -51,22 +38,29 @@ namespace BOBS_Backend.Controllers
             {
                 var orders = await _order.GetAllOrders(pageNum);
 
-                ViewData["AllOrders"] = orders;
-
                 return View(orders);
             }
             else if (!String.IsNullOrEmpty(searchString) && !String.IsNullOrEmpty(filterValue))
             {
 
-                var orders = await _order.FilterList(filterValue, searchString);
+                var orders = await _order.FilterList(filterValue, searchString,pageNum);
 
-                ViewData["AllOrders"] = orders;
-                return View();
+                return View(orders);
             }
             else
             {
+                ManageOrderViewModel viewModel = new ManageOrderViewModel();
 
-                return View();
+                int[] pages = Enumerable.Range(1, 1).ToArray();
+
+                viewModel.Orders = null;
+                viewModel.FilterValue = filterValue;
+                viewModel.SearchString = searchString;
+                viewModel.Pages = pages;
+                viewModel.HasPreviousPages = false;
+                viewModel.CurrentPage = 1;
+                viewModel.HasNextPages = false;
+                return View(viewModel);
             }
 
 
