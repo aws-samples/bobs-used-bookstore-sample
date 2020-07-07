@@ -1,0 +1,19 @@
+﻿@model BobBookstore.Models.ViewModels.BookViewModel
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+<h2>Name: @Html.DisplayFor(modelitem => Model.BookName)</h2>
+<h4>Genre: @Html.DisplayFor(modelitem => Model.GenreName)</h4>
+<h4>Type: @Html.DisplayFor(modelitem => Model.TypeName)</h4>
+<img src="@Html.DisplayFor(modelitem => Model.Url)" />
+<p>
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+    incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
+    exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+    Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat
+    nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia
+    deserunt mollit anim id est laborum
+</p>
