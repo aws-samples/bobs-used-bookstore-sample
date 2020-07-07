@@ -28,8 +28,7 @@ namespace BOBS_Backend.Controllers
             _order = order;
             _orderStatus = orderStatus;
         }
-
-        
+       
         public async Task<IActionResult> Index(string filterValue, string searchString, int pageNum)
         {
             if (pageNum == 0) pageNum++;
@@ -62,8 +61,6 @@ namespace BOBS_Backend.Controllers
                 viewModel.HasNextPages = false;
                 return View(viewModel);
             }
-
-
         }
 
 
@@ -106,10 +103,6 @@ namespace BOBS_Backend.Controllers
 
                 return View(viewModel);
             }
-
-
-
-
         }
     }
 }

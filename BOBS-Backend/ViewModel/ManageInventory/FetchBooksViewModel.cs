@@ -24,5 +24,13 @@ namespace BOBS_Backend.ViewModel
 
         public string searchby { get; set; }
 
+        public string front_url { get; set; }
+
+        public string back_url { get; set; }
+
+        public string left_url { get; set; }
+
+        public string right_url { get; set; }
+
     }
 }

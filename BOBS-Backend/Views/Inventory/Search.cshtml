@@ -11,8 +11,10 @@
 @if (Model.searchfilter != "")
 {
     <div class="container">
-        <div class="text-center">
-            <h2>Search For Books</h2>
+        <div class="text-center">            
+            <h1 class="text-center" style="margin-top:35px">
+                <span class="font-weight-light text-primary ">Search For Books</span>
+            </h1>
         </div>
         <div class="row" style="margin:15px;">
             <div class="col-12">
@@ -25,7 +27,7 @@
                         <option value="Condition">Condition</option>
                         <option value="Type">Type</option>
                     </select>
-                    <input type="text" asp-for="searchfilter" class="form-control" aria-label="Text input with dropdown button">
+                    <input type="text" asp-for="searchfilter" placeholder = "                                                       Please , Enter the search query            " class="form-control bg-light text-dark" aria-label="Text input with dropdown button">
                     <button class="btn btn-outline-secondary" type="submit">Submit</button>
                 </form>
             </div>
@@ -38,23 +40,29 @@
         <div class="container">
             <div class="row border-top-2">
                 @foreach (var book in Model.Books)
-                {                  
+                {
+                    var param = new Dictionary<string, string>
+                    {
+                        {"BookId",book.BookId + ""}
+                    };
                    <div class="col-4" style="margin-top:20px;">
                         <div class="card" style="width: 20rem;">
-                            <img class="card-img-top" src="@book.front_url" alt="Card image cap">
+                            <img class="card-img-top rounded" src="@book.front_url" alt="Card image cap">
                             <div class="card-body">
-                                <h5 class="card-title">@book.BookName</h5>
+                                <h2 class="card-title text-danger text-center">@book.BookName</h2>
                                 <p class="card-text"></p>
                             </div>
                             <ul class="list-group list-group-flush">
-                                <li class="list-group-item">Publisher : @book.Publisher.Name</li>
-                                <li class="list-group-item">Genre     : @book.Genre.Name</li>
-                                <li class="list-group-item">Type      : @book.BookType.TypeName</li>
-                                <li class="list-group-item">Condition : @book.BookCondition.ConditionName</li>
-                                <li class="list-group-item">Price     : $@book.Price</li>
-                                <li class="list-group-item">Quantity  : @book.Quantity</li>
+                                <li class="list-group-item text-success">BookID     : @book.BookId</li>
+                                <li class="list-group-item text-success">Publisher  : @book.Publisher.Name</li>
+                                <li class="list-group-item text-success">Genre      : @book.Genre.Name</li>
+                                <li class="list-group-item text-success">Type       : @book.BookType.TypeName</li>
+                               @* <li class="list-group-item text-success">Condition  : @book.BookCondition.ConditionName</li>
+                                <li class="list-group-item text-success">Price      : $@book.Price</li>
+                                <li class="list-group-item text-success">Quantity   : @book.Quantity</li> *@
                             </ul>
                             <div class="card-body">
+                                <a asp-controller="Inventory" asp-action="BookDetails" asp-all-route-data="param">See More Detail</a>
                             </div>
                         </div>
                     </div>

@@ -80,13 +80,14 @@ namespace BOBS_Backend.Controllers
         [HttpPost]
         public IActionResult Search(FetchBooksViewModel filteredbooks)
         {
-            if(filteredbooks.searchfilter == " ")
+            if(filteredbooks.searchby == null)
             {
                 return RedirectToAction("Search");
             }
 
             FetchBooksViewModel books = new FetchBooksViewModel();
-            books.Books = _Inventory.GetRequestedBooks(filteredbooks.searchby, filteredbooks.searchfilter);         
+            // books.Books = _Inventory.GetRequestedBooks(filteredbooks.searchby, filteredbooks.searchfilter);   
+            books.Books = _Inventory.GetRequestedBooks(filteredbooks.searchby, filteredbooks.searchfilter);
             return View(books);
 
         }
@@ -195,6 +196,25 @@ namespace BOBS_Backend.Controllers
             }
 
             return View();
+
+        }
+
+
+        public IActionResult BookDetails(long BookId)
+        {
+
+            FetchBooksViewModel books = new FetchBooksViewModel();
+            var bookdetails = _Inventory.GetBookByID(BookId);
+            books.publisher = bookdetails.Publisher.Name;
+            books.genre = bookdetails.Genre.Name;
+            books.BookType = bookdetails.BookType.TypeName;
+            books.BookName = bookdetails.BookName;
+            books.Books = _Inventory.GetDetails(BookId);
+            books.front_url = bookdetails.front_url;
+            books.back_url = bookdetails.back_url;
+            books.left_url = bookdetails.left_url;
+            books.right_url = bookdetails.right_url;
+            return View(books);
 
         }
 

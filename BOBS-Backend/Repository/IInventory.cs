@@ -22,8 +22,9 @@ namespace BOBS_Backend
         public void SaveBook(Book book );
 
         public IEnumerable<BookDetails> GetAllBooks();
+       // public IEnumerable<Book> GetAllBooks();
 
-        public Book GetBookByID(long Id);
+        public BookDetails GetBookByID(long Id);
 
         public void SavePrice(Price price);
 
@@ -34,6 +35,8 @@ namespace BOBS_Backend
         public Task<bool> IsImageSafe(string bucket, string key);
 
         public Task<bool> IsBook(string bucket, string key);
+
+       // public IEnumerable<Book> GetRequestedBooks(string searchby, string searchfilter);
 
         public IEnumerable<BookDetails> GetRequestedBooks(string searchby, string Searchfilter);
 
@@ -65,5 +68,6 @@ namespace BOBS_Backend
 
         public string GenerateAudioSummary(string BookName, string Summary, string targetLanguageCode, VoiceId voice);
 
+        public IEnumerable<BookDetails> GetDetails(long BookId);
     }
 }

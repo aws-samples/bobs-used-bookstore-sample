@@ -1,31 +1,80 @@
-﻿@model BOBS_Backend.DataModel.BookDetails
+﻿@model BOBS_Backend.ViewModel.FetchBooksViewModel
 
 @{
+    var count = @Model.Books.Count();
 
-    var details = (BOBS_Backend.DataModel.BookDetails)ViewData["BookDetails"];
 }
+    <div class="text-center">
+        <h1 class="text-center" style="margin-top:35px">
+            <span class="font-weight-light text-primary ">Book Details</span>
+        </h1>
+    </div>
+    <div class="container">
+        <div class="row">
 
-<div class="container">
-    <div class="row border-top-2">       
-            <div class="col-4" style="margin-top:20px;">
-                <div class="card" style="width: 20rem;">
-                    <img class="card-img-top" src="@details.front_url" alt="Card image cap">
-                    <div class="card-body">
-                        <h5 class="card-title">@details.BookName</h5>
-                        <p class="card-text"></p>
+            <div class="card col-12">
+                <div class="row no-gutters">
+                    <div class="col-md-5">
+                        <div id="carouselExampleIndicators" class="carousel slide " data-ride="carousel">
+                            <ol class="carousel-indicators">
+                                <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+                                <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+                                <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+                                <li data-target="#carouselExampleIndicators" data-slide-to="3"></li>
+                            </ol>
+                            <div class="carousel-inner rounded">
+                                <div class="carousel-item active">
+                                    <img class="d-block w-100" src="@Model.front_url" alt="First slide">
+                                </div>
+                                <div class="carousel-item">
+                                    <img class="d-block w-100" src="@Model.back_url" alt="Second slide">
+                                </div>
+                            </div>
+                            <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="sr-only">Previous</span>
+                            </a>
+                            <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="sr-only">Next</span>
+                            </a>
+                        </div>
                     </div>
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item">Publisher : @details.Publisher.Name</li>
-                        <li class="list-group-item">Genre     : @details.Genre.Name</li>
-                        <li class="list-group-item">Type      : @details.BookType.TypeName</li>
-                        <li class="list-group-item">Condition : @details.BookCondition.ConditionName</li>
-                        <li class="list-group-item">Price     : $@details.Price</li>
-                        <li class="list-group-item">Quantity  :@details.Quantity</li>
-                    </ul>
-                    <div class="card-body">
-                        <a href="#" class="card-link">Card link</a>
+                    <div class="col-6">
+                        <div class="card-body">
+                            <h3 class="card-title text-center">@Model.BookName</h3>
+                            <li class="list-group-item"><h4>Publisher  :  @Model.publisher</h4></li>
+                            <li class="list-group-item"><h4>Genre     :  @Model.genre</h4></li>
+                            <li class="list-group-item"><h4>Type       :  @Model.BookType</h4></li>
+                            @if (count != 0)
+                            {
+                                <div class="container">
+                                    <div class="row border-top-2">
+                                        @foreach (var book in Model.Books)
+                                        {
+                                            <div class="col-5" style="margin-top:20px;">
+                                                <div class="card rounded" >
+                                                    <ul class="list-group list-group-flush">
+                                                        <li class="list-group-item">Condition : @book.BookCondition.ConditionName</li>
+                                                        <li class="list-group-item">Price     : $@book.Price</li>
+                                                        <li class="list-group-item">Quantity  : @book.Quantity</li>
+                                                    </ul>
+                                                    <div class="card-body">
+                                                        <a asp-controller="Inventory" asp-action="BookDetails" asp-route-id="@book.BookId">Edit</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+
+                            }
+
+                        </div>
                     </div>
                 </div>
             </div>
-    </div>
-</div>
+        </div>
+   </div>
+
+            
