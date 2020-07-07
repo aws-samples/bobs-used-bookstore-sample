@@ -13,9 +13,4 @@ namespace BOBS_Backend.Models.AdminUser
 
     }
 
-    public class CreateUser
-    {
-       
-    }
-   
 }
