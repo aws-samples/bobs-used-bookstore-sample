@@ -15,6 +15,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.IP)
             </th>
+            <th>
+                @Html.DisplayNameFor(model=>model.Customer)
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -23,6 +26,9 @@
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.IP)
+            </td>
+            <td>
+                @Convert.ToString( item.Customer)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Cart_Id">Edit</a> |

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BobBookstore.Data;
 using BobBookstore.Models.Carts;
+using BobBookstore.Models.Book;
 
 namespace BobBookstore.Controllers
 {
@@ -22,7 +23,13 @@ namespace BobBookstore.Controllers
         // GET: CartItems
         public async Task<IActionResult> Index()
         {
-            return View(await _context.CartItem.ToListAsync());
+            var id = Convert.ToInt32(HttpContext.Request.Cookies["CartId"]);
+            var cart = _context.Cart.Find(id);
+            var cartItem = from c in _context.CartItem
+                       select c;
+            cartItem = cartItem.Where(s => s.Cart==cart);
+            return View(await cartItem.ToListAsync());
+            //return View(Tuple.Create(item1,book));
         }
 
         // GET: CartItems/Details/5

@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Identity;
 using Amazon.Extensions.CognitoAuthentication;
 using Amazon.AspNetCore.Identity.Cognito;
 using BobBookstore.Models.Customer;
+using BobBookstore.Models.Book;
 
 namespace BobBookstore.Controllers
 {
@@ -37,8 +38,7 @@ namespace BobBookstore.Controllers
 
             //Add Guid to session coookie
             //HttpContext.Response.Cookies.Delete("CartIp");
-            string ip = "";
-
+            string ip = "0";
             if (_SignInManager.IsSignedIn(User))
             {
                 var user = await _userManager.GetUserAsync(User);

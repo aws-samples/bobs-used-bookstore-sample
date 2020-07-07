@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using BobBookstore.Models;
+//using BobBookstore.Models;
 using BobBookstore.Models.Customer;
 using BobBookstore.Models.Order;
 using BobBookstore.Models.Book;
@@ -13,6 +13,10 @@ namespace BobBookstore.Data
 {
     public class UsedBooksContext : DbContext
     {
+        public UsedBooksContext()
+        {
+        }
+
         public UsedBooksContext(DbContextOptions<UsedBooksContext> options)
             : base(options)
         {

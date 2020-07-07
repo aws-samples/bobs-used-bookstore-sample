@@ -1,4 +1,5 @@
 ﻿@model IEnumerable<BobBookstore.Models.Carts.CartItem>
+@*@model Tuple<IEnumerable<BobBookstore.Models.Carts.CartItem>, BobBookstore.Models.Book.Book>*@
 
 @{
     ViewData["Title"] = "Index";
@@ -12,18 +13,25 @@
 <table class="table">
     <thead>
         <tr>
+            <th>
+                @Html.DisplayNameFor(Model=>Model.CartItem_Id)
+            </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.CartItem_Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.CartItem_Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.CartItem_Id">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CartItem_Id)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.CartItem_Id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.CartItem_Id">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.CartItem_Id">Delete</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
