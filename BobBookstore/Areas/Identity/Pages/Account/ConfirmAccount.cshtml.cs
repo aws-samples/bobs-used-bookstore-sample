@@ -9,6 +9,7 @@ using Amazon.Extensions.CognitoAuthentication;
 using BobBookstore.Data;
 using BobBookstore.Models.Customer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -20,10 +21,12 @@ namespace BobBookstore.Areas.Identity.Pages.Account
     {
         private readonly CognitoUserManager<CognitoUser> _userManager;
         private readonly UsedBooksContext _context;
-        public ConfirmAccountModel(UserManager<CognitoUser> userManager, UsedBooksContext context)
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        public ConfirmAccountModel(UserManager<CognitoUser> userManager, UsedBooksContext context,IHttpContextAccessor httpContextAccessor)
         {
             _userManager = userManager as CognitoUserManager<CognitoUser>;
             _context = context;
+            _httpContextAccessor = httpContextAccessor;
         }
         [BindProperty]
         public InputModel Input { get; set; }
@@ -65,13 +68,17 @@ namespace BobBookstore.Areas.Identity.Pages.Account
                 {
                     //this part is to add customer information into the DB,birthday need to be convert
                     var userName = await _userManager.GetUserNameAsync(user);
+                    
                     var firstName = user.Attributes[CognitoAttribute.GivenName.AttributeName];
                     var lastName = user.Attributes[CognitoAttribute.FamilyName.AttributeName];
                     var email = user.Attributes[CognitoAttribute.Email.AttributeName];
                     var dateOfBirth = user.Attributes[CognitoAttribute.BirthDate.AttributeName];
                     var phone = user.Attributes[CognitoAttribute.PhoneNumber.AttributeName];
+                    var customer_ID = user.Attributes[CognitoAttribute.Sub.AttributeName];
                     var customer = new Customer()
                     {
+                        Customer_Id=customer_ID,
+                        //Customer_Id = 1111,
                         Username = userName,
                         FirstName = firstName,
                         LastName = lastName,
@@ -79,6 +86,22 @@ namespace BobBookstore.Areas.Identity.Pages.Account
                         Phone = phone
                     };
                     _context.Add(customer);
+                    _context.SaveChanges();
+                   
+                    //var currentuser = await _userManager.GetUserAsync(User);
+                    //var email = user.Attributes[CognitoAttribute.Email.AttributeName];
+                    var currentCustomer = from m in _context.Customer
+                                   select m;
+                    currentCustomer = currentCustomer.Where(s => s.Email == email);
+                    var CustomerId = new Customer();
+                    foreach (var CC in currentCustomer)
+                    {
+                        CustomerId = CC;
+                    }
+                    var cartId = HttpContext.Request.Cookies["CartId"];
+                    var recentCart = await _context.Cart.FindAsync(Convert.ToInt32(cartId));
+                    recentCart.Customer = CustomerId;
+                    _context.Update(recentCart);
                     await _context.SaveChangesAsync();
 
 

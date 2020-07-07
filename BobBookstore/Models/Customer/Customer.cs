@@ -9,7 +9,7 @@ namespace BobBookstore.Models.Customer
     public class Customer
     {
         [Key]
-        public long Customer_Id { get; set; }
+        public string Customer_Id { get; set; }
 
         public string Username { get; set; }
 

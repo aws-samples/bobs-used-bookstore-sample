@@ -35,10 +35,7 @@ namespace BobBookstore.Migrations
                     b.Property<string>("Front_Url")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<long>("Genre_Id")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("Genre_Id1")
+                    b.Property<long?>("Genre_Id")
                         .HasColumnType("bigint");
 
                     b.Property<long>("ISBN")
@@ -65,8 +62,6 @@ namespace BobBookstore.Migrations
                     b.HasKey("Book_Id");
 
                     b.HasIndex("Genre_Id");
-
-                    b.HasIndex("Genre_Id1");
 
                     b.HasIndex("Publisher_Id");
 
@@ -170,8 +165,8 @@ namespace BobBookstore.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<long?>("Customer_Id")
-                        .HasColumnType("bigint");
+                    b.Property<string>("Customer_Id")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("IP")
                         .HasColumnType("nvarchar(max)");
@@ -229,8 +224,8 @@ namespace BobBookstore.Migrations
                     b.Property<string>("Country")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<long?>("Customer_Id")
-                        .HasColumnType("bigint");
+                    b.Property<string>("Customer_Id")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<bool>("IsPrimary")
                         .HasColumnType("bit");
@@ -250,10 +245,8 @@ namespace BobBookstore.Migrations
 
             modelBuilder.Entity("BobBookstore.Models.Customer.Customer", b =>
                 {
-                    b.Property<long>("Customer_Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                    b.Property<string>("Customer_Id")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("DateOfBirth")
                         .HasColumnType("datetime2");
@@ -288,8 +281,8 @@ namespace BobBookstore.Migrations
                     b.Property<long?>("Address_Id")
                         .HasColumnType("bigint");
 
-                    b.Property<long?>("Customer_Id")
-                        .HasColumnType("bigint");
+                    b.Property<string>("Customer_Id")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("DeliveryDate")
                         .HasColumnType("nvarchar(max)");
@@ -314,6 +307,39 @@ namespace BobBookstore.Migrations
                     b.ToTable("Order");
                 });
 
+            modelBuilder.Entity("BobBookstore.Models.Order.OrderDetails", b =>
+                {
+                    b.Property<long>("OrderDetail_Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<long?>("Book_Id")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("Order_Id")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("Price_Id")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<double>("price")
+                        .HasColumnType("float");
+
+                    b.HasKey("OrderDetail_Id");
+
+                    b.HasIndex("Book_Id");
+
+                    b.HasIndex("Order_Id");
+
+                    b.HasIndex("Price_Id");
+
+                    b.ToTable("OrderDetails");
+                });
+
             modelBuilder.Entity("BobBookstore.Models.Order.OrderStatus", b =>
                 {
                     b.Property<long>("OrderStatus_Id")
@@ -333,13 +359,7 @@ namespace BobBookstore.Migrations
                 {
                     b.HasOne("BobBookstore.Models.Book.Genre", "Genre")
                         .WithMany()
-                        .HasForeignKey("Genre_Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("BobBookstore.Models.Book.Genre", null)
-                        .WithMany()
-                        .HasForeignKey("Genre_Id1");
+                        .HasForeignKey("Genre_Id");
 
                     b.HasOne("BobBookstore.Models.Book.Publisher", "Publisher")
                         .WithMany()
@@ -403,6 +423,21 @@ namespace BobBookstore.Migrations
                     b.HasOne("BobBookstore.Models.Order.OrderStatus", "OrderStatus")
                         .WithMany()
                         .HasForeignKey("OrderStatus_Id");
+                });
+
+            modelBuilder.Entity("BobBookstore.Models.Order.OrderDetails", b =>
+                {
+                    b.HasOne("BobBookstore.Models.Book.Book", "Book")
+                        .WithMany()
+                        .HasForeignKey("Book_Id");
+
+                    b.HasOne("BobBookstore.Models.Order.Order", "Order")
+                        .WithMany()
+                        .HasForeignKey("Order_Id");
+
+                    b.HasOne("BobBookstore.Models.Book.Price", "Price")
+                        .WithMany()
+                        .HasForeignKey("Price_Id");
                 });
 #pragma warning restore 612, 618
         }

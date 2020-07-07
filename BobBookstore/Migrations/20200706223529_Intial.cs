@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace BobBookstore.Migrations
 {
-    public partial class InitialCreate : Migration
+    public partial class Intial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -24,8 +24,7 @@ namespace BobBookstore.Migrations
                 name: "Customer",
                 columns: table => new
                 {
-                    Customer_Id = table.Column<long>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Customer_Id = table.Column<string>(nullable: false),
                     Username = table.Column<string>(nullable: true),
                     FirstName = table.Column<string>(nullable: true),
                     LastName = table.Column<string>(nullable: true),
@@ -103,7 +102,7 @@ namespace BobBookstore.Migrations
                     State = table.Column<string>(nullable: true),
                     Country = table.Column<string>(nullable: true),
                     ZipCode = table.Column<long>(nullable: false),
-                    Customer_Id = table.Column<long>(nullable: true)
+                    Customer_Id = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -122,7 +121,7 @@ namespace BobBookstore.Migrations
                 {
                     Cart_Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Customer_Id = table.Column<long>(nullable: true),
+                    Customer_Id = table.Column<string>(nullable: true),
                     IP = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -187,7 +186,7 @@ namespace BobBookstore.Migrations
                     Tax = table.Column<double>(nullable: false),
                     DeliveryDate = table.Column<string>(nullable: true),
                     OrderStatus_Id = table.Column<long>(nullable: true),
-                    Customer_Id = table.Column<long>(nullable: true),
+                    Customer_Id = table.Column<string>(nullable: true),
                     Address_Id = table.Column<long>(nullable: true)
                 },
                 constraints: table =>
@@ -274,6 +273,41 @@ namespace BobBookstore.Migrations
                         onDelete: ReferentialAction.Restrict);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "OrderDetails",
+                columns: table => new
+                {
+                    OrderDetail_Id = table.Column<long>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Order_Id = table.Column<long>(nullable: true),
+                    Book_Id = table.Column<long>(nullable: true),
+                    Price_Id = table.Column<long>(nullable: true),
+                    price = table.Column<double>(nullable: false),
+                    Quantity = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OrderDetails", x => x.OrderDetail_Id);
+                    table.ForeignKey(
+                        name: "FK_OrderDetails_Book_Book_Id",
+                        column: x => x.Book_Id,
+                        principalTable: "Book",
+                        principalColumn: "Book_Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_OrderDetails_Order_Order_Id",
+                        column: x => x.Order_Id,
+                        principalTable: "Order",
+                        principalColumn: "Order_Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_OrderDetails_Price_Price_Id",
+                        column: x => x.Price_Id,
+                        principalTable: "Price",
+                        principalColumn: "Price_Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_Address_Customer_Id",
                 table: "Address",
@@ -330,6 +364,21 @@ namespace BobBookstore.Migrations
                 column: "OrderStatus_Id");
 
             migrationBuilder.CreateIndex(
+                name: "IX_OrderDetails_Book_Id",
+                table: "OrderDetails",
+                column: "Book_Id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OrderDetails_Order_Id",
+                table: "OrderDetails",
+                column: "Order_Id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OrderDetails_Price_Id",
+                table: "OrderDetails",
+                column: "Price_Id");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Price_Book_Id",
                 table: "Price",
                 column: "Book_Id");
@@ -346,10 +395,13 @@ namespace BobBookstore.Migrations
                 name: "CartItem");
 
             migrationBuilder.DropTable(
-                name: "Order");
+                name: "OrderDetails");
 
             migrationBuilder.DropTable(
                 name: "Cart");
+
+            migrationBuilder.DropTable(
+                name: "Order");
 
             migrationBuilder.DropTable(
                 name: "Price");
