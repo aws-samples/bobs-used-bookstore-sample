@@ -21,27 +21,30 @@ namespace BobBookstore.Controllers
         public async Task<IActionResult> IndexAsync(string searchString)
         {
 
-            var books = from b in _context.Book
-                        select new BookViewModel()
-                        {
-                            BookId = b.Book_Id,
-                            BookName = b.Name,
-                            ISBN = b.ISBN,
-                            GenreName = b.Genre.Name,
-                            TypeName = b.Type.TypeName,
-                            Url = b.Back_Url
-                        };
-
             if (!String.IsNullOrEmpty(searchString))
             {
-                books = books.Where(s => s.BookName.Contains(searchString) || s.GenreName.Contains(searchString)
-                                    || s.TypeName.Contains(searchString));
+                var books = from b in _context.Book
+                            where b.Name.Contains(searchString) ||
+                            b.Genre.Name.Contains(searchString) ||
+                            b.Type.TypeName.Contains(searchString) ||
+                            b.ISBN.ToString().Contains(searchString)
+                            select new BookViewModel()
+                            {
+                                BookId = b.Book_Id,
+                                BookName = b.Name,
+                                ISBN = b.ISBN,
+                                GenreName = b.Genre.Name,
+                                TypeName = b.Type.TypeName,
+                                Url = b.Back_Url
+                            };
+                return View(await books.ToListAsync());
+
             }
 
-            return View(await books.ToListAsync());
+            return View();
         }
 
-        public IActionResult Detail(long id)
+        public async Task<IActionResult> DetailAsync(long id)
         {
             var book = from m in _context.Book
                        where m.Book_Id == id
@@ -54,7 +57,7 @@ namespace BobBookstore.Controllers
                            Url = m.Back_Url
                        };
 
-            return View(book.First());
+            return View(await book.FirstOrDefaultAsync());
         }
     }
 }
