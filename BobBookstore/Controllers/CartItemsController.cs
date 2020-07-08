@@ -32,6 +32,20 @@ namespace BobBookstore.Controllers
             //return View(Tuple.Create(item1,book));
         }
 
+        public async Task<IActionResult> AddtoCartitem(long bookid,long priceid)
+        {
+            var book = _context.Book.Find(bookid);
+            var price = _context.Price.Find(priceid);
+            var cartId = HttpContext.Request.Cookies["CartId"];
+            var cart = _context.Cart.Find(Convert.ToInt32(cartId));
+
+            var cartItem = new CartItem() { Book = book, Price = price, Cart = cart };
+
+            _context.Add(cartItem);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
         // GET: CartItems/Details/5
         public async Task<IActionResult> Details(int? id)
         {

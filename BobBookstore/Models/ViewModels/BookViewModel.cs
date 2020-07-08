@@ -13,5 +13,6 @@ namespace BobBookstore.Models.ViewModels
         public string GenreName { get; set; }
         public string TypeName { get; set; }
         public string Url { get; set; }
+
     }
 }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using BobBookstore.Data;
 using BobBookstore.Models.Book;
+using BobBookstore.Models.Carts;
 using BobBookstore.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -55,9 +56,25 @@ namespace BobBookstore.Controllers
                            GenreName = m.Genre.Name,
                            TypeName = m.Type.TypeName,
                            Url = m.Back_Url
+                           
                        };
 
             return View(await book.FirstOrDefaultAsync());
+        }
+
+        public async Task<IActionResult> AddtoCartitem(long bookid, long priceid)
+        {
+            var book = _context.Book.Find(bookid);
+            var price = _context.Price.Find(priceid);
+            var cartId = HttpContext.Request.Cookies["CartId"];
+            var cart = _context.Cart.Find(Convert.ToInt32(cartId));
+
+            var cartItem = new CartItem() { Book = book, Price = price, Cart = cart };
+
+            _context.Add(cartItem);
+            _context.SaveChanges();
+            
+            return RedirectToAction(nameof(Index));
         }
     }
 }
