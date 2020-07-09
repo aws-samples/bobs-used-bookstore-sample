@@ -19,6 +19,12 @@
 </head>
 
 <body>
+    <form asp-controller="Search" asp-action="Index" method="get">
+        <p>
+            <input type="text" name="SearchString" placeholder="Search books..."/>
+            <input type="submit" value="Filter" />
+        </p>
+    </form>
 
     <!-- Page Content -->
     <div class="container">
@@ -174,7 +180,7 @@
         <!-- /.row -->
 
     </div>
-    
+
 </body>
 
 </html>
