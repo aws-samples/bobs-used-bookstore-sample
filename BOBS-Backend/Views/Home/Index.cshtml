@@ -2,67 +2,57 @@
     ViewData["Title"] = "Home";
 }
 @*The view for when is the user is logged in*@
+
 @if (User.Identity.IsAuthenticated)
 {
-
-    <partial name="~/Views/Home/Partials/_AuthIndex.cshtml" />
-
+    
+        <div class="position-relative overflow-hidden p-0 m-0 text-center">
+            <div class="col-md-5 p-lg-5 mx-auto my-5">
+                <h1 class="display-4 font-weight-normal">Bob's Used Bookstore</h1>
+                <p class="lead font-weight-normal">Manage your workspace</p>
+                @Html.ActionLink("Manage", "WelcomePage", "Home", null, new { @class = "btn-group-sm btn btn-outline-light btn btn-dark" })
+            </div>
+        </div>
+    
 
 }
 @*the carousel for when the user is not authenticated*@
 else
 {
-    <div id="myCarousel" class="carousel slide" data-ride="carousel">
-        <ol class="carousel-indicators">
-            <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
-            <li data-target="#myCarousel" data-slide-to="1"></li>
-            <li data-target="#myCarousel" data-slide-to="2"></li>
-        </ol>
-        <div class="carousel-inner">
-            <div class="carousel-item active">
-                <img class="first-slide" width="100%" height="400px" src="~/css/Images/bgBlack.jpg" alt="First slide">
-                <div class="container">
-                    <div class="carousel-caption text-center">
-                        <h1>Get the right Book for you</h1>
-                        <p></p>
-                        <p>
-                            @Html.ActionLink("Login", "WelcomePage", "Home", null, new { @class = "btn-group-sm btn btn-outline-light btn btn-primary" })
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div class="carousel-item">
-                <img class="second-slide" width="100%" height="400px" src="~/css/Images/book2.jpg" alt="Second slide">
-                <div class="container">
-                    <div class="carousel-caption">
-                        <h1>We have the best collection of Books.</h1>
-                        <p>
-                            @Html.ActionLink("Register", "WelcomePage", "Home", null, new { @class = "btn-group-sm btn btn-outline-light btn btn-primary" })
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div class="carousel-item">
-                <img class="third-slide" width="100%" height="400px" src="~/css/Images/book1.jpg" alt="Third slide">
-                <div class="container">
-                    <div class="carousel-caption text-left">
-                        <h1>Already a Member?</h1>
+    @* <partial name="~/Views/Home/Partials/_UnAuthIndex.cshtml" />*@
+    <div class="position-relative overflow-hidden p-0 m-0 text-center ">
+        <div class="col-md-5 p-lg-5 mx-auto my-5">
+            <h1 class="display-4 font-weight-normal">Bob's Used Bookstore</h1>
+            <p class="lead font-weight-normal">Login in to manage your workspace</p>
+            @Html.ActionLink("Login", "WelcomePage", "Home", null, new { @class = "btn-group-sm btn btn-outline-light btn btn-dark" })
+        </div>
+    </div>
 
-                        <p>
-                            @Html.ActionLink("Login", "WelcomePage", "Home", null, new { @class = "btn-group-sm btn btn-outline-light btn btn-primary" })
-                        </p>
-                    </div>
-                </div>
+    <hr class="featurette-divider">
+
+    <div class="card-deck">
+        <div class="card border-dark">
+            <img src="/css/Images/orderManage.jpg" class="card-img-top" alt="...">
+            <div class="card-body">
+                <h5 class="card-title text-center">View Orders</h5>
+                <p class="card-text">An easy to use filter for viewing all orders with ease. Retrieve relevant orders based on attrbutes.</p>
             </div>
         </div>
-        <a class="carousel-control-prev" href="#myCarousel" role="button" data-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="sr-only">Previous</span>
-        </a>
-        <a class="carousel-control-next" href="#myCarousel" role="button" data-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="sr-only">Next</span>
-        </a>
+        <div class="card border-dark">
+            <img src="/css/Images/searchInventory.jpg" height="166px" card-img-top" alt="...">
+            <div class="card-body">
+                <h5 class="card-title text-center">Manage Inventory</h5>
+                <p class="card-text">Manage all the inventory in one place. Add relevant book attributes. Update existing book details.</p>
+
+            </div>
+        </div>
+        <div class="card border-dark">
+            <img src="/css/Images/manageOrder.jpg" height="162px" class="card-img-top" alt="...">
+            <div class="card-body">
+                <h5 class="card-title text-center">Manage Orders</h5>
+                <p class="card-text">Manage the status of your orders. Update and track existing orders. View all details in one place.</p>
+            </div>
+        </div>
     </div>
 
 }

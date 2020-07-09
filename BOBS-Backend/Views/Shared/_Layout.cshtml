@@ -7,11 +7,12 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
     
+    
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-lg navbar-toggleable-sm navbar-dark bg-light border-bottom box-shadow mb-3">
-            <div class="container">
+        <nav class="navbar navbar-expand-lg navbar-toggleable-sm navbar-dark bg-dark  box-shadow mb-3">
+            <div class="container-fluid">
                 
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
@@ -20,18 +21,18 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Home" asp-action="Index">Bob's Used Bookstore</a>
+                            <a class="nav-link text-white" asp-controller="Home" asp-action="Index">Bob's Used Bookstore</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
                         @if (User.Identity.IsAuthenticated)
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Orders" asp-action="Index">Manage Orders</a>
+                                <a class="nav-link text-white" asp-area="" asp-controller="Orders" asp-action="Index">Manage Orders</a>
                             </li>
                             <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle text-dark" id="navbarDropdownMenuLink-333" data-toggle="dropdown"
+                                <a class="nav-link dropdown-toggle text-white" id="navbarDropdownMenuLink-333" data-toggle="dropdown"
                                    aria-haspopup="true" aria-expanded="false">
                                     Inventory
                                 </a>
@@ -47,7 +48,7 @@
                 <div class="nav navbar-nav navbar-right">
                     <ul class="nav navbar-nav navbar-right">
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle text-dark" id="navbarDropdownMenuLink-333" data-toggle="dropdown"
+                            <a class="nav-link dropdown-toggle text-white" id="navbarDropdownMenuLink-333" data-toggle="dropdown"
                                aria-haspopup="true" aria-expanded="false">
                                 Profile
                             </a>
@@ -71,7 +72,7 @@
             </div>
         </nav>
     </header>
-    <div class="container">
+    <div class="container-fluid">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
