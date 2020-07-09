@@ -12,6 +12,7 @@ namespace BobBookstore.Models.ViewModels
         public long ISBN { get; set; }
         public string GenreName { get; set; }
         public string TypeName { get; set; }
+        public List<Book.Price> Prices { get; set; }
         public string Url { get; set; }
 
     }

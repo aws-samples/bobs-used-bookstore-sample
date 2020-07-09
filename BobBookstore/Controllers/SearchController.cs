@@ -47,6 +47,10 @@ namespace BobBookstore.Controllers
 
         public async Task<IActionResult> DetailAsync(long id)
         {
+            var prices = await (from p in _context.Price
+                         where p.Book.Book_Id == id
+                         select p).ToListAsync();
+
             var book = from m in _context.Book
                        where m.Book_Id == id
                        select new BookViewModel()
@@ -55,8 +59,8 @@ namespace BobBookstore.Controllers
                            ISBN = m.ISBN,
                            GenreName = m.Genre.Name,
                            TypeName = m.Type.TypeName,
-                           Url = m.Back_Url
-                           
+                           Url = m.Back_Url,
+                           Prices = prices
                        };
 
             return View(await book.FirstOrDefaultAsync());
