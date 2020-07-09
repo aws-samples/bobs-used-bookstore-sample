@@ -47,9 +47,16 @@ namespace BobBookstore.Controllers
 
         public async Task<IActionResult> DetailAsync(long id)
         {
-            var prices = await (from p in _context.Price
-                         where p.Book.Book_Id == id
-                         select p).ToListAsync();
+            var prices = await (from p in _context.Price where p.Book.Book_Id == id
+                         join c in _context.Condition
+                         on p.Condition.Condition_Id equals c.Condition_Id
+                         select new Price
+                         {
+                             Price_Id = p.Price_Id,
+                             Condition = c,
+                             ItemPrice = p.ItemPrice,
+                             Quantity = p.Quantity
+                         }).ToListAsync();
 
             var book = from m in _context.Book
                        where m.Book_Id == id
