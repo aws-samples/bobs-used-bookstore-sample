@@ -6,6 +6,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20200709171123_CrtData.cs" />
+    <Compile Remove="Migrations\20200709171123_CrtData.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Amazon.Extensions.CognitoAuthentication" Version="1.0.3" />
     <PackageReference Include="AWSSDK.CognitoIdentity" Version="3.3.101.98" />
     <PackageReference Include="AWSSDK.CognitoIdentityProvider" Version="3.3.110.2" />
