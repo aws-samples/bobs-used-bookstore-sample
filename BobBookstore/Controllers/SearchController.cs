@@ -67,7 +67,8 @@ namespace BobBookstore.Controllers
                            GenreName = m.Genre.Name,
                            TypeName = m.Type.TypeName,
                            Url = m.Back_Url,
-                           Prices = prices
+                           Prices = prices,
+                           BookId=m.Book_Id
                        };
 
             return View(await book.FirstOrDefaultAsync());
@@ -84,8 +85,8 @@ namespace BobBookstore.Controllers
 
             _context.Add(cartItem);
             _context.SaveChanges();
-            
-            return RedirectToAction(nameof(Index));
+            var stringBookid = Convert.ToString(bookid);
+            return RedirectToAction("Detail","Search",new { @id = bookid });
         }
     }
 }

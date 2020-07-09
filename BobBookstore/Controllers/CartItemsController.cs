@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using BobBookstore.Data;
 using BobBookstore.Models.Carts;
 using BobBookstore.Models.Book;
+using BobBookstore.Models.ViewModels;
 
 namespace BobBookstore.Controllers
 {
@@ -26,10 +27,20 @@ namespace BobBookstore.Controllers
             var id = Convert.ToInt32(HttpContext.Request.Cookies["CartId"]);
             var cart = _context.Cart.Find(id);
             var cartItem = from c in _context.CartItem
-                       select c;
-            cartItem = cartItem.Where(s => s.Cart==cart);
+                           where c.Cart==cart
+                       select new CartViewModel()
+                       {
+                           BookId=c.Book.Book_Id,
+                           Url=c.Book.Back_Url,
+                           Prices=c.Price.ItemPrice,
+                           BookName=c.Book.Name,
+                           CartItem_Id=c.CartItem_Id
+
+                       };
+            
             return View(await cartItem.ToListAsync());
             //return View(Tuple.Create(item1,book));
+            
         }
 
         public async Task<IActionResult> AddtoCartitem(long bookid,long priceid)
