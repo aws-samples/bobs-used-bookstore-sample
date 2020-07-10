@@ -45,29 +45,36 @@ else
         <tbody>
             @foreach (var item in Model)
             {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelitem => item.BookName)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelitem => item.ISBN)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.GenreName)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelitem => item.TypeName)
-                    </td>
-                    <td>
-                        Available from $@Html.DisplayFor(modelitem => item.Prices.Min(p => p.ItemPrice))
-                    </td>
-                    <td>
-                        <form asp-controller="Search" asp-action="Detail" method="get">
-                            <input type="hidden" name="id" value="@item.BookId" />
-                            <input type="submit" value="details" />
-                        </form>
-                    </td>
-                </tr>
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelitem => item.BookName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelitem => item.ISBN)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.GenreName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelitem => item.TypeName)
+                </td>
+                @if (item.Prices.Count == 0)
+                {
+                    <td> None in stock </td>
+                }
+                else
+                {
+                    <td> Available from $@item.Prices.Min(p => p.ItemPrice)</td>
+                }
+
+
+                <td>
+                    <form asp-controller="Search" asp-action="Detail" method="get">
+                        <input type="hidden" name="id" value="@item.BookId" />
+                        <input type="submit" value="details" />
+                    </form>
+                </td>
+            </tr>
             }
         </tbody>
     </table>
