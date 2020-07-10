@@ -37,6 +37,9 @@ else
                 <th>
                     @Html.DisplayNameFor(model => model.TypeName)
                 </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Prices)
+                </th>
             </tr>
         </thead>
         <tbody>
@@ -54,6 +57,9 @@ else
                     </td>
                     <td>
                         @Html.DisplayFor(modelitem => item.TypeName)
+                    </td>
+                    <td>
+                        Available from $@Html.DisplayFor(modelitem => item.Prices.Min(p => p.ItemPrice))
                     </td>
                     <td>
                         <form asp-controller="Search" asp-action="Detail" method="get">

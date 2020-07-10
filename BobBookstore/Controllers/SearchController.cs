@@ -29,6 +29,7 @@ namespace BobBookstore.Controllers
                             b.Genre.Name.Contains(searchString) ||
                             b.Type.TypeName.Contains(searchString) ||
                             b.ISBN.ToString().Contains(searchString)
+                            join p in _context.Price on b.Book_Id equals p.Book.Book_Id into prices
                             select new BookViewModel()
                             {
                                 BookId = b.Book_Id,
@@ -36,8 +37,10 @@ namespace BobBookstore.Controllers
                                 ISBN = b.ISBN,
                                 GenreName = b.Genre.Name,
                                 TypeName = b.Type.TypeName,
-                                Url = b.Back_Url
+                                Url = b.Back_Url,
+                                Prices = prices.ToList()
                             };
+
                 return View(await books.ToListAsync());
 
             }
