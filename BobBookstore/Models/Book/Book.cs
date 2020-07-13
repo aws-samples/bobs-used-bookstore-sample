@@ -11,8 +11,6 @@ namespace BobBookstore.Models.Book
         [Key]
         public long Book_Id { get; set; }
 
-        public string Author { get; set; }
-
         public Publisher Publisher { get; set; }
 
         public long ISBN { get; set; }

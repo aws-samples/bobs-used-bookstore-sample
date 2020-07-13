@@ -4,43 +4,84 @@
 @{
     ViewData["Title"] = "Index";
 }
+    <body>
+        <h1>Cart</h1>
 
-<h1>Cart</h1>
+        <h3>Total price：$ <span id="totalprice">0</span></h3>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        Cover
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(Model => Model.BookName)
+                    </th>
+                        <th>
+                            <input type="checkbox" name="selectall" value="choose" onclick="selectall();count()" />choose all &nbsp;@Html.DisplayNameFor(Model => Model.Prices) &nbsp;&nbsp;Quantity
+                        </th>
 
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            <img src="@Html.DisplayFor(modelitem => item.Url)" />
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelitem => item.BookName)
+                        </td>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                Cover
-            </th>
-            <th>
-                @Html.DisplayNameFor(Model => Model.BookName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(Model => Model.Prices)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-        <tr>
-            <td>
-                <img src="@Html.DisplayFor(modelitem => item.Url)" />
-            </td>
-            <td>
-                @Html.DisplayFor(modelitem => item.BookName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelitem => item.Prices)
-            </td>
-            <td>
+                        <td>
+                            <input type="checkbox" name="fruits" value="@Html.DisplayFor(modelitem => item.Prices)">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$@Html.DisplayFor(modelitem => item.Prices)&nbsp;&nbsp;<input type="number" min="1" max="@Html.DisplayFor(modelitem=>item.quantity)" value="1" id="quantity" class="numbers"><br />
+                        </td>
+                        
+                        <td>
 
-                <a asp-action="Delete" asp-route-id="@item.CartItem_Id">Delete</a>
-            </td>
-        </tr>
-        }
-    </tbody>
-</table>
+                            <a asp-action="Delete" asp-route-id="@item.CartItem_Id">Delete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        
+
+        <script>
+            var fruits = document.getElementsByName('fruits');
+            var numbers = document.getElementsByClassName("numbers");
+
+            for (var i = 0; i < fruits.length; i++) {
+                fruits[i].onclick = count;
+            }
+            for (var i = 0; i < numbers.length; i++) {
+                numbers[i].onclick = count;
+            }
+            function count() {
+                var totalprice = 0;
+                for (var i = 0; i < fruits.length; i++) {
+                    if (fruits[i].checked) {
+                        var number = fruits[i].nextSibling.nextSibling.value;
+                        totalprice += parseFloat(fruits[i].value) * number;
+                    }
+                }
+                document.getElementById('totalprice').innerHTML = totalprice;
+            }
+            function selectall() {
+                var sports = document.getElementsByName("fruits");
+                for (i = 0; i < sports.length; i++) {
+                    var sportname = sports[i];
+                    if (sportname.checked == true) {
+                        sportname.checked = false
+
+                    }
+                    else { sportname.checked = true; }
+
+                }
+            }
+
+        </script>
+    </body>

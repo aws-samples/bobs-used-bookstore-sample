@@ -34,7 +34,8 @@ namespace BobBookstore.Controllers
                            Url=c.Book.Back_Url,
                            Prices=c.Price.ItemPrice,
                            BookName=c.Book.Name,
-                           CartItem_Id=c.CartItem_Id
+                           CartItem_Id=c.CartItem_Id,
+                           quantity=c.Price.Quantity
 
                        };
             

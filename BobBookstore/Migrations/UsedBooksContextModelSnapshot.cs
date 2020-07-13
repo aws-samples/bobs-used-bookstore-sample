@@ -29,9 +29,6 @@ namespace BobBookstore.Migrations
                     b.Property<string>("AudioBook_Url")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Author")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Back_Url")
                         .HasColumnType("nvarchar(max)");
 
