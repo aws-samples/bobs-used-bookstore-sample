@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BobBookstore.Data;
+using BobBookstore.Models.Order;
 using BobBookstore.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -33,12 +34,17 @@ namespace BobBookstore.Controllers
             return View(await orders.ToListAsync());
         }
 
-        public async Task<IActionResult> DeleteAsync(long id)
+        public async Task<IActionResult> Delete(long id)
         {
-            var order = (from o in _context.Order where o.Order_Id == id select o)
-                .FirstOrDefault();
+            // needs rework, buggy rn
+            var orderstatus_id = (from o in _context.Order where o.Order_Id == id select 
+                                  new
+                                  {
+                                      Status_Id = o.OrderStatus.OrderStatus_Id
+                                  })
+                .FirstOrDefault().Status_Id;
             var status = (from s in _context.OrderStatus
-                          where order.OrderStatus.OrderStatus_Id == s.OrderStatus_Id
+                          where orderstatus_id == s.OrderStatus_Id
                           select s).FirstOrDefault();
 
             if (status == null)
@@ -50,7 +56,7 @@ namespace BobBookstore.Controllers
             _context.Update(status);
             await _context.SaveChangesAsync();
 
-            return View();
+            return await IndexAsync("1");
         }
     }
 }
