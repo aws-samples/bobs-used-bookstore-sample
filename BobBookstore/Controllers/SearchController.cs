@@ -41,6 +41,7 @@ namespace BobBookstore.Controllers
                                 Prices = prices.ToList()
                             };
 
+                
                 return View(await books.ToListAsync());
 
             }
