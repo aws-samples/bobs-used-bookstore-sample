@@ -45,7 +45,6 @@ namespace BobBookstore.Controllers
                                 Prices = prices.Where(p => p.Book.Book_Id == b.Book_Id).ToList()
                             };
 
-                
 
                 return View(await books.ToListAsync());
 
