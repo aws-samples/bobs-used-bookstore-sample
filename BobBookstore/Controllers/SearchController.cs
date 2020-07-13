@@ -24,24 +24,29 @@ namespace BobBookstore.Controllers
 
             if (!String.IsNullOrEmpty(searchString))
             {
-                var books = from b in _context.Book
+                var prices = from p in _context.Price
+                             where p.Book.Name.Contains(searchString) ||
+                            p.Book.Genre.Name.Contains(searchString) ||
+                            p.Book.Type.TypeName.Contains(searchString) ||
+                            p.Book.ISBN.ToString().Contains(searchString)
+                             select p;
+                 var books = from b in _context.Book
                             where b.Name.Contains(searchString) ||
                             b.Genre.Name.Contains(searchString) ||
                             b.Type.TypeName.Contains(searchString) ||
                             b.ISBN.ToString().Contains(searchString)
-                            join p in _context.Price on b.Book_Id equals p.Book.Book_Id into prices
-                            select new BookViewModel()
+                            select new BookViewModel
                             {
                                 BookId = b.Book_Id,
                                 BookName = b.Name,
                                 ISBN = b.ISBN,
                                 GenreName = b.Genre.Name,
                                 TypeName = b.Type.TypeName,
-                                Url = b.Back_Url,
-                                Prices = prices.ToList()
+                                Prices = prices.Where(p => p.Book.Book_Id == b.Book_Id).ToList()
                             };
 
                 
+
                 return View(await books.ToListAsync());
 
             }

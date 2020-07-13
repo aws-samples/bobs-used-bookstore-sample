@@ -16,5 +16,7 @@ namespace BobBookstore.Models.ViewModels
         public string Url { get; set; }
 
         public int CartItem_Id { get; set; }
+
+        public int quantity { get; set; }
     }
 }

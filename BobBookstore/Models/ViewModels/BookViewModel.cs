@@ -15,5 +15,6 @@ namespace BobBookstore.Models.ViewModels
         public List<Book.Price> Prices { get; set; }
         public string Url { get; set; }
 
+        
     }
 }
