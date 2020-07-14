@@ -6,6 +6,7 @@ using BobBookstore.Data;
 using BobBookstore.Models.Order;
 using BobBookstore.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
 
 namespace BobBookstore.Controllers
@@ -37,26 +38,32 @@ namespace BobBookstore.Controllers
         public async Task<IActionResult> Delete(long id)
         {
             // needs rework, buggy rn
-            var orderstatus_id = (from o in _context.Order where o.Order_Id == id select 
-                                  new
-                                  {
-                                      Status_Id = o.OrderStatus.OrderStatus_Id
-                                  })
-                .FirstOrDefault().Status_Id;
-            var status = (from s in _context.OrderStatus
-                          where orderstatus_id == s.OrderStatus_Id
-                          select s).FirstOrDefault();
+            //TODO Create new order_status (cancel), reassign to order
+            var order = (from o in _context.Order where o.Order_Id == id select o).First();
 
-            if (status == null)
+            if (order == null)
             {
                 return NotFound();
             }
 
-            status.Status = "Cancelled";
-            _context.Update(status);
+            var cancel_status = (from o in _context.OrderStatus where o.Status.Equals("Cancelled") select o).First();
+
+            if (cancel_status == null)
+            {
+                // create it
+                cancel_status = new OrderStatus
+                {
+                    Status = "Cancelled"
+                };
+                _context.OrderStatus.Add(cancel_status);
+            }
+
+            order.OrderStatus = cancel_status;
+            _context.Order.Update(order);
+
             await _context.SaveChangesAsync();
 
-            return await IndexAsync("1");
+            return View();
         }
     }
 }
