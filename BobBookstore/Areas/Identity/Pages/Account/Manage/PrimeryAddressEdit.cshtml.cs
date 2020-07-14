@@ -11,13 +11,13 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Extensions.Logging;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.View;
 
 namespace BobBookstore.Areas.Identity.Pages.Account.Manage
 {
+    
+
     [AllowAnonymous]
-    public class ManageAccountModel : PageModel
+    public class PrimeryAddressEditModel : PageModel
     {
         private readonly CognitoUserManager<CognitoUser> _userManager;
         private readonly SignInManager<CognitoUser> _signInManager;
@@ -31,7 +31,7 @@ namespace BobBookstore.Areas.Identity.Pages.Account.Manage
         public string Username { get; set; }
 
 
-        public ManageAccountModel(
+        public PrimeryAddressEditModel(
             UserManager<CognitoUser> userManager,
             SignInManager<CognitoUser> signInManager,
             UsedBooksContext context)
@@ -44,7 +44,7 @@ namespace BobBookstore.Areas.Identity.Pages.Account.Manage
         public class AccountModel
         {
             //[Required]
-            [Display(Name ="Address")]
+            [Display(Name = "Address")]
             public string Address { get; set; }
             //[Required]
             [Display(Name = "Birth Date ")]
@@ -97,7 +97,7 @@ namespace BobBookstore.Areas.Identity.Pages.Account.Manage
             var state = user.Attributes["custom:State"];
             var Country = user.Attributes["custom:Country"];
             var zipCode = user.Attributes["custom:ZipCode"];
-            
+
 
             Username = userName;
 
@@ -110,14 +110,14 @@ namespace BobBookstore.Areas.Identity.Pages.Account.Manage
                 NickName = nickName,
                 PhoneNumber = phoneNumber,
                 FamilyName = familyName,
-                AddressLine1=addressLine1,
-                AddressLine2= addressLine2,
-                City=city,
-                State=state,
-                Country=Country,
-                ZipCode=zipCode
-                
-                
+                AddressLine1 = addressLine1,
+                AddressLine2 = addressLine2,
+                City = city,
+                State = state,
+                Country = Country,
+                ZipCode = zipCode
+
+
             };
             if (Input.FamilyName == "default")
             {
@@ -148,8 +148,8 @@ namespace BobBookstore.Areas.Identity.Pages.Account.Manage
             {
                 Input.PhoneNumber = "";
             }
-           
-            if (Input.AddressLine1=="default")
+
+            if (Input.AddressLine1 == "default")
             {
                 Input.AddressLine1 = "";
             }
@@ -175,7 +175,7 @@ namespace BobBookstore.Areas.Identity.Pages.Account.Manage
             }
         }
 
-        
+
         public async Task<IActionResult> OnGetAsync()
         {
             var user = await _userManager.GetUserAsync(User);
@@ -185,15 +185,15 @@ namespace BobBookstore.Areas.Identity.Pages.Account.Manage
             }
 
             await LoadAsync(user);
-            
-            
+
+
             return Page();
         }
 
         public async Task<IActionResult> OnPostAsync()
         {
             var user = await _userManager.GetUserAsync(User);
-            
+
 
             if (user == null)
             {
@@ -205,7 +205,7 @@ namespace BobBookstore.Areas.Identity.Pages.Account.Manage
                 await LoadAsync(user);
                 return Page();
             }
-            
+
             if (string.IsNullOrWhiteSpace(Input.FamilyName))
             {
                 Input.FamilyName = "default";
@@ -258,7 +258,7 @@ namespace BobBookstore.Areas.Identity.Pages.Account.Manage
             {
                 Input.ZipCode = "default";
             }
-           
+
             user.Attributes[CognitoAttribute.Address.AttributeName] = Input.Address;
             user.Attributes[CognitoAttribute.BirthDate.AttributeName] = Input.BirthDate;
             user.Attributes[CognitoAttribute.Gender.AttributeName] = Input.Gender;
@@ -271,12 +271,12 @@ namespace BobBookstore.Areas.Identity.Pages.Account.Manage
             user.Attributes["custom:City"] = Input.City;
             user.Attributes["custom:State"] = Input.State;
             user.Attributes["custom:Country"] = Input.Country;
-            
+
             user.Attributes["custom:ZipCode"] = Input.ZipCode;
-            
+
             var result = await _userManager.UpdateAsync(user);
-            if(!result.Succeeded)
-           
+            if (!result.Succeeded)
+
             {
                 foreach (var error in result.Errors)
                 {
@@ -290,23 +290,23 @@ namespace BobBookstore.Areas.Identity.Pages.Account.Manage
                 var email = user.Attributes[CognitoAttribute.Email.AttributeName];
                 var customer = from m in _context.Customer
                                select m;
-                customer = customer.Where(s => s.Email==email);
+                customer = customer.Where(s => s.Email == email);
                 //customer =customer.Where(s=>s.Username.)
-                
-                string id="a";
+
+                string id = "a";
                 foreach (var m in customer)
                 {
-                    if(m.Email==email)
+                    if (m.Email == email)
                     {
                         id = m.Customer_Id;
                     }
-                       
+
                 }
                 //get customer information
                 var recentCustomer = await _context.Customer.FindAsync(id);
                 var address = from m in _context.Address
                               select m;
-                address = address.Where(s => s.Customer==recentCustomer);
+                address = address.Where(s => s.Customer == recentCustomer);
                 Address recentAddress = new Address();
                 foreach (var add in address)
                 {
@@ -323,13 +323,13 @@ namespace BobBookstore.Areas.Identity.Pages.Account.Manage
                 recentAddress.Customer = recentCustomer;
                 recentAddress.IsPrimary = true;
                 _context.Update(recentAddress);
-                
+
 
                 await _context.SaveChangesAsync();
 
-                
+
             }
-            
+
             return RedirectToPage();
         }
     }

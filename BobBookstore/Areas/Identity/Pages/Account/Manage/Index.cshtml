@@ -42,25 +42,16 @@
     <div class="row">
         <div class="col-md-3">
             <partial name="_ManageNav" />
+            
+                <a  asp-area="" asp-controller="Addresses" asp-action="Index">Manage Address</a>
+           
         </div>
+        
 
     </div>
 </div>
 
-<br />
-<div>
-    <h4>Your Orders:</h4>
-    <hr />
-    <div class="row">
-        <div class="col-md-3">
-            <ul>
-                <li>
-                    Order 1 <a>Edit</a> <a class="text-danger">Cancel</a>
-                </li>
-            </ul>
-        </div>
-    </div>
-</div>
+
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

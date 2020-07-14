@@ -7,22 +7,42 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BobBookstore.Data;
 using BobBookstore.Models.Customer;
+using Amazon.AspNetCore.Identity.Cognito;
+using Amazon.Extensions.CognitoAuthentication;
+using Microsoft.AspNetCore.Identity;
+using Amazon.Extensions.CognitoAuthentication;
 
 namespace BobBookstore.Controllers
 {
     public class AddressesController : Controller
     {
+        
         private readonly UsedBooksContext _context;
-
-        public AddressesController(UsedBooksContext context)
+        private readonly SignInManager<CognitoUser> _SignInManager;
+        private readonly UserManager<CognitoUser> _userManager;
+        public AddressesController( UsedBooksContext context, SignInManager<CognitoUser> SignInManager, UserManager<CognitoUser> userManager)
         {
+           
             _context = context;
+            _SignInManager = SignInManager;
+            _userManager = userManager;
         }
 
         // GET: Addresses
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Address.ToListAsync());
+            
+            var user = await _userManager.GetUserAsync(User);
+            var id = user.Attributes[CognitoAttribute.Sub.AttributeName];
+            var customer = _context.Customer.Find(id);
+            var address = from c in _context.Address
+                          where c.Customer == customer
+                          select c;
+
+
+
+
+            return View(await address.ToListAsync());
         }
 
         // GET: Addresses/Details/5
@@ -54,10 +74,14 @@ namespace BobBookstore.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Address_Id,IsPrimary,AddressLine1,AddressLine2,City,State,Country,ZipCode")] Address address)
+        public async Task<IActionResult> Create([Bind("Address_Id,AddressLine1,AddressLine2,City,State,Country,ZipCode")] Address address)
         {
             if (ModelState.IsValid)
             {
+                var user = await _userManager.GetUserAsync(User);
+                var id = user.Attributes[CognitoAttribute.Sub.AttributeName];
+                var customer = _context.Customer.Find(id);
+                address.Customer = customer;
                 _context.Add(address);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -86,7 +110,7 @@ namespace BobBookstore.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(long id, [Bind("Address_Id,IsPrimary,AddressLine1,AddressLine2,City,State,Country,ZipCode")] Address address)
+        public async Task<IActionResult> Edit(long id, [Bind("Address_Id,AddressLine1,AddressLine2,City,State,Country,ZipCode")] Address address)
         {
             if (id != address.Address_Id)
             {
@@ -97,6 +121,19 @@ namespace BobBookstore.Controllers
             {
                 try
                 {
+                    if (address.IsPrimary == true)
+                    {
+                        var user = await _userManager.GetUserAsync(User);
+                        user.Attributes["custom:AddressLine1"] = address.AddressLine1;
+                        user.Attributes["custom:AddressLine2"] = address.AddressLine2;
+                        user.Attributes["custom:City"] = address.City;
+                        user.Attributes["custom:State"] =address.State;
+                        user.Attributes["custom:Country"] = address.Country;
+
+                        user.Attributes["custom:ZipCode"] = Convert.ToString( address.ZipCode);
+
+                        var result = await _userManager.UpdateAsync(user);
+                    }
                     _context.Update(address);
                     await _context.SaveChangesAsync();
                 }
