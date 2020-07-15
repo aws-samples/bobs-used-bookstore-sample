@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BobBookstore.Data;
+using BobBookstore.Models.Order;
 using BobBookstore.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -32,7 +33,7 @@ namespace BobBookstore.Controllers
 
             return View(await orders.ToListAsync());
         }
-<<<<<<< HEAD
+//<<<<<<< HEAD
 
         public async Task<IActionResult> Delete(long id)
         {
@@ -64,7 +65,7 @@ namespace BobBookstore.Controllers
 
             return View();
         }
-=======
->>>>>>> ca6445f9ff3b47384a19a76d3247e9e74acaafb9
+//=======
+//>>>>>>> ca6445f9ff3b47384a19a76d3247e9e74acaafb9
     }
 }

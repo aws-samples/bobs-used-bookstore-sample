@@ -194,6 +194,9 @@ namespace BobBookstore.Migrations
                     b.Property<long?>("Price_Id")
                         .HasColumnType("bigint");
 
+                    b.Property<bool>("WantToBuy")
+                        .HasColumnType("bit");
+
                     b.HasKey("CartItem_Id");
 
                     b.HasIndex("Book_Id");

@@ -14,5 +14,6 @@ namespace BobBookstore.Models.Carts
         public Price  Price { get; set; }
         public Cart Cart { get; set; }
         public Book.Book Book { get; set; }
+        public bool WantToBuy { get; set; }
     }
 }

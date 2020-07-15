@@ -89,12 +89,26 @@ namespace BobBookstore.Controllers
             var cartId = HttpContext.Request.Cookies["CartId"];
             var cart = _context.Cart.Find(Convert.ToInt32(cartId));
 
-            var cartItem = new CartItem() { Book = book, Price = price, Cart = cart };
+            var cartItem = new CartItem() { Book = book, Price = price, Cart = cart,WantToBuy=true };
 
             _context.Add(cartItem);
             _context.SaveChanges();
             var stringBookid = Convert.ToString(bookid);
             return RedirectToAction("Detail","Search",new { @id = bookid });
+        }
+        public async Task<IActionResult> AddtoWishList(long bookid, long priceid)
+        {
+            var book = _context.Book.Find(bookid);
+            var price = _context.Price.Find(priceid);
+            var cartId = HttpContext.Request.Cookies["CartId"];
+            var cart = _context.Cart.Find(Convert.ToInt32(cartId));
+
+            var cartItem = new CartItem() { Book = book, Price = price, Cart = cart};
+
+            _context.Add(cartItem);
+            _context.SaveChanges();
+            var stringBookid = Convert.ToString(bookid);
+            return RedirectToAction("Detail", "Search", new { @id = bookid });
         }
     }
 }

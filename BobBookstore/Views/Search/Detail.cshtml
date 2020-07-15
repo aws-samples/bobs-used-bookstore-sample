@@ -40,6 +40,13 @@ else
                             <input type="submit" value="Add to cart" />
                         </form>
                     </td>
+                    <td>
+                        <form asp-controller="Search" asp-action="AddtoWishList" method="get">
+                            <input type="hidden" name="bookid" value="@Model.BookId" />
+                            <input type="hidden" name="priceid" value="@price.Price_Id" />
+                            <input type="submit" value="Add to WishList" />
+                        </form>
+                    </td>
                 </tr>
 
             </table>

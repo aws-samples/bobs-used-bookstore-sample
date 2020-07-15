@@ -27,7 +27,7 @@ namespace BobBookstore.Controllers
             var id = Convert.ToInt32(HttpContext.Request.Cookies["CartId"]);
             var cart = _context.Cart.Find(id);
             var cartItem = from c in _context.CartItem
-                           where c.Cart==cart
+                           where c.Cart==cart&&c.WantToBuy==true
                        select new CartViewModel()
                        {
                            BookId=c.Book.Book_Id,
@@ -43,6 +43,32 @@ namespace BobBookstore.Controllers
             //return View(Tuple.Create(item1,book));
             
         }
+        public async Task<IActionResult> WishListIndex()
+        {
+            var id = Convert.ToInt32(HttpContext.Request.Cookies["CartId"]);
+            var cart = _context.Cart.Find(id);
+            var cartItem = from c in _context.CartItem
+                           where c.Cart == cart && c.WantToBuy==false
+                           select new CartViewModel()
+                           {
+                               BookId = c.Book.Book_Id,
+                               Url = c.Book.Back_Url,
+                               Prices = c.Price.ItemPrice,
+                               BookName = c.Book.Name,
+                               CartItem_Id = c.CartItem_Id,
+                               quantity = c.Price.Quantity
+
+                           };
+
+            return View(await cartItem.ToListAsync());
+            //return View(Tuple.Create(item1,book));
+
+        }
+        public async Task<IActionResult> MoveToCart()
+        {
+
+            return RedirectToAction("WishListIndex");
+        }
 
         public async Task<IActionResult> AddtoCartitem(long bookid,long priceid)
         {
@@ -51,7 +77,20 @@ namespace BobBookstore.Controllers
             var cartId = HttpContext.Request.Cookies["CartId"];
             var cart = _context.Cart.Find(Convert.ToInt32(cartId));
 
-            var cartItem = new CartItem() { Book = book, Price = price, Cart = cart };
+            var cartItem = new CartItem() { Book = book, Price = price, Cart = cart,WantToBuy=true };
+
+            _context.Add(cartItem);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+        public async Task<IActionResult> AddtoWishlist(long bookid, long priceid)
+        {
+            var book = _context.Book.Find(bookid);
+            var price = _context.Price.Find(priceid);
+            var cartId = HttpContext.Request.Cookies["CartId"];
+            var cart = _context.Cart.Find(Convert.ToInt32(cartId));
+
+            var cartItem = new CartItem() { Book = book, Price = price, Cart = cart, WantToBuy = true };
 
             _context.Add(cartItem);
             await _context.SaveChangesAsync();

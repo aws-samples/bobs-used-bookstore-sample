@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BobBookstore.Migrations
 {
     [DbContext(typeof(UsedBooksContext))]
-    [Migration("20200706223529_Intial")]
-    partial class Intial
+    [Migration("20200715133519_WishList")]
+    partial class WishList
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -195,6 +195,9 @@ namespace BobBookstore.Migrations
 
                     b.Property<long?>("Price_Id")
                         .HasColumnType("bigint");
+
+                    b.Property<bool>("WantToBuy")
+                        .HasColumnType("bit");
 
                     b.HasKey("CartItem_Id");
 
