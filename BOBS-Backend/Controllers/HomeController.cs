@@ -7,15 +7,26 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using BOBS_Backend.Models;
 using Microsoft.AspNetCore.Authorization;
+using BOBS_Backend.Models.AdminUser;
+using BOBS_Backend.Repository.Implementations.AdminImplementation;
+using BOBS_Backend.Repository.WelcomePageInterface;
+using BOBS_Backend.Views.Orders.Shared;
+using BOBS_Backend.Repository.Implementations.WelcomePageImplementation;
+using BOBS_Backend.Repository.Implementations.WelcomePageImplementation;
+using BOBS_Backend.ViewModel.UpdateBooks;
+
 namespace BOBS_Backend.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private ICustomAdminPage _customeAdmin;
 
-        public HomeController(ILogger<HomeController> logger)
+
+        public HomeController(ICustomAdminPage customAdmin)
         {
-            _logger = logger;
+            _customeAdmin = customAdmin;
+           
         }
 
         public IActionResult Index()
@@ -25,7 +36,10 @@ namespace BOBS_Backend.Controllers
         [Authorize]
         public IActionResult WelcomePage()
         {
-            return View();
+            BookUpdates bookUpdates = new BookUpdates();
+            bookUpdates.books = _customeAdmin.GetUpdatedBooks(User.Claims).Result;
+            
+             return View(bookUpdates);
         }
         public IActionResult Logout()
         {
