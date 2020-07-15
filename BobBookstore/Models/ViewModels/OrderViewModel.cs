@@ -7,6 +7,7 @@ namespace BobBookstore.Models.ViewModels
 {
     public class OrderViewModel
     {
+        public long Order_Id { get; set; }
         public string Status { get; set; }
         public double Subtotal { get; set; }
         public double Tax { get; set; }
