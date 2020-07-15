@@ -2,8 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Amazon.AspNetCore.Identity.Cognito;
+using Amazon.Extensions.CognitoAuthentication;
 using BobBookstore.Data;
+using BobBookstore.Models.Order;
 using BobBookstore.Models.ViewModels;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
@@ -13,26 +17,37 @@ namespace BobBookstore.Controllers
     public class OrdersController : Controller
     {
         private readonly UsedBooksContext _context;
+        private readonly SignInManager<CognitoUser> _SignInManager;
+        private readonly UserManager<CognitoUser> _userManager;
 
-        public OrdersController(UsedBooksContext context)
+        public OrdersController(UsedBooksContext context, SignInManager<CognitoUser> SignInManager, UserManager<CognitoUser> userManager)
         {
             _context = context;
+            _SignInManager = SignInManager;
+            _userManager = userManager;
         }
-        public async Task<IActionResult> IndexAsync(string id)
+        public async Task<IActionResult> Index()
         {
-            var orders = from o in _context.Order where o.Customer.Customer_Id == id
-                         select new OrderViewModel() 
-                         {
-                             Status = o.OrderStatus.Status,
-                             Tax = o.Tax,
-                             Subtotal = o.Subtotal,
-                             DeliveryDate = o.DeliveryDate
-                         };
+            if (_SignInManager.IsSignedIn(User))
+            {
+                var user = await _userManager.GetUserAsync(User);
+                string customer_id = user.Attributes[CognitoAttribute.Sub.AttributeName];
+                var orders = from o in _context.Order
+                             where o.Customer.Customer_Id == customer_id
+                             select new OrderViewModel()
+                             {
+                                 Order_Id = o.Order_Id,
+                                 Status = o.OrderStatus.Status,
+                                 Tax = o.Tax,
+                                 Subtotal = o.Subtotal,
+                                 DeliveryDate = o.DeliveryDate
+                             };
 
 
-            return View(await orders.ToListAsync());
+                return View(await orders.ToListAsync());
+            }
+            return NotFound("You must be signed in.");
         }
-<<<<<<< HEAD
 
         public async Task<IActionResult> Delete(long id)
         {
@@ -64,7 +79,5 @@ namespace BobBookstore.Controllers
 
             return View();
         }
-=======
->>>>>>> ca6445f9ff3b47384a19a76d3247e9e74acaafb9
     }
 }
