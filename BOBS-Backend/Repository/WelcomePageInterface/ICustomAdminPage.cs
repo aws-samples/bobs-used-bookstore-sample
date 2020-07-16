@@ -10,5 +10,6 @@ namespace BOBS_Backend.Repository.WelcomePageInterface
     public interface ICustomAdminPage
     {
         Task<List<Price>> GetUpdatedBooks(IEnumerable<System.Security.Claims.Claim> claims);
+        Task<List<Price>> GetGlobalUpdatedBooks();
     }
 }

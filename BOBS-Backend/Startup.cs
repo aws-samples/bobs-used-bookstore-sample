@@ -16,6 +16,9 @@ using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Http;
 using BOBS_Backend.Repository.OrdersInterface;
 using BOBS_Backend.Repository.Implementations.OrderImplementations;
+
+
+
 using BOBS_Backend.Repository.WelcomePageInterface;
 using BOBS_Backend.Repository.Implementations.WelcomePageImplementation;
 
@@ -41,6 +44,8 @@ namespace BOBS_Backend
             services.AddTransient<IOrderDetailRepository, OrderDetailRepository>();
             services.AddTransient<IOrderRepository, OrderRepository>();
             services.AddTransient<IOrderStatusRepository, OrderStatusRepository>();
+            
+            
             services.AddTransient<ICustomAdminPage, CustomAdmin>();
             services.AddAuthentication(options =>
             {

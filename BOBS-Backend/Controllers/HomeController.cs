@@ -38,6 +38,7 @@ namespace BOBS_Backend.Controllers
         {
             BookUpdates bookUpdates = new BookUpdates();
             bookUpdates.books = _customeAdmin.GetUpdatedBooks(User.Claims).Result;
+            bookUpdates.globalBooks = _customeAdmin.GetGlobalUpdatedBooks().Result;
             
              return View(bookUpdates);
         }
