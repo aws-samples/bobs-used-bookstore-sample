@@ -10,11 +10,11 @@
 <form asp-controller="Search" asp-action="Index" method="get">
     <p>
         <select class="col-2 custom-select">
-            <option>Name</option>
-            <option>Genre</option>
-            <option>Type</option>
-            <option>Price (ascending)</option>
-            <option>Price (descending)</option>
+            <option value="Book string Book.Name">Name</option>
+            <option value="Book string Book.Genre">Genre</option>
+            <option value="Book string Book.Type">Type</option>
+            <option value="Book int Book.Price">Price (ascending)</option>
+            <option value="Book int Book.Price">Price (descending)</option>
         </select>
         <input type="text" name="SearchString" />
         <input type="submit" value="Search" />
