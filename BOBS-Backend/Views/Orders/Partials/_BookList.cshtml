@@ -1,40 +1,70 @@
 ﻿@model BOBS_Backend.ViewModel.ManageOrders.PartialOrder;
-    <div id="accordion">
-        @foreach (var (detail, index) in Model.OrderDetails.Select((value, i) => (value, i)))
-        {
+    
 
-            var num = index + 1;
-            var collapseKey = "collapse" + index;
-            var collapse = "#collapse" + index;
-            var heading = "heading" + index;
+<style>
+    .item-col {
+        margin:0;
+        padding:0;
+    }
+    .item-right {
+        border-color:black;
+        border-right-width:0;
+    }
+    .item-left {
+        border-color:black;
+        border-left-width:0;
+    }
+    .book-list-card {
+        padding-left: 0;
+        padding-right: 0;
+        border-color:black;
+        margin-bottom:.25rem;
+    }
+    .book-list-card-header {
+        background-color:white;
+    }
+    .item-list-btn-link {
+        color: black;
+    }
+    .website-text {
+        font-family: 'Arvo',serif;
+    }
+</style>
+    <div id="accordion" >
+            @foreach (var (detail, index) in Model.OrderDetails.Select((value, i) => (value, i)))
+            {
 
-            <div class="card">
-                <div class="card-header" id="heading@(index)">
-                    <h5 class="mb-0">
-                        <button class="btn btn-link" data-toggle="collapse" data-target="#collapse@(index)" aria-expanded="true" aria-controls="collapse@(index)">
-                            Item @num: @detail.Book.Name
-                        </button>
-                    </h5>
-                </div>
-            </div>
-            <div id="collapse@(index)" class="collapse" aria-labelledby="heading@(index)" data-parent="#accordion">
-                <div class="row">
-                    <div class="col-6" style="margin-right:0; padding-right:0">
-                        <ul class="list-group ">
-                            <li style="border-right-width:0; border-top-right-radius:0;" class="list-group-item">Book Name: @detail.Book.Name</li>
-                            <li style="border-right-width:0; border-top-right-radius:0;" class="list-group-item">Book Id: @detail.Book.Book_Id</li>
-                            <li style="border-right-width:0; border-top-right-radius:0;" class="list-group-item">ISBN: @detail.Book.ISBN</li>
-                        </ul>
+                var num = index + 1;
+                var collapseKey = "collapse" + index;
+                var collapse = "#collapse" + index;
+                var heading = "heading" + index;
+
+                <div class="card book-list-card col-6 ">
+                    <div class="card-header book-list-card-header" id="heading@(index)">
+                        <h5 class="mb-0">
+                            <button class="btn item-list-btn-link website-text" data-toggle="collapse" data-target="#collapse@(index)" aria-expanded="true" aria-controls="collapse@(index)">
+                                Item @num: @detail.Book.Name
+                            </button>
+                        </h5>
                     </div>
-                    <div class="col-6" style="margin-left:0;padding-left:0">
-                        <ul class="list-group ">
-                            <li style="border-left-width:0; border-top-left-radius:0;" class="list-group-item">Quantity: @detail.quantity</li>
-                            <li style="border-left-width:0; border-top-left-radius:0;" class="list-group-item">Condition: @detail.Price.Condition.ConditionName</li>
-                            <li style="border-left-width:0; border-top-left-radius:0;" class="list-group-item">Type: @detail.Book.Type.TypeName </li>
-                        </ul>
+                </div>
+                <div id="collapse@(index)" style="margin-bottom:.25rem;"class="collapse col-6" aria-labelledby="heading@(index)" data-parent="#accordion">
+                    <div class="row">
+                        <div class="col-6 item-col">
+                            <ul class="list-group ">
+                                <li class="item-right list-group-item website-text">Book Name: @detail.Book.Name</li>
+                                <li class="item-right list-group-item website-text">Book Id: @detail.Book.Book_Id</li>
+                                <li class="item-right list-group-item website-text">ISBN: @detail.Book.ISBN</li>
+                            </ul>
+                        </div>
+                        <div class="col-6 item-col" >
+                            <ul class="list-group ">
+                                <li class="item-left list-group-item website-text">Quantity: @detail.quantity</li>
+                                <li class="item-left list-group-item website-text">Condition: @detail.Price.Condition.ConditionName</li>
+                                <li class="item-left list-group-item website-text">Type: @detail.Book.Type.TypeName </li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
-            </div>
-        }
-
+            }
     </div>

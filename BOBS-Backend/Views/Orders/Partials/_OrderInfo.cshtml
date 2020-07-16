@@ -1,15 +1,48 @@
 ﻿@model BOBS_Backend.ViewModel.ManageOrders.PartialOrder;
-<div class="card" >
-    <div class="card-header">
+
+
+
+<style>
+    .card-custom {
+        border-radius: 3rem;
+        border-color: black;
+        background-color: white;
+    }
+    .card-custom-header {
+        border-top-left-radius: 3rem;
+        border-top-right-radius: 3rem;
+        background-color: white;
+        padding: .75rem 1.25rem;
+        border-bottom: 1px solid rgba(0,0,0,.125);
+    }
+    .website-text {
+        font-family: 'Arvo',serif
+    }
+    .card-custom-li-last-item {
+        border-bottom-left-radius: 3rem;
+        border-bottom-right-radius: 3rem;
+        padding-bottom: 1rem;
+    }
+    .card-custom-li-item {
+        display: block;
+        background-color: #fff;
+        border: 1px solid rgba(0,0,0,.125);
+        display: block;
+        padding: .75rem 1.25rem;
+    }
+
+</style>
+<div class="card card-custom shadow" >
+    <div class="card-custom-header text-center website-text">
         Order Info
     </div>
     @{
         var total = Model.Order.Subtotal + Model.Order.Tax;
     }
     <ul class="list-group list-group-flush">
-        <li class="list-group-item">Order Id: @Model.Order.Order_Id</li>
-        <li class="list-group-item">Total Cost: $@total</li>
-        <li class="list-group-item">Subtotal: $@Model.Order.Subtotal</li>
-        <li class="list-group-item">Tax: $@Model.Order.Tax</li>
+        <li class="card-custom-li-item  website-text">Order Id: @Model.Order.Order_Id</li>
+        <li class="card-custom-li-item  website-text">Total Cost: $@total</li>
+        <li class="card-custom-li-item  website-text">Subtotal: $@Model.Order.Subtotal</li>
+        <li class="card-custom-li-item  card-custom-li-last-item website-text">Tax: $@Model.Order.Tax</li>
     </ul>
 </div>

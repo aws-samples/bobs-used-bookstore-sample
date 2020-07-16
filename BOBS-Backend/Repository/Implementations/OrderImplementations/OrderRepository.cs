@@ -21,7 +21,7 @@ namespace BOBS_Backend.Repository.Implementations.OrderImplementations
          */
 
         private DatabaseContext _context;
-        private readonly int _ordersPerPage = 30;
+        private readonly int _ordersPerPage = 20;
 
 
         // Set up connection to Database 

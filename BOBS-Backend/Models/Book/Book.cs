@@ -12,6 +12,8 @@ namespace BOBS_Backend.Models.Book
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long Book_Id { get; set; }
 
+       public string Author { get; set; }
+
         public Publisher Publisher { get; set; }
 
         public long ISBN { get; set; }

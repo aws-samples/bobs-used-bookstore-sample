@@ -16,6 +16,9 @@ using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Http;
 using BOBS_Backend.Repository.OrdersInterface;
 using BOBS_Backend.Repository.Implementations.OrderImplementations;
+using BOBS_Backend.Repository.EmailInterface;
+using BOBS_Backend.Repository.Implementations.EmailImplementations;
+using Amazon.SimpleNotificationService;
 
 namespace BOBS_Backend
 {
@@ -36,9 +39,11 @@ namespace BOBS_Backend
 
             services.AddTransient<IInventory, Inventory>();
 
+
             services.AddTransient<IOrderDetailRepository, OrderDetailRepository>();
             services.AddTransient<IOrderRepository, OrderRepository>();
             services.AddTransient<IOrderStatusRepository, OrderStatusRepository>();
+            services.AddTransient<IEmailRepository, EmailRepository>();
             services.AddAuthentication(options =>
             {
                 // uses cookies on local machine for maintaining authentication
