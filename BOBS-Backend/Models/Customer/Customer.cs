@@ -14,7 +14,8 @@ namespace BOBS_Backend.Models.Customer
          */
 
         [Key]
-        public long Customer_Id { get; set; }
+        [StringLength(450)]
+        public string Customer_Id { get; set; }
 
         public string Username { get; set; }
 

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -10,11 +10,6 @@
     <Content Remove="Models\Repository\**" />
     <EmbeddedResource Remove="Models\Repository\**" />
     <None Remove="Models\Repository\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Remove="Migrations\20200709171123_CrtData.cs" />
-    <Compile Remove="Migrations\20200709171123_CrtData.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

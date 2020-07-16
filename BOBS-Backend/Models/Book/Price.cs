@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations.Schema;
-
+using System.Data;
 
 namespace BOBS_Backend.Models.Book
 {
@@ -19,6 +19,9 @@ namespace BOBS_Backend.Models.Book
 
         public double ItemPrice { get; set; }
 
-        public int Quantiy { get; set; }
+        public int Quantity { get; set; }
+
+        public string UpdatedBy { get; set; }
+        public DateTime UpdatedOn { get; set; }
     }
 }

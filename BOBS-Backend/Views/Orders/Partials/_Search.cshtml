@@ -11,7 +11,7 @@
 
             <option value="Order int Order_Id">Order Id</option>
 
-            <option value="Customer int Customer.Customer_Id">Customer Id</option>
+            <option value="Customer string Customer.Customer_Id">Customer Id</option>
             <option value="Customer string Customer.Username">Username</option>
             <option value="Customer string Customer.FirstName">First Name</option>
             <option value="Customer string Customer.LastName">Last Name</option>
@@ -54,6 +54,8 @@
 
         var deliveredPill = retrievePill("Status string OrderStatus.Status", "Delivered");
 
+        var cancelledPill = retrievePill("Status string OrderStatus.Status", "Cancelled");
+
     }
 
 
@@ -62,4 +64,5 @@
     <a asp-controller="Orders" asp-action="Index" asp-all-route-data="pendingPill" class="col-1 filter-pill badge badge-pill text-white">Pending</a>
     <a asp-controller="Orders" asp-action="Index" asp-all-route-data="enRoutePill" class="col-1 filter-pill badge badge-pill text-white">En Route</a>
     <a asp-controller="Orders" asp-action="Index" asp-all-route-data="deliveredPill" class="col-1 filter-pill badge badge-pill text-white">Delivered</a>
+    <a asp-controller="Orders" asp-action="Index" asp-all-route-data="cancelledPill" class="col-1 filter-pill badge badge-pill text-white">Cancelled</a>
 </div>
