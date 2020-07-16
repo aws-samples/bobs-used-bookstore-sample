@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 using BOBS_Backend.ViewModel.ProcessOrders;
 using System.Runtime.InteropServices;
+using BOBS_Backend.Repository.EmailInterface;
 
 namespace BOBS_Backend.Controllers
 {
@@ -21,12 +22,14 @@ namespace BOBS_Backend.Controllers
         private IOrderDetailRepository _orderDetail;
         private IOrderRepository _order;
         private IOrderStatusRepository _orderStatus;
+        private IEmailRepository _emailSender;
    
-        public OrdersController(IOrderDetailRepository orderDetail, IOrderRepository order, IOrderStatusRepository orderStatus)
+        public OrdersController(IOrderDetailRepository orderDetail, IOrderRepository order, IOrderStatusRepository orderStatus, IEmailRepository emailSender)
         {
             _orderDetail = orderDetail;
             _order = order;
             _orderStatus = orderStatus;
+            _emailSender = emailSender;
         }
        
         public async Task<IActionResult> Index(string filterValue, string searchString, int pageNum)
@@ -87,6 +90,8 @@ namespace BOBS_Backend.Controllers
                 if(status != 0)
                 {
                     order = await _orderStatus.UpdateOrderStatus(order, status);
+                    _emailSender.SendOrderStatusUpdateEmail(order.OrderStatus.Status,order.Order_Id, order.Customer.FirstName, order.Customer.Email);
+
                 }
 
                 var orderDetails = await _orderDetail.FindOrderDetailByOrderId(orderId);

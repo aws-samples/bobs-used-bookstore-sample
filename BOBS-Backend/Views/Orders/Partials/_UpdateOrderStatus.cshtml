@@ -4,7 +4,21 @@
 
     var orderStatus = Model.Statuses;
 }
-
+<style>
+    .submit-button {
+        border-bottom-right-radius: 1.2rem;
+        border-top-right-radius: 1.2rem;
+        border-color: #7D53DE;
+        background-color: #7D53DE;
+        color: white;
+    }
+    .submit-button:hover {
+        color:white;
+    }
+    .website-text {
+        font-family: 'Arvo',serif;
+    }
+</style>
 <form class="input-group mb-3" asp-controller="Orders" asp-action="ProcessOrders" method="get">
     <select asp-for="OrderId" class="invisible">
         <option selected value="@fullOrder.Order.Order_Id">id</option>
@@ -12,7 +26,7 @@
     <select asp-for="Status" class="col-5 custom-select" id="inputGroupSelect01">
         @foreach (var status in orderStatus)
         {
-            if (status.OrderStatus_Id < fullOrder.Order.OrderStatus.OrderStatus_Id)
+            if ((status.OrderStatus_Id < fullOrder.Order.OrderStatus.OrderStatus_Id) || (fullOrder.Order.OrderStatus.OrderStatus_Id > 1 && status.OrderStatus_Id == 5))
             {
                 <option disabled value="@status.OrderStatus_Id">@status.Status</option>
             }
@@ -27,5 +41,5 @@
 
         }
     </select>
-    <button class="btn btn-outline-secondary" type="submit">Submit</button>
+    <button class="btn submit-button website-text" type="submit">Submit</button>
 </form>

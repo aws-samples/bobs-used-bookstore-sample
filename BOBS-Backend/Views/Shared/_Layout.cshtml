@@ -6,18 +6,28 @@
     <title>@ViewData["Title"] - Bob's Used Bookstore</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
-    <style>
-        #footer{
-            position:relative;
-        }
-        
-    </style>
-    
+    <link href="https://fonts.googleapis.com/css2?family=Arvo&display=swap" rel="stylesheet">
+
 </head>
 <body>
+
+    <style>
+        .main-color-text {
+            font-family: 'Arvo', serif;
+            color: black;
+            padding: .5rem;
+            display: block;
+        }
+        .main-color-text:hover {
+            color: #7D53DE;
+        }
+        .nav-background-color {
+            background-color:white;
+        }
+    </style>
     <header>
-        <nav class="navbar navbar-expand-lg navbar-toggleable-sm navbar-dark bg-dark  box-shadow mb-3">
-            <div class="container-fluid">
+        <nav class="navbar navbar-expand-lg navbar-toggleable-sm navbar-dark  nav-background-color  box-shadow mb-3">
+            <div class="container">
                 
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
@@ -26,24 +36,24 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-white" asp-controller="Home" asp-action="Index">Bob's Used Bookstore</a>
+                            <a class="main-color-text" asp-controller="Home" asp-action="Index">Bob's Used Bookstore</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="main-color-text" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
                         @if (User.Identity.IsAuthenticated)
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-white" asp-area="" asp-controller="Orders" asp-action="Index">Manage Orders</a>
+                                <a class="main-color-text" asp-area="" asp-controller="Orders" asp-action="Index">Manage Orders</a>
                             </li>
                             <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle text-white" id="navbarDropdownMenuLink-333" data-toggle="dropdown"
+                                <a class="main-color-text dropdown-toggle" id="navbarDropdownMenuLink-333" data-toggle="dropdown"
                                    aria-haspopup="true" aria-expanded="false">
                                     Inventory
                                 </a>
-                                <div class="dropdown-menu dropdown-default" aria-labelledby="navbarDropdownMenuLink-333">
-                                    <a class="dropdown-item" asp-controller="Inventory" asp-action="EditBookDetails">Add New Book</a>
-                                    <a class="dropdown-item" asp-controller="Inventory" asp-action="Search">Search Inventory</a>
+                                <div class="nav-background-color dropdown-menu dropdown-default" aria-labelledby="navbarDropdownMenuLink-333">
+                                    <a class="dropdown-item main-color-text" asp-controller="Inventory" asp-action="EditBookDetails">Add New Book</a>
+                                    <a class="dropdown-item main-color-text" asp-controller="Inventory" asp-action="Search">Search Inventory</a>
 
                                 </div>
                             </li>
@@ -53,21 +63,21 @@
                 <div class="nav navbar-nav navbar-right">
                     <ul class="nav navbar-nav navbar-right">
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle text-white" id="navbarDropdownMenuLink-333" data-toggle="dropdown"
+                            <a class="main-color-text dropdown-toggle" id="navbarDropdownMenuLink-333" data-toggle="dropdown"
                                aria-haspopup="true" aria-expanded="false">
                                 Profile
                             </a>
-                            <div class="dropdown-menu dropdown-default" aria-labelledby="navbarDropdownMenuLink-333">
+                            <div class="nav-background-color dropdown-menu dropdown-default" aria-labelledby="navbarDropdownMenuLink-333">
                                 @if (User.Identity.IsAuthenticated)
                                 {
-                                    <a class="dropdown-item">My Account</a>
-                                    <a class="dropdown-item" asp-controller="Authentication" asp-action="SignOut">Logout</a>
+                                    <a class="main-color-text dropdown-item">My Account</a>
+                                    <a class="main-color-text dropdown-item" asp-controller="Authentication" asp-action="SignOut">Logout</a>
                                 }
                                 else { 
-                                    <a class="dropdown-item" asp-controller="Home" asp-action="WelcomePage">Login</a>
+                                    <a class="main-color-text dropdown-item" asp-controller="Home" asp-action="WelcomePage">Login</a>
                                 
                                 }
-                            </div>
+</div>
                         </li>
                        
 
@@ -77,14 +87,14 @@
             </div>
         </nav>
     </header>
-    <div class="container-fluid">
+    <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted" id="footer">
-        <div class="container " >
+    <footer class="border-top footer text-muted">
+        <div class="container">
             &copy; 2020 - Bob's Used Bookstore - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>

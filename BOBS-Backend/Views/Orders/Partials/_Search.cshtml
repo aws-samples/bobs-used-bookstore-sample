@@ -1,33 +1,30 @@
 ﻿@model BOBS_Backend.ViewModel.ManageOrders.ManageOrderViewModel;
 
-<style>
-    .filter-pill {
-        padding: .6em;
-    }
-</style>
+
+<head>
+    <link rel="stylesheet" href="~/css/Orders/ManageOrders/Search.css" />
+</head>
 
 <div class="col-12">
     <form id="hello" class="input-group mb-3" asp-controller="Orders" asp-action="Index" method="get">
-        <select class="col-2 custom-select" asp-for="FilterValue">
-            <option disabled>Order Info</option>
+        <select class="filter-by-button col-2 custom-select" asp-for="FilterValue">
+
             <option value="Order int Order_Id">Order Id</option>
 
-            <option disabled>Customer Info</option>
-            <option value="Customer int Customer.Customer_Id">Customer Id</option>
+            <option value="Customer string Customer.Customer_Id">Customer Id</option>
             <option value="Customer string Customer.Username">Username</option>
             <option value="Customer string Customer.FirstName">First Name</option>
             <option value="Customer string Customer.LastName">Last Name</option>
             <option value="Customer string Customer.Email">Email</option>
             <option value="Customer sring Customer.Phone">Phone</option>
 
-            <option disabled>Address Info</option>
             <option value="Address string Address.City">City</option>
             <option value="Address string Address.State">State</option>
             <option value="Address int Address.ZipCode">Zip Code</option>
         </select>
 
         <input type="text" asp-for="SearchString" class="form-control" aria-label="Text input with dropdown button">
-        <button class="btn btn-outline-secondary" type="submit">Submit</button>
+        <button class="btn submit-button text text-white" type="submit">Submit</button>
 
     </form>
 </div>
@@ -57,12 +54,15 @@
 
         var deliveredPill = retrievePill("Status string OrderStatus.Status", "Delivered");
 
+        var cancelledPill = retrievePill("Status string OrderStatus.Status", "Cancelled");
+
     }
 
-    <h5>Common Filters</h5>
-    <a asp-controller="Orders" asp-action="Index" asp-all-route-data="allOrdersPill" class="col-1 filter-pill badge badge-pill badge-primary">All Orders</a>
-    <a asp-controller="Orders" asp-action="Index" asp-all-route-data="justPlaceddPill" class="col-1 filter-pill badge badge-pill badge-secondary">Just Placed</a>
-    <a asp-controller="Orders" asp-action="Index" asp-all-route-data="pendingPill" class="col-1 filter-pill badge badge-pill badge-danger">Pending</a>
-    <a asp-controller="Orders" asp-action="Index" asp-all-route-data="enRoutePill" class="col-1 filter-pill badge badge-pill badge-warning text-white">En Route</a>
-    <a asp-controller="Orders" asp-action="Index" asp-all-route-data="deliveredPill" class="col-1 filter-pill badge badge-pill badge-success">Delivered</a>
+
+    <a asp-controller="Orders" asp-action="Index" asp-all-route-data="allOrdersPill" class="col-1 filter-pill badge badge-pill text-white">All Orders</a>
+    <a asp-controller="Orders" asp-action="Index" asp-all-route-data="justPlaceddPill" class="col-1 filter-pill badge badge-pill text-white">Just Placed</a>
+    <a asp-controller="Orders" asp-action="Index" asp-all-route-data="pendingPill" class="col-1 filter-pill badge badge-pill text-white">Pending</a>
+    <a asp-controller="Orders" asp-action="Index" asp-all-route-data="enRoutePill" class="col-1 filter-pill badge badge-pill text-white">En Route</a>
+    <a asp-controller="Orders" asp-action="Index" asp-all-route-data="deliveredPill" class="col-1 filter-pill badge badge-pill text-white">Delivered</a>
+    <a asp-controller="Orders" asp-action="Index" asp-all-route-data="cancelledPill" class="col-1 filter-pill badge badge-pill text-white">Cancelled</a>
 </div>
