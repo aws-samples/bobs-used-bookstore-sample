@@ -22,6 +22,7 @@ using BOBS_Backend.Repository.Implementations.OrderImplementations;
 using BOBS_Backend.Repository.WelcomePageInterface;
 using BOBS_Backend.Repository.Implementations.WelcomePageImplementation;
 using BOBS_Backend.Repository.EmailInterface;
+using BOBS_Backend.Repository.Implementations.EmailImplementations;
 
 namespace BOBS_Backend
 {
@@ -46,7 +47,7 @@ namespace BOBS_Backend
             services.AddTransient<IOrderRepository, OrderRepository>();
             services.AddTransient<IOrderStatusRepository, OrderStatusRepository>();
 
-            services.AddTransient<IEmailRepository, IEmailRepository>();
+            services.AddTransient<IEmailRepository, EmailRepository>();
             services.AddTransient<ICustomAdminPage, CustomAdmin>();
             services.AddAuthentication(options =>
             {
