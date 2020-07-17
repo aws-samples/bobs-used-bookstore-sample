@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 using BOBS_Backend.ViewModel.ProcessOrders;
 using System.Runtime.InteropServices;
-using BOBS_Backend.Repository.EmailInterface;
+using BOBS_Backend.Notifications.NotificationsInterface;
 
 namespace BOBS_Backend.Controllers
 {
@@ -22,9 +22,9 @@ namespace BOBS_Backend.Controllers
         private IOrderDetailRepository _orderDetail;
         private IOrderRepository _order;
         private IOrderStatusRepository _orderStatus;
-        private IEmailRepository _emailSender;
+        private INotifications _emailSender;
    
-        public OrdersController(IOrderDetailRepository orderDetail, IOrderRepository order, IOrderStatusRepository orderStatus, IEmailRepository emailSender)
+        public OrdersController(IOrderDetailRepository orderDetail, IOrderRepository order, IOrderStatusRepository orderStatus, INotifications emailSender)
         {
             _orderDetail = orderDetail;
             _order = order;
