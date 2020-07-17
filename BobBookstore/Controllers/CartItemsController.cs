@@ -9,6 +9,8 @@ using BobBookstore.Data;
 using BobBookstore.Models.Carts;
 using BobBookstore.Models.Book;
 using BobBookstore.Models.ViewModels;
+using Microsoft.AspNetCore.Http;
+using Microsoft.CodeAnalysis;
 
 namespace BobBookstore.Controllers
 {
@@ -64,11 +66,51 @@ namespace BobBookstore.Controllers
             //return View(Tuple.Create(item1,book));
 
         }
-        public async Task<IActionResult> MoveToCart()
+        public async Task<IActionResult> MoveToCart(int? id)
         {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var cartItem = await _context.CartItem.FindAsync(id);
+            if (cartItem == null)
+            {
+                return NotFound();
+            }
+            cartItem.WantToBuy = true;
+            _context.Update(cartItem);
+            await _context.SaveChangesAsync();
+            return RedirectToAction("WishListIndex");
+        }
+        [HttpPost]
+        public async Task<IActionResult> AllMoveToCart(string[] fruits)
+        {
+            string a = "1,";
+            foreach (var ids in fruits)
+            {
+                var id = Convert.ToInt32(ids);
+                if (id == null)
+                {
+                    return NotFound();
+                }
+
+                var cartItem = await _context.CartItem.FindAsync(id);
+                if (cartItem == null)
+                {
+                    return NotFound();
+                }
+                cartItem.WantToBuy = true;
+                _context.Update(cartItem);
+            }
+
+
+
+            await _context.SaveChangesAsync();
 
             return RedirectToAction("WishListIndex");
         }
+        
 
         public async Task<IActionResult> AddtoCartitem(long bookid,long priceid)
         {
