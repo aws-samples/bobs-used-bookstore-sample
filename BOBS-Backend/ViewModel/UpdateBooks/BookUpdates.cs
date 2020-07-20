@@ -8,7 +8,7 @@ namespace BOBS_Backend.ViewModel.UpdateBooks
 {
     public class BookUpdates
     {
-        public List<Price> books { get; set; }
-        public List<Price> globalBooks { get; set; }
+        public List<Price> Books { get; set; }
+        public List<Price> GlobalBooks { get; set; }
     }
 }

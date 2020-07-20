@@ -36,9 +36,11 @@ namespace BOBS_Backend.Controllers
         [Authorize]
         public IActionResult WelcomePage()
         {
+            
+            // change global orders into getting orders not updated by current user
             BookUpdates bookUpdates = new BookUpdates();
-            bookUpdates.books = _customeAdmin.GetUpdatedBooks(User.Claims).Result;
-            bookUpdates.globalBooks = _customeAdmin.GetGlobalUpdatedBooks().Result;
+            bookUpdates.Books = _customeAdmin.GetUpdatedBooks(User.Claims).Result;
+            bookUpdates.GlobalBooks = _customeAdmin.GetGlobalUpdatedBooks().Result;
             
              return View(bookUpdates);
         }
