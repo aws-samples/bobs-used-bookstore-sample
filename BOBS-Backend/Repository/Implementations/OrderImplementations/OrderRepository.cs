@@ -30,6 +30,36 @@ namespace BOBS_Backend.Repository.Implementations.OrderImplementations
             _context = context;
         }
 
+        public async Task CancelOrder(long id)
+        {
+            try
+            {
+                IOrderDetailRepository orderDetailRepo = new OrderDetailRepository(_context);
+
+                var orderDetails = await orderDetailRepo.FindOrderDetailByOrderId(id);
+                var order = await FindOrderById(id);
+
+                foreach (var detail in orderDetails)
+                {
+                    if (detail.IsRemoved != true)
+                    {
+                        order.Refund += (detail.quantity * detail.price);
+                        detail.Price.Quantity += detail.quantity;
+                        detail.IsRemoved = true;
+
+                    }
+                }
+
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+
+            }
+           
+
+        }
+
         // Find Single Order by the Order Id
         public async Task<Order> FindOrderById(long id)
         {

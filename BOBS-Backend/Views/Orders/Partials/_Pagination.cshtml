@@ -14,7 +14,7 @@
                         {"pageNum",Model.CurrentPage-1+""}
                      };
 
-            <a  class="page-num page-num-prev" asp-controller="Orders" asp-action="Index" asp-all-route-data="prevPag">
+            <a  class="page-num page-num-prev website-text" asp-controller="Orders" asp-action="Index" asp-all-route-data="prevPag">
                 Previous
             </a>
         }
@@ -22,7 +22,7 @@
         {
             if (Model.CurrentPage == page)
             {
-                <li class="list-group-item page-num"><span>@(page)</span></li>
+                <li class="list-group-item page-num website-text"><span>@(page)</span></li>
             }
             else
             {
@@ -32,7 +32,7 @@
                         {"searchString",Model.SearchString},
                         {"pageNum",page+""}
                      };
-                <li class="list-group-item page-num"><a asp-controller="Orders" asp-action="Index" asp-all-route-data="pag">@(page)</a></li>
+                <li class="list-group-item page-num website-text"><a asp-controller="Orders" asp-action="Index" asp-all-route-data="pag">@(page)</a></li>
             }
         }
         @if (Model.HasNextPages)
@@ -44,7 +44,7 @@
                         {"pageNum",Model.CurrentPage+1+""}
                      };
 
-            <a class="page-num page-num-next" asp-controller="Orders" asp-action="Index" asp-all-route-data="nextPag" >
+            <a class="page-num page-num-next website-text" asp-controller="Orders" asp-action="Index" asp-all-route-data="nextPag" >
                 Next
             </a>
         }

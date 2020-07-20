@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BOBS_Backend.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20200716150134_UpdateData")]
-    partial class UpdateData
+    [Migration("20200717200703_CD-3")]
+    partial class CD3
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -281,6 +281,9 @@ namespace BOBS_Backend.Migrations
 
                     b.Property<long?>("Book_Id")
                         .HasColumnType("bigint");
+
+                    b.Property<bool>("IsRemoved")
+                        .HasColumnType("bit");
 
                     b.Property<long?>("Order_Id")
                         .HasColumnType("bigint");

@@ -9,5 +9,6 @@ namespace BOBS_Backend.Notifications.NotificationsInterface
     {
     
         void SendOrderStatusUpdateEmail(string orderStatus,long orderId, string customerFirstName, string customerEmail);
+        void SendItemRemovalEmail(string bookName, string bookCondition, string customerFirstName, string customerEmail);
     }
 }

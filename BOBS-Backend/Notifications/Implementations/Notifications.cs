@@ -88,5 +88,20 @@ namespace BOBS_Backend.Notifications.Implementations
             
         }
 
+        public void SendItemRemovalEmail(string bookName, string bookCondition, string customerFirstName, string customerEmail)
+        {
+            string FROM = Configuration.GetConnectionString("FromEmailAddress");
+
+            string TO = String.IsNullOrEmpty(Configuration.GetConnectionString("ToEmailAddressDefault")) ? customerEmail : Configuration.GetConnectionString("ToEmailAddressDefault");
+
+            string subject = "BOBS Books Can't Find Book";
+
+            string body =
+                "<h3>Hello " + customerFirstName + "</h3>" +
+                "<p> We are sorry to inform you that we dont have enough copies of " + bookName + " in the condition of " + bookCondition + " . Please visit your nearest BOBS Branch to get a refund. <p>"; 
+
+            GenerateMessagePayload(FROM, TO, subject, body);
+        }
+
     }
 }
