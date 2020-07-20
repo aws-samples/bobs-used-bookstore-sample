@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 using BOBS_Backend.ViewModel.ProcessOrders;
 using System.Runtime.InteropServices;
+using BOBS_Backend.Notifications.NotificationsInterface;
 
 namespace BOBS_Backend.Controllers
 {
@@ -21,14 +22,38 @@ namespace BOBS_Backend.Controllers
         private IOrderDetailRepository _orderDetail;
         private IOrderRepository _order;
         private IOrderStatusRepository _orderStatus;
+        private INotifications _emailSender;
    
-        public OrdersController(IOrderDetailRepository orderDetail, IOrderRepository order, IOrderStatusRepository orderStatus)
+        public OrdersController(IOrderDetailRepository orderDetail, IOrderRepository order, IOrderStatusRepository orderStatus, INotifications emailSender)
         {
             _orderDetail = orderDetail;
             _order = order;
             _orderStatus = orderStatus;
+            _emailSender = emailSender;
         }
        
+        public async Task<IActionResult> EditOrderDetailAsync(long orderId, long orderDetailId,string quantity,bool isLast)
+        {
+
+            int quant;
+            bool res;
+            int status = 0;
+            
+            res = int.TryParse(quantity,out quant);
+
+            if (res)
+            {
+                var emailInfo = await _orderDetail.MakeOrderDetailInactive(orderDetailId, orderId, quant);
+                if (emailInfo != null) _emailSender.SendItemRemovalEmail(emailInfo["bookName"], emailInfo["bookCondition"], emailInfo["customerFirstName"], emailInfo["customerEmail"]);
+                if (isLast)
+                {
+                    status = 5;
+                    return RedirectToAction("UpdateOrderStatus", new { orderId, status });
+                }
+            }
+
+            return RedirectToAction("ProcessOrders", new {orderId });
+        }
         public async Task<IActionResult> Index(string filterValue, string searchString, int pageNum)
         {
             if (pageNum == 0) pageNum++;
@@ -63,6 +88,16 @@ namespace BOBS_Backend.Controllers
             }
         }
 
+        public async Task<IActionResult> UpdateOrderStatusAsync(long orderId,long status)
+        {
+            var order = await _order.FindOrderById(orderId);
+            order = await _orderStatus.UpdateOrderStatus(order, status);
+            _emailSender.SendOrderStatusUpdateEmail(order.OrderStatus.Status, order.Order_Id, order.Customer.FirstName, order.Customer.Email);
+
+            if (status == 5) await _order.CancelOrder(order.Order_Id);
+
+            return RedirectToAction("ProcessOrders", new { orderId });
+        }
 
         public IActionResult Error()
         {
@@ -70,7 +105,7 @@ namespace BOBS_Backend.Controllers
         }
 
 
-        public async Task<IActionResult> ProcessOrders(long orderId, long status)
+        public async Task<IActionResult> ProcessOrders(long orderId)
         {
  
             if(string.IsNullOrEmpty(orderId.ToString()))
@@ -84,10 +119,6 @@ namespace BOBS_Backend.Controllers
 
                 var order = await _order.FindOrderById(orderId);
 
-                if(status != 0)
-                {
-                    order = await _orderStatus.UpdateOrderStatus(order, status);
-                }
 
                 var orderDetails = await _orderDetail.FindOrderDetailByOrderId(orderId);
 
@@ -97,6 +128,7 @@ namespace BOBS_Backend.Controllers
 
                 fullOrder.Order = order;
                 fullOrder.OrderDetails = orderDetails;
+                fullOrder.itemsRemoved = await _orderDetail.FindOrderDetailsRemovedCountAsync(orderId);
 
                 viewModel.Statuses = orderStatus;
                 viewModel.FullOrder = fullOrder;

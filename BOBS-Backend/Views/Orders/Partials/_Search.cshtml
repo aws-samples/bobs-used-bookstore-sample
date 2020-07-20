@@ -1,45 +1,39 @@
 ﻿@model BOBS_Backend.ViewModel.ManageOrders.ManageOrderViewModel;
 
-<style>
-    .filter-pill {
-        padding: .6em;
-    }
-</style>
+
+<head>
+    <link rel="stylesheet" href="~/css/Orders/ManageOrders/Search.css" />
+</head>
 
 <div class="col-12">
     <form id="hello" class="input-group mb-3" asp-controller="Orders" asp-action="Index" method="get">
-        <select class="col-2 custom-select" asp-for="FilterValue">
-            <option disabled>Order Info</option>
-            <option value="Order Id">Order Id</option>
+        <select class="filter-by-button col-2 custom-select text" asp-for="FilterValue">
 
-            <option disabled>Order Status</option>
-            <option value="Status">Status</option>
+            <option value="Order int Order_Id">Order Id</option>
 
-            <option disabled>Customer Info</option>
-            <option value="Customer Id">Customer Id</option>
-            <option value="Username">Username</option>
-            <option value="First Name">First Name</option>
-            <option value="Last Name">Last Name</option>
-            <option value="Email">Email</option>
-            <option value="Phone">Phone</option>
+            <option value="Customer string Customer.Customer_Id">Customer Id</option>
+            <option value="Customer string Customer.Username">Username</option>
+            <option value="Customer string Customer.FirstName">First Name</option>
+            <option value="Customer string Customer.LastName">Last Name</option>
+            <option value="Customer string Customer.Email">Email</option>
+            <option value="Customer sring Customer.Phone">Phone</option>
 
-            <option disabled>Address Info</option>
-            <option value="City">City</option>
-            <option value="State">State</option>
-            <option value="Zip Code">Zip Code</option>
+            <option value="Address string Address.City">City</option>
+            <option value="Address string Address.State">State</option>
+            <option value="Address int Address.ZipCode">Zip Code</option>
         </select>
 
-        <input type="text" asp-for="SearchString" class="form-control" aria-label="Text input with dropdown button">
-        <button class="btn btn-outline-secondary" type="submit">Submit</button>
+        <input type="text" asp-for="SearchString" class="form-control text" aria-label="Text input with dropdown button">
+        <button class="btn submit-button text text-white" type="submit">Submit</button>
 
     </form>
 </div>
 
 <div class="col-12" style="margin-top:15px;">
     @functions {
-        public static Dictionary<string,string> retrievePill(string filterValue, string searchString)
+        public static Dictionary<string, string> retrievePill(string filterValue, string searchString)
         {
-           var pill = new Dictionary<string, string>
+            var pill = new Dictionary<string, string>
             {
                 {"filterValue",filterValue},
                 {"searchString",searchString },
@@ -48,17 +42,27 @@
             return pill;
         }
     }
-    @{ 
+    @{
         var allOrdersPill = retrievePill("", "");
 
-        var pendingPill = retrievePill("Status", "Pending");
+        var pendingPill = retrievePill("Status string OrderStatus.Status", "Pending");
 
-        var enRoutePill = retrievePill("Status", "En Route");
+        var enRoutePill = retrievePill("Status string OrderStatus.Status", "En Route");
+
+
+        var justPlaceddPill = retrievePill("Status string OrderStatus.Status", "Just Placed");
+
+        var deliveredPill = retrievePill("Status string OrderStatus.Status", "Delivered");
+
+        var cancelledPill = retrievePill("Status string OrderStatus.Status", "Cancelled");
 
     }
 
-    <h5>Common Filters</h5>
-    <a asp-controller="Orders" asp-action="Index" asp-all-route-data="allOrdersPill" class="col-1 filter-pill badge badge-pill badge-primary">All Orders</a>
-    <a asp-controller="Orders" asp-action="Index" asp-all-route-data="pendingPill" class="col-1 filter-pill badge badge-pill badge-primary">Pending</a>
-    <a asp-controller="Orders" asp-action="Index" asp-all-route-data="enRoutePill" class="col-1 filter-pill badge badge-pill badge-primary">En Route</a>
-</div>
+
+    <a asp-controller="Orders" asp-action="Index" asp-all-route-data="allOrdersPill" class="col-1 filter-pill badge badge-pill text-white">All Orders</a>
+    <a asp-controller="Orders" asp-action="Index" asp-all-route-data="justPlaceddPill" class="col-1 filter-pill badge badge-pill text-white">Just Placed</a>
+    <a asp-controller="Orders" asp-action="Index" asp-all-route-data="pendingPill" class="col-1 filter-pill badge badge-pill text-white">Pending</a>
+    <a asp-controller="Orders" asp-action="Index" asp-all-route-data="enRoutePill" class="col-1 filter-pill badge badge-pill text-white">En Route</a>
+    <a asp-controller="Orders" asp-action="Index" asp-all-route-data="deliveredPill" class="col-1 filter-pill badge badge-pill text-white">Delivered</a>
+    <a asp-controller="Orders" asp-action="Index" asp-all-route-data="cancelledPill" class="col-1 filter-pill badge badge-pill text-white">Cancelled</a>
+</div>`

@@ -32,5 +32,7 @@ namespace BOBS_Backend.Models.Order
 
         // Many to One Relationship with Address Table 
         public Address Address { get; set; }
+
+        public double Refund { get; set; }
     }
 }

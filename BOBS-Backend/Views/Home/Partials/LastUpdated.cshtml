@@ -1,0 +1,96 @@
+﻿@*The view parrtial for last update book by current user and global user*@
+@model BOBS_Backend.ViewModel.UpdateBooks.BookUpdates;
+@{
+    var books = Model;
+}
+
+<style>
+    .table_font{
+        font-size:13px;
+    }
+</style>
+  
+
+<div class="container p-3 m-2 ">
+    <div class="row">
+        <div class="col-lg-6 mb-4">
+            <div class="card border-dark p-0">
+                <div class="card-header bg-dark text-center text-white">
+                    Last Updated by You
+                </div>
+                <div class="table-responsive p-0 m-0">
+                    <table class="card-table table_font table-sm table-bordered  table-hover w-auto h-auto">
+                        <thead>
+                            <tr>
+                                <th scope="col">Book_ID</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Genre</th>
+                                <th scope="col">Type</th>
+                                <th scope="col">Condition</th>
+                                <th scope="col">Price</th>
+                                <th scope="col">Update Date</th>
+                                <th scope="col">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                           @foreach(var b in books.books)
+                           {
+                            <tr>
+                                <td>@b.Book.Book_Id</td>
+                                <td>@b.Book.Name</td>
+                                <td>@b.Book.Genre.Name</td>
+                                <td>@b.Book.Type.TypeName</td>
+                                <td>@b.Condition.ConditionName</td>
+                                <td>@b.ItemPrice</td>
+                                <td>@b.UpdatedOn</td>
+                                <td><a class="card-link" href="#">Modify</a></td>
+                            </tr>
+                           }
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+        <div class="col-lg-6 mb-4">
+            <div class="card border-dark p-0">
+                <div class="card-header bg-dark text-center text-white">
+                    Last Global Updates
+                </div>
+                <div class="table-responsive p-0 m-0">
+                    <table class="card-table table_font table-sm table-bordered table-hover h-auto w-auto">
+                        <thead>
+                            <tr>
+                                <th scope="col">Book ID</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Genre</th>
+                                <th scope="col">Type</th>
+                                <th scope="col">Condition</th>
+                                <th scope="col">Price</th>
+                                <th scope="col">Update Date</th>
+                                <th scope="col">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach(var b in books.books)
+                           {
+                            <tr>
+                                <td>@b.Book.Book_Id</td>
+                                <td>@b.Book.Name</td>
+                                <td>@b.Book.Genre.Name</td>
+                                <td>@b.Book.Type.TypeName</td>
+                                <td>@b.Condition.ConditionName</td>
+                                <td>@b.ItemPrice</td>
+                                <td>@b.UpdatedOn</td>
+                                <td><a class="card-link" href="#">Modify</a></td>
+                            </tr>
+                           }
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+

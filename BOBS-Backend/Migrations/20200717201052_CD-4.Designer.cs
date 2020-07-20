@@ -10,14 +10,14 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BOBS_Backend.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20200625001936_DatabaseCreate")]
-    partial class DatabaseCreate
+    [Migration("20200717201052_CD-4")]
+    partial class CD4
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.5")
+                .HasAnnotation("ProductVersion", "3.1.6")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -28,11 +28,26 @@ namespace BOBS_Backend.Migrations
                         .HasColumnType("bigint")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<long?>("Genere_Id")
+                    b.Property<string>("AudioBook_Url")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Author")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Back_Url")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Front_Url")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long?>("Genre_Id")
                         .HasColumnType("bigint");
 
                     b.Property<long>("ISBN")
                         .HasColumnType("bigint");
+
+                    b.Property<string>("Left_Url")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
@@ -40,12 +55,18 @@ namespace BOBS_Backend.Migrations
                     b.Property<long?>("Publisher_Id")
                         .HasColumnType("bigint");
 
+                    b.Property<string>("Right_Url")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Summary")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<long?>("Type_Id")
                         .HasColumnType("bigint");
 
                     b.HasKey("Book_Id");
 
-                    b.HasIndex("Genere_Id");
+                    b.HasIndex("Genre_Id");
 
                     b.HasIndex("Publisher_Id");
 
@@ -69,9 +90,9 @@ namespace BOBS_Backend.Migrations
                     b.ToTable("Condition");
                 });
 
-            modelBuilder.Entity("BOBS_Backend.Models.Book.Genere", b =>
+            modelBuilder.Entity("BOBS_Backend.Models.Book.Genre", b =>
                 {
-                    b.Property<long>("Genere_Id")
+                    b.Property<long>("Genre_Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
@@ -79,9 +100,9 @@ namespace BOBS_Backend.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Genere_Id");
+                    b.HasKey("Genre_Id");
 
-                    b.ToTable("Genere");
+                    b.ToTable("Genre");
                 });
 
             modelBuilder.Entity("BOBS_Backend.Models.Book.Price", b =>
@@ -100,8 +121,14 @@ namespace BOBS_Backend.Migrations
                     b.Property<double>("ItemPrice")
                         .HasColumnType("float");
 
-                    b.Property<int>("Quantiy")
+                    b.Property<int>("Quantity")
                         .HasColumnType("int");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("UpdatedOn")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Price_Id");
 
@@ -161,8 +188,11 @@ namespace BOBS_Backend.Migrations
                     b.Property<string>("Country")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<long?>("Customer_Id")
-                        .HasColumnType("bigint");
+                    b.Property<string>("Customer_Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<bool>("IsPrimary")
+                        .HasColumnType("bit");
 
                     b.Property<string>("State")
                         .HasColumnType("nvarchar(max)");
@@ -179,18 +209,26 @@ namespace BOBS_Backend.Migrations
 
             modelBuilder.Entity("BOBS_Backend.Models.Customer.Customer", b =>
                 {
-                    b.Property<long>("Customer_Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                    b.Property<string>("Customer_Id")
+                        .HasColumnType("nvarchar(450)")
+                        .HasMaxLength(450);
 
                     b.Property<DateTime>("DateOfBirth")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FirstName")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LastName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Phone")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Username")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Customer_Id");
@@ -205,11 +243,11 @@ namespace BOBS_Backend.Migrations
                         .HasColumnType("bigint")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<long>("Address_Id")
+                    b.Property<long?>("Address_Id")
                         .HasColumnType("bigint");
 
-                    b.Property<long>("Customer_Id")
-                        .HasColumnType("bigint");
+                    b.Property<string>("Customer_Id")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("DeliveryDate")
                         .HasColumnType("nvarchar(max)");
@@ -225,11 +263,9 @@ namespace BOBS_Backend.Migrations
 
                     b.HasKey("Order_Id");
 
-                    b.HasIndex("Address_Id")
-                        .IsUnique();
+                    b.HasIndex("Address_Id");
 
-                    b.HasIndex("Customer_Id")
-                        .IsUnique();
+                    b.HasIndex("Customer_Id");
 
                     b.HasIndex("OrderStatus_Id");
 
@@ -245,6 +281,9 @@ namespace BOBS_Backend.Migrations
 
                     b.Property<long?>("Book_Id")
                         .HasColumnType("bigint");
+
+                    b.Property<bool>("IsRemoved")
+                        .HasColumnType("bit");
 
                     b.Property<long?>("Order_Id")
                         .HasColumnType("bigint");
@@ -281,14 +320,14 @@ namespace BOBS_Backend.Migrations
 
                     b.HasKey("OrderStatus_Id");
 
-                    b.ToTable("orderStatus");
+                    b.ToTable("OrderStatus");
                 });
 
             modelBuilder.Entity("BOBS_Backend.Models.Book.Book", b =>
                 {
-                    b.HasOne("BOBS_Backend.Models.Book.Genere", "Genere")
+                    b.HasOne("BOBS_Backend.Models.Book.Genre", "Genre")
                         .WithMany()
-                        .HasForeignKey("Genere_Id");
+                        .HasForeignKey("Genre_Id");
 
                     b.HasOne("BOBS_Backend.Models.Book.Publisher", "Publisher")
                         .WithMany()
@@ -320,16 +359,12 @@ namespace BOBS_Backend.Migrations
             modelBuilder.Entity("BOBS_Backend.Models.Order.Order", b =>
                 {
                     b.HasOne("BOBS_Backend.Models.Customer.Address", "Address")
-                        .WithOne("Order")
-                        .HasForeignKey("BOBS_Backend.Models.Order.Order", "Address_Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .WithMany()
+                        .HasForeignKey("Address_Id");
 
                     b.HasOne("BOBS_Backend.Models.Customer.Customer", "Customer")
-                        .WithOne("Order")
-                        .HasForeignKey("BOBS_Backend.Models.Order.Order", "Customer_Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .WithMany()
+                        .HasForeignKey("Customer_Id");
 
                     b.HasOne("BOBS_Backend.Models.Order.OrderStatus", "OrderStatus")
                         .WithMany()

@@ -2,6 +2,7 @@
 using BOBS_Backend.Models.Order;
 using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -9,6 +10,7 @@ using BOBS_Backend.Repository.OrdersInterface;
 using BOBS_Backend.ViewModel.ManageOrders;
 using System.Reflection.PortableExecutable;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Threading;
 
 namespace BOBS_Backend.Repository.Implementations.OrderImplementations
 {
@@ -19,13 +21,43 @@ namespace BOBS_Backend.Repository.Implementations.OrderImplementations
          */
 
         private DatabaseContext _context;
-        private readonly int _ordersPerPage = 30;
+        private readonly int _ordersPerPage = 20;
 
 
         // Set up connection to Database 
         public OrderRepository(DatabaseContext context)
         {
             _context = context;
+        }
+
+        public async Task CancelOrder(long id)
+        {
+            try
+            {
+                IOrderDetailRepository orderDetailRepo = new OrderDetailRepository(_context);
+
+                var orderDetails = await orderDetailRepo.FindOrderDetailByOrderId(id);
+                var order = await FindOrderById(id);
+
+                foreach (var detail in orderDetails)
+                {
+                    if (detail.IsRemoved != true)
+                    {
+                        order.Refund += (detail.quantity * detail.price);
+                        detail.Price.Quantity += detail.quantity;
+                        detail.IsRemoved = true;
+
+                    }
+                }
+
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+
+            }
+           
+
         }
 
         // Find Single Order by the Order Id
@@ -41,7 +73,7 @@ namespace BOBS_Backend.Repository.Implementations.OrderImplementations
             return order;
         }
 
-        public ManageOrderViewModel RetrieveViewModel(string filterValue, string searchString, int pageNum, int totalPages, int[] pages, List<Order> order)
+        private ManageOrderViewModel RetrieveViewModel(string filterValue, string searchString, int pageNum, int totalPages, int[] pages, List<Order> order)
         {
             ManageOrderViewModel viewModel = new ManageOrderViewModel();
 
@@ -56,7 +88,7 @@ namespace BOBS_Backend.Repository.Implementations.OrderImplementations
             return viewModel;
         }
 
-        public IQueryable<Order> GetBaseOrderQuery()
+        private IQueryable<Order> GetBaseOrderQuery()
         {
             var query = _context.Order
                             .Include(order => order.Customer)
@@ -66,9 +98,13 @@ namespace BOBS_Backend.Repository.Implementations.OrderImplementations
             return query;
         }
 
-        public int GetTotalPages(IQueryable<Order> orderQuery)
+        private int GetTotalPages(IQueryable<Order> orderQuery)
         {
-            return (orderQuery.Count() / _ordersPerPage) + 1;
+            if((orderQuery.Count() % _ordersPerPage) == 0)
+            {
+                return (orderQuery.Count() / _ordersPerPage);
+            }
+            else return (orderQuery.Count() / _ordersPerPage) + 1;
         }
 
         // Find All the Orders in the Table
@@ -77,13 +113,13 @@ namespace BOBS_Backend.Repository.Implementations.OrderImplementations
 
             ManageOrderViewModel viewModel = new ManageOrderViewModel();
 
-            var totalPages = (_context.Order.Count() / _ordersPerPage) + 1 ;
+            var totalPages = GetTotalPages(_context.Order);
 
             var orders = await _context.Order
                             .Include(order => order.Customer)
                             .Include(order => order.Address)
                             .Include(order => order.OrderStatus)
-                            .OrderByDescending(order => order.DeliveryDate)
+                            .OrderByDescending(order => order.OrderStatus.Status == "Pending")
                             .Skip((pageNum - 1) * _ordersPerPage)
                             .Take(_ordersPerPage)
                             .ToListAsync();
@@ -97,12 +133,12 @@ namespace BOBS_Backend.Repository.Implementations.OrderImplementations
         }
 
 
-        public async Task<ManageOrderViewModel> RetrieveFilterViewModel(IQueryable<Order> filterQuery, int totalPages, int pageNum, string filterValue, string searchString) 
+        private async Task<ManageOrderViewModel> RetrieveFilterViewModel(IQueryable<Order> filterQuery, int totalPages, int pageNum, string filterValue, string searchString) 
         {
             ManageOrderViewModel viewModel = new ManageOrderViewModel();
 
             var orders = await filterQuery
-                            .OrderByDescending(order => order.DeliveryDate)
+                            .OrderByDescending(order => order.OrderStatus.Status == "Pending")
                             .Skip((pageNum - 1) * _ordersPerPage)
                             .Take(_ordersPerPage)
                             .ToListAsync();
@@ -114,201 +150,132 @@ namespace BOBS_Backend.Repository.Implementations.OrderImplementations
             return viewModel;
         }
 
-       
 
-        // With User input determines which Feature to filter by and navigates to respective function
-        public async Task<ManageOrderViewModel> FilterList(string filterValue, string searchString,int pageNum)
+        private Expression<Func<Order,bool>> GenerateDynamicLambdaFunctionOrderProperty(string[] splitFilter, ParameterExpression parameterExpression, string searchString)
         {
-            ManageOrderViewModel viewModel = new ManageOrderViewModel();
 
-            
+            var property = Expression.Property(parameterExpression, splitFilter[2]);
 
-            switch(filterValue)
+            Expression<Func<Order, bool>> lambda;
+
+            if (splitFilter[1] == "int")
             {
-
-
-                case "Order Id":
+                try
                 {
-                    long value = 0;
+                    long value = long.Parse(searchString);
 
-                    bool canConvert = long.TryParse(searchString, out value);
+                    var constant = Expression.Constant(value);
 
-                    if (canConvert == true)
-                    {
-                        var query = GetBaseOrderQuery();
-                        var filterQuery = query.Where(order => order.Order_Id == value);
+                    var expression = Expression.Equal(property, constant);
 
-                        int totalPages = GetTotalPages(filterQuery);
+                    lambda = Expression.Lambda<Func<Order, bool>>(expression, parameterExpression);
 
-                        viewModel = await RetrieveFilterViewModel(filterQuery, totalPages, pageNum, filterValue, searchString);
-
-                    }
-                    else
-                    {
-                        int[] pageArr = Enumerable.Range(1, 1).ToArray();
-
-                        viewModel = RetrieveViewModel(filterValue, searchString, 1, 1, pageArr, null);
-                    }
-
-                    break;
+                 
                 }
-                case "Status":
+                catch
                 {
-                        var query = GetBaseOrderQuery();
-                        var filterQuery = query.Where(order => order.OrderStatus.Status.Contains(searchString));
-
-                        int totalPages = GetTotalPages(filterQuery);
-
-                        viewModel = await RetrieveFilterViewModel(filterQuery, totalPages, pageNum, filterValue, searchString);
-                        break;
-
+                    lambda = null;
                 }
-                    
-
-                case "Customer Id":
-                {
-                        long value = 0;
-
-                        bool canConvert = long.TryParse(searchString, out value);
-
-                        if (canConvert == true)
-                        {
-                            var query = GetBaseOrderQuery();
-                            var filterQuery = query.Where(order => order.Customer.Customer_Id == value);
-
-                            int totalPages = GetTotalPages(filterQuery);
-
-                            viewModel = await RetrieveFilterViewModel(filterQuery, totalPages, pageNum, filterValue, searchString);
-
-                        }
-                        else
-                        {
-                            int[] pageArr = Enumerable.Range(1, 1).ToArray();
-
-                            viewModel = RetrieveViewModel(filterValue, searchString, 1, 1, pageArr, null);
-                        }
-
-                        break;
-                }
-
-                case "Username":
-                {
-                        var query = GetBaseOrderQuery();
-                        var filterQuery = query.Where(order => order.Customer.Username.Contains(searchString));
-
-                        int totalPages = GetTotalPages(filterQuery);
-
-                        viewModel = await RetrieveFilterViewModel(filterQuery, totalPages, pageNum, filterValue, searchString);
-                        break;
-                }
-  
-
-                case "First Name":
-                    {
-                        var query = GetBaseOrderQuery();
-                        var filterQuery = query.Where(order => order.Customer.FirstName.Contains(searchString));
-
-                        int totalPages = GetTotalPages(filterQuery);
-
-                        viewModel = await RetrieveFilterViewModel(filterQuery, totalPages, pageNum, filterValue, searchString);
-                        break;
-                    }
-
-                case "Last Name":
-                    {
-                        var query = GetBaseOrderQuery();
-                        var filterQuery = query.Where(order => order.Customer.LastName.Contains(searchString));
-
-                        int totalPages = GetTotalPages(filterQuery);
-
-                        viewModel = await RetrieveFilterViewModel(filterQuery, totalPages, pageNum, filterValue, searchString);
-                        break;
-                    }
-
-                case "Email":
-                    {
-                        var query = GetBaseOrderQuery();
-                        var filterQuery = query.Where(order => order.Customer.Email.Contains(searchString));
-
-                        int totalPages = GetTotalPages(filterQuery);
-
-                        viewModel = await RetrieveFilterViewModel(filterQuery, totalPages, pageNum, filterValue, searchString);
-                        break;
-                    }
-
-                case "Phone":
-                    {
-                        var query = GetBaseOrderQuery();
-                        var filterQuery = query.Where(order => order.Customer.Phone.Contains(searchString));
-
-                        int totalPages = GetTotalPages(filterQuery);
-
-                        viewModel = await RetrieveFilterViewModel(filterQuery, totalPages, pageNum, filterValue, searchString);
-                        break;
-                    }
-
-                case "State":
-                    {
-                        var query = GetBaseOrderQuery();
-                        var filterQuery = query.Where(order => order.Address.State.Contains(searchString));
-
-                        int totalPages = GetTotalPages(filterQuery);
-
-                        viewModel = await RetrieveFilterViewModel(filterQuery, totalPages, pageNum, filterValue, searchString);
-                        break;
-                    }
-
-                case "Zip Code":
-                    {
-                        long value = 0;
-
-                        bool canConvert = long.TryParse(searchString, out value);
-
-                        if (canConvert == true)
-                        {
-                            var query = GetBaseOrderQuery();
-                            var filterQuery = query.Where(order => order.Address.ZipCode == value);
-
-                            int totalPages = GetTotalPages(filterQuery);
-
-                            viewModel = await RetrieveFilterViewModel(filterQuery, totalPages, pageNum, filterValue, searchString);
-
-                        }
-                        else
-                        {
-                            int[] pageArr = Enumerable.Range(1, 1).ToArray();
-
-                            viewModel = RetrieveViewModel(filterValue, searchString, 1, 1, pageArr, null);
-                        }
-
-                        break;
-                    }
-
-                case "City":
-                    {
-                        var query = GetBaseOrderQuery();
-                        var filterQuery = query.Where(order => order.Address.City.Contains(searchString));
-
-                        int totalPages = GetTotalPages(filterQuery);
-
-                        viewModel = await RetrieveFilterViewModel(filterQuery, totalPages, pageNum, filterValue, searchString);
-                        break;
-                    }
-
-
-                default:
-                    {
-                        int[] pageArr = Enumerable.Range(1, 1).ToArray();
-
-                        viewModel = RetrieveViewModel("", searchString, 1, 1, pageArr, null);
-
-                        break;
-                    }
-                    
             }
 
+            else
+            {
+                lambda = null;
+            }
+
+            return lambda;
+        }
+
+        private Expression<Func<Order, bool>> GenerateDynamicLambdaFunctionSubOrderProperty(string[] splitFilter, ParameterExpression parameterExpression, string searchString)
+        {
+
+
+            Expression<Func<Order, bool>> lambda;
+
+            if (splitFilter[1] == "int")
+            {
+                try
+                {
+                    long value = long.Parse(searchString);
+
+                    var constant = Expression.Constant(value);
+
+                    Expression property2 = parameterExpression;
+
+                    foreach (var member in splitFilter[2].Split('.'))
+                    {
+                        property2 = Expression.PropertyOrField(property2, member);
+                    }
+
+                    var expression = Expression.Equal(property2, constant);
+
+                    lambda = Expression.Lambda<Func<Order, bool>>(expression, parameterExpression);
+                }
+                catch
+                {
+                    lambda = null;
+                }
+            }
+
+            else
+            {
+                var constant = Expression.Constant(searchString);
+
+                Expression property2 = parameterExpression;
+
+                foreach (var member in splitFilter[2].Split('.'))
+                {
+                    property2 = Expression.PropertyOrField(property2, member);
+                }
+                var method = typeof(string).GetMethod("Contains", new Type[] { typeof(string) });
+
+                var expression = Expression.Call(property2, method, constant);
+
+                lambda = Expression.Lambda<Func<Order, bool>>(expression, parameterExpression);
+            }
+
+            return lambda;
+        }
+
+        public async Task<ManageOrderViewModel> FilterList(string filterValue, string searchString, int pageNum)
+        {
+            ManageOrderViewModel viewModel = new ManageOrderViewModel();
+            var parameterExpression = Expression.Parameter(Type.GetType("BOBS_Backend.Models.Order.Order"), "order");
+
+
+            string[] splitFilter = filterValue.Split(' ');
+            Expression<Func<Order, bool>> lambda;
+
+            if(splitFilter[0] == "Order")
+            {
+                lambda = GenerateDynamicLambdaFunctionOrderProperty(splitFilter, parameterExpression, searchString);
+            }
+            else
+            {
+
+                lambda = GenerateDynamicLambdaFunctionSubOrderProperty(splitFilter, parameterExpression, searchString);
+
+
+            }
+
+            if(lambda == null)
+            {
+                int[] pages = Enumerable.Range(1, 1).ToArray();
+
+
+                viewModel = RetrieveViewModel("", "", 1, 1, pages, null);
+                return viewModel;
+            }
+            
+            var query = GetBaseOrderQuery();
+            var filterQuery = query.Where(lambda);
+
+            int totalPages = GetTotalPages(filterQuery);
+
+            viewModel = await RetrieveFilterViewModel(filterQuery, totalPages, pageNum, filterValue, searchString);
             return viewModel;
 
         }
+
     }
 }

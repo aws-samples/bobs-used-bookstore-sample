@@ -2,21 +2,22 @@
 
 namespace BOBS_Backend.Migrations
 {
-    public partial class CreateDatabse5 : Migration
+    public partial class CD4 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<string>(
-                name: "Email",
-                table: "Customer",
-                nullable: true);
+            migrationBuilder.AddColumn<bool>(
+                name: "IsRemoved",
+                table: "OrderDetail",
+                nullable: false,
+                defaultValue: false);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "Email",
-                table: "Customer");
+                name: "IsRemoved",
+                table: "OrderDetail");
         }
     }
 }

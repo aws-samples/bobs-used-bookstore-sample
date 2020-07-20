@@ -1,0 +1,31 @@
+﻿.filter-pill {
+    font-weight: normal;
+    font-family: 'Arvo',serif;
+    padding: .6em;
+    border-top-left-radius: 12rem;
+    border-bottom-left-radius: 12rem;
+    border-top-right-radius: 12rem;
+    border-bottom-right-radius: 12rem;
+    background-color: #7D53DE;
+}
+
+.filter-by-button {
+    border-bottom-left-radius: 1.3rem;
+    border-top-left-radius: 1.3rem;
+}
+
+.submit-button {
+    border-top-right-radius: 1.5rem;
+    border-bottom-right-radius: 1.5rem;
+    border-color: #7D53DE;
+    background-color: #7D53DE;
+    color: white;
+}
+
+.submit-button:hover {
+    color: white;
+}
+
+.text {
+    font-family: 'Arvo', serif;
+}

@@ -3,12 +3,63 @@
 @{ 
     var orders = Model;
 }
-
+    <style>
+        .filter-pill {
+            padding: .6em;
+        }
+        .filter-pill-tag {
+            font-weight:normal;
+            background-color: #7D53DE;
+            padding: .6em;
+            padding-left: 1.5em;
+            margin-top: -.375rem;
+            margin-bottom: .5rem;
+            border-bottom-right-radius: 0;
+            border-top-right-radius: 0;
+            margin-right: -1.25rem;
+        }
+        .order-info-card {
+            border-radius: 3rem;
+            height: 18rem;
+            border-color: black;
+            background-color: white;
+        }
+        .order-info-card-header {
+            border-top-left-radius: 3rem;
+            border-top-right-radius: 3rem;
+            background-color: white;
+            padding: .75rem 1.25rem;
+        }
+        .order-info-card-header-text {
+            text-align: center;
+            font-weight: bold;
+        }
+        .website-text {
+            font-family: 'Arvo', serif;
+        }
+        .go-corner {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            overflow: hidden;
+            top: 0.11rem;
+            right: 0;
+            background-color: #7D53DE;
+            border-radius: 0 3rem 0 32px;
+        }
+        .go-arrow {
+            color: white;
+            font-family: courier, sans;
+        }
+    </style>
 @if ((orders == null) || (!orders.Any()))
 {
     <div class="text-center col-12">
-        <h2>No Results Returned</h2>
-        <p>It seems that no search results have been returned. Try changing your search query or the filter category</p>
+        <h2 class="website-text">No Results Returned</h2>
+        <p class="website-text">It seems that no search results have been returned. Try changing your search query or the filter category</p>
     </div>
 }
 else
@@ -23,14 +74,29 @@ else
 
 
         <div class="col-4" style="margin-top:20px;">
-            <div style="border-radius:.65rem" class="card">
+            <div class="card shadow order-info-card">
+
+                <div class="order-info-card-header" >
+                    <div class="col-12 order-info-card-header-text website-text">
+                        Order Info
+                    </div>
+                    <div class="go-corner" href="#">
+                        <a asp-controller="Orders" asp-action="ProcessOrders" asp-all-route-data="param">
+                            <div class="go-arrow">
+                                →
+                            </div>
+                        </a>
+                        
+                    </div>
+                </div>
                 <div class="card-body">
-                    <h5 class="card-title">Order Details</h5>
-                    <h6 class="card-subtitle mb-2 text-muted">Order ID: @order.Order_Id</h6>
-                    <p class="card-text">Order Status: @order.OrderStatus.Status</p>
-                    <p class="card-text">Customer ID: @order.Customer.Customer_Id</p>
-                    <p class="card-text">Expected Delivery Date: @DateTime.Parse(order.DeliveryDate).ToString("MM/dd/yyyy")</p>
-                    <a asp-controller="Orders" asp-action="ProcessOrders" asp-all-route-data="param">See More Details </a>
+                    <div style="padding-right:0; padding-left:0" class="col-12 d-flex justify-content-between">
+                        <h6 class="card-subtitle mb-2 text-muted website-text">Order ID: @order.Order_Id</h6>
+                        <span class="filter-pill-tag badge badge-pill text-white website-text">@order.OrderStatus.Status</span>
+                    </div>
+                    <p class="card-text website-text">Customer ID: @order.Customer.Customer_Id</p>
+                    <p class="card-text website-text">Customer Name: @order.Customer.FirstName  @order.Customer.LastName</p>
+                    <p class="card-text website-text">Expected Delivery Date: @DateTime.Parse(order.DeliveryDate).ToString("MM/dd/yyyy")</p>
                 </div>
             </div>
         </div>

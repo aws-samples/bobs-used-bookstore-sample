@@ -8,26 +8,25 @@
 
 }
 
-<div class="container">
-    <div class="text-center">
-        <h2>Manage Orders</h2>
-    </div>
-    <div class="row" style="margin:15px;">
-        <partial name="./Partials/_Search" model="Model"/>
+    <body>
+        <div class="container" >
+            <div class="text-center">
+                <h2 style="font-family: 'Arvo', serif; color: black;">Manage Orders</h2>
+            </div>
+            <div class="row" style="margin:15px;">
+                <partial name="./Partials/_Search" model="Model" />
 
-    </div>
+            </div>
 
-    <div class="row">
-        <partial name="./Partials/_DisplayOrders" model="orders"/>
-        
-    </div>
+            <div class="row">
+                <partial name="./Partials/_DisplayOrders" model="orders" />
 
-    <div class="row d-flex justify-content-center" style="margin-top:35px;">
+            </div>
 
-        <partial name="./Partials/_Pagination" model="Model" />
-    </div>
+            <div class="row d-flex justify-content-center" style="margin-top:35px;">
 
-
-
-</div>
+                <partial name="./Partials/_Pagination" model="Model" />
+            </div>
+        </div>
+    </body>
 

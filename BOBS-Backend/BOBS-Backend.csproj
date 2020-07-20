@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -6,38 +6,48 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Amazon.Extensions.CognitoAuthentication" Version="1.0.3" />
-    <PackageReference Include="AWSSDK.CognitoIdentity" Version="3.3.101.98" />
-    <PackageReference Include="AWSSDK.CognitoIdentityProvider" Version="3.3.110.2" />
-    <PackageReference Include="AWSSDK.Core" Version="3.3.107.19" />
-    <PackageReference Include="AWSSDK.SecurityToken" Version="3.3.105.16" />
+    <Compile Remove="Models\Repository\**" />
+    <Content Remove="Models\Repository\**" />
+    <EmbeddedResource Remove="Models\Repository\**" />
+    <None Remove="Models\Repository\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Migrations\20200717184023_CD-2.cs" />
+    <Compile Remove="Migrations\20200717184023_CD-2.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Amazon.Extensions.CognitoAuthentication" Version="1.0.4" />
+    <PackageReference Include="AWSSDK.CognitoIdentity" Version="3.3.101.110" />
+    <PackageReference Include="AWSSDK.CognitoIdentityProvider" Version="3.3.111.6" />
+    <PackageReference Include="AWSSDK.Core" Version="3.3.107.24" />
+    <PackageReference Include="AWSSDK.SecurityToken" Version="3.3.105.28" />
+    <PackageReference Include="AWSSDK.SimpleEmail" Version="3.3.101.178" />
+    <PackageReference Include="AWSSDK.SimpleNotificationService" Version="3.3.102.1" />
     <PackageReference Include="AWSSDKCPP-Polly.redist" Version="1.6.20160610.25" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="3.1.5" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.5" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.5">
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="3.1.6" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.6" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.6">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.5" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.5">
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.6" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.6">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.3" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-	<PackageReference Include="AWSSDK.Rekognition" Version="3.3.106" />
-	<PackageReference Include="AWSSDK.S3" Version="3.3.111.14" />
+	<PackageReference Include="AWSSDK.Rekognition" Version="3.3.106.11" />
+	<PackageReference Include="AWSSDK.S3" Version="3.3.111.25" />
 	<PackageReference Include="SixLabors.ImageSharp" Version="1.0.0-rc0003" />
-	  <PackageReference Include="AWSSDK.Translate" Version="3.3.101.79" />
+	  <PackageReference Include="AWSSDK.Translate" Version="3.3.101.86" />
 	  <PackageReference Include="AWSSDKCPP-Polly" Version="1.6.20160610.25" />
 	  <PackageReference Include="AWSSDKCPP-Text-To-Speech" Version="1.6.25" />
-	  <PackageReference Include="AWSSDK.Polly" Version="3.3.104.7" />
+	  <PackageReference Include="AWSSDK.Polly" Version="3.3.104.14" />
 
 
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Models\Repository\" />
   </ItemGroup>
 
 </Project>

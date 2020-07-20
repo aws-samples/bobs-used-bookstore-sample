@@ -60,7 +60,7 @@ html {
 
 body {
   /* Margin bottom by footer height */
-  margin-bottom: 60px;
+  margin-bottom: 0px;
 }
 .footer {
   position: absolute;
@@ -70,3 +70,9 @@ body {
   line-height: 60px; /* Vertically center the text there */
 }
 
+.layoutBg{
+    background-image:url("Images/book1.jpg");
+    height:100px;
+    width:100px;
+
+}

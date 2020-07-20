@@ -10,14 +10,14 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BOBS_Backend.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20200629154254_CreateDatabase7")]
-    partial class CreateDatabase7
+    [Migration("20200717200703_CD-3")]
+    partial class CD3
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.5")
+                .HasAnnotation("ProductVersion", "3.1.6")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -28,17 +28,38 @@ namespace BOBS_Backend.Migrations
                         .HasColumnType("bigint")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("AudioBook_Url")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Author")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Back_Url")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Front_Url")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<long?>("Genre_Id")
                         .HasColumnType("bigint");
 
                     b.Property<long>("ISBN")
                         .HasColumnType("bigint");
 
+                    b.Property<string>("Left_Url")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<long?>("Publisher_Id")
                         .HasColumnType("bigint");
+
+                    b.Property<string>("Right_Url")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Summary")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<long?>("Type_Id")
                         .HasColumnType("bigint");
@@ -100,8 +121,14 @@ namespace BOBS_Backend.Migrations
                     b.Property<double>("ItemPrice")
                         .HasColumnType("float");
 
-                    b.Property<int>("Quantiy")
+                    b.Property<int>("Quantity")
                         .HasColumnType("int");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("UpdatedOn")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Price_Id");
 
@@ -161,8 +188,11 @@ namespace BOBS_Backend.Migrations
                     b.Property<string>("Country")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<long?>("Customer_Id")
-                        .HasColumnType("bigint");
+                    b.Property<string>("Customer_Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<bool>("IsPrimary")
+                        .HasColumnType("bit");
 
                     b.Property<string>("State")
                         .HasColumnType("nvarchar(max)");
@@ -179,10 +209,9 @@ namespace BOBS_Backend.Migrations
 
             modelBuilder.Entity("BOBS_Backend.Models.Customer.Customer", b =>
                 {
-                    b.Property<long>("Customer_Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                    b.Property<string>("Customer_Id")
+                        .HasColumnType("nvarchar(450)")
+                        .HasMaxLength(450);
 
                     b.Property<DateTime>("DateOfBirth")
                         .HasColumnType("datetime2");
@@ -196,8 +225,8 @@ namespace BOBS_Backend.Migrations
                     b.Property<string>("LastName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<long>("Phone")
-                        .HasColumnType("bigint");
+                    b.Property<string>("Phone")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Username")
                         .HasColumnType("nvarchar(max)");
@@ -217,8 +246,8 @@ namespace BOBS_Backend.Migrations
                     b.Property<long?>("Address_Id")
                         .HasColumnType("bigint");
 
-                    b.Property<long?>("Customer_Id")
-                        .HasColumnType("bigint");
+                    b.Property<string>("Customer_Id")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("DeliveryDate")
                         .HasColumnType("nvarchar(max)");
@@ -252,6 +281,9 @@ namespace BOBS_Backend.Migrations
 
                     b.Property<long?>("Book_Id")
                         .HasColumnType("bigint");
+
+                    b.Property<bool>("IsRemoved")
+                        .HasColumnType("bit");
 
                     b.Property<long?>("Order_Id")
                         .HasColumnType("bigint");

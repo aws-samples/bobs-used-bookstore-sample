@@ -1,40 +1,126 @@
 ﻿@model BOBS_Backend.ViewModel.ManageOrders.PartialOrder;
-    <div id="accordion">
-        @foreach (var (detail, index) in Model.OrderDetails.Select((value, i) => (value, i)))
-        {
+    
 
-            var num = index + 1;
-            var collapseKey = "collapse" + index;
-            var collapse = "#collapse" + index;
-            var heading = "heading" + index;
+<style>
+    .item-col {
+        margin:0;
+        padding:0;
+    }
+    .item-right {
+        border-color:black;
+        border-right-width:0;
+    }
+    .item-left {
+        border-color:black;
+        border-left-width:0;
+    }
+    .book-list-card {
+        padding-left: 0;
+        padding-right: 0;
+        border-color:black;
+        margin-bottom:.25rem;
+    }
+    .book-list-card-header {
+        background-color:white;
+    }
+    .item-list-btn-link {
+        color: black;
+    }
+    .website-text {
+        font-family: 'Arvo',serif;
+    }
+    .cant-find-book {
+        padding-top:.375rem;
+    }
+</style>
+<div id="accordion">
+    @foreach (var (detail, index) in Model.OrderDetails.Select((value, i) => (value, i)))
+    {
 
-            <div class="card">
-                <div class="card-header" id="heading@(index)">
-                    <h5 class="mb-0">
-                        <button class="btn btn-link" data-toggle="collapse" data-target="#collapse@(index)" aria-expanded="true" aria-controls="collapse@(index)">
+        var num = index + 1;
+
+        <div class="card book-list-card col-6 ">
+            <div class="card-header book-list-card-header col-12" id="heading@(index)">
+                <div class="row">
+                    <h5 class="col-6">
+                        <button class="btn item-list-btn-link website-text" data-toggle="collapse" data-target="#collapse@(index)" aria-expanded="true" aria-controls="collapse@(index)">
                             Item @num: @detail.Book.Name
                         </button>
                     </h5>
-                </div>
-            </div>
-            <div id="collapse@(index)" class="collapse" aria-labelledby="heading@(index)" data-parent="#accordion">
-                <div class="row">
-                    <div class="col-6" style="margin-right:0; padding-right:0">
-                        <ul class="list-group ">
-                            <li style="border-right-width:0; border-top-right-radius:0;" class="list-group-item">Book Name: @detail.Book.Name</li>
-                            <li style="border-right-width:0; border-top-right-radius:0;" class="list-group-item">Book Id: @detail.Book.Book_Id</li>
-                            <li style="border-right-width:0; border-top-right-radius:0;" class="list-group-item">ISBN: @detail.Book.ISBN</li>
-                        </ul>
-                    </div>
-                    <div class="col-6" style="margin-left:0;padding-left:0">
-                        <ul class="list-group ">
-                            <li style="border-left-width:0; border-top-left-radius:0;" class="list-group-item">Quantity: @detail.quantity</li>
-                            <li style="border-left-width:0; border-top-left-radius:0;" class="list-group-item">Condition: @detail.Price.Condition.ConditionName</li>
-                            <li style="border-left-width:0; border-top-left-radius:0;" class="list-group-item">Type: @detail.Book.Type.TypeName </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        }
+                    @if (detail.IsRemoved)
+                    {
+                        <button style="padding-top:0" class="btn col-6 website-text">Item Has Been Removed</button>
+                    }
+                    else
+                    {
+                        @if (Model.Order.OrderStatus.Status == "Just Placed" || Model.Order.OrderStatus.Status == "Pending")
+                        {
+                            <button data-toggle="modal" data-target="#Modal@(index)" type="button" style="padding-top:0" class="btn website-text col-6">Can't Find Book Click Here?</button>
+                        }
+                        
+                    }
 
-    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="modal fade" id="Modal@(index)" tabindex="-1" role="dialog" aria-labelledby="ModalLabel@(index)" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title website-text" id="ModalLabel@(index)">Remove Item</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form asp-controller="Orders" asp-action="EditOrderDetail">
+                        <div class="modal-body">
+                            <p class="website-text">How many copies of the book do you have?</p>
+                            <p class="card-subtitle mb-2 text-muted website-text">
+                                Max Limit: @detail.quantity
+                            </p>
+                            @if(Model.OrderDetails.Count() - 1 == Model.itemsRemoved && detail.IsRemoved != true)
+                            {
+                                <select asp-for="isLast" class="invisible">
+                                    <option selected value="true">tets</option>
+                                </select>
+                                <p class="card-subtitle mb-2 text-muted website-text">Warning removing last item will cancel the order</p>
+                            }
+                            <input asp-for="quantity" type="text" class="form-control website-text" id="quantity" name="quantity" min="1" max="@detail.quantity">
+                            <select asp-for="orderDetailId" class="invisible">
+                                <option selected value="@detail.OrderDetail_Id">tets</option>
+                            </select>
+                            <select asp-for="orderId" class="invisible">
+                                <option selected value="@Model.Order.Order_Id">tets</option>
+                            </select>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary website-text" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary website-text">Save changes</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+
+        <div id="collapse@(index)" style="margin-bottom:.25rem;" class="collapse col-6" aria-labelledby="heading@(index)" data-parent="#accordion">
+            <div class="row">
+                <div class="col-6 item-col">
+                    <ul class="list-group ">
+                        <li class="item-right list-group-item website-text">Book Name: @detail.Book.Name</li>
+                        <li class="item-right list-group-item website-text">Book Id: @detail.Book.Book_Id</li>
+                        <li class="item-right list-group-item website-text">ISBN: @detail.Book.ISBN</li>
+                    </ul>
+                </div>
+                <div class="col-6 item-col">
+                    <ul class="list-group ">
+                        <li class="item-left list-group-item website-text">Quantity: @detail.quantity</li>
+                        <li class="item-left list-group-item website-text">Condition: @detail.Price.Condition.ConditionName</li>
+                        <li class="item-left list-group-item website-text">Type: @detail.Book.Type.TypeName </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    }
+</div>
