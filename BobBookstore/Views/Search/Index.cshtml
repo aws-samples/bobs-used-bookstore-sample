@@ -9,8 +9,15 @@
 
 <form asp-controller="Search" asp-action="Index" method="get">
     <p>
+        <select class="col-2 custom-select" name="SortBy">
+            <option value="Name">Name</option>
+            <option value="Genre">Genre</option>
+            <option value="Type">Type</option>
+            <option value="PriceAsc">Price (ascending)</option>
+            <option value="PriceDesc">Price (descending)</option>
+        </select>
         <input type="text" name="SearchString" />
-        <input type="submit" value="Filter" />
+        <input type="submit" value="Search" />
     </p>
 </form>
 
@@ -38,7 +45,7 @@ else
                     @Html.DisplayNameFor(model => model.TypeName)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Prices)
+                    @Html.DisplayNameFor(model => model.MinPrice)
                 </th>
             </tr>
         </thead>
@@ -64,7 +71,7 @@ else
                 }
                 else
                 {
-                    <td> Available from $@item.Prices.Min(p => p.ItemPrice)</td>
+                    <td> Available from $@item.MinPrice</td>
                 }
 
 
