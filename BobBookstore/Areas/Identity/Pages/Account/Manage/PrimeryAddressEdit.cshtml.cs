@@ -43,27 +43,8 @@ namespace BobBookstore.Areas.Identity.Pages.Account.Manage
 
         public class AccountModel
         {
-            //[Required]
-            [Display(Name = "Address")]
-            public string Address { get; set; }
-            //[Required]
-            [Display(Name = "Birth Date ")]
-            public string BirthDate { get; set; }
-            //[Required]
-            [Display(Name = "Gender")]
-            public string Gender { get; set; }
-            //[Required]
-            [Display(Name = "Phone Number")]
-            public string PhoneNumber { get; set; }
-            //[Required]
-            [Display(Name = "Last Name")]
-            public string FamilyName { get; set; }
-            //[Required]
-            [Display(Name = "First Name")]
-            public string GivenName { get; set; }
-            //[Required]
-            [Display(Name = "Nick Name")]
-            public string NickName { get; set; }
+           
+           
             [Display(Name = "Address Line 1")]
             public string AddressLine1 { get; set; }
             [Display(Name = "Address Line 2")]
@@ -103,13 +84,7 @@ namespace BobBookstore.Areas.Identity.Pages.Account.Manage
 
             Input = new AccountModel()
             {
-                Address = address,
-                BirthDate = birthDate,
-                GivenName = givenName,
-                Gender = gender,
-                NickName = nickName,
-                PhoneNumber = phoneNumber,
-                FamilyName = familyName,
+                
                 AddressLine1 = addressLine1,
                 AddressLine2 = addressLine2,
                 City = city,
@@ -119,35 +94,7 @@ namespace BobBookstore.Areas.Identity.Pages.Account.Manage
 
 
             };
-            if (Input.FamilyName == "default")
-            {
-                Input.FamilyName = "";
-            }
-
-            if (Input.Address == "default")
-            {
-                Input.Address = "";
-            }
-            if (Input.Gender == "default")
-            {
-                Input.Gender = string.Empty;
-            }
-            if (Input.NickName == "default")
-            {
-                Input.NickName = string.Empty;
-            }
-            if (Input.GivenName == "default")
-            {
-                Input.GivenName = "";
-            }
-            if (Input.BirthDate == "0000-00-00")
-            {
-                Input.BirthDate = "";
-            }
-            if (Input.PhoneNumber == "+01234567890")
-            {
-                Input.PhoneNumber = "";
-            }
+            
 
             if (Input.AddressLine1 == "default")
             {
@@ -206,34 +153,7 @@ namespace BobBookstore.Areas.Identity.Pages.Account.Manage
                 return Page();
             }
 
-            if (string.IsNullOrWhiteSpace(Input.FamilyName))
-            {
-                Input.FamilyName = "default";
-            }
-            if (string.IsNullOrWhiteSpace(Input.Address))
-            {
-                Input.Address = "default";
-            }
-            if (string.IsNullOrWhiteSpace(Input.Gender))
-            {
-                Input.Gender = "default";
-            }
-            if (string.IsNullOrWhiteSpace(Input.GivenName))
-            {
-                Input.GivenName = "default";
-            }
-            if (string.IsNullOrWhiteSpace(Input.BirthDate))
-            {
-                Input.BirthDate = "0000-00-00";
-            }
-            if (string.IsNullOrWhiteSpace(Input.PhoneNumber))
-            {
-                Input.PhoneNumber = "+01234567890";
-            }
-            if (string.IsNullOrWhiteSpace(Input.NickName))
-            {
-                Input.NickName = "default";
-            }
+            
             if (string.IsNullOrWhiteSpace(Input.AddressLine1))
             {
                 Input.AddressLine1 = "default";
@@ -259,13 +179,7 @@ namespace BobBookstore.Areas.Identity.Pages.Account.Manage
                 Input.ZipCode = "default";
             }
 
-            user.Attributes[CognitoAttribute.Address.AttributeName] = Input.Address;
-            user.Attributes[CognitoAttribute.BirthDate.AttributeName] = Input.BirthDate;
-            user.Attributes[CognitoAttribute.Gender.AttributeName] = Input.Gender;
-            user.Attributes[CognitoAttribute.NickName.AttributeName] = Input.NickName;
-            user.Attributes[CognitoAttribute.PhoneNumber.AttributeName] = Input.PhoneNumber;
-            user.Attributes[CognitoAttribute.FamilyName.AttributeName] = Input.FamilyName;
-            user.Attributes[CognitoAttribute.GivenName.AttributeName] = Input.GivenName;
+            
             user.Attributes["custom:AddressLine1"] = Input.AddressLine1;
             user.Attributes["custom:AddressLine2"] = Input.AddressLine2;
             user.Attributes["custom:City"] = Input.City;

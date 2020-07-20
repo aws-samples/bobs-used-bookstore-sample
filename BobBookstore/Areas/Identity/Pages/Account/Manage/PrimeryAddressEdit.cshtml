@@ -110,20 +110,12 @@
             </div>
 
 
-            <div class="form-group">
-                <label asp-for="Input.Gender"></label>
-                <input asp-for="Input.Gender" class="form-control" />
-                <span asp-validation-for="Input.Gender" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Input.NickName"></label>
-                <input asp-for="Input.NickName" class="form-control" />
-                <span asp-validation-for="Input.NickName" class="text-danger"></span>
-            </div>
+            
 
 
-            <button id="update-profile-button" type="submit" class="btn btn-primary">Save</button>
+            <button id="update-profile-button" type="submit" class="btn btn-primary"style="background-color: #2D99F9 ;color: #FFFFFF">Save</button>
         </form>
     </div>
 </div>
-<a href="##" onClick="history.go(-1); return false;"> Return to Addresses manager</a> 
+<input type="button" value="Return to Addresses manager" onclick="location.href='@Url.Action( "Index","Addresses")'"style="background-color: #2D99F9 ;color: #FFFFFF" />
+@*<a href="##" onClick="history.go(-1); return false;"> Return to Addresses manager</a>*@ 
