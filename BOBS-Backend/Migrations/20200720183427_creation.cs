@@ -2,22 +2,22 @@
 
 namespace BOBS_Backend.Migrations
 {
-    public partial class CD5 : Migration
+    public partial class creation : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<double>(
-                name: "Refund",
-                table: "Order",
+            migrationBuilder.AddColumn<bool>(
+                name: "Active",
+                table: "Price",
                 nullable: false,
-                defaultValue: 0.0);
+                defaultValue: false);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "Refund",
-                table: "Order");
+                name: "Active",
+                table: "Price");
         }
     }
 }

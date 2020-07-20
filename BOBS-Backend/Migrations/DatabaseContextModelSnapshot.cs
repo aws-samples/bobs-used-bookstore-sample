@@ -110,6 +110,9 @@ namespace BOBS_Backend.Migrations
                         .HasColumnType("bigint")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
+
                     b.Property<long?>("Book_Id")
                         .HasColumnType("bigint");
 

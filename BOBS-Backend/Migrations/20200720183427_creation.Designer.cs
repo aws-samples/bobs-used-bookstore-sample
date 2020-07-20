@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BOBS_Backend.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20200717192859_CD-2")]
-    partial class CD2
+    [Migration("20200720183427_creation")]
+    partial class creation
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -112,14 +112,17 @@ namespace BOBS_Backend.Migrations
                         .HasColumnType("bigint")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
+
                     b.Property<long?>("Book_Id")
                         .HasColumnType("bigint");
 
                     b.Property<long?>("Condition_Id")
                         .HasColumnType("bigint");
 
-                    b.Property<decimal>("ItemPrice")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<double>("ItemPrice")
+                        .HasColumnType("float");
 
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
@@ -255,6 +258,9 @@ namespace BOBS_Backend.Migrations
                     b.Property<long?>("OrderStatus_Id")
                         .HasColumnType("bigint");
 
+                    b.Property<double>("Refund")
+                        .HasColumnType("float");
+
                     b.Property<double>("Subtotal")
                         .HasColumnType("float");
 
@@ -291,8 +297,8 @@ namespace BOBS_Backend.Migrations
                     b.Property<long?>("Price_Id")
                         .HasColumnType("bigint");
 
-                    b.Property<decimal>("price")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<double>("price")
+                        .HasColumnType("float");
 
                     b.Property<int>("quantity")
                         .HasColumnType("int");

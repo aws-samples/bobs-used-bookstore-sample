@@ -27,5 +27,7 @@ namespace BOBS_Backend.Models.Book
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:MM/dd/yyyy}")]
         public DateTime UpdatedOn { get; set; }
+
+        public bool Active { get; set; }
     }
 }
