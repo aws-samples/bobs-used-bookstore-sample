@@ -7,34 +7,35 @@
     var conditions = (List<BOBS_Backend.Models.Book.Condition>)ViewData["Conditions"];
     var count = @Model.Books.Count();
 
-}
-@if (Model.searchfilter != "")
-{
-    <div class="container">
-        <div class="text-center">            
-            <h1 class="text-center" style="margin-top:35px">
-                <span class="font-weight-light text-primary ">Search For Books</span>
-            </h1>
-        </div>
-        <div class="row" style="margin:15px;">
-            <div class="col-12">
-                <form enctype="multipart/form-data" class="input-group mb-3" asp-controller="Inventory" asp-action="Search" method="post" style="padding-bottom: 0px;">
-                    <select class="col-2 custom-select" id="inputGroupSelect01" asp-for="searchby">
-                        <option selected value="">Filter By</option>
-                        <option value="BookName">Book Name</option>
-                        <option value="Publisher">Publisher</option>
-                        <option value="Genre">Genre</option>
-                        <option value="Condition">Condition</option>
-                        <option value="Type">Type</option>
-                    </select>
-                    <input type="text" asp-for="searchfilter" placeholder = "                                                       Please , Enter the search query            " class="form-control bg-light text-dark" aria-label="Text input with dropdown button">
-                    <button class="btn btn-outline-secondary" type="submit">Submit</button>
-                </form>
+
+    }
+    @if (Model.searchfilter != "")
+    {
+        <div class="container">
+            <div class="text-center">
+                <h1 class="text-center" style="margin-top:35px">
+                    <span class="font-weight-light text-primary ">Search For Books</span>
+                </h1>
+            </div>
+            <div class="row" style="margin:15px;">
+                <div class="col-12">
+                    <form enctype="multipart/form-data" class="input-group mb-3" asp-controller="Inventory" asp-action="Search" method="post" style="padding-bottom: 0px;">
+                        <select class="col-2 custom-select" id="inputGroupSelect01" asp-for="searchby">
+                            <option selected value="">Filter By</option>
+                            <option value="BookName">Book Name</option>
+                            <option value="Publisher">Publisher</option>
+                            <option value="Genre">Genre</option>
+                            <option value="Condition">Condition</option>
+                            <option value="Type">Type</option>
+                        </select>
+                        <input type="text" asp-for="searchfilter" placeholder="                                                       Please , Enter the search query            " class="form-control bg-light text-dark" aria-label="Text input with dropdown button">
+                        <button class="btn btn-outline-secondary" type="submit">Submit</button>
+                    </form>
+                </div>
             </div>
         </div>
-    </div>
- }
-   
+    }
+
     @if (count != 0)
     {
         <div class="container">
@@ -45,11 +46,11 @@
                     {
                         {"BookId",book.BookId + ""}
                     };
-                   <div class="col-4" style="margin-top:20px;">
+                    <div class="col-4" style="margin-top:20px;">
                         <div class="card" style="width: 20rem;">
                             <img class="card-img-top rounded" src="@book.front_url" alt="Card image cap">
                             <div class="card-body">
-                                <h2 class="card-title text-danger text-center">@book.BookName</h2>
+                                <h2 class="card-title text-danger text-center font-weight-light">@book.BookName</h2>
                                 <p class="card-text"></p>
                             </div>
                             <ul class="list-group list-group-flush">
@@ -57,9 +58,9 @@
                                 <li class="list-group-item text-success">Publisher  : @book.Publisher.Name</li>
                                 <li class="list-group-item text-success">Genre      : @book.Genre.Name</li>
                                 <li class="list-group-item text-success">Type       : @book.BookType.TypeName</li>
-                               @* <li class="list-group-item text-success">Condition  : @book.BookCondition.ConditionName</li>
-                                <li class="list-group-item text-success">Price      : $@book.Price</li>
-                                <li class="list-group-item text-success">Quantity   : @book.Quantity</li> *@
+                                @* <li class="list-group-item text-success">Condition  : @book.BookCondition.ConditionName</li>
+                                    <li class="list-group-item text-success">Price      : $@book.Price</li>
+                                    <li class="list-group-item text-success">Quantity   : @book.Quantity</li> *@
                             </ul>
                             <div class="card-body">
                                 <a asp-controller="Inventory" asp-action="BookDetails" asp-all-route-data="param">See More Detail</a>
@@ -70,9 +71,9 @@
             </div>
         </div>
 
-     }
+    }
     else
-    { <h1>Sorry , Could'nt find any relevant books. Try again !!</h1>
+    { <h3 class="text-center font-weight-light text-primary">Sorry , Could'nt find any relevant books. Try again !!</h3>
 
     }
 

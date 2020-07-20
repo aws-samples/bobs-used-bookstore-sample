@@ -12,7 +12,7 @@ using SixLabors.ImageSharp.Formats;
 using SixLabors.ImageSharp.Processing;
 using Amazon.Polly;
 using Amazon.Polly.Model;
-
+using BOBS_Backend.Models.Order;
 
 namespace BOBS_Backend
 {
@@ -69,5 +69,20 @@ namespace BOBS_Backend
         public string GenerateAudioSummary(string BookName, string Summary, string targetLanguageCode, VoiceId voice);
 
         public IEnumerable<BookDetails> GetDetails(long BookId);
+
+        public IEnumerable<BookDetails> SearchBeta(string searchby, string Searchfilter);
+
+        public List<string> GetTypesOfheBook(string bookname);
+
+        public List<BookDetails> GetRelevantBooks(string Bookname , string type);
+
+        public List<Dictionary<string, int>> DashBoard();
+
+       // public List<Dictionary<string, int>> InventoryDashBoard();
+
+        public BookDetails UpdateDetails(int Id, string Condition);
+
+
+        public void PushDetails(BookDetails details);
     }
 }

@@ -1,5 +1,6 @@
 ﻿using BOBS_Backend.Models;
 using BOBS_Backend.Models.Book;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,5 +36,10 @@ namespace BOBS_Backend.DataModel
 
         public string BookNameSearchParameter { get; set; }
 
+        public IFormFile FrontPhoto { get; set; }
+        public IFormFile BackPhoto { get; set; }
+        public IFormFile RearPhoto { get; set; }
+        public IFormFile LeftSidePhoto { get; set; }
+        public IFormFile RightSidePhoto { get; set; }
     }
 }

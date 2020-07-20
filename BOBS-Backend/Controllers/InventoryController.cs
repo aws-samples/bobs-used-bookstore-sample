@@ -11,6 +11,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore.Internal;
 using BOBS_Backend.Database;
 using BOBS_Backend.Models.Book;
+using Amazon.S3.Model;
+using BOBS_Backend.DataModel;
 
 namespace BOBS_Backend.Controllers
 {
@@ -26,8 +28,15 @@ namespace BOBS_Backend.Controllers
         }
 
         [HttpGet]
-        public IActionResult EditBookDetails()
+        public IActionResult EditBookDetails( string bookname)
         {
+            ViewData["user"]  = @User.Claims.FirstOrDefault(c => c.Type.Equals("cognito:username"))?.Value;
+
+            DateTime time = DateTime.Now;
+            if (bookname != null)
+            {
+                ViewData["Book"] = bookname;
+            }
             ViewData["Types"] = _Inventory.GetTypes();
             ViewData["Publishers"] = _Inventory.GetAllPublishers();
             ViewData["Genres"] = _Inventory.GetGenres();
@@ -35,70 +44,47 @@ namespace BOBS_Backend.Controllers
             return View();
         }
 
-        [HttpPost]
-        public IActionResult EditBookDetails(BooksViewModel bookview)
+        [HttpPost] //Post Data from forms to tables
+        public IActionResult EditBookDetails(BooksViewModel bookview )
         {
+            var user = @User.Claims.FirstOrDefault(c => c.Type.Equals("cognito:username"))?.Value;
             if (ModelState.IsValid)
             {
 
                 var status = _Inventory.AddToTables(bookview);
 
-                if (status == 1)
-                {
-                    return RedirectToAction("Search");
+                if (status != 1)
+                { 
+  
+                    ViewData["ErrorStatus"] = "Yes";
+                                                          
                 }
 
-                else
-                {
-                    ViewData["ErrorStatus"] = "Yes";
-                    ViewData["Types"] = _Inventory.GetTypes();
-                    ViewData["Publishers"] = _Inventory.GetAllPublishers();
-                    ViewData["Genres"] = _Inventory.GetGenres();
-                    ViewData["Conditions"] = _Inventory.GetConditions();
-                    return View(bookview);                       
-                }
+                ViewData["Types"] = _Inventory.GetTypes();
+                ViewData["Publishers"] = _Inventory.GetAllPublishers();
+                ViewData["Genres"] = _Inventory.GetGenres();
+                ViewData["Conditions"] = _Inventory.GetConditions();
             }
             return View(bookview);
         }
 
+        //Get list of all books in the inventory
         public IActionResult GetAllBooks()
         {
 
             var books = _Inventory.GetAllBooks();
             return View(books);
-        }
-
-        [HttpGet]
-        public IActionResult Search()
-        {
-            FetchBooksViewModel books = new FetchBooksViewModel();
-            books.Books = _Inventory.GetAllBooks();
-            return View(books);
-        }
-
-
-        [HttpPost]
-        public IActionResult Search(FetchBooksViewModel filteredbooks)
-        {
-            if(filteredbooks.searchby == null)
-            {
-                return RedirectToAction("Search");
-            }
-
-            FetchBooksViewModel books = new FetchBooksViewModel();
-            // books.Books = _Inventory.GetRequestedBooks(filteredbooks.searchby, filteredbooks.searchfilter);   
-            books.Books = _Inventory.GetRequestedBooks(filteredbooks.searchby, filteredbooks.searchfilter);
-            return View(books);
-
-        }
-
+        }       
 
         [HttpGet]
         public IActionResult AddPublishers()
         {
 
             ViewData["Status"] = "Please Enter the details of the publisher you wish to add to the database";
+            
+
             return View();
+
 
         }
 
@@ -199,10 +185,9 @@ namespace BOBS_Backend.Controllers
 
         }
 
-
+       [HttpGet]
         public IActionResult BookDetails(long BookId)
         {
-
             FetchBooksViewModel books = new FetchBooksViewModel();
             var bookdetails = _Inventory.GetBookByID(BookId);
             books.publisher = bookdetails.Publisher.Name;
@@ -214,10 +199,107 @@ namespace BOBS_Backend.Controllers
             books.back_url = bookdetails.back_url;
             books.left_url = bookdetails.left_url;
             books.right_url = bookdetails.right_url;
+            ViewData["Types"] = _Inventory.GetTypesOfheBook(bookdetails.BookName);
+            ViewData["status"] = "details";
             return View(books);
 
         }
 
+        [HttpPost]
+        public IActionResult BookDetails(string type , string BookName , FetchBooksViewModel book)
+        {
+            ViewData["Types"] = _Inventory.GetTypesOfheBook(BookName);
+            ViewData["status"] = "List";
+            ViewData["Books"] = _Inventory.GetRelevantBooks(BookName, type);
+            var lis = _Inventory.GetRelevantBooks(BookName, type);
+            book.BookType = lis[0].BookType.TypeName;
+            book.publisher = lis[0].Publisher.Name;
+            book.genre = lis[0].Genre.Name;
+            return View(book);
+        }
+
+            public IActionResult SearchBeta()
+        {
+            FetchBooksViewModel books = new FetchBooksViewModel();
+            books.Books = _Inventory.GetAllBooks();
+            var stats = _Inventory.DashBoard();
+            ViewData["genre"] = stats[0].OrderByDescending(x => x.Value).First().Key;                  
+            ViewData["type"] = stats[1].OrderByDescending(x => x.Value).First().Key;
+            ViewData["publisher"] = stats[2].OrderByDescending(x => x.Value).First().Key;
+            ViewData["name"] = stats[3].OrderByDescending(x => x.Value).First().Key;
+
+            return View(books);
+
+            
+        }
+
+
+        [HttpPost]
+        public IActionResult SearchBeta(FetchBooksViewModel filteredbooks)
+        {
+            var stats = _Inventory.DashBoard();
+            ViewData["genre"] = stats[0].OrderByDescending(x => x.Value).First().Key;
+            ViewData["type"] = stats[1].OrderByDescending(x => x.Value).First().Key;
+            ViewData["publisher"] = stats[2].OrderByDescending(x => x.Value).First().Key;
+            ViewData["name"] = stats[3].OrderByDescending(x => x.Value).First().Key;
+            if (filteredbooks.searchby == null && filteredbooks.searchfilter == null)
+            {
+                return RedirectToAction("SearchBeta");
+            }
+
+            FetchBooksViewModel books = new FetchBooksViewModel();
+            // books.Books = _Inventory.GetRequestedBooks(filteredbooks.searchby, filteredbooks.searchfilter);   
+            books.Books = _Inventory.SearchBeta(filteredbooks.searchby, filteredbooks.searchfilter);
+            return View(books);
+
+        }
+
+       [HttpPost]
+        public IActionResult UpdateDetails(int BookId, string Condition)
+        {
+           var details =  _Inventory.UpdateDetails(BookId, Condition);
+            
+            return View(details);
+        }
+
+        public IActionResult Submitchanges(BookDetails details)
+        {
+            _Inventory.PushDetails(details);
+
+            return RedirectToAction("SearchBeta");
+        }
        
+        public IActionResult Dashboard(FetchBooksViewModel Book)
+        {
+            var orderstats = _Inventory.DashBoard();
+            ViewData["ordes_top_genre"] = orderstats[0].First().Key;
+            ViewData["ordes_top_genre_count"] = orderstats[0].First().Value;
+
+            ViewData["ordes_top_type"] = orderstats[1].First().Key;
+            ViewData["ordes_top_type_count"] = orderstats[1].First().Value;
+
+            ViewData["ordes_top_publisher"] = orderstats[2].First().Key;
+            ViewData["ordes_top_publisher_count"] = orderstats[2].First().Value;
+
+            ViewData["ordes_top_name"] = orderstats[3].First().Key;
+            ViewData["ordes_top_name_count"] = orderstats[3].First().Value;
+
+            ViewData["orders_genre"] = orderstats[0];
+            ViewData["orders_type"] = orderstats[1];
+            ViewData["orders_publisher"] = orderstats[2];
+            ViewData["orders_name"] = orderstats[3];
+
+           
+            var a = orderstats[4];
+
+            List<int> count = new List<int>();
+            foreach (var i in a)
+                count.Add(i.Value);
+            ViewData["count"] = count;
+                return View();
+        }
+
+        
+
     }
 }

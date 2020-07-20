@@ -19,6 +19,13 @@ namespace BOBS_Backend.Models.Book
 
         public double ItemPrice { get; set; }
 
-        public int Quantiy { get; set; }
+        public int Quantity { get; set; }
+
+        public string UpdatedBy { get; set; }
+
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:MM/dd/yyyy}")]
+
+        public DateTime UpdatedOn { get; set; }
     }
 }
