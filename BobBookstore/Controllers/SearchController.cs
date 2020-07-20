@@ -19,7 +19,7 @@ namespace BobBookstore.Controllers
         {
             _context = context;
         }
-        public async Task<IActionResult> IndexAsync(string sortBy, string searchString)
+        public async Task<IActionResult> IndexAsync(string SortBy, string searchString)
         {
 
             if (!String.IsNullOrEmpty(searchString))
@@ -30,7 +30,10 @@ namespace BobBookstore.Controllers
                             p.Book.Type.TypeName.Contains(searchString) ||
                             p.Book.ISBN.ToString().Contains(searchString)
                              select p;
-                 var booksQuery = from b in _context.Book
+
+                prices = prices.OrderBy(p => p.ItemPrice);
+
+                var books = from b in _context.Book
                             where b.Name.Contains(searchString) ||
                             b.Genre.Name.Contains(searchString) ||
                             b.Type.TypeName.Contains(searchString) ||
@@ -42,17 +45,33 @@ namespace BobBookstore.Controllers
                                 ISBN = b.ISBN,
                                 GenreName = b.Genre.Name,
                                 TypeName = b.Type.TypeName,
-                                Prices = prices.Where(p => p.Book.Book_Id == b.Book_Id).ToList()
+                                Prices = prices.Where(p => p.Book.Book_Id == b.Book_Id).ToList(),
+                                MinPrice = prices.Where(p => p.Book.Book_Id == b.Book_Id).FirstOrDefault().ItemPrice
                             };
-                
-                var books = await booksQuery.ToListAsync();
 
-                if (!String.IsNullOrEmpty(sortBy))
+                // sort query
+                switch (SortBy)
                 {
-                    BookViewModel.sortBy(books, sortBy);
+                    case "Name":
+                        books = books.OrderByDescending(b => b.BookName);
+                        break;
+                    case "Genre":
+                        books = books.OrderBy(b => b.GenreName);
+                        break;
+                    case "Type":
+                        books = books.OrderBy(b => b.TypeName);
+                        break;
+                    case "PriceAsc":
+                        books = books.OrderBy(b => b.MinPrice);
+                        break;
+                    case "PriceDesc":
+                        books = books.OrderByDescending(b => b.MinPrice);
+                        break;
+                    default:
+                        break;
                 }
 
-                return View(books);
+                return View(await books.ToListAsync());
 
             }
 

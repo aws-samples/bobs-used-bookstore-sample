@@ -45,7 +45,7 @@ else
                     @Html.DisplayNameFor(model => model.TypeName)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Prices)
+                    @Html.DisplayNameFor(model => model.MinPrice)
                 </th>
             </tr>
         </thead>
@@ -71,7 +71,7 @@ else
                 }
                 else
                 {
-                    <td> Available from $@item.Prices.Min(p => p.ItemPrice)</td>
+                    <td> Available from $@item.MinPrice</td>
                 }
 
 
