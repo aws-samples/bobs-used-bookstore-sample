@@ -2,7 +2,7 @@
 
 namespace BOBS_Backend.Migrations
 {
-    public partial class UpdateData : Migration
+    public partial class chages : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

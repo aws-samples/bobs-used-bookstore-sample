@@ -4,7 +4,8 @@ using Amazon.SimpleEmail.Model;
 using Amazon.SimpleNotificationService;
 using Amazon.SimpleNotificationService.Model;
 using BOBS_Backend.Models.Order;
-using BOBS_Backend.Repository.EmailInterface;
+using BOBS_Backend.Notifications.NotificationsInterface;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,15 +13,20 @@ using System.Net;
 using System.Net.Mail;
 using System.Threading.Tasks;
 
-namespace BOBS_Backend.Repository.Implementations.EmailImplementations
+namespace BOBS_Backend.Notifications.Implementations
 {
-    public class EmailRepository : IEmailRepository
+    public class Notifications : INotifications
 
     {
+        private IConfiguration Configuration;
 
-        private const string FROM = "ancelmop@amazon.com";
+        public Notifications(IConfiguration configuration)
+        {
+            Configuration = configuration;
+        }
 
-        private async void GenerateMessagePayload(string subject, string body)
+
+        private async void GenerateMessagePayload(string FROM, string TO,string subject, string body)
         {
             using (var client = new AmazonSimpleEmailServiceClient(RegionEndpoint.USEast1))
             {
@@ -67,15 +73,34 @@ namespace BOBS_Backend.Repository.Implementations.EmailImplementations
 
         public void SendOrderStatusUpdateEmail(string orderStatus,long orderId, string customerFirstName, string customerEmail)
         {
+            string FROM = Configuration.GetConnectionString("FromEmailAddress");
+
+            string TO = String.IsNullOrEmpty(Configuration.GetConnectionString("ToEmailAddressDefault")) ? customerEmail : Configuration.GetConnectionString("ToEmailAddressDefault");
+           
             string subject = "BOBS Books Update to Order Status";
 
             string body =
                 "<h3>Hello " + customerFirstName + "</h3>" +
                 "<p> Your Order Status for Order:" + orderId + " has changed to " + orderStatus + "<p>";
 
-            GenerateMessagePayload(subject, body);
+            GenerateMessagePayload(FROM,TO,subject, body);
            
             
+        }
+
+        public void SendItemRemovalEmail(string bookName, string bookCondition, string customerFirstName, string customerEmail)
+        {
+            string FROM = Configuration.GetConnectionString("FromEmailAddress");
+
+            string TO = String.IsNullOrEmpty(Configuration.GetConnectionString("ToEmailAddressDefault")) ? customerEmail : Configuration.GetConnectionString("ToEmailAddressDefault");
+
+            string subject = "BOBS Books Can't Find Book";
+
+            string body =
+                "<h3>Hello " + customerFirstName + "</h3>" +
+                "<p> We are sorry to inform you that we dont have enough copies of " + bookName + " in the condition of " + bookCondition + " . Please visit your nearest BOBS Branch to get a refund. <p>"; 
+
+            GenerateMessagePayload(FROM, TO, subject, body);
         }
 
     }

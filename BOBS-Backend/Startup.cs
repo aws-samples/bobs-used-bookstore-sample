@@ -21,8 +21,8 @@ using BOBS_Backend.Repository.Implementations.OrderImplementations;
 
 using BOBS_Backend.Repository.WelcomePageInterface;
 using BOBS_Backend.Repository.Implementations.WelcomePageImplementation;
-using BOBS_Backend.Repository.EmailInterface;
-using BOBS_Backend.Repository.Implementations.EmailImplementations;
+using BOBS_Backend.Notifications.NotificationsInterface;
+using BOBS_Backend.Notifications.Implementations;
 
 namespace BOBS_Backend
 {
@@ -38,6 +38,8 @@ namespace BOBS_Backend
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
+          
             services.AddControllersWithViews();
             services.AddDbContext<Database.DatabaseContext>(option => option.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
@@ -47,7 +49,7 @@ namespace BOBS_Backend
             services.AddTransient<IOrderRepository, OrderRepository>();
             services.AddTransient<IOrderStatusRepository, OrderStatusRepository>();
 
-            services.AddTransient<IEmailRepository, EmailRepository>();
+            services.AddTransient<INotifications, Notifications.Implementations.Notifications>();
             services.AddTransient<ICustomAdminPage, CustomAdmin>();
             services.AddAuthentication(options =>
             {

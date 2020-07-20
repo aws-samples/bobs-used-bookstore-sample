@@ -7,7 +7,7 @@
 
 <div class="col-12">
     <form id="hello" class="input-group mb-3" asp-controller="Orders" asp-action="Index" method="get">
-        <select class="filter-by-button col-2 custom-select" asp-for="FilterValue">
+        <select class="filter-by-button col-2 custom-select text" asp-for="FilterValue">
 
             <option value="Order int Order_Id">Order Id</option>
 
@@ -23,7 +23,7 @@
             <option value="Address int Address.ZipCode">Zip Code</option>
         </select>
 
-        <input type="text" asp-for="SearchString" class="form-control" aria-label="Text input with dropdown button">
+        <input type="text" asp-for="SearchString" class="form-control text" aria-label="Text input with dropdown button">
         <button class="btn submit-button text text-white" type="submit">Submit</button>
 
     </form>
@@ -65,4 +65,4 @@
     <a asp-controller="Orders" asp-action="Index" asp-all-route-data="enRoutePill" class="col-1 filter-pill badge badge-pill text-white">En Route</a>
     <a asp-controller="Orders" asp-action="Index" asp-all-route-data="deliveredPill" class="col-1 filter-pill badge badge-pill text-white">Delivered</a>
     <a asp-controller="Orders" asp-action="Index" asp-all-route-data="cancelledPill" class="col-1 filter-pill badge badge-pill text-white">Cancelled</a>
-</div>
+</div>`

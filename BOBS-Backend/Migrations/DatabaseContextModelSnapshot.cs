@@ -253,6 +253,9 @@ namespace BOBS_Backend.Migrations
                     b.Property<long?>("OrderStatus_Id")
                         .HasColumnType("bigint");
 
+                    b.Property<double>("Refund")
+                        .HasColumnType("float");
+
                     b.Property<double>("Subtotal")
                         .HasColumnType("float");
 
@@ -279,6 +282,9 @@ namespace BOBS_Backend.Migrations
 
                     b.Property<long?>("Book_Id")
                         .HasColumnType("bigint");
+
+                    b.Property<bool>("IsRemoved")
+                        .HasColumnType("bit");
 
                     b.Property<long?>("Order_Id")
                         .HasColumnType("bigint");

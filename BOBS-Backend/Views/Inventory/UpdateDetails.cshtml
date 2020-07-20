@@ -1,0 +1,167 @@
+﻿@model BOBS_Backend.DataModel.BookDetails
+@{
+    ViewData["Title"] = "Checkout";
+    var errorstatus = (string)ViewData["ErrorStatus"];
+    var error = (string)ViewData["Error"];
+
+}
+
+
+
+<div>
+    <div>
+        <div>
+            <h1 class ="text-center"style="margin-top:35px">
+                <span class="title-1 text-center font-weight-light"  style="margin-bottom: 45px; font-size: 400 ; font-family : 'Lucida Handwriting'">Update book details</span>
+            </h1>
+            @if (errorstatus == "Yes")
+            {
+                <div>
+                    <li> "Please re-upload the photos as they violate one or more of our content policies "</li>
+                    <li>"1) Photo must be  of type .jpg or .png or .gif"</li>
+                    <li>"2) Photo content must not contain profanity"</li>
+                    <li>"3) Photo must be that of a book"</li>
+                </div>
+
+            }
+        </div>
+        <form enctype="multipart/form-data" asp-controller="Inventory" asp-action="SubmitChanges" method="post" style="padding-bottom: 0px;">
+            <div asp-validation-summary="All"></div>
+            <div class="panel-body">
+                <div class="form-group">
+                    <input class="form-control bg-light text-dark" asp-for=" BookId" hidden required placeholder="@Model.BookName" readonly />
+                </div>
+                <div class="form-group">
+                    <input class="form-control bg-light text-dark" asp-for=" BookCondition" hidden required placeholder="@Model.BookName" readonly />
+                </div>
+                <div class="form-group">
+                    <label class="form-check-label text-secondary">Book Name</label>
+                    <input class="form-control bg-light text-dark" asp-for=" BookName" required placeholder="@Model.Publisher.Name" readonly />
+                </div>
+                <div class="form-group">
+                    <label class="form-check-label text-secondary">Publisher</label>
+                    <input class="form-control bg-light text-dark" asp-for=" Publisher.Name" required placeholder="@Model.Publisher.Name" readonly />
+                </div>
+                <div class="form-group">
+                    <label class="form-check-label text-secondary">Genre</label>
+                    <input class="form-control bg-light text-dark" asp-for=" Genre.Name" required placeholder="@Model.Genre.Name" readonly />
+                </div>
+                <div class="form-group">
+                    <label class="form-check-label text-secondary">Condition</label>
+                    <input class="form-control bg-light text-dark" asp-for="BookCondition.ConditionName" required placeholder="@Model.BookCondition.ConditionName" readonly />
+                </div>
+                <div class="form-group">
+                    <label class="form-check-label text-secondary">Format</label>
+                    <input class="form-control bg-light text-dark" asp-for="BookType.TypeName" required placeholder="@Model.BookType.TypeName" readonly />
+                </div>
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm">
+                            <div class="form-group">
+                                <label class="form-check-label" asp-for="Price">Price</label>
+                                <input class="form-control bg-light text-dark" asp-for="Price" placeholder="@Model.Price" required />
+                            </div>
+                        </div>
+                        <div class="col-sm">
+                            <div class="form-group">
+                                <label class="form-check-label" asp-for="Quantity">Quantity</label>
+                                <input class="form-control bg-light text-dark" asp-for="Quantity" placeholder="@Model.Quantity" required />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="container">
+                    <div class="image-grid-container">
+                        <div class="row">
+                            @if (Model.front_url != null)
+                            {
+                                <div class="col-sm">
+
+                                    <img src="@Model.front_url">
+                                    <h4 class="text-center font-weight-light">1</h4>
+
+                                </div>
+                            }
+                            @if (Model.back_url != null)
+                            {
+                                <div class="col-sm">
+
+                                    <img src="@Model.back_url">
+                                    <h4 class="text-center font-weight-light">2</h4>
+
+                                </div>
+                            }
+                            @if (Model.left_url != null)
+                            {
+                                <div class="col-sm">
+
+                                    <img src="@Model.left_url">
+                                    <h4 class="text-center font-weight-light">3</h4>
+
+                                </div>
+                            }
+                            @if (Model.right_url != null)
+                            {
+                                <div class="col-sm">
+
+                                    <img src="@Model.right_url">
+                                    <h4 class="text-center font-weight-light">4</h4>
+
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    <input asp-for="@Model.front_url" hidden class="form-control custom-file-input">
+                    <input asp-for="@Model.back_url" hidden class="form-control custom-file-input">
+                    <input asp-for="@Model.left_url" hidden class="form-control custom-file-input">
+                    <input asp-for="@Model.right_url" hidden class="form-control custom-file-input">
+
+                    <div class="form-group row">
+                        <label asp-for="FrontPhoto" class="col-sm-2 col-form-label">Picture 1</label>
+                        <div class="col-sm-10">
+                            <div class="custom-file">
+                                <input asp-for="FrontPhoto" class="form-control custom-file-input">
+                                <label class="custom-file-label">Choose File...</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label asp-for="BackPhoto" class="col-sm-2 col-form-label">Picture 2</label>
+                        <div class="col-sm-10">
+                            <div class="custom-file">
+                                <input asp-for="BackPhoto" class="form-control custom-file-input">
+                                <label class="custom-file-label">Choose File...</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label asp-for="LeftSidePhoto" class="col-sm-2 col-form-label">Picture 3</label>
+                        <div class="col-sm-10">
+                            <div class="custom-file">
+                                <input asp-for="LeftSidePhoto" class="form-control custom-file-input">
+                                <label class="custom-file-label">Choose File...</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label asp-for="RightSidePhoto" class="col-sm-2 col-form-label">Picture 4</label>
+                        <div class="col-sm-10">
+                            <div class="custom-file">
+                                <input asp-for="RightSidePhoto" class="form-control custom-file-input">
+                                <label class="custom-file-label">Choose File...</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group text-center">
+                        <button class="btn btn-outline-primary" type="submit">Submit</button>
+                    </div>
+                </div>
+</form>
+
+    </div>
+</div>
+
+
+
+

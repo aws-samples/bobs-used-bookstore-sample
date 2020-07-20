@@ -1,0 +1,114 @@
+﻿@model BOBS_Backend.ViewModel.FetchBooksViewModel
+@{
+    ViewData["Title"] = "Checkout";
+    var types = (List<BOBS_Backend.Models.Book.Type>)ViewData["Types"];
+    var publishers = (List<BOBS_Backend.Models.Book.Publisher>)ViewData["Publishers"];
+    var genres = (List<BOBS_Backend.Models.Book.Genre>)ViewData["Genres"];
+    var conditions = (List<BOBS_Backend.Models.Book.Condition>)ViewData["Conditions"];
+    var count = @Model.Books.Count();
+
+}
+
+@if (Model.searchfilter != "")
+{
+    <div class="container">
+        <div class="text-center">
+            <h1 class="text-center" style="margin-top:35px">
+                <span class="title-1 text-center font-weight-light"  style="margin-bottom: 45px; font-size: 400">Search Books</span>
+            </h1>
+        </div>
+        <div class="row" style="margin:15px;">
+            <div class="col-12">
+                <form enctype="multipart/form-data" class="input-group mb-3" asp-controller="Inventory" asp-action="SearchBeta" method="post" style="padding-bottom: 0px;">
+                    <select class="col-2 custom-select title-1 text-center font-weight-light " id="inputGroupSelect01" asp-for="searchby">
+                        <option selected value="">Filter By</option>
+                        <option value="BookName">Book Name</option>
+                        <option value="Publisher">Publisher</option>
+                        <option value="Genre">Genre</option>
+                        <option value="Condition">Condition</option>
+                        <option value="Type">Type</option>
+                    </select>
+                    <input type="text" asp-for="searchfilter" placeholder="                                                       Please , Enter the search query            " class="form-control bg-light text-dark" aria-label="Text input with dropdown button">
+                    <button class="btn btn-outline-secondary title-1 text-center font-weight-light  " type="submit">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+}
+<div class="container">
+    <div class="row">
+        <div class="col-12 col-sm-3">
+            <div class="card bg-light mb-3">
+                <div class="card-header bg-success text-white text-uppercase text-center bg-danger">Best Selling Book</div>
+                <div class="card-body">
+                    <img class="img-fluid" src="" />
+                    <h5 class="card-title text-center">@ViewData["name"]</h5>
+                    <p class="card-text"></p>
+                </div>
+            </div>
+            <div class="card bg-light mb-3">
+                <div class="card-header bg-success text-white text-uppercase text-center bg-success">Best Selling Publisher</div>
+                <div class="card-body">
+                    <img class="img-fluid" src="" />
+                    <h5 class="card-title text-center">@ViewData["publisher"]</h5>
+                    <p class="card-text"></p>
+                </div>
+            </div>
+            <div class="card bg-light mb-3">
+                <div class="card-header bg-success text-white text-uppercase text-center bg-danger">Best Selling Format</div>
+                <div class="card-body">
+                    <img class="img-fluid" src="" />
+                    <h5 class="card-title text-center">@ViewData["type"]</h5>
+                    <p class="card-text"></p>
+                </div>
+            </div>
+            <div class="card bg-light mb-3">
+                <div class="card-header bg-success text-white text-uppercase text-center bg-success">Best Selling Genre</div>
+                <div class="card-body">
+                    <img class="img-fluid" src="" />
+                    <h5 class="card-title text-center">@ViewData["genre"]</h5>
+                    <p class="card-text"></p>
+                </div>
+            </div>
+        </div>
+        @if (count != 0)
+        {
+
+            <div class="col">
+                <div class="row">
+                    @foreach (var book in Model.Books)
+                    {
+                        var param = new Dictionary<string, string>
+                                        {
+                            {"BookId",book.BookId + ""}
+                        };
+                        <div class="col-12 col-md-6 col-lg-4">
+                            <div class="card">
+                                <img class="card-img-top" src="@book.back_url" alt="Card image cap">
+                                <div class="card-body">
+                                    <h4 class="card-title text-center">
+                                        <a asp-controller="Inventory" asp-action="BookDetails" asp-all-route-data="param">@book.BookName</a>
+                                    </h4>
+                                    <p class="card-text  text-center">@book.Publisher.Name</p>
+                                    <div class="row">
+                                        <div class="col">
+                                            <p class="btn btn-danger btn-block">@book.Price $</p>
+                                        </div>
+                                        <div class="col">
+                                            <a href="#" class="btn btn-success btn-block">@book.Quantity Units</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+        else
+        { <h3 class="text-center font-weight-light text-primary">Sorry , Could'nt find any relevant books. Try again !!</h3>
+
+        }
+    </div> 
+</div>
+

@@ -19,11 +19,11 @@
         font-family: 'Arvo',serif;
     }
 </style>
-<form class="input-group mb-3" asp-controller="Orders" asp-action="ProcessOrders" method="get">
+<form class="input-group mb-3" asp-controller="Orders" asp-action="UpdateOrderStatus" method="get">
     <select asp-for="OrderId" class="invisible">
         <option selected value="@fullOrder.Order.Order_Id">id</option>
     </select>
-    <select asp-for="Status" class="col-5 custom-select" id="inputGroupSelect01">
+    <select asp-for="Status" class="col-5 custom-select website-text" id="inputGroupSelect01">
         @foreach (var status in orderStatus)
         {
             if ((status.OrderStatus_Id < fullOrder.Order.OrderStatus.OrderStatus_Id) || (fullOrder.Order.OrderStatus.OrderStatus_Id > 1 && status.OrderStatus_Id == 5))

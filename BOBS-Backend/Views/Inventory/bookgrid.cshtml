@@ -1,0 +1,27 @@
+﻿
+@{
+    var books = (List<BOBS_Backend.DataModel.BookDetails>)ViewData["Conditions"];
+}
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>Publisher</th>
+            <th>Condition</th>
+            <th>Edit</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var i in books)
+        {
+            <tr>
+                <td> @i.BookCondition</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+

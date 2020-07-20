@@ -32,5 +32,7 @@ namespace BOBS_Backend.ViewModel
 
         public string right_url { get; set; }
 
+        public string typechosen { get; set; }
+
     }
 }
