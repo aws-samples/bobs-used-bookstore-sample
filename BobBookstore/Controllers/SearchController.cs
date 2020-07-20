@@ -19,7 +19,7 @@ namespace BobBookstore.Controllers
         {
             _context = context;
         }
-        public async Task<IActionResult> IndexAsync(string searchString)
+        public async Task<IActionResult> IndexAsync(string sortBy, string searchString)
         {
 
             if (!String.IsNullOrEmpty(searchString))
@@ -30,7 +30,7 @@ namespace BobBookstore.Controllers
                             p.Book.Type.TypeName.Contains(searchString) ||
                             p.Book.ISBN.ToString().Contains(searchString)
                              select p;
-                 var books = from b in _context.Book
+                 var booksQuery = from b in _context.Book
                             where b.Name.Contains(searchString) ||
                             b.Genre.Name.Contains(searchString) ||
                             b.Type.TypeName.Contains(searchString) ||
@@ -44,9 +44,15 @@ namespace BobBookstore.Controllers
                                 TypeName = b.Type.TypeName,
                                 Prices = prices.Where(p => p.Book.Book_Id == b.Book_Id).ToList()
                             };
+                
+                var books = await booksQuery.ToListAsync();
 
+                if (!String.IsNullOrEmpty(sortBy))
+                {
+                    BookViewModel.sortBy(books, sortBy);
+                }
 
-                return View(await books.ToListAsync());
+                return View(books);
 
             }
 
