@@ -29,6 +29,9 @@ namespace BobBookstore.Migrations
                     b.Property<string>("AudioBook_Url")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Author")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Back_Url")
                         .HasColumnType("nvarchar(max)");
 
@@ -53,7 +56,7 @@ namespace BobBookstore.Migrations
                     b.Property<string>("Right_Url")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Summary_Url")
+                    b.Property<string>("Summary")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<long?>("Type_Id")
@@ -118,6 +121,12 @@ namespace BobBookstore.Migrations
 
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("UpdatedOn")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Price_Id");
 
@@ -310,7 +319,7 @@ namespace BobBookstore.Migrations
                     b.ToTable("Order");
                 });
 
-            modelBuilder.Entity("BobBookstore.Models.Order.OrderDetails", b =>
+            modelBuilder.Entity("BobBookstore.Models.Order.OrderDetail", b =>
                 {
                     b.Property<long>("OrderDetail_Id")
                         .ValueGeneratedOnAdd()
@@ -320,17 +329,20 @@ namespace BobBookstore.Migrations
                     b.Property<long?>("Book_Id")
                         .HasColumnType("bigint");
 
+                    b.Property<bool>("IsRemoved")
+                        .HasColumnType("bit");
+
                     b.Property<long?>("Order_Id")
                         .HasColumnType("bigint");
 
                     b.Property<long?>("Price_Id")
                         .HasColumnType("bigint");
 
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
-
                     b.Property<double>("price")
                         .HasColumnType("float");
+
+                    b.Property<int>("quantity")
+                        .HasColumnType("int");
 
                     b.HasKey("OrderDetail_Id");
 
@@ -428,7 +440,7 @@ namespace BobBookstore.Migrations
                         .HasForeignKey("OrderStatus_Id");
                 });
 
-            modelBuilder.Entity("BobBookstore.Models.Order.OrderDetails", b =>
+            modelBuilder.Entity("BobBookstore.Models.Order.OrderDetail", b =>
                 {
                     b.HasOne("BobBookstore.Models.Book.Book", "Book")
                         .WithMany()

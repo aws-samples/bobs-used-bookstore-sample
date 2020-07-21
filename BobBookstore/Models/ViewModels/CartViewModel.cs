@@ -18,5 +18,6 @@ namespace BobBookstore.Models.ViewModels
         public int CartItem_Id { get; set; }
 
         public int quantity { get; set; }
+        public long PriceId { get; set; }
     }
 }

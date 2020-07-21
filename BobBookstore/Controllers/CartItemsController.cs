@@ -45,7 +45,8 @@ namespace BobBookstore.Controllers
                            Prices=c.Price.ItemPrice,
                            BookName=c.Book.Name,
                            CartItem_Id=c.CartItem_Id,
-                           quantity=c.Price.Quantity
+                           quantity=c.Price.Quantity,
+                           PriceId=c.Price.Price_Id,
 
                        };
             
@@ -66,7 +67,8 @@ namespace BobBookstore.Controllers
                                Prices = c.Price.ItemPrice,
                                BookName = c.Book.Name,
                                CartItem_Id = c.CartItem_Id,
-                               quantity = c.Price.Quantity
+                               quantity = c.Price.Quantity,
+                               PriceId = c.Price.Price_Id
 
                            };
 
@@ -146,7 +148,7 @@ namespace BobBookstore.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
-        public async Task<IActionResult> CheckOut(string[] IDs,string[] quantity)
+        public async Task<IActionResult> CheckOut(string[] fruits,string[] IDs,string[] quantity,string[] bookF,string[]priceF)
         {
 
             //if (!_SignInManager.IsSignedIn(User))
@@ -154,7 +156,8 @@ namespace BobBookstore.Controllers
             //    //Response.Write(" <script>function window.onload() {alert( ' 弹出的消息' ); } </script> ");
             //    await Response.WriteAsync(" <script>function window.onload() {alert( ' 弹出的消息' ); } </script> ");
             //}
-            var orderStatue = _context.OrderStatus.Find(1);
+            long statueId = 1;
+            var orderStatue = _context.OrderStatus.Find(statueId);
             var user = await _userManager.GetUserAsync(User);
             var userId = user.Attributes[CognitoAttribute.Sub.AttributeName];
             var customer = _context.Customer.Find(userId);
@@ -162,11 +165,61 @@ namespace BobBookstore.Controllers
             var itemIdList = new List<CartItem>();
             for (int i = 0; i < IDs.Length; i++)
             {
-                var item = _context.CartItem.Find(Convert.ToInt32(IDs[i]));
+                var cartItem = from c in _context.CartItem
+                               where c.CartItem_Id == Convert.ToInt32(IDs[i])
+                               select c;
+                              
+                var item = new CartItem();
+                foreach (var ii in cartItem)
+                {
+                    item = ii;
+                }
+                //var item = _context.CartItem.Find(Convert.ToInt32(IDs[i]));
                 itemIdList.Add(item);
-                subTotal += item.Price.ItemPrice * Convert.ToInt32(quantity[i]);
+                subTotal += Convert.ToDouble( fruits[i]) * Convert.ToInt32(quantity[i]);
             }
-            var recentOrder = new Order() { OrderStatus = orderStatue, Subtotal=subTotal,Tax=subTotal*0.1,Customer=customer};
+
+            //var s1 = "";
+            //var s2 = "";
+            //for (int i = 0; i < IDs.Length; i++)
+            //{
+            //    var item = _context.CartItem.Find(Convert.ToInt32(IDs[i]));
+
+            //    s1 += itemIdList[i].BookN;
+            //    s1 += "A";
+            //    s2 += quantity[i];
+            //    s2 += "A";
+            //}
+            //if (!HttpContext.Request.Cookies.ContainsKey("SS1"))
+            //{
+            //    CookieOptions options = new CookieOptions();
+
+            //    HttpContext.Response.Cookies.Append("SS1", s1);
+
+
+            //}
+            //else
+            //{
+            //    HttpContext.Response.Cookies.Delete("SS1");
+            //    HttpContext.Response.Cookies.Append("SS1", s1);
+            //}
+            //if (!HttpContext.Request.Cookies.ContainsKey("SS2"))
+            //{
+            //    CookieOptions options = new CookieOptions();
+
+            //    HttpContext.Response.Cookies.Append("SS2", s2);
+
+
+            //}
+            //else
+            //{
+            //    HttpContext.Response.Cookies.Delete("SS2");
+            //    HttpContext.Response.Cookies.Append("SS2", s2);
+            //}
+
+
+            //return RedirectToAction(nameof(Index));
+            var recentOrder = new Order() { OrderStatus = orderStatue, Subtotal = subTotal, Tax = subTotal * 0.1, Customer = customer };
             _context.Add(recentOrder);
             _context.SaveChanges();
             var orderId = recentOrder.Order_Id;
@@ -175,10 +228,16 @@ namespace BobBookstore.Controllers
                 var orderDetailBook = itemIdList[i].Book;
                 var orderDetailPrice = itemIdList[i].Price;
 
-                var orderDetail = new OrderDetails() { Book = orderDetailBook, Price = orderDetailPrice, price = orderDetailPrice.ItemPrice, Quantity = Convert.ToInt32(quantity[i]), Order = recentOrder };
+                var orderDetail = new OrderDetail() { Book = orderDetailBook, Price = orderDetailPrice, price = Convert.ToDouble(fruits[i]), quantity = Convert.ToInt32(quantity[i]), Order = recentOrder, IsRemoved = false };
+                _context.Add(orderDetail);
+                _context.SaveChanges();
             }
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(ConfirmCheckout));
             //return View();
+        }
+        public async Task<IActionResult> ConfirmCheckout()
+        {
+            return View();
         }
 
         // GET: CartItems/Details/5

@@ -49,6 +49,8 @@
                         </td>
 
                         <td>
+                            <input type="hidden" name="bookF" value="@Html.DisplayFor(modelitem => item.BookId)"> 
+                            <input type="hidden" name="priceF" value="@Html.DisplayFor(modelitem => item.PriceId)">
                             <input type="hidden" name="fruits" value="@Html.DisplayFor(modelitem => item.Prices)"><input type="hidden" name="IDs" value="@Html.DisplayFor(modelitem => item.CartItem_Id)">&nbsp;&nbsp;$@Html.DisplayFor(modelitem => item.Prices)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="number" name="quantity" min="1" max="@Html.DisplayFor(modelitem => item.quantity)" value="1" id="quantity" class="numbers"><br />
                         </td>
 
