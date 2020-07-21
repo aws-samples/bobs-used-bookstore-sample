@@ -1,30 +1,43 @@
 ﻿@model IEnumerable<BobBookstore.Models.ViewModels.CartViewModel>
+@using Microsoft.AspNetCore.Identity
+@using Amazon.Extensions.CognitoAuthentication
+
+@inject SignInManager<CognitoUser> SignInManager
+@inject UserManager<CognitoUser> UserManager
 @*@model Tuple<IEnumerable<BobBookstore.Models.Carts.CartItem>, BobBookstore.Models.Book.Book>*@
 
 @{
     ViewData["Title"] = "Index";
 }
-    <body>
-        <h1>Cart</h1>
+<body>
+    <h1>Cart</h1>
+    @foreach (var item in Model)
+    {
+        if (item.quantity <= 5)
+        {
+            <h2>There is only a few @Html.DisplayFor(modelitem => item.BookName) in the store</h2>
+        }
+    }
+    <h3>Total price：$ <span id="totalprice">0</span></h3>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Cover
+                </th>
+                <th>
+                    @Html.DisplayNameFor(Model => Model.BookName)
+                </th>
+                <th>
+                    &nbsp;@Html.DisplayNameFor(Model => Model.Prices) &nbsp;&nbsp;Quantity
+                </th>
 
-        <h3>Total price：$ <span id="totalprice">0</span></h3>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>
-                        Cover
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(Model => Model.BookName)
-                    </th>
-                        <th>
-                             &nbsp;@Html.DisplayNameFor(Model => Model.Prices) &nbsp;&nbsp;Quantity
-                        </th>
-
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @using (Html.BeginForm(new { action = "CheckOut" }))
+            {
                 @foreach (var item in Model)
                 {
                     <tr>
@@ -36,46 +49,55 @@
                         </td>
 
                         <td>
-                            <input type="hidden" name="fruits" value="@Html.DisplayFor(modelitem => item.Prices)">&nbsp;&nbsp;$@Html.DisplayFor(modelitem => item.Prices)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="number" min="1" max="@Html.DisplayFor(modelitem=>item.quantity)" value="1" id="quantity" class="numbers"><br />
+                            <input type="hidden" name="fruits" value="@Html.DisplayFor(modelitem => item.Prices)"><input type="hidden" name="IDs" value="@Html.DisplayFor(modelitem => item.CartItem_Id)">&nbsp;&nbsp;$@Html.DisplayFor(modelitem => item.Prices)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="number" name="quantity" min="1" max="@Html.DisplayFor(modelitem => item.quantity)" value="1" id="quantity" class="numbers"><br />
                         </td>
-                        
+
                         <td>
 
                             <a asp-action="Delete" asp-route-id="@item.CartItem_Id">Remove</a>
                         </td>
                     </tr>
                 }
-            </tbody>
-        </table>
 
-        
+                @if (SignInManager.IsSignedIn(User))
+                {
+        <input type="submit" value="checkout" style="background-color: #0b71ca ;color: #FFFFFF" />}
+                else
+                {
+                    <h5 style="color:#ff0000">You have to register a account</h5>
+                }
+        }
+        </tbody>
+    </table>
 
-        <script>
-            var fruits = document.getElementsByName('fruits');
-            var numbers = document.getElementsByClassName("numbers");
+
+
+    <script>
+        var fruits = document.getElementsByName('fruits');
+        var numbers = document.getElementsByClassName("numbers");
+        var totalprice = 0;
+        for (var i = 0; i < fruits.length; i++) {
+
+            var number = numbers[i].value;
+            totalprice += fruits[i].value * number;
+
+        }
+        document.getElementById('totalprice').innerHTML = totalprice;
+
+        for (var i = 0; i < numbers.length; i++) {
+            numbers[i].onclick = count;
+        }
+        function count() {
             var totalprice = 0;
             for (var i = 0; i < fruits.length; i++) {
-                
-                    var number = numbers[i].value;
-                    totalprice += fruits[i].value * number;
-                
+
+                var number = numbers[i].value;
+                totalprice += fruits[i].value * number;
+
             }
             document.getElementById('totalprice').innerHTML = totalprice;
-            
-            for (var i = 0; i < numbers.length; i++) {
-                numbers[i].onclick = count;
-            }
-            function count() {
-                var totalprice = 0;
-                for (var i = 0; i < fruits.length; i++) {
-                    
-                    var number = numbers[i].value;
-                    totalprice += fruits[i].value * number;
-                    
-                }
-                document.getElementById('totalprice').innerHTML = totalprice;
-            }
-            
+        }
 
-        </script>
-    </body>
+
+    </script>
+</body>

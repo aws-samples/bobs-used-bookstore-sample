@@ -11,21 +11,29 @@ using BobBookstore.Models.Book;
 using BobBookstore.Models.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.CodeAnalysis;
+using BobBookstore.Models.Order;
+using Amazon.Extensions.CognitoAuthentication;
+using Microsoft.AspNetCore.Identity;
+using Amazon.AspNetCore.Identity.Cognito;
 
 namespace BobBookstore.Controllers
 {
     public class CartItemsController : Controller
     {
         private readonly UsedBooksContext _context;
-
-        public CartItemsController(UsedBooksContext context)
+        private readonly SignInManager<CognitoUser> _SignInManager;
+        private readonly UserManager<CognitoUser> _userManager;
+        public CartItemsController(UsedBooksContext context, SignInManager<CognitoUser> SignInManager, UserManager<CognitoUser> userManager)
         {
             _context = context;
+            _SignInManager = SignInManager;
+            _userManager = userManager;
         }
 
         // GET: CartItems
         public async Task<IActionResult> Index()
         {
+            
             var id = Convert.ToInt32(HttpContext.Request.Cookies["CartId"]);
             var cart = _context.Cart.Find(id);
             var cartItem = from c in _context.CartItem
@@ -137,6 +145,40 @@ namespace BobBookstore.Controllers
             _context.Add(cartItem);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+        }
+        public async Task<IActionResult> CheckOut(string[] IDs,string[] quantity)
+        {
+
+            //if (!_SignInManager.IsSignedIn(User))
+            //{
+            //    //Response.Write(" <script>function window.onload() {alert( ' 弹出的消息' ); } </script> ");
+            //    await Response.WriteAsync(" <script>function window.onload() {alert( ' 弹出的消息' ); } </script> ");
+            //}
+            var orderStatue = _context.OrderStatus.Find(1);
+            var user = await _userManager.GetUserAsync(User);
+            var userId = user.Attributes[CognitoAttribute.Sub.AttributeName];
+            var customer = _context.Customer.Find(userId);
+            double subTotal = 0.0;
+            var itemIdList = new List<CartItem>();
+            for (int i = 0; i < IDs.Length; i++)
+            {
+                var item = _context.CartItem.Find(Convert.ToInt32(IDs[i]));
+                itemIdList.Add(item);
+                subTotal += item.Price.ItemPrice * Convert.ToInt32(quantity[i]);
+            }
+            var recentOrder = new Order() { OrderStatus = orderStatue, Subtotal=subTotal,Tax=subTotal*0.1,Customer=customer};
+            _context.Add(recentOrder);
+            _context.SaveChanges();
+            var orderId = recentOrder.Order_Id;
+            for (int i = 0; i < itemIdList.Count; i++)
+            {
+                var orderDetailBook = itemIdList[i].Book;
+                var orderDetailPrice = itemIdList[i].Price;
+
+                var orderDetail = new OrderDetails() { Book = orderDetailBook, Price = orderDetailPrice, price = orderDetailPrice.ItemPrice, Quantity = Convert.ToInt32(quantity[i]), Order = recentOrder };
+            }
+            return RedirectToAction(nameof(Index));
+            //return View();
         }
 
         // GET: CartItems/Details/5

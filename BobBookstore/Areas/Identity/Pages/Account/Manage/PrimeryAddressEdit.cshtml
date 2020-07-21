@@ -117,5 +117,6 @@
         </form>
     </div>
 </div>
-<input type="button" value="Return to Addresses manager" onclick="location.href='@Url.Action( "Index","Addresses")'"style="background-color: #2D99F9 ;color: #FFFFFF" />
+<a asp-area=""asp-controller="Addresses" asp-action="Index">Back to list</a>
+@*<input type="button" value="Return to Addresses manager" onclick="location.href='@Url.Action( "Index","Addresses")'"style="background-color: #2D99F9 ;color: #FFFFFF" />*@
 @*<a href="##" onClick="history.go(-1); return false;"> Return to Addresses manager</a>*@ 
