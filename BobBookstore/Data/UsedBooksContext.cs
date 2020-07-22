@@ -35,6 +35,6 @@ namespace BobBookstore.Data
         public DbSet<Models.Book.Type> Type { get; set; }
         public DbSet<BobBookstore.Models.Carts.Cart> Cart { get; set; }
         public DbSet<BobBookstore.Models.Carts.CartItem> CartItem { get; set; }
-        public DbSet<Models.Order.OrderDetail> OrderDetails { get; set; }
+        public DbSet<Models.Order.OrderDetail> OrderDetail { get; set; }
     }
 }

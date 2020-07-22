@@ -352,7 +352,7 @@ namespace BobBookstore.Migrations
 
                     b.HasIndex("Price_Id");
 
-                    b.ToTable("OrderDetails");
+                    b.ToTable("OrderDetail");
                 });
 
             modelBuilder.Entity("BobBookstore.Models.Order.OrderStatus", b =>

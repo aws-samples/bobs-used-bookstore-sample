@@ -68,7 +68,7 @@ namespace BobBookstore.Controllers
                                BookName = c.Book.Name,
                                CartItem_Id = c.CartItem_Id,
                                quantity = c.Price.Quantity,
-                               PriceId = c.Price.Price_Id
+                               PriceId = c.Price.Price_Id,
 
                            };
 
@@ -185,7 +185,7 @@ namespace BobBookstore.Controllers
             //{
             //    var item = _context.CartItem.Find(Convert.ToInt32(IDs[i]));
 
-            //    s1 += itemIdList[i].BookN;
+            //    s1 += priceF[i];
             //    s1 += "A";
             //    s2 += quantity[i];
             //    s2 += "A";
@@ -223,21 +223,31 @@ namespace BobBookstore.Controllers
             _context.Add(recentOrder);
             _context.SaveChanges();
             var orderId = recentOrder.Order_Id;
-            for (int i = 0; i < itemIdList.Count; i++)
+            for (int i = 0; i < bookF.Length; i++)
             {
-                var orderDetailBook = itemIdList[i].Book;
-                var orderDetailPrice = itemIdList[i].Price;
-
-                var orderDetail = new OrderDetail() { Book = orderDetailBook, Price = orderDetailPrice, price = Convert.ToDouble(fruits[i]), quantity = Convert.ToInt32(quantity[i]), Order = recentOrder, IsRemoved = false };
-                _context.Add(orderDetail);
+                //var orderDetailBook = itemIdList[i].Book;
+                var orderDetailBook = _context.Book.Find(Convert.ToInt64(bookF[i]));
+                //var orderDetailPrice = itemIdList[i].Price;
+                var orderDetailPrice = _context.Price.Find(Convert.ToInt64(priceF[i]));
+                var newOrderDetail = new OrderDetail() { };
+                var OrderDetail = new OrderDetail() { Book = orderDetailBook, Price = orderDetailPrice, price =Convert.ToDouble(fruits[i]), quantity = Convert.ToInt32(quantity[i]), Order = recentOrder, IsRemoved = false };
+                //var orderDetail = new CartViewModel();
+                _context.Add(OrderDetail);
                 _context.SaveChanges();
             }
-            return RedirectToAction(nameof(ConfirmCheckout));
+            return RedirectToAction(nameof(ConfirmCheckout),new { OrderId=orderId});
             //return View();
         }
-        public async Task<IActionResult> ConfirmCheckout()
+        public async Task<IActionResult> ConfirmCheckout(long OrderId)
         {
-            return View();
+            var user = await _userManager.GetUserAsync(User);
+            var id = user.Attributes[CognitoAttribute.Sub.AttributeName];
+            var customer = _context.Customer.Find(id);
+            var address = from c in _context.Address
+                          where c.Customer == customer
+                          select c;
+            ViewBag.TGB = "大米时代"+OrderId;
+            return View(await address.ToListAsync());
         }
 
         // GET: CartItems/Details/5

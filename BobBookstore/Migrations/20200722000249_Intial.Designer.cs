@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BobBookstore.Migrations
 {
     [DbContext(typeof(UsedBooksContext))]
-    [Migration("20200721203827_InitialCreat")]
-    partial class InitialCreat
+    [Migration("20200722000249_Intial")]
+    partial class Intial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -354,7 +354,7 @@ namespace BobBookstore.Migrations
 
                     b.HasIndex("Price_Id");
 
-                    b.ToTable("OrderDetails");
+                    b.ToTable("OrderDetail");
                 });
 
             modelBuilder.Entity("BobBookstore.Models.Order.OrderStatus", b =>
