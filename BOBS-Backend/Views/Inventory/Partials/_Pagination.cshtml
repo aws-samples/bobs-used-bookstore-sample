@@ -1,0 +1,57 @@
+﻿@model BOBS_Backend.ViewModel.ManageInventory.PagedSearchViewModel;
+
+<head>
+    <link rel="stylesheet" href="~/css/Orders/ManageOrders/Pagination.css" />
+</head>
+
+<ul class="list-group-horizontal list-group text-center">
+    @if (Model.HasPreviousPages)
+    {
+        var prevPag = new Dictionary<string, string>
+        {
+                        {"searchfilter",Model.searchfilter},
+                        {"searchby",Model.searchby},
+                        {"pageNum",Model.CurrentPage-1+""},
+                        {"style",Model.ViewStyle}
+
+        };
+
+        <a class="page-num page-num-prev website-text" asp-controller="Inventory" asp-action="SearchBeta" asp-all-route-data="prevPag">
+            Previous
+        </a>
+    }
+    @foreach (var page in Model.Pages)
+    {
+        if (Model.CurrentPage == page)
+        {
+            <li class="list-group-item page-num website-text"><span>@(page)</span></li>
+        }
+        else
+        {
+            var pag = new Dictionary<string, string>
+        {
+                        {"searchfilter",Model.searchfilter},
+                        {"searchby",Model.searchby},
+                        {"pageNum",page+""},
+                        {"style",Model.ViewStyle}
+
+                     };
+            <li class="list-group-item page-num website-text"><a asp-controller="Inventory" asp-action="SearchBeta" asp-all-route-data="pag">@(page)</a></li>
+        }
+    }
+    @if (Model.HasNextPages)
+    {
+        var nextPag = new Dictionary<string, string>
+        {
+                        {"searchfilter",Model.searchfilter},
+                        {"searchby",Model.searchby},
+                        {"pageNum",Model.CurrentPage+1+""},
+                        {"style",Model.ViewStyle}
+                
+                     };
+
+        <a class="page-num page-num-next website-text" asp-controller="Inventory" asp-action="SearchBeta" asp-all-route-data="nextPag">
+            Next
+        </a>
+    }
+</ul>

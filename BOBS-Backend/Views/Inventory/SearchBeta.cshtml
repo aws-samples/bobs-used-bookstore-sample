@@ -1,4 +1,4 @@
-﻿@model BOBS_Backend.ViewModel.FetchBooksViewModel
+﻿@model BOBS_Backend.ViewModel.ManageInventory.PagedSearchViewModel;
 @{
     ViewData["Title"] = "Checkout";
     var types = (List<BOBS_Backend.Models.Book.Type>)ViewData["Types"];
@@ -6,40 +6,63 @@
     var genres = (List<BOBS_Backend.Models.Book.Genre>)ViewData["Genres"];
     var conditions = (List<BOBS_Backend.Models.Book.Condition>)ViewData["Conditions"];
     var count = @Model.Books.Count();
+    var viewstyle = Model.ViewStyle;
 
 }
+<style>
 
-@if (Model.searchfilter != "")
-{
-    <div class="container">
-        <div class="text-center">
-            <h1 class="text-center" style="margin-top:35px">
-                <span class="title-1 text-center font-weight-light"  style="margin-bottom: 45px; font-size: 400">Search Books</span>
-            </h1>
-        </div>
-        <div class="row" style="margin:15px;">
-            <div class="col-12">
-                <form enctype="multipart/form-data" class="input-group mb-3" asp-controller="Inventory" asp-action="SearchBeta" method="post" style="padding-bottom: 0px;">
-                    <select class="col-2 custom-select title-1 text-center font-weight-light " id="inputGroupSelect01" asp-for="searchby">
-                        <option selected value="">Filter By</option>
-                        <option value="BookName">Book Name</option>
-                        <option value="Publisher">Publisher</option>
-                        <option value="Genre">Genre</option>
-                        <option value="Condition">Condition</option>
-                        <option value="Type">Type</option>
-                    </select>
-                    <input type="text" asp-for="searchfilter" placeholder="                                                       Please , Enter the search query            " class="form-control bg-light text-dark" aria-label="Text input with dropdown button">
-                    <button class="btn btn-outline-secondary title-1 text-center font-weight-light  " type="submit">Submit</button>
-                </form>
-            </div>
+    .table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
+        background-color: #4ABDAC;
+    }
+</style>
+
+
+<div class="container">
+    <div class="text-center">
+        <h1 class="text-center" style="margin-top:35px">
+            <span class="title-1 text-center font-weight-light" style="margin-bottom: 45px">Search Books</span>
+        </h1>
+    </div>
+    <div class="row" style="margin:15px;">
+        <div class="col-12">
+
+            <form enctype="multipart/form-data" class="input-group mb-3" asp-controller="Inventory" asp-action="SearchBeta" method="get" style="padding-bottom: 0px;">
+                <select class="col-2 custom-select title-1 text-center font-weight-light " id="inputGroupSelect01" asp-for="searchby">
+                    <option selected value="">Filter By</option>
+                    <option value="Book.Name">Book Name</option>
+                    <option value="Book.Publisher.Name">Publisher</option>
+                    <option value="Book.Genre.Name">Genre</option>
+                    <option value="Condition.ConditionName">Condition</option>
+                    <option value="Book.Type.TypeName">Type</option>
+                </select>
+                <input id="tags" type="text" asp-page-handler="@Model.searchby" asp-for="searchfilter" placeholder="Please , Enter the search query" class="form-control bg-light text-dark font-weight-light" aria-label="Text input with dropdown button">
+                @section Scripts{
+                    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+                    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+                    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+                    <script>
+                        $(function () {
+                            $("#tags").autocomplete({
+                                source: '/Inventory/AutoSuggest'
+                            });
+                        });
+                    </script>
+                }
+                <select class="col-2 custom-select title-1 text-center font-weight-light " id="inputGroupSelect01" asp-for="ViewStyle">
+                    <option value="Grid">Grid</option>
+                    <option value="Tabular">Tabular</option>
+                </select>
+                <button class="btn btn-outline-secondary title-1 text-center font-weight-light  " type="submit">Submit</button>
+            </form>
         </div>
     </div>
-}
+</div>
+
 <div class="container">
     <div class="row">
         <div class="col-12 col-sm-3">
             <div class="card bg-light mb-3">
-                <div class="card-header bg-success text-white text-uppercase text-center bg-danger">Best Selling Book</div>
+                <div class="card-header  text-white text-uppercase text-center " style="background-color: #4ABDAC">Best Selling Book</div>
                 <div class="card-body">
                     <img class="img-fluid" src="" />
                     <h5 class="card-title text-center">@ViewData["name"]</h5>
@@ -47,7 +70,7 @@
                 </div>
             </div>
             <div class="card bg-light mb-3">
-                <div class="card-header bg-success text-white text-uppercase text-center bg-success">Best Selling Publisher</div>
+                <div class="card-header  text-white text-uppercase text-center " style="background-color: #4ABDAC">Best Selling Publisher</div>
                 <div class="card-body">
                     <img class="img-fluid" src="" />
                     <h5 class="card-title text-center">@ViewData["publisher"]</h5>
@@ -55,7 +78,7 @@
                 </div>
             </div>
             <div class="card bg-light mb-3">
-                <div class="card-header bg-success text-white text-uppercase text-center bg-danger">Best Selling Format</div>
+                <div class="card-header  text-white text-uppercase text-center " style="background-color: #4ABDAC">Best Selling Format</div>
                 <div class="card-body">
                     <img class="img-fluid" src="" />
                     <h5 class="card-title text-center">@ViewData["type"]</h5>
@@ -63,7 +86,7 @@
                 </div>
             </div>
             <div class="card bg-light mb-3">
-                <div class="card-header bg-success text-white text-uppercase text-center bg-success">Best Selling Genre</div>
+                <div class="card-header  text-white text-uppercase text-center " style="background-color: #4ABDAC">Best Selling Genre</div>
                 <div class="card-body">
                     <img class="img-fluid" src="" />
                     <h5 class="card-title text-center">@ViewData["genre"]</h5>
@@ -76,31 +99,127 @@
 
             <div class="col">
                 <div class="row">
-                    @foreach (var book in Model.Books)
+                    @if (viewstyle == "Grid")
                     {
-                        var param = new Dictionary<string, string>
-                                        {
-                            {"BookId",book.BookId + ""}
-                        };
-                        <div class="col-12 col-md-6 col-lg-4">
-                            <div class="card">
-                                <img class="card-img-top" src="@book.back_url" alt="Card image cap">
-                                <div class="card-body">
-                                    <h4 class="card-title text-center">
-                                        <a asp-controller="Inventory" asp-action="BookDetails" asp-all-route-data="param">@book.BookName</a>
-                                    </h4>
-                                    <p class="card-text  text-center">@book.Publisher.Name</p>
-                                    <div class="row">
-                                        <div class="col">
-                                            <p class="btn btn-danger btn-block">@book.Price $</p>
-                                        </div>
-                                        <div class="col">
-                                            <a href="#" class="btn btn-success btn-block">@book.Quantity Units</a>
+                        @foreach (var book in Model.Books)
+                        {
+                            var param = new Dictionary<string, string>
+                                                                                        {
+                                {"BookId",book.BookId + ""}
+                            };
+
+                            <div class="col-12 col-md-6 col-lg-4">
+                                <div class="card">
+                                    <img class="card-img-top" src="@book.back_url" alt="Card image cap">
+                                    <div class="card-body">
+                                        <h4 class="card-title text-center">
+                                            <a asp-controller="Inventory" asp-action="BookDetails" asp-all-route-data="param" style="text-emphasis-color: #FC4A1A">@book.BookName</a>
+                                        </h4>
+                                        <p class="card-text  text-center" style="text-emphasis-color: #FC4A1A">@book.Publisher.Name</p>
+                                        <div class="row">
+                                            <div class="col">
+                                                <p class="btn text-white btn-block" style="background-color: #4ABDAC">@book.Price $</p>
+                                            </div>
+                                            <div class="col">
+                                                <a href="#" class="btn text-white btn-block" style="background-color: #4ABDAC">@book.Quantity Units</a>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        }
+                    }
+
+                    else
+                    {
+
+  //table-striped                    
+                        <table id="mytable" class="table table-hover "> 
+                            <thead>
+                            <th>
+                                Book Name
+                                @{
+                                    var SortBy = new Dictionary<string, string>
+                                                        {
+                                        {"searchfilter",Model.searchfilter},
+                                        {"searchby",Model.searchby},
+                                        {"SortBy","Sort Book.Name"},
+                                        {"pageNum",Model.CurrentPage+""},
+                                        {"style",Model.ViewStyle}
+                                        };
+
+                                    <a asp-controller="Inventory" asp-action="SearchBeta" asp-all-route-data="SortBy">Sort</a>
+                                }
+                            </th>
+                            <th>
+                                Publisher
+                                @{
+                                    var Sort = new Dictionary<string, string>
+                                                                            {
+                                        {"searchfilter",Model.searchfilter},
+                                        {"searchby",Model.searchby},
+                                        {"SortBy","Sort Book.Publisher.Name"},
+                                        {"pageNum",Model.CurrentPage+""},
+                                        {"style",Model.ViewStyle}
+
+                                        };
+
+                                    <a asp-controller="Inventory" asp-action="SearchBeta" asp-all-route-data="Sort"> Sort </a>
+                                }
+                            </th>
+                            <th>
+                                Price
+                                @{
+                                    var sort = new Dictionary<string, string>
+                                                                            {
+                                        {"searchfilter",Model.searchfilter},
+                                        {"searchby",Model.searchby},
+                                        {"SortBy","Sort ItemPrice"},
+                                        {"pageNum",Model.CurrentPage+""},
+                                        {"style",Model.ViewStyle}
+                                        };
+
+                                    <a asp-controller="Inventory" asp-action="SearchBeta" asp-all-route-data="sort"> Sort </a>
+                                }
+                            </th>
+                            <th>
+                                Quantity
+                                @{
+                                    var sortby = new Dictionary<string, string>
+                                                                            {
+                                        {"searchfilter",Model.searchfilter},
+                                        {"searchby",Model.searchby},
+                                        {"SortBy","Sort Quantity"},
+                                        {"pageNum",Model.CurrentPage+""},
+                                        {"style",Model.ViewStyle}
+                                        };
+
+                                    <a asp-controller="Inventory" asp-action="SearchBeta" asp-all-route-data="sortby"> Sort</a>
+                                }
+                            </th>
+                            </thead>
+                            <tbody>
+                                @foreach (var book in Model.Books)
+                                {
+                                    var param = new Dictionary<string, string>
+                                                                                                                                          {
+                                                {"BookId",book.BookId + ""}
+                                                              };
+                                    <tr>
+                                        <td>@book.BookName</td>
+                                        <td>@book.Publisher.Name</td>
+                                        <td>@book.Price</td>
+                                        <td>@book.Quantity</td>
+                                        <td>
+                                            <a asp-controller="Inventory" asp-action="BookDetails" asp-all-route-data="param">View</a>
+                                        </td>
+                                    </tr>
+                                }
+
+                            </tbody>
+                        </table>
+
+
                     }
                 </div>
             </div>
@@ -109,6 +228,11 @@
         { <h3 class="text-center font-weight-light text-primary">Sorry , Could'nt find any relevant books. Try again !!</h3>
 
         }
-    </div> 
+    </div>
 </div>
+<div class="row d-flex justify-content-lg-center">
+    <div class="row d-flex justify-content-center" style="margin-top:35px;">
 
+        <partial name="./Partials/_Pagination" model="Model" />
+    </div>
+</div>

@@ -13,6 +13,7 @@ using BOBS_Backend.Database;
 using BOBS_Backend.Models.Book;
 using Amazon.S3.Model;
 using BOBS_Backend.DataModel;
+using BOBS_Backend.ViewModel.ManageInventory;
 
 namespace BOBS_Backend.Controllers
 {
@@ -47,7 +48,9 @@ namespace BOBS_Backend.Controllers
         [HttpPost] //Post Data from forms to tables
         public IActionResult EditBookDetails(BooksViewModel bookview )
         {
-            var user = @User.Claims.FirstOrDefault(c => c.Type.Equals("cognito:username"))?.Value;
+            bookview.UpdatedBy = @User.Claims.FirstOrDefault(c => c.Type.Equals("cognito:username"))?.Value;
+            bookview.UpdatedOn = DateTime.Now;
+            bookview.Active = true;
             if (ModelState.IsValid)
             {
 
@@ -72,7 +75,7 @@ namespace BOBS_Backend.Controllers
         public IActionResult GetAllBooks()
         {
 
-            var books = _Inventory.GetAllBooks();
+            var books = _Inventory.GetAllBooks(1 , "" , "");
             return View(books);
         }       
 
@@ -199,7 +202,7 @@ namespace BOBS_Backend.Controllers
             books.back_url = bookdetails.back_url;
             books.left_url = bookdetails.left_url;
             books.right_url = bookdetails.right_url;
-            ViewData["Types"] = _Inventory.GetTypesOfheBook(bookdetails.BookName);
+            ViewData["Types"] = _Inventory.GetVariantsOfTheSelectedBook(bookdetails.BookName);
             ViewData["status"] = "details";
             return View(books);
 
@@ -208,7 +211,7 @@ namespace BOBS_Backend.Controllers
         [HttpPost]
         public IActionResult BookDetails(string type , string BookName , FetchBooksViewModel book)
         {
-            ViewData["Types"] = _Inventory.GetTypesOfheBook(BookName);
+            ViewData["Types"] = _Inventory.GetVariantsOfTheSelectedBook(BookName);
             ViewData["status"] = "List";
             ViewData["Books"] = _Inventory.GetRelevantBooks(BookName, type);
             var lis = _Inventory.GetRelevantBooks(BookName, type);
@@ -217,41 +220,58 @@ namespace BOBS_Backend.Controllers
             book.genre = lis[0].Genre.Name;
             return View(book);
         }
-
-            public IActionResult SearchBeta()
+        /*
+         * Order Repository contains all functions associated with Order Model
+        
+        public IActionResult SearchBeta(string style)
         {
-            FetchBooksViewModel books = new FetchBooksViewModel();
+            PagedSearchViewModel books = new PagedSearchViewModel();
             books.Books = _Inventory.GetAllBooks();
             var stats = _Inventory.DashBoard();
             ViewData["genre"] = stats[0].OrderByDescending(x => x.Value).First().Key;                  
             ViewData["type"] = stats[1].OrderByDescending(x => x.Value).First().Key;
             ViewData["publisher"] = stats[2].OrderByDescending(x => x.Value).First().Key;
             ViewData["name"] = stats[3].OrderByDescending(x => x.Value).First().Key;
+            if (style != null)
+            {
+                books.ViewStyle = style;
+            }
 
+            else
+            {
+                books.ViewStyle = "Tabular";
+            }
             return View(books);
 
             
         }
+         */
 
-
-        [HttpPost]
-        public IActionResult SearchBeta(FetchBooksViewModel filteredbooks)
+        public IActionResult SearchBeta(string searchfilter, string searchby, int pageNum , string ViewStyle , string SortBy)
         {
             var stats = _Inventory.DashBoard();
             ViewData["genre"] = stats[0].OrderByDescending(x => x.Value).First().Key;
             ViewData["type"] = stats[1].OrderByDescending(x => x.Value).First().Key;
             ViewData["publisher"] = stats[2].OrderByDescending(x => x.Value).First().Key;
             ViewData["name"] = stats[3].OrderByDescending(x => x.Value).First().Key;
-            if (filteredbooks.searchby == null && filteredbooks.searchfilter == null)
+
+            if (pageNum == 0) pageNum++;
+
+            if ((String.IsNullOrEmpty(searchby) && String.IsNullOrEmpty(searchfilter)))
             {
-                return RedirectToAction("SearchBeta");
+                var books = _Inventory.GetAllBooks(pageNum , ViewStyle , SortBy); 
+
+                return View(books);
             }
+            else
+            {
 
-            FetchBooksViewModel books = new FetchBooksViewModel();
-            // books.Books = _Inventory.GetRequestedBooks(filteredbooks.searchby, filteredbooks.searchfilter);   
-            books.Books = _Inventory.SearchBeta(filteredbooks.searchby, filteredbooks.searchfilter);
-            return View(books);
+                var books = _Inventory.SearchBeta(searchby, searchfilter , ViewStyle, SortBy, pageNum);
+                
 
+                return View(books);
+            }          
+           
         }
 
        [HttpPost]
@@ -264,6 +284,8 @@ namespace BOBS_Backend.Controllers
 
         public IActionResult Submitchanges(BookDetails details)
         {
+            details.UpdatedBy = @User.Claims.FirstOrDefault(c => c.Type.Equals("cognito:username"))?.Value;
+            details.UpdatedOn = DateTime.Now;
             _Inventory.PushDetails(details);
 
             return RedirectToAction("SearchBeta");
@@ -271,35 +293,57 @@ namespace BOBS_Backend.Controllers
        
         public IActionResult Dashboard(FetchBooksViewModel Book)
         {
-            var orderstats = _Inventory.DashBoard();
-            ViewData["ordes_top_genre"] = orderstats[0].First().Key;
-            ViewData["ordes_top_genre_count"] = orderstats[0].First().Value;
+            var stats = _Inventory.DashBoard();
+            ViewData["ordes_top_genre"] = stats[0].First().Key;
+            ViewData["ordes_top_genre_count"] = stats[0].First().Value;
 
-            ViewData["ordes_top_type"] = orderstats[1].First().Key;
-            ViewData["ordes_top_type_count"] = orderstats[1].First().Value;
+            ViewData["ordes_top_type"] = stats[1].First().Key;
+            ViewData["ordes_top_type_count"] = stats[1].First().Value;
 
-            ViewData["ordes_top_publisher"] = orderstats[2].First().Key;
-            ViewData["ordes_top_publisher_count"] = orderstats[2].First().Value;
+            ViewData["ordes_top_publisher"] = stats[2].First().Key;
+            ViewData["ordes_top_publisher_count"] = stats[2].First().Value;
 
-            ViewData["ordes_top_name"] = orderstats[3].First().Key;
-            ViewData["ordes_top_name_count"] = orderstats[3].First().Value;
+            ViewData["ordes_top_name"] = stats[3].First().Key;
+            ViewData["ordes_top_name_count"] = stats[3].First().Value;
 
-            ViewData["orders_genre"] = orderstats[0];
-            ViewData["orders_type"] = orderstats[1];
-            ViewData["orders_publisher"] = orderstats[2];
-            ViewData["orders_name"] = orderstats[3];
+            ViewData["orders_genre"] = stats[0];
+            ViewData["orders_type"] = stats[1];
+            ViewData["orders_publisher"] = stats[2];
+            ViewData["orders_name"] = stats[3];
 
            
-            var a = orderstats[4];
+            var a = stats[4];
 
-            List<int> count = new List<int>();
+            List<int> InventoryStats = new List<int>();
             foreach (var i in a)
-                count.Add(i.Value);
-            ViewData["count"] = count;
-                return View();
+                InventoryStats.Add(i.Value);
+            ViewData["Inventory"] = InventoryStats;
+
+            var b = stats[5];
+            List<int> OrdersStats = new List<int>();
+            foreach (var i in b)
+                OrdersStats.Add(i.Value);
+            ViewData["Orders"] = OrdersStats;
+
+            return View();
         }
 
-        
+
+        [HttpGet]
+        public async Task<IActionResult> AutoSuggest(string searchby)
+        {
+            try
+            {
+                string term = HttpContext.Request.Query["term"].ToString();
+                var names = _Inventory.autosuggest(term);
+
+                return Ok(names);
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
 
     }
 }

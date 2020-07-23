@@ -1,48 +1,54 @@
-﻿            @{
-                //  var orders_top_genre = (string)ViewData["ordes_top_genre"];
-                var orders_top_type = (string)ViewData["ordes_top_type"];
-                var ordes_top_publisher  = (string)ViewData["ordes_top_publisher"] ;
-                var   ordes_top_name = (string)ViewData["ordes_top_name"] ;
+﻿@{
 
-                var orders_genre = (Dictionary<string, int>)ViewData["orders_genre"] ;
-                var orders_top_genre = orders_genre.First().Key;
-                var orders_top_genre_count = orders_genre.First().Value;
+    var orders_genre = (Dictionary<string, int>)ViewData["orders_genre"];
+    var orders_type = (Dictionary<string, int>)ViewData["orders_type"];
+    var orders_publisher = (Dictionary<string, int>)ViewData["orders_publisher"];
+    var orders_name = (Dictionary<string, int>)ViewData["orders_name"];
 
 
+    var inventory_stats = (List<int>)ViewData["Inventory"];
+
+    var total_titles = inventory_stats[0];
+    var total_books = inventory_stats[1];
+    var total_merchandise_value = inventory_stats[2];
+    var genre_count = inventory_stats[3];
+    var publisher_count = inventory_stats[4];
+    var type_count = inventory_stats[5];
+    var conditons_count = inventory_stats[6];
+
+    var order_stats = (List<int>)ViewData["Orders"];
+    var ordersplaced = order_stats[0];
+    var delivered = order_stats[1];
+    var enroute = order_stats[2];
+    var pending = order_stats[3];
+    var justplaced = order_stats[4];
+    var total_books_sold = order_stats[4];
+    var total_sales = order_stats[6];
 
 
-                var orders_type = (Dictionary<string, int>)ViewData["orders_type"];
-                var orders_publisher = (Dictionary<string, int>)ViewData["orders_publisher"] ;
-                var   orders_name = (Dictionary<string, int>)ViewData["orders_name"] ;
+}
 
-                var inventory_top_genre = (string)ViewData["inventory_top_genre"];
-                var inventory_top_type = (string)ViewData["inventory_top_type"] ;
-                var  inventory_top_publisher = (string)ViewData["inventory_top_publisher"] ;
-                var  inventory_top_name = (string)ViewData["inventory_top_name"] ;
-                var inventory_genre = (Dictionary<string, int>)ViewData["inventory_genre"] ;
-                var  inventory_type = (Dictionary<string, int>)ViewData["inventory_type"] ;
-                var inventory_publisher = (Dictionary<string, int>)ViewData["inventory_publisher"] ;
-                var inventory_name = (Dictionary<string, int>)ViewData["inventory_name"] ;
-                var count_stats = (List<int>)ViewData["count"];
-                var total_books_sold = count_stats[0];
-                var total_sales = count_stats[1];
-                var total_books = count_stats[2];
-                var total_titles = count_stats[3];
-                var total_merchandise_value = count_stats[4];
-                var genre_count = count_stats[5];
-                var publisher_count = count_stats[6];
-                var type_count = count_stats[7];
-                var conditons_count = count_stats[8];
-                var ordersplaced = count_stats[9];
-                var delivered = count_stats[10];
-                var enroute = count_stats[11];
-                var pending = count_stats[12];
-                var justplaced = count_stats[13];
+@* <style>
+        html {
+            background-color: #000;
+            margin: auto;
+            padding: 0;
+        }
 
-               
+        body {
+            background-color: #201d3a;
+            border-top: solid 90px #000;
+            color: #7d3cff;
+            font-size: 1.1em;
+            font-family: Calibri, Verdana, Helvetica, Sans-Serif;
+            margin: 0;
+            padding: 0;
+        }
 
 
-            }
+        }
+    </style>
+*@
 <!-- MAIN CONTENT-->
 <div class="main-content">
     <div class="section__content section__content--p30">
@@ -50,7 +56,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="overview-wrap">
-                        <h1 class="title-1 text-center font-weight-light"  style="margin-bottom: 45px; font-size: 300" >Inventory Dashboard</h>
+                        <h1 class="title-1 text-center font-weight-light" style="margin-bottom: 45px; font-size: 300">Inventory Dashboard</h>
                     </div>
                 </div>
             </div>
@@ -134,7 +140,7 @@
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col-md-12">
-                          
+
                         </div>
                     </div>
                     <div class="row m-t-25" style="margin-top : 30px ">
@@ -391,7 +397,7 @@
                                                                             <div class="table-hover">
                                                                                 <table class="table table-top-countries">
                                                                                     <tbody>
-                                                                                        @foreach ( var i in orders_genre)
+                                                                                        @foreach (var i in orders_genre)
                                                                                         {
                                                                                             <tr>
                                                                                                 <td class="text-white font-weight-bold">@i.Key</td>
@@ -499,6 +505,6 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        
+
 
                                                     </div>

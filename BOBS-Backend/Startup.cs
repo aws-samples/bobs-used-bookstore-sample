@@ -23,6 +23,7 @@ using BOBS_Backend.Repository.WelcomePageInterface;
 using BOBS_Backend.Repository.Implementations.WelcomePageImplementation;
 using BOBS_Backend.Notifications.NotificationsInterface;
 using BOBS_Backend.Notifications.Implementations;
+using BOBS_Backend.Repository.Implementations.InventoryImplementation;
 
 namespace BOBS_Backend
 {
@@ -44,6 +45,8 @@ namespace BOBS_Backend
             services.AddDbContext<Database.DatabaseContext>(option => option.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddTransient<IInventory, Inventory>();
+            services.AddTransient<IRekognitionNPollyRepository, RekognitionNPollyRepository>();
+
 
             services.AddTransient<IOrderDetailRepository, OrderDetailRepository>();
             services.AddTransient<IOrderRepository, OrderRepository>();

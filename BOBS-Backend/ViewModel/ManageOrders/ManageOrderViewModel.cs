@@ -27,5 +27,7 @@ namespace BOBS_Backend.ViewModel.ManageOrders
         public bool HasNextPages { get; set; }
 
         public int[] Pages { get; set; }
+
+        public string SortBy { get; set; }
     }
 }

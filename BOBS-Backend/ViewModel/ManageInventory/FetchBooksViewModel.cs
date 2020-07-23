@@ -34,5 +34,7 @@ namespace BOBS_Backend.ViewModel
 
         public string typechosen { get; set; }
 
+        public string ViewStyle { get; set; }
+
     }
 }

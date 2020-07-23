@@ -38,6 +38,14 @@ namespace BOBS_Backend.ViewModel
         public string Summary { get; set; }
 
         public string AudioBookUrl { get; set; }
+        
+        public string Author { get; set; }
 
+
+        public string UpdatedBy { get; set; }
+
+        public DateTime UpdatedOn { get; set; }
+
+        public bool Active { get; set; }
     }
 }

@@ -13,6 +13,7 @@ using SixLabors.ImageSharp.Processing;
 using Amazon.Polly;
 using Amazon.Polly.Model;
 using BOBS_Backend.Models.Order;
+using BOBS_Backend.ViewModel.ManageInventory;
 
 namespace BOBS_Backend
 {
@@ -21,8 +22,7 @@ namespace BOBS_Backend
 
         public void SaveBook(Book book );
 
-        public IEnumerable<BookDetails> GetAllBooks();
-       // public IEnumerable<Book> GetAllBooks();
+        public PagedSearchViewModel GetAllBooks(int pagenum, string style , string SortBy);
 
         public BookDetails GetBookByID(long Id);
 
@@ -30,16 +30,7 @@ namespace BOBS_Backend
 
         public void SavePublisherDetails(Publisher publisher);
 
-        public Task<string> UploadtoS3(IFormFile file);
-
-        public Task<bool> IsImageSafe(string bucket, string key);
-
-        public Task<bool> IsBook(string bucket, string key);
-
-       // public IEnumerable<Book> GetRequestedBooks(string searchby, string searchfilter);
-
-        public IEnumerable<BookDetails> GetRequestedBooks(string searchby, string Searchfilter);
-
+      
         public int AddPublishers(BOBS_Backend.Models.Book.Publisher publishers);
 
         public int AddGenres(BOBS_Backend.Models.Book.Genre genres);
@@ -56,33 +47,28 @@ namespace BOBS_Backend
 
         public List<BOBS_Backend.Models.Book.Condition> GetConditions();
 
-        public IImageEncoder selectEncoder(string extension);
-
-        public  Task<Stream> ResizeImage(IFormFile file, string fileExt);
-
         public BookDetails GetBookDetails(long bookid, long priceid);
 
         public int AddToTables(ViewModel.BooksViewModel bookview);
 
-        public bool checkIfViolation(string input);
-
-        public string GenerateAudioSummary(string BookName, string Summary, string targetLanguageCode, VoiceId voice);
-
         public IEnumerable<BookDetails> GetDetails(long BookId);
 
-        public IEnumerable<BookDetails> SearchBeta(string searchby, string Searchfilter);
+        public PagedSearchViewModel SearchBeta(string searchby, string Searchfilter , string style , string SortBy , int pagnum);
 
-        public List<string> GetTypesOfheBook(string bookname);
+        public List<string> GetVariantsOfTheSelectedBook(string bookname);
 
         public List<BookDetails> GetRelevantBooks(string Bookname , string type);
 
         public List<Dictionary<string, int>> DashBoard();
 
-       // public List<Dictionary<string, int>> InventoryDashBoard();
+
+        public void PushDetails(BookDetails details);
+
+        public List<string> autosuggest(string input);
 
         public BookDetails UpdateDetails(int Id, string Condition);
 
 
-        public void PushDetails(BookDetails details);
+
     }
 }
