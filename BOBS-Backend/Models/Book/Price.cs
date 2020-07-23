@@ -29,5 +29,8 @@ namespace BOBS_Backend.Models.Book
         public DateTime UpdatedOn { get; set; }
 
         public bool Active { get; set; }
+
+        [Timestamp]
+        public byte[] RowVersion { get; set; }
     }
 }

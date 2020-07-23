@@ -11,6 +11,7 @@
                 {
                         {"filterValue",Model.FilterValue},
                         {"searchString",Model.SearchString},
+                        {"filterValueText",Model.FilterValueText },
                         {"pageNum",Model.CurrentPage-1+""}
                      };
 
@@ -30,6 +31,7 @@
                 {
                         {"filterValue",Model.FilterValue},
                         {"searchString",Model.SearchString},
+                        {"filterValueText",Model.FilterValueText },
                         {"pageNum",page+""}
                      };
                 <li class="list-group-item page-num website-text"><a asp-controller="Orders" asp-action="Index" asp-all-route-data="pag">@(page)</a></li>
@@ -41,6 +43,7 @@
                 {
                         {"filterValue",Model.FilterValue},
                         {"searchString",Model.SearchString},
+                        {"filterValueText",Model.FilterValueText },
                         {"pageNum",Model.CurrentPage+1+""}
                      };
 

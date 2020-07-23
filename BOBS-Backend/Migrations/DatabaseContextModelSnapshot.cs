@@ -125,6 +125,11 @@ namespace BOBS_Backend.Migrations
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
                     b.Property<string>("UpdatedBy")
                         .HasColumnType("nvarchar(max)");
 
@@ -256,8 +261,10 @@ namespace BOBS_Backend.Migrations
                     b.Property<long?>("OrderStatus_Id")
                         .HasColumnType("bigint");
 
-                    b.Property<double>("Refund")
-                        .HasColumnType("float");
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
 
                     b.Property<double>("Subtotal")
                         .HasColumnType("float");
@@ -294,6 +301,11 @@ namespace BOBS_Backend.Migrations
 
                     b.Property<long?>("Price_Id")
                         .HasColumnType("bigint");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
 
                     b.Property<double>("price")
                         .HasColumnType("float");
