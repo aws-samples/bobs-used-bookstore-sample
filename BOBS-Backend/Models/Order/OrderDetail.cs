@@ -32,5 +32,8 @@ namespace BOBS_Backend.Models.Order
         public int quantity { get; set; }
 
         public bool IsRemoved { get; set; }
+
+        [Timestamp]
+        public byte[] RowVersion { get; set; }
     }
 }

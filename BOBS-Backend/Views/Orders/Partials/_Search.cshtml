@@ -5,64 +5,177 @@
     <link rel="stylesheet" href="~/css/Orders/ManageOrders/Search.css" />
 </head>
 
-<div class="col-12">
-    <form id="hello" class="input-group mb-3" asp-controller="Orders" asp-action="Index" method="get">
-        <select class="filter-by-button col-2 custom-select text" asp-for="FilterValue">
+<body>
 
-            <option value="Order int Order_Id">Order Id</option>
-
-            <option value="Customer string Customer.Customer_Id">Customer Id</option>
-            <option value="Customer string Customer.Username">Username</option>
-            <option value="Customer string Customer.FirstName">First Name</option>
-            <option value="Customer string Customer.LastName">Last Name</option>
-            <option value="Customer string Customer.Email">Email</option>
-            <option value="Customer sring Customer.Phone">Phone</option>
-
-            <option value="Address string Address.City">City</option>
-            <option value="Address string Address.State">State</option>
-            <option value="Address int Address.ZipCode">Zip Code</option>
-        </select>
-
-        <input type="text" asp-for="SearchString" class="form-control text" aria-label="Text input with dropdown button">
-        <button class="btn submit-button text text-white" type="submit">Submit</button>
-
-    </form>
-</div>
-
-<div class="col-12" style="margin-top:15px;">
     @functions {
-        public static Dictionary<string, string> retrievePill(string filterValue, string searchString)
-        {
-            var pill = new Dictionary<string, string>
-            {
-                {"filterValue",filterValue},
-                {"searchString",searchString },
-            };
 
-            return pill;
+        public bool IsCheck(string value)
+        {
+            if (string.IsNullOrEmpty(Model.FilterValueText))
+            {
+                return false;
+            }
+            if (Model.FilterValueText.Contains(value))
+            {
+                return true;
+            }
+            return false;
         }
     }
-    @{
-        var allOrdersPill = retrievePill("", "");
 
-        var pendingPill = retrievePill("Status string OrderStatus.Status", "Pending");
+    <div class="col-12">
+        <form id="hello" class="input-group mb-3" asp-controller="Orders" asp-action="Index" method="get">
 
-        var enRoutePill = retrievePill("Status string OrderStatus.Status", "En Route");
+            <button class="filter-by-button col-2 text btn text-white" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                FilterBy
+            </button>
+            <input asp-for="FilterValue" type="text" style="width:0;padding:0;border:0" class="invisible" readonly="readonly" id="filterValueString" />
+            <input asp-for="FilterValueText" type="text" class="col-2 form-control text" readonly="readonly" id="idFilterValue" value="Filter By: @Model.FilterValueText" />
+            <input type="text" asp-for="SearchString" class="form-control text" aria-label="Text input with dropdown button">
+            <button class="btn submit-button text text-white" type="submit">Submit</button>
+
+        </form>
+    </div>
 
 
-        var justPlaceddPill = retrievePill("Status string OrderStatus.Status", "Just Placed");
-
-        var deliveredPill = retrievePill("Status string OrderStatus.Status", "Delivered");
-
-        var cancelledPill = retrievePill("Status string OrderStatus.Status", "Cancelled");
-
-    }
 
 
-    <a asp-controller="Orders" asp-action="Index" asp-all-route-data="allOrdersPill" class="col-1 filter-pill badge badge-pill text-white">All Orders</a>
-    <a asp-controller="Orders" asp-action="Index" asp-all-route-data="justPlaceddPill" class="col-1 filter-pill badge badge-pill text-white">Just Placed</a>
-    <a asp-controller="Orders" asp-action="Index" asp-all-route-data="pendingPill" class="col-1 filter-pill badge badge-pill text-white">Pending</a>
-    <a asp-controller="Orders" asp-action="Index" asp-all-route-data="enRoutePill" class="col-1 filter-pill badge badge-pill text-white">En Route</a>
-    <a asp-controller="Orders" asp-action="Index" asp-all-route-data="deliveredPill" class="col-1 filter-pill badge badge-pill text-white">Delivered</a>
-    <a asp-controller="Orders" asp-action="Index" asp-all-route-data="cancelledPill" class="col-1 filter-pill badge badge-pill text-white">Cancelled</a>
-</div>`
+    <div class="collapse" id="collapseExample" style="padding-left:1.5rem; width:100%">
+        <div class="row" style="padding-left:1.5rem; margin-bottom:10px;">
+            <a style="margin-right:.25rem" class=" filter-pill badge badge-pill text-white" data-toggle="collapse" data-target="#orderInfoCollapse" aria-expanded="false" aria-controls="orderInfoCollapse">
+                Order Info
+            </a>
+            <a style="margin-right:.25rem" class="filter-pill badge badge-pill text-white" data-toggle="collapse" data-target="#customerInfoCollapse" aria-expanded="false" aria-controls="customerInfoCollapse">
+                Customer Info
+            </a>
+            <a style="margin-right:.25rem" class="filter-pill badge badge-pill text-white" data-toggle="collapse" data-target="#addressInfoCollapse" aria-expanded="false" aria-controls="addressInfoCollapse">
+                Address
+            </a>
+            <a class="filter-pill badge badge-pill text-white" data-toggle="collapse" data-target="#orderStatusCollapse" aria-expanded="false" aria-controls="orderStatusCollapse">
+                Order Status
+            </a>
+        </div>
+
+        <div class="row collapse" id="orderInfoCollapse" style="padding-left:1.75rem">
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" onclick="updateFilterValue(' Order Id', 'Order-int-Order_Id')" type="checkbox" id="inlineCheckbox1" checked="@IsCheck("Order Id")">
+                <label class="form-check-label text" for="inlineCheckbox1">Order Id</label>
+            </div>
+        </div>
+
+        <div class="row collapse" id="orderStatusCollapse" style="padding-left:1.75rem">
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" onclick="updateFilterValue(' Status', 'Status-string-OrderStatus.Status')" type="checkbox" id="inlineCheckbox1" checked="@IsCheck("Status")">
+                <label class="form-check-label text" for="inlineCheckbox1">Status</label>
+            </div>
+        </div>
+
+
+        <div class="row collapse" id="addressInfoCollapse" style="padding-left:1.75rem">
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" onclick="updateFilterValue(' City', 'Address-string-Address.City')" type="checkbox" id="inlineCheckbox1" checked="@IsCheck("City")">
+                <label class="form-check-label text" for="inlineCheckbox1">City</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" onclick="updateFilterValue(' State', 'Address-string-Address.State')" type="checkbox" id="inlineCheckbox1" checked="@IsCheck("State")">
+                <label class="form-check-label text" for="inlineCheckbox1">State</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" onclick="updateFilterValue(' Zip Code', 'Address-int-Address.ZipCode')" type="checkbox" id="inlineCheckbox1" checked="@IsCheck("Zip Code")">
+                <label class="form-check-label text" for="inlineCheckbox1">Zip Code</label>
+            </div>
+        </div>
+
+        <div class="row collapse" id="customerInfoCollapse" style="padding-left:1.75rem">
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" onclick="updateFilterValue(' Customer Id', 'Customer-string-Customer.Customer_Id')" type="checkbox" id="inlineCheckbox2" checked="@IsCheck("Customer Id")">
+                <label class="form-check-label text" for="inlineCheckbox2">Customer Id</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" onclick="updateFilterValue(' Username', 'Customer-string-Customer.Username')" type="checkbox" id="inlineCheckbox2" checked="@IsCheck("Username")">
+                <label class="form-check-label text" for="inlineCheckbox2">Username</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" onclick="updateFilterValue(' First Name', 'Customer-string-Customer.FirstName')" type="checkbox" id="inlineCheckbox2" checked="@IsCheck("First Name")">
+                <label class="form-check-label text" for="inlineCheckbox2">First Name</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" onclick="updateFilterValue(' Last Name', 'Customer-string-Customer.LastName')" type="checkbox" id="inlineCheckbox2" checked="@IsCheck("Last Name")">
+                <label class="form-check-label text" for="inlineCheckbox2">Last Name</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" onclick="updateFilterValue(' Email', 'Customer-string-Customer.Email')" type="checkbox" id="inlineCheckbox2" checked="@IsCheck("Email")">
+                <label class="form-check-label text" for="inlineCheckbox2">Email</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" onclick="updateFilterValue(' Phone', 'Customer-string-Customer.Phone')" type="checkbox" id="inlineCheckbox2" checked="@IsCheck("Phone")">
+                <label class="form-check-label text" for="inlineCheckbox2">Phone</label>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="col-12" style="margin-top:15px;">
+        @functions {
+            public static Dictionary<string, string> retrievePill(string filterValue, string searchString)
+            {
+                var pill = new Dictionary<string, string>
+                                    {
+                {"filterValue",filterValue},
+                {"filterValueText", " Status"},
+                {"searchString",searchString },
+
+            };
+
+                return pill;
+            }
+        }
+        @{
+            var allOrdersPill = retrievePill("", "");
+
+            var pendingPill = retrievePill(" Status-string-OrderStatus.Status", "Pending");
+
+            var enRoutePill = retrievePill(" Status-string-OrderStatus.Status", "En Route");
+
+
+            var justPlaceddPill = retrievePill(" Status-string-OrderStatus.Status", "Just Placed");
+
+            var deliveredPill = retrievePill(" Status-string-OrderStatus.Status", "Delivered");
+
+            var cancelledPill = retrievePill(" Status-string-OrderStatus.Status", "Cancelled");
+
+        }
+
+        <a asp-controller="Orders" asp-action="Index" asp-all-route-data="allOrdersPill" class="col-1 filter-pill badge badge-pill text-white">All Orders</a>
+        <a asp-controller="Orders" asp-action="Index" asp-all-route-data="justPlaceddPill" class="col-1 filter-pill badge badge-pill text-white">Just Placed</a>
+        <a asp-controller="Orders" asp-action="Index" asp-all-route-data="pendingPill" class="col-1 filter-pill badge badge-pill text-white">Pending</a>
+        <a asp-controller="Orders" asp-action="Index" asp-all-route-data="enRoutePill" class="col-1 filter-pill badge badge-pill text-white">En Route</a>
+        <a asp-controller="Orders" asp-action="Index" asp-all-route-data="deliveredPill" class="col-1 filter-pill badge badge-pill text-white">Delivered</a>
+        <a asp-controller="Orders" asp-action="Index" asp-all-route-data="cancelledPill" class="col-1 filter-pill badge badge-pill text-white">Cancelled</a>
+    </div>
+
+    <script>
+        function updateFilterValue(filterValue, filterValueData) {
+            var text = document.getElementById('idFilterValue').value;
+            var reg = new RegExp(filterValue, "g");
+
+            var reg2 = new RegExp(" " + filterValueData, "g");
+            var data = document.getElementById("filterValueString").value;
+
+            if (text.includes(filterValue)) {
+                text = text.replace(reg, '');
+                data = data.replace(reg2, '');
+
+            }
+            else {
+                text = text.concat(filterValue);
+
+                data = data.concat(" " + filterValueData);
+            }
+
+            document.getElementById('idFilterValue').value = text;
+            document.getElementById("filterValueString").value = data;
+        }
+    </script>
+
+</body>

@@ -42,6 +42,7 @@ namespace BOBS_Backend.Repository.Implementations.OrderImplementations
             {
                 var origOrderDetail = await FindOrderDetailById(id);
 
+                //Lookup up transaction
 
                 var moneyOwe = origOrderDetail.price * origOrderDetail.quantity;
 
@@ -49,7 +50,9 @@ namespace BOBS_Backend.Repository.Implementations.OrderImplementations
 
                 var origOrder = await orderRepo.FindOrderById(orderId);
 
-                origOrder.Refund += (moneyOwe + (moneyOwe * .10));
+                origOrder.Subtotal -= (moneyOwe);
+
+                origOrder.Tax -= (moneyOwe * .10);
 
                 origOrderDetail.IsRemoved = true;
 

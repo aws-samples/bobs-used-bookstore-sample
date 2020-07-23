@@ -20,7 +20,7 @@ namespace BOBS_Backend.Repository.OrdersInterface
 
         Task<ManageOrderViewModel> GetAllOrders(int pageNum);
 
-        Task<ManageOrderViewModel> FilterList(string filterValue, string searchString,int pageNum);
+        Task<ManageOrderViewModel> FilterList(string filterValue, string searchString, int pageNum);
 
 
 

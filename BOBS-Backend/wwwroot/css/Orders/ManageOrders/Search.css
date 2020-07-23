@@ -10,8 +10,10 @@
 }
 
 .filter-by-button {
-    border-bottom-left-radius: 1.3rem;
-    border-top-left-radius: 1.3rem;
+    border-bottom-left-radius: 1.5rem;
+    border-top-left-radius: 1.5rem;
+    border-color: #7D53DE;
+    background-color: #7D53DE;
 }
 
 .submit-button {

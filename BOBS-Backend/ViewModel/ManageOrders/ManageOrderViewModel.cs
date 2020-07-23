@@ -16,6 +16,8 @@ namespace BOBS_Backend.ViewModel.ManageOrders
 
         public string FilterValue { get; set; }
 
+        public string FilterValueText { get; set; }
+
         public int PageNumber { get; set; }
 
         public List<Order> Orders { get; set; }

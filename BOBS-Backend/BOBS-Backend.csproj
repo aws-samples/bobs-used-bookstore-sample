@@ -26,6 +26,7 @@
     <PackageReference Include="AWSSDK.SimpleEmail" Version="3.3.101.178" />
     <PackageReference Include="AWSSDK.SimpleNotificationService" Version="3.3.102.1" />
     <PackageReference Include="AWSSDKCPP-Polly.redist" Version="1.6.20160610.25" />
+    <PackageReference Include="jQuery" Version="3.5.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="3.1.6" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.6" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.6">

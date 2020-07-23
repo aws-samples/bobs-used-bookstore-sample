@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Authorization;
 using BOBS_Backend.ViewModel.ProcessOrders;
 using System.Runtime.InteropServices;
 using BOBS_Backend.Notifications.NotificationsInterface;
+using System.Text.RegularExpressions;
 
 namespace BOBS_Backend.Controllers
 {
@@ -54,11 +55,11 @@ namespace BOBS_Backend.Controllers
 
             return RedirectToAction("ProcessOrders", new {orderId });
         }
-        public async Task<IActionResult> Index(string filterValue, string searchString, int pageNum)
+        public async Task<IActionResult> Index(string filterValue, string filterValueText, string searchString, int pageNum)
         {
             if (pageNum == 0) pageNum++;
        
-            if ( (String.IsNullOrEmpty(searchString)  && String.IsNullOrEmpty(filterValue)) || filterValue.Contains("All Orders"))
+            if ( (String.IsNullOrEmpty(searchString)  && String.IsNullOrEmpty(filterValue)) )
             {
                 var orders = await _order.GetAllOrders(pageNum);
 
@@ -66,8 +67,13 @@ namespace BOBS_Backend.Controllers
             }
             else if (!String.IsNullOrEmpty(searchString) && !String.IsNullOrEmpty(filterValue))
             {
+                searchString = Regex.Replace(searchString, @"\s+", " ");
 
                 var orders = await _order.FilterList(filterValue, searchString,pageNum);
+
+
+                filterValueText = filterValueText.Replace("Filter By: ", "");
+                orders.FilterValueText = filterValueText;
 
                 return View(orders);
             }
@@ -77,9 +83,12 @@ namespace BOBS_Backend.Controllers
 
                 int[] pages = Enumerable.Range(1, 1).ToArray();
 
+                filterValueText = filterValueText.Replace("Filter By: ", "");
+
                 viewModel.Orders = null;
                 viewModel.FilterValue = filterValue;
                 viewModel.SearchString = searchString;
+                viewModel.FilterValueText = filterValueText;
                 viewModel.Pages = pages;
                 viewModel.HasPreviousPages = false;
                 viewModel.CurrentPage = 1;
