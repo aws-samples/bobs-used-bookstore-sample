@@ -51,7 +51,7 @@ namespace BobBookstore.Controllers
                        };
             
             return View(await cartItem.ToListAsync());
-            //return View(Tuple.Create(item1,book));
+            
             
         }
         public async Task<IActionResult> WishListIndex()
@@ -151,11 +151,7 @@ namespace BobBookstore.Controllers
         public async Task<IActionResult> CheckOut(string[] fruits,string[] IDs,string[] quantity,string[] bookF,string[]priceF)
         {
 
-            //if (!_SignInManager.IsSignedIn(User))
-            //{
-            //    //Response.Write(" <script>function window.onload() {alert( ' 弹出的消息' ); } </script> ");
-            //    await Response.WriteAsync(" <script>function window.onload() {alert( ' 弹出的消息' ); } </script> ");
-            //}
+            
             long statueId = 1;
             var orderStatue = _context.OrderStatus.Find(statueId);
             var user = await _userManager.GetUserAsync(User);
@@ -179,50 +175,23 @@ namespace BobBookstore.Controllers
                 subTotal += Convert.ToDouble( fruits[i]) * Convert.ToInt32(quantity[i]);
             }
 
-            //var s1 = "";
-            //var s2 = "";
-            //for (int i = 0; i < IDs.Length; i++)
-            //{
-            //    var item = _context.CartItem.Find(Convert.ToInt32(IDs[i]));
-
-            //    s1 += priceF[i];
-            //    s1 += "A";
-            //    s2 += quantity[i];
-            //    s2 += "A";
-            //}
-            //if (!HttpContext.Request.Cookies.ContainsKey("SS1"))
-            //{
-            //    CookieOptions options = new CookieOptions();
-
-            //    HttpContext.Response.Cookies.Append("SS1", s1);
-
-
-            //}
-            //else
-            //{
-            //    HttpContext.Response.Cookies.Delete("SS1");
-            //    HttpContext.Response.Cookies.Append("SS1", s1);
-            //}
-            //if (!HttpContext.Request.Cookies.ContainsKey("SS2"))
-            //{
-            //    CookieOptions options = new CookieOptions();
-
-            //    HttpContext.Response.Cookies.Append("SS2", s2);
-
-
-            //}
-            //else
-            //{
-            //    HttpContext.Response.Cookies.Delete("SS2");
-            //    HttpContext.Response.Cookies.Append("SS2", s2);
-            //}
-
-
-            //return RedirectToAction(nameof(Index));
             var recentOrder = new Order() { OrderStatus = orderStatue, Subtotal = subTotal, Tax = subTotal * 0.1, Customer = customer };
             _context.Add(recentOrder);
             _context.SaveChanges();
             var orderId = recentOrder.Order_Id;
+            if (!HttpContext.Request.Cookies.ContainsKey("OrderId"))
+            {
+                CookieOptions options = new CookieOptions();
+
+                HttpContext.Response.Cookies.Append("OrderId", Convert.ToString(orderId));
+
+
+            }
+            else
+            {
+                HttpContext.Response.Cookies.Delete("OrderId");
+                HttpContext.Response.Cookies.Append("OrderId", Convert.ToString(orderId));
+            }
             for (int i = 0; i < bookF.Length; i++)
             {
                 //var orderDetailBook = itemIdList[i].Book;
@@ -246,10 +215,34 @@ namespace BobBookstore.Controllers
             var address = from c in _context.Address
                           where c.Customer == customer
                           select c;
-            ViewBag.TGB = "大米时代"+OrderId;
-            return View(await address.ToListAsync());
-        }
+            //ViewBag.TGB = "大米时代"+OrderId;
 
+            var order = _context.Order.Find(OrderId);
+            var orderDeteail = from m in _context.OrderDetail
+                               where m.Order == order
+                               select new OrderDetailViewModel()
+                               { Bookname=m.Book.Name,
+                               Url=m.Book.Back_Url,
+                               price=m.price,
+                               quantity=m.quantity
+                               };
+            ViewData["order"] = orderDeteail.ToList();
+            ViewData["orderId"] = OrderId;
+            return View(address.ToList());
+        }
+        public async Task<IActionResult> Congratulation()
+        {
+            return View();
+        }
+        public async Task<IActionResult> ConfirmOrderAddress(string addressID,long OrderId)
+        {
+            var address = _context.Address.Find(Convert.ToInt64(addressID));
+            var order = _context.Order.Find(OrderId);
+            order.Address = address;
+            _context.Update(order);
+            _context.SaveChanges();
+            return RedirectToAction(nameof(Congratulation));
+        }
         // GET: CartItems/Details/5
         public async Task<IActionResult> Details(int? id)
         {
