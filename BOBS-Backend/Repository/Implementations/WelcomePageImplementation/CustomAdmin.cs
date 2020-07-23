@@ -9,13 +9,13 @@ using BOBS_Backend.Database;
 using Microsoft.EntityFrameworkCore.Internal;
 using BOBS_Backend.Models.Book;
 using BOBS_Backend.Models.Order;
+using Amazon.Runtime.Internal.Util;
 
 namespace BOBS_Backend.Repository.Implementations.WelcomePageImplementation
 {
     public class CustomAdmin: ICustomAdminPage
     {
         private DatabaseContext _context;
-        private string adminUserName;
         public CustomAdmin(DatabaseContext context)
         {
             _context = context;
@@ -23,15 +23,15 @@ namespace BOBS_Backend.Repository.Implementations.WelcomePageImplementation
 
         }
 
-        public async Task<List<Price>> GetUpdatedBooks(IEnumerable<System.Security.Claims.Claim> claims)
+        public async Task<List<Price>> GetUpdatedBooks(string adminUsername)
         {
             // the query returns the collection of updated book models
             // Return the books updated by the current User. Returns only latest 5
             try
             {
-                adminUserName = claims.FirstOrDefault(c => c.Type.Equals("cognito:username"))?.Value;
+                
                 var books = await _context.Price
-                            .Where(p => p.UpdatedBy == adminUserName)
+                            .Where(p => p.UpdatedBy == adminUsername)
                             .Include(p => p.Book)
                             .Include(p => p.Book)
                                 .ThenInclude(b => b.Genre)
@@ -39,7 +39,7 @@ namespace BOBS_Backend.Repository.Implementations.WelcomePageImplementation
                                 .ThenInclude(b => b.Type)
                             .Include(p => p.Condition)
                             .OrderByDescending(p => p.UpdatedOn.Date)
-                            .Take(4).ToListAsync();
+                            .Take(8).ToListAsync();
                             
                                 
 
@@ -51,7 +51,7 @@ namespace BOBS_Backend.Repository.Implementations.WelcomePageImplementation
                 return null;
             }
         }
-        public async Task<List<Price>> GetGlobalUpdatedBooks()
+        public async Task<List<Price>> GetGlobalUpdatedBooks(string adminUsername)
         {
 
             /*
@@ -61,7 +61,7 @@ namespace BOBS_Backend.Repository.Implementations.WelcomePageImplementation
             try
             {
                 var books = await _context.Price
-                                .Where(p=>p.UpdatedBy != adminUserName)
+                                .Where(p=>p.UpdatedBy != adminUsername)
                                 .Include(p => p.Book)
                                 .Include(p => p.Book)
                                     .ThenInclude(b => b.Genre)
@@ -69,7 +69,7 @@ namespace BOBS_Backend.Repository.Implementations.WelcomePageImplementation
                                     .ThenInclude(b => b.Type)
                                 .Include(p => p.Condition)
                                 .OrderByDescending(p => p.UpdatedOn.Date)
-                                .Take(4).ToListAsync();
+                                .Take(8).ToListAsync();
                 return books;
             }catch(Exception e)
             {
@@ -79,16 +79,35 @@ namespace BOBS_Backend.Repository.Implementations.WelcomePageImplementation
         }
         private List<Order> FilterOrders(List<Order> allOrders)
         {
+            //filters the orders based on priority
             try
             {
+                // list of filtered orders to be returned 
                 List<Order> filtered_order = new List<Order>();
+                // Date at the time 
                 DateTime todayDate = DateTime.Now;
                 foreach (var order in allOrders)
                 {
+
+                   
                     DateTime time = Convert.ToDateTime(order.DeliveryDate);
-                    if (order.OrderStatus.Status == "Pending")
+                    if (order.OrderStatus.OrderStatus_Id == 2)
+                    
                     {
-                        if ((time - todayDate).TotalDays <= 5)
+                        // check pending orders which are due within 5 days
+                       
+                        double diff = (time - todayDate).TotalDays;
+                        if (diff >= 0 && diff <= 3)
+                        {
+                            filtered_order.Add(order);
+                        }
+
+                    }
+                    // check for delayed orders. i.e today's date is past delivery date
+                    else if (order.OrderStatus.OrderStatus_Id == 3)
+                    {
+                        double diff = (todayDate - time).TotalDays;
+                        if (diff > 0 && diff < 5)
                         {
                             filtered_order.Add(order);
                         }
@@ -102,23 +121,46 @@ namespace BOBS_Backend.Repository.Implementations.WelcomePageImplementation
                 return null;
             }
         }
-        public async Task GetImportantOrders()
+        public async Task<List<Order>> GetImportantOrders()
         {
-            var order = await _context.Order
-                            .Include(o => o.Order_Id)
-                            .Include(o => o.Customer)
-                                .ThenInclude(c => c.Customer_Id)
-                            .Include(o => o.Customer)
-                                .ThenInclude(c => c.FirstName)
-                            .Include(o => o.Customer)
-                                .ThenInclude(c => c.LastName)
-                            .Include(o => o.DeliveryDate)
-                            .Include(o => o.OrderStatus)
-                                .ThenInclude(os => os.Status).ToListAsync();
-            var filteredOrders = FilterOrders(order);
+            try
+            {
+                
+                var order = await _context.Order
+                                
+                                .Include(o => o.Customer)
+                                .Include(o => o.OrderStatus)
+                                   
+                                  .ToListAsync();
+                var filteredOrders = FilterOrders(order);
+                return filteredOrders;
+            }catch(Exception e)
+            {
+                Console.WriteLine(e);
+                return null;
+            }
 
         }
-
+        public List<Order> SortTable(List<Order> orders, string sortByValue)
+        {
+            
+            switch(sortByValue){
+                case "price":
+                    orders = orders.OrderByDescending(o => o.Subtotal).ToList();
+                    break;
+                case "date":
+                    orders = orders.OrderByDescending(o => o.DeliveryDate).ToList();
+                    break;
+                case "price_desc":
+                    orders = orders.OrderBy(o => o.Subtotal).ToList();
+                    break;
+                case "date_desc":
+                    orders = orders.OrderBy(o => o.DeliveryDate).ToList();
+                    break;
+                default: break;
+            }
+            return orders;
+        }
         
     }
 }

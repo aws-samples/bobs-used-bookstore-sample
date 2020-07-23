@@ -14,6 +14,7 @@ using BOBS_Backend.Views.Orders.Shared;
 using BOBS_Backend.Repository.Implementations.WelcomePageImplementation;
 using BOBS_Backend.Repository.Implementations.WelcomePageImplementation;
 using BOBS_Backend.ViewModel.UpdateBooks;
+using BOBS_Backend.Models.Book;
 
 namespace BOBS_Backend.Controllers
 {
@@ -21,7 +22,7 @@ namespace BOBS_Backend.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private ICustomAdminPage _customeAdmin;
-
+        private string adminUsername;
 
         public HomeController(ICustomAdminPage customAdmin)
         {
@@ -34,15 +35,31 @@ namespace BOBS_Backend.Controllers
             return View();
         }
         [Authorize]
-        public IActionResult WelcomePage()
+        public IActionResult WelcomePage(string sortByValue)
         {
+                
+            adminUsername = User.Claims.FirstOrDefault(c => c.Type.Equals("cognito:username"))?.Value;
+            LatestUpdates bookUpdates = new LatestUpdates();
+           
+            //Get books updated by current user
+            bookUpdates.Books = _customeAdmin.GetUpdatedBooks(adminUsername).Result;
+                // get recent books updated globally
+            bookUpdates.GlobalBooks = _customeAdmin.GetGlobalUpdatedBooks(adminUsername).Result;
+            bookUpdates.ImpOrders = _customeAdmin.GetImportantOrders().Result;
+
+            // get important orders
+            if (sortByValue == null)
+            {
+                return View(bookUpdates);
+            }
+            else
+            {
+                
+                bookUpdates.ImpOrders = _customeAdmin.SortTable(bookUpdates.ImpOrders, sortByValue);
+                return View(bookUpdates);
+            }
             
-            // change global orders into getting orders not updated by current user
-            BookUpdates bookUpdates = new BookUpdates();
-            bookUpdates.Books = _customeAdmin.GetUpdatedBooks(User.Claims).Result;
-            bookUpdates.GlobalBooks = _customeAdmin.GetGlobalUpdatedBooks().Result;
             
-             return View(bookUpdates);
         }
         public IActionResult Logout()
         {
