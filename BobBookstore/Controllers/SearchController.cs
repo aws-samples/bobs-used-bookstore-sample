@@ -8,6 +8,7 @@ using BobBookstore.Models.Carts;
 using BobBookstore.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using PagedList;
 
 namespace BobBookstore.Controllers
 {
@@ -19,7 +20,7 @@ namespace BobBookstore.Controllers
         {
             _context = context;
         }
-        public async Task<IActionResult> IndexAsync(string SortBy, string searchString)
+        public async Task<IActionResult> IndexAsync(string SortBy, string searchString, int? page)
         {
 
             if (!String.IsNullOrEmpty(searchString))
@@ -46,7 +47,8 @@ namespace BobBookstore.Controllers
                                 GenreName = b.Genre.Name,
                                 TypeName = b.Type.TypeName,
                                 Prices = prices.Where(p => p.Book.Book_Id == b.Book_Id).ToList(),
-                                MinPrice = prices.Where(p => p.Book.Book_Id == b.Book_Id).FirstOrDefault().ItemPrice
+                                MinPrice = prices.Where(p => p.Book.Book_Id == b.Book_Id).FirstOrDefault().ItemPrice,
+                                Author = b.Author
                             };
 
                 // sort query
@@ -71,7 +73,10 @@ namespace BobBookstore.Controllers
                         break;
                 }
 
-                return View(await books.ToListAsync());
+                int pageSize = 10;
+                int pageNumber = (page ?? 1);
+
+                return View(books.ToPagedList(pageNumber, pageSize));
 
             }
 
@@ -99,9 +104,13 @@ namespace BobBookstore.Controllers
                            ISBN = m.ISBN,
                            GenreName = m.Genre.Name,
                            TypeName = m.Type.TypeName,
-                           Url = m.Back_Url,
                            Prices = prices,
-                           BookId=m.Book_Id
+                           BookId = m.Book_Id,
+                           Author = m.Author,
+                           Front_Url = m.Front_Url,
+                           Back_Url = m.Back_Url,
+                           Right_Url = m.Right_Url,
+                           Left_Url = m.Left_Url
                        };
 
             return View(await book.FirstOrDefaultAsync());
