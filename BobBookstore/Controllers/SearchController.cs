@@ -27,10 +27,14 @@ namespace BobBookstore.Controllers
                 ViewBag.CurrentSort = SortBy;
             }
             
-            ViewBag.CurrentFilter = searchString;
+            if (String.IsNullOrEmpty(searchString))
+            {
+                searchString = ViewBag.currentFilter;
+            }
 
             if (!String.IsNullOrEmpty(searchString))
             {
+                ViewBag.currentFilter = searchString;
                 var prices = from p in _context.Price
                              where p.Book.Name.Contains(searchString) ||
                             p.Book.Genre.Name.Contains(searchString) ||

@@ -2,9 +2,7 @@
 @{
     ViewData["Title"] = "Index";
 }
-@section scripts {
 
-}
 
 <h2>Search</h2>
 
@@ -12,19 +10,19 @@
 
 <form asp-controller="Search" asp-action="Index" method="get">
     <p>
-        <select class="col-2 custom-select" name="SortBy">
+        <select id="selectId" class="col-2 custom-select" name="SortBy" onchange="javascript:this.form.submit()">
             <option value="Name">Name</option>
             <option value="Genre">Genre</option>
             <option value="Type">Type</option>
             <option value="PriceAsc">Price (ascending)</option>
             <option value="PriceDesc">Price (descending)</option>
         </select>
-        <input type="text" name="SearchString" />
+        <input type="text" name="SearchString" value="@ViewBag.currentFilter" />
         <input type="submit" value="Search" />
     </p>
 </form>
 
-@if (Model.Data == null)
+@if (Model == null)
 {
     <h3>
         No results found.
@@ -106,4 +104,5 @@ else
         </ul>
     </div>
 }
+
 
