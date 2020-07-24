@@ -1,5 +1,5 @@
-﻿@model PagedList.IPagedList<BobBookstore.Models.ViewModels.BookViewModel>
-@using PagedList.Mvc.HtmlHelper
+﻿@model BobBookstore.Models.ViewModels.PaginationModel
+@using X.PagedList.Mvc;
 @{
     ViewData["Title"] = "Index";
 }
@@ -25,7 +25,7 @@
     </p>
 </form>
 
-@if (Model == null)
+@if (Model.Data == null)
 {
     <h3>
         No results found.
@@ -57,7 +57,7 @@ else
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in Model)
+            @foreach (var item in Model.Data)
             {
                 <tr>
                     <td>
@@ -97,9 +97,14 @@ else
     </table>
     <br />
     <div>
-        Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
-        @PagedList.Mvc.HtmlHelper.PagedListPager(Model, page => Url.Action("Index",
-            new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))
+        <ul class="pagination">
+            @for (var i = 1; i <= (int)Math.Ceiling(Model.Count / 10.0); i++)
+            {
+                <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+                    <a asp-route-page="@i" asp-route-searchstring="@ViewBag.currentFilter" class="page-link">@i</a>
+                </li>
+            }
+        </ul>
     </div>
 }
 

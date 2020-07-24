@@ -12,8 +12,14 @@ namespace BobBookstore.Models.ViewModels
     {
         public long BookId { get; set; }
 
+        public int CurrentPage { get; set; } = 1;
+
+        public int PageSize { get; set; } = 10;
+
         [Display(Name = "Title")]
         public string BookName { get; set; }
+
+        public string Author { get; set; }
 
         public long ISBN { get; set; }
 

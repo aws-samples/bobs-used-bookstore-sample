@@ -20,8 +20,11 @@ namespace BobBookstore.Controllers
         {
             _context = context;
         }
-        public async Task<IActionResult> IndexAsync(string SortBy, string searchString, int? page)
+        public async Task<IActionResult> Index(string SortBy, string currentFilter, string searchString, int? page)
         {
+            ViewBag.CurrentSort = SortBy;
+
+            ViewBag.CurrentFilter = searchString;
 
             if (!String.IsNullOrEmpty(searchString))
             {
@@ -47,8 +50,7 @@ namespace BobBookstore.Controllers
                                 GenreName = b.Genre.Name,
                                 TypeName = b.Type.TypeName,
                                 Prices = prices.Where(p => p.Book.Book_Id == b.Book_Id).ToList(),
-                                MinPrice = prices.Where(p => p.Book.Book_Id == b.Book_Id).FirstOrDefault().ItemPrice,
-                                Author = b.Author
+                                MinPrice = prices.Where(p => p.Book.Book_Id == b.Book_Id).FirstOrDefault().ItemPrice
                             };
 
                 // sort query
@@ -70,13 +72,20 @@ namespace BobBookstore.Controllers
                         books = books.OrderByDescending(b => b.MinPrice);
                         break;
                     default:
+                        books = books.OrderBy(b => b.BookName);
                         break;
                 }
 
                 int pageSize = 10;
-                int pageNumber = (page ?? 1);
-
-                return View(books.ToPagedList(pageNumber, pageSize));
+                int currentPage = (page ?? 1);
+                
+                return View(new PaginationModel 
+                    {
+                    Count = books.Count(),
+                    Data = await books.Skip((currentPage - 1) * pageSize).Take(pageSize).ToListAsync(),
+                    CurrentPage = currentPage,
+                    PageSize = pageSize,
+                    CurrentFilter = searchString});
 
             }
 
@@ -104,13 +113,9 @@ namespace BobBookstore.Controllers
                            ISBN = m.ISBN,
                            GenreName = m.Genre.Name,
                            TypeName = m.Type.TypeName,
+                           Url = m.Back_Url,
                            Prices = prices,
-                           BookId = m.Book_Id,
-                           Author = m.Author,
-                           Front_Url = m.Front_Url,
-                           Back_Url = m.Back_Url,
-                           Right_Url = m.Right_Url,
-                           Left_Url = m.Left_Url
+                           BookId=m.Book_Id
                        };
 
             return View(await book.FirstOrDefaultAsync());
