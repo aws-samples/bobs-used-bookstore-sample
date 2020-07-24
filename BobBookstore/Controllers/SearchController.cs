@@ -22,8 +22,11 @@ namespace BobBookstore.Controllers
         }
         public async Task<IActionResult> Index(string SortBy, string currentFilter, string searchString, int? page)
         {
-            ViewBag.CurrentSort = SortBy;
-
+            if (!String.IsNullOrEmpty(SortBy))
+            {
+                ViewBag.CurrentSort = SortBy;
+            }
+            
             ViewBag.CurrentFilter = searchString;
 
             if (!String.IsNullOrEmpty(searchString))
@@ -55,7 +58,7 @@ namespace BobBookstore.Controllers
                             };
 
                 // sort query
-                switch (SortBy)
+                switch (ViewBag.CurrentSort)
                 {
                     case "Name":
                         books = books.OrderByDescending(b => b.BookName);

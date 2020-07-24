@@ -1,5 +1,4 @@
 ﻿@model BobBookstore.Models.ViewModels.PaginationModel
-@using X.PagedList.Mvc;
 @{
     ViewData["Title"] = "Index";
 }
@@ -101,7 +100,7 @@ else
             @for (var i = 1; i <= (int)Math.Ceiling(Model.Count / 10.0); i++)
             {
                 <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
-                    <a asp-route-page="@i" asp-route-searchstring="@ViewBag.currentFilter" class="page-link">@i</a>
+                    <a asp-route-page="@i" asp-route-sortBy="@ViewBag.CurrentSort" asp-route-searchstring="@ViewBag.currentFilter" class="page-link">@i</a>
                 </li>
             }
         </ul>
