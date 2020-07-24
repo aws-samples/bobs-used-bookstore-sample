@@ -47,6 +47,7 @@ namespace BobBookstore.Controllers
                                 BookId = b.Book_Id,
                                 BookName = b.Name,
                                 ISBN = b.ISBN,
+                                Author = b.Author,
                                 GenreName = b.Genre.Name,
                                 TypeName = b.Type.TypeName,
                                 Prices = prices.Where(p => p.Book.Book_Id == b.Book_Id).ToList(),
