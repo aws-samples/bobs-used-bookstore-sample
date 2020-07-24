@@ -8,6 +8,7 @@ using BobBookstore.Models.Carts;
 using BobBookstore.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using PagedList;
 
 namespace BobBookstore.Controllers
 {
@@ -19,8 +20,11 @@ namespace BobBookstore.Controllers
         {
             _context = context;
         }
-        public async Task<IActionResult> IndexAsync(string SortBy, string searchString)
+        public async Task<IActionResult> Index(string SortBy, string currentFilter, string searchString, int? page)
         {
+            ViewBag.CurrentSort = SortBy;
+
+            ViewBag.CurrentFilter = searchString;
 
             if (!String.IsNullOrEmpty(searchString))
             {
@@ -43,6 +47,7 @@ namespace BobBookstore.Controllers
                                 BookId = b.Book_Id,
                                 BookName = b.Name,
                                 ISBN = b.ISBN,
+                                Author = b.Author,
                                 GenreName = b.Genre.Name,
                                 TypeName = b.Type.TypeName,
                                 Prices = prices.Where(p => p.Book.Book_Id == b.Book_Id).ToList(),
@@ -68,10 +73,20 @@ namespace BobBookstore.Controllers
                         books = books.OrderByDescending(b => b.MinPrice);
                         break;
                     default:
+                        books = books.OrderBy(b => b.BookName);
                         break;
                 }
 
-                return View(await books.ToListAsync());
+                int pageSize = 10;
+                int currentPage = (page ?? 1);
+                
+                return View(new PaginationModel 
+                    {
+                    Count = books.Count(),
+                    Data = await books.Skip((currentPage - 1) * pageSize).Take(pageSize).ToListAsync(),
+                    CurrentPage = currentPage,
+                    PageSize = pageSize,
+                    CurrentFilter = searchString});
 
             }
 
