@@ -21,5 +21,7 @@ namespace BOBS_Backend.ViewModel.ProcessOrders
 
         public PartialOrder FullOrder { get; set; }
 
+        public string errorMessage { get; set; }
+
     }
 }

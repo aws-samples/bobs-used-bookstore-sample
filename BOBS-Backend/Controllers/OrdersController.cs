@@ -33,7 +33,7 @@ namespace BOBS_Backend.Controllers
             _emailSender = emailSender;
         }
        
-        public async Task<IActionResult> EditOrderDetailAsync(long orderId, long orderDetailId,string quantity,bool isLast)
+        public async Task<IActionResult> EditOrderDetailAsync(long orderId, long orderDetailId,string quantity,int maxQuant,bool isLast)
         {
 
             int quant;
@@ -42,18 +42,42 @@ namespace BOBS_Backend.Controllers
             
             res = int.TryParse(quantity,out quant);
 
+            string errorMessage = "";
+
             if (res)
             {
-                var emailInfo = await _orderDetail.MakeOrderDetailInactive(orderDetailId, orderId, quant);
-                if (emailInfo != null) _emailSender.SendItemRemovalEmail(emailInfo["bookName"], emailInfo["bookCondition"], emailInfo["customerFirstName"], emailInfo["customerEmail"]);
-                if (isLast)
+                if (quant > maxQuant)
                 {
-                    status = 5;
-                    return RedirectToAction("UpdateOrderStatus", new { orderId, status });
+                    errorMessage = "Error Occurred: Quantity must be less or equal to the max quantity";
+                    return RedirectToAction("ProcessOrders", new { orderId, errorMessage });
                 }
+
+                var emailInfo = await _orderDetail.MakeOrderDetailInactive(orderDetailId, orderId, quant);
+                if (emailInfo != null)
+                {
+                    
+                    if (isLast)
+                    {
+                        status = 5;
+                        return RedirectToAction("UpdateOrderStatus", new { orderId, status });
+                    }
+                    else
+                    {
+                        _emailSender.SendItemRemovalEmail(emailInfo["bookName"], emailInfo["bookCondition"], emailInfo["customerFirstName"], emailInfo["customerEmail"]);
+                    }
+                }
+                else
+                {
+                    errorMessage = "Error Occurred: When trying to remove item. Please try again";
+                }
+
+            }
+            else
+            {
+                errorMessage = " Error Occurred: Quantity must be a integer";
             }
 
-            return RedirectToAction("ProcessOrders", new {orderId });
+            return RedirectToAction("ProcessOrders", new {orderId, errorMessage });
         }
         public async Task<IActionResult> Index(string filterValue, string filterValueText, string searchString, int pageNum)
         {
@@ -100,10 +124,26 @@ namespace BOBS_Backend.Controllers
         public async Task<IActionResult> UpdateOrderStatusAsync(long orderId,long status)
         {
             var order = await _order.FindOrderById(orderId);
-            order = await _orderStatus.UpdateOrderStatus(order, status);
-            _emailSender.SendOrderStatusUpdateEmail(order.OrderStatus.Status, order.Order_Id, order.Customer.FirstName, order.Customer.Email);
+            string errorMessage = "";
+            if(status == 5)
+            {
+                order = await _order.CancelOrder(orderId);
+            }
+            else
+            {
+                order = await _orderStatus.UpdateOrderStatus(order, status);
+            }    
+            
+            if(order != null)
+            {
+                _emailSender.SendOrderStatusUpdateEmail(order.OrderStatus.Status, order.Order_Id, order.Customer.FirstName, order.Customer.Email);
 
-            if (status == 5) await _order.CancelOrder(order.Order_Id);
+            }
+            else
+            {
+                errorMessage = "Error Occured: Couldn't updated order status please try again";
+            }
+    
 
             return RedirectToAction("ProcessOrders", new { orderId });
         }
@@ -114,7 +154,7 @@ namespace BOBS_Backend.Controllers
         }
 
 
-        public async Task<IActionResult> ProcessOrders(long orderId)
+        public async Task<IActionResult> ProcessOrders(long orderId, string errorMessage)
         {
  
             if(string.IsNullOrEmpty(orderId.ToString()))
@@ -141,6 +181,7 @@ namespace BOBS_Backend.Controllers
 
                 viewModel.Statuses = orderStatus;
                 viewModel.FullOrder = fullOrder;
+                viewModel.errorMessage = string.IsNullOrEmpty(errorMessage) ? "" : errorMessage;
 
                 return View(viewModel);
             }

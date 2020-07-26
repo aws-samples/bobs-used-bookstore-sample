@@ -39,10 +39,29 @@
     .manage-order-button:hover {
         color:white;
     }
+    .filter-pill {
+        font-weight: normal;
+        font-family: 'Arvo',serif;
+        padding: .6em;
+        border-top-left-radius: 12rem;
+        border-bottom-left-radius: 12rem;
+        border-top-right-radius: 12rem;
+        border-bottom-right-radius: 12rem;
+        background-color: #7D53DE;
+    }
 </style>
 <div class="container">
-    <div class="text-center" >
+    <div class="text-center">
         <h2 class="website-text">Process Order</h2>
+        @if (!string.IsNullOrEmpty(Model.errorMessage))
+        {
+            <div class="alert alert-secondary alert-dismissible fade show" role="alert">
+                @Model.errorMessage
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        }
     </div>
 
     <div class="progress progress-bar-empty" >
@@ -88,9 +107,21 @@
     </div>
 
     <div class="row" style="margin-top:35px">
-        <div class="col-12">
+      
             <h4 class="website-text">Expected Delivery Date: @DateTime.Parse(fullOrder.Order.DeliveryDate).ToString("MM/dd/yyyy")</h4>
-        </div>
+
+        @if(Model.FullOrder.OrderDetails.Count() == Model.FullOrder.itemsRemoved && Model.FullOrder.Order.OrderStatus.Status != "Cancelled" )
+        {
+
+            var data = new Dictionary<string,string>
+            {
+                { "orderId", "" + Model.FullOrder.Order.Order_Id },
+                { "status", "5"},
+
+            };
+            <a asp-controller="Orders" asp-action="UpdateOrderStatus" asp-all-route-data="data" style="padding-top:.8rem; margin-left:.7rem;" class=" filter-pill badge badge-pill text-white">Cancel Order</a>
+        }
+            
 
     </div>
 </div>

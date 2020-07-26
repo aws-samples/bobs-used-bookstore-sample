@@ -1,5 +1,6 @@
 ﻿using BOBS_Backend.Database;
 using BOBS_Backend.Models.Order;
+using BOBS_Backend.Repository.OrdersInterface;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -46,19 +47,32 @@ namespace BOBS_Backend.Repository.Implementations.OrderImplementations
             {
                 OrderStatus newStatus = await FindOrderStatusById(Status_Id);
 
-                order.OrderStatus = newStatus;
+                IOrderRepository orderRepo = new OrderRepository(_context);
 
-                _context.Order.Update(order);
-                await _context.SaveChangesAsync();
+                using (var transaction = _context.Database.BeginTransaction())
+                {
+                    order.OrderStatus = newStatus;
 
-                return order;
+                    _context.Order.Update(order);
+                    await _context.SaveChangesAsync();
+
+                    await transaction.CommitAsync();
+
+                    return order;
+                }
+                    
             }
-            catch (DbUpdateException)
+            catch (DbUpdateConcurrencyException ex)
             {
 
+                return null;
+            }
+            catch (Exception)
+            {
+                return null;
             }
 
-            return order;
+ 
         }
     }
 }

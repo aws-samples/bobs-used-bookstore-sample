@@ -15,8 +15,25 @@ using Amazon.Rekognition.Model;
 using System.Reflection;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
+namespace CustomExtensions
+{
+    // Extension methods must be defined in a static class.
+    public static class StringExtension
+    {
+        // This is the extension method.
+        // The first parameter takes the "this" modifier
+        // and specifies the type for which the method is defined.
+        public static int WordCount(this String str)
+        {
+            return str.Split(new char[] { ' ', '.', '?' }, StringSplitOptions.RemoveEmptyEntries).Length;
+        }
+    }
+}
+
 namespace BOBS_Backend.Repository.Implementations.OrderImplementations
 {
+
+    using CustomExtensions;
     public class OrderRepository : IOrderRepository
     {
         /*
@@ -33,32 +50,49 @@ namespace BOBS_Backend.Repository.Implementations.OrderImplementations
             _context = context;
         }
 
-        public async Task CancelOrder(long id)
+        public async Task<Order> CancelOrder(long id)
         {
             try
             {
                 IOrderDetailRepository orderDetailRepo = new OrderDetailRepository(_context);
+                IOrderStatusRepository orderStatusRepo = new OrderStatusRepository(_context);
+
+                var orderStatus = await orderStatusRepo.FindOrderStatusById(5);
 
                 var orderDetails = await orderDetailRepo.FindOrderDetailByOrderId(id);
                 var order = await FindOrderById(id);
 
-                foreach (var detail in orderDetails)
+                using (var transaction = _context.Database.BeginTransaction())
                 {
-                    if (detail.IsRemoved != true)
+                    foreach (var detail in orderDetails)
                     {
-                        order.Subtotal -= (detail.quantity * detail.price);
-                        order.Tax -= (detail.quantity * detail.price * .1); 
-                        detail.Price.Quantity += detail.quantity;
-                        detail.IsRemoved = true;
+                        if (detail.IsRemoved != true)
+                        {
+                            order.Subtotal -= (detail.quantity * detail.price);
+                            order.Tax -= (detail.quantity * detail.price * .1);
+                            detail.Price.Quantity += detail.quantity;
+                            detail.IsRemoved = true;
 
+                        }
                     }
-                }
 
-                await _context.SaveChangesAsync();
+                    order.OrderStatus = orderStatus;
+
+                    await _context.SaveChangesAsync();
+
+                    await transaction.CommitAsync();
+
+                    return order;
+                }
+                   
+            }
+            catch(DbUpdateConcurrencyException ex)
+            {
+                return null;
             }
             catch (Exception ex)
             {
-
+                return null;
             }
            
 
@@ -117,13 +151,16 @@ namespace BOBS_Backend.Repository.Implementations.OrderImplementations
 
             var start = pageNum / 10;
 
-            if ((start * 10) + 10 < totalPages)
+            bool Noreminder = pageNum % 10 == 0;
+
+          
+            if (start  < (totalPages / 10) || Noreminder == true)
             {
-                pages = Enumerable.Range(start * 10 + 1, 10).ToArray();
+                pages = Enumerable.Range((Noreminder) ? ((start-1) * 10 + 1) : (start * 10 + 1), 10 ).ToArray();
             }
             else
             {
-                pages = Enumerable.Range(start * 10 + 1, totalPages - (start * 10)).ToArray();
+                pages = Enumerable.Range((Noreminder) ? ((start-1) * 10) : (start * 10 + 1), totalPages - (start * 10)).ToArray();
             }
 
             return pages;
@@ -174,21 +211,30 @@ namespace BOBS_Backend.Repository.Implementations.OrderImplementations
         }
 
 
-        private BinaryExpression GenerateDynamicLambdaFunctionOrderProperty(string[] splitFilter, ParameterExpression parameterExpression, string searchString)
+        private BinaryExpression GenerateDynamicLambdaFunctionOrderProperty(string splitFilter, ParameterExpression parameterExpression, string searchString)
         {
-            var property = Expression.Property(parameterExpression, splitFilter[2]);
+            var property = Expression.Property(parameterExpression, splitFilter);
 
             BinaryExpression lambda = null;
             MethodInfo method;
             bool isFirst = true;
             searchString = searchString.Trim();
 
-            foreach(var subSearch in searchString.Split(' '))
+            var table = (IQueryable)_context.GetType().GetProperty("Order").GetValue(_context, null);
+
+            var row = Expression.Parameter(table.ElementType, "row");
+
+            var col = Expression.Property(row, splitFilter);
+
+            var type = col.Type.FullName;
+
+            foreach (var subSearch in searchString.Split(' '))
             {
                 try
                 {
+
                     ConstantExpression constant = null;
-                    if (splitFilter[1] == "int")
+                    if (type == "System.Int64")
                     {
                         long value = 0;
 
@@ -239,18 +285,28 @@ namespace BOBS_Backend.Repository.Implementations.OrderImplementations
             MethodInfo method;
             bool isFirst = true;
             searchString = searchString.Trim();
-            foreach(var subSearch in searchString.Split(' '))
+
+            var table = (IQueryable)_context.GetType().GetProperty(splitFilter[0]).GetValue(_context, null);
+
+            var row = Expression.Parameter(table.ElementType, "row");
+
+            var col = Expression.Property(row, splitFilter[1]);
+
+            var type = col.Type.FullName;
+            foreach (var subSearch in searchString.Split(' '))
             {
                 try
                 {
+
                     ConstantExpression constant = null;
-                    if (splitFilter[1] == "int")
+                    if (type == "System.Int64")
                     {
                         long value = 0;
 
                         bool res = long.TryParse(subSearch, out value);
 
                         constant = Expression.Constant(value);
+        
                         method = typeof(long).GetMethod("Equals", new Type[] { typeof(int) });
                     }
                     else
@@ -261,7 +317,7 @@ namespace BOBS_Backend.Repository.Implementations.OrderImplementations
 
                     Expression property2 = parameterExpression;
 
-                    foreach (var member in splitFilter[2].Split('.'))
+                    foreach (var member in splitFilter)
                     {
                         property2 = Expression.PropertyOrField(property2, member);
                     }
@@ -307,18 +363,17 @@ namespace BOBS_Backend.Repository.Implementations.OrderImplementations
 
             for (int i = 1; i < listOfFilters.Length; i++)
             {
-                string[] splitFilter = listOfFilters[i].Split('-');
 
                 BinaryExpression exp2 = null;
 
-                if (splitFilter[0] == "Order")
+                if (!listOfFilters[i].Contains("."))
                 {
-                    exp2 = GenerateDynamicLambdaFunctionOrderProperty(splitFilter, parameterExpression, searchString);
+                    exp2 = GenerateDynamicLambdaFunctionOrderProperty(listOfFilters[i], parameterExpression, searchString);
                 }
                 else
                 {
                    
-                    exp2 = GenerateDynamicLambdaFunctionSubOrderProperty(splitFilter, parameterExpression, searchString);
+                    exp2 = GenerateDynamicLambdaFunctionSubOrderProperty(listOfFilters[i].Split("."), parameterExpression, searchString);
 
 
 

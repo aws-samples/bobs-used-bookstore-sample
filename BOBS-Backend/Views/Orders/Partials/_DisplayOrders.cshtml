@@ -95,8 +95,8 @@ else
                         <span class="filter-pill-tag badge badge-pill text-white website-text">@order.OrderStatus.Status</span>
                     </div>
                     <p class="card-text website-text">Customer ID: @order.Customer.Customer_Id</p>
-                    <p class="card-text website-text">Customer Name: @order.Customer.FirstName  @order.Customer.LastName</p>
-                    <p class="card-text website-text">Expected Delivery Date: @DateTime.Parse(order.DeliveryDate).ToString("MM/dd/yyyy")</p>
+                    <p class="card-text website-text">Customer Name: @( order.Customer.FirstName == null || order.Customer.LastName == null ? "Error Missing" : (order.Customer.FirstName + " " + order.Customer.LastName) )</p>
+                    <p class="card-text website-text">Expected Delivery Date: @( order.DeliveryDate == null ? "Error Missing" : DateTime.Parse(order.DeliveryDate).ToString("MM/dd/yyyy")) </p>
                 </div>
             </div>
         </div>
