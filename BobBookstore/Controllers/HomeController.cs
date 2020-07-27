@@ -41,6 +41,8 @@ namespace BobBookstore.Controllers
             string ip = "0";
             if (_SignInManager.IsSignedIn(User))
             {
+                
+
                 var user = await _userManager.GetUserAsync(User);
                 var email = user.Attributes[CognitoAttribute.Email.AttributeName];
                 var customer = from m in _context.Customer
@@ -73,6 +75,33 @@ namespace BobBookstore.Controllers
                 }
                 else
                 {
+                    
+
+                        var id = Convert.ToInt32(HttpContext.Request.Cookies["CartId"]);
+                        var cartC = _context.Cart.Find(id);
+                        var cartItem = from c in _context.CartItem
+                                       where c.Cart == cartC && c.WantToBuy == true
+                                       select c;
+                        var userC = await _userManager.GetUserAsync(User);
+
+                        var UserId = userC.Attributes[CognitoAttribute.Sub.AttributeName];
+
+                        var recentcustomer = _context.Customer.Find(UserId);
+                        var customerCart = from c in _context.Cart
+                                           where c.Customer == recentcustomer
+                                           select c;
+                        Cart recentCart = new Cart();
+                        foreach (var item in customerCart)
+                        {
+                            recentCart = item;
+                        }
+                        foreach (var item in cartItem)
+                        {
+                            item.Cart = recentCart;
+                            _context.Update(item);
+                        }
+                        await _context.SaveChangesAsync();
+                    
                     HttpContext.Response.Cookies.Delete("CartId");
                     HttpContext.Response.Cookies.Append("CartId", Convert.ToString(currentCart.Cart_Id));
                 }

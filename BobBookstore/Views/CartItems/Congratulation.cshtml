@@ -3,4 +3,64 @@
 *@
 @{
 }
-    <h4>Congratulation</h4>
+@{
+    var totalprice = 0.0;
+    foreach (var item in ViewData["order"] as List<BobBookstore.Models.ViewModels.OrderDetailViewModel>)
+    {
+        totalprice += item.price * item.quantity;
+    }
+}
+<table width="100%" height="100%" cellpadding="0" cellspacing="0">
+    <tr>
+        <td valign="middle" align="center">
+            <h2>Congratulation!</h2>
+        </td>
+    </tr>
+</table>
+<table class="table" width="700">
+    <thead>
+        <tr>
+            <th>
+                Cover
+            </th>
+            <th>
+                name
+            </th>
+            <th>
+                price
+            </th>
+            <th>quantity</th>
+            <th>total</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in ViewData["order"] as List<BobBookstore.Models.ViewModels.OrderDetailViewModel>)
+        {
+            double total = item.price * item.quantity;
+            <tr>
+                <td>
+                    <img src="@item.Url" height="80" width="50" />
+                </td>
+                <td>
+                    @item.Bookname
+                </td>
+
+                <td>
+
+                    $@item.price
+
+                <td>
+
+                    @item.quantity
+                </td>
+                <td>$@total</td>
+
+
+            </tr>
+        }
+    </tbody>
+</table>
+<div>
+    <h2>Total price :$@totalprice</h2>
+</div>
+<a asp-controller="Home" asp-action="Index">Back to home</a>

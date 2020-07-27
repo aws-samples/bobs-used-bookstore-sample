@@ -204,6 +204,12 @@ namespace BobBookstore.Controllers
                 _context.Add(OrderDetail);
                 _context.SaveChanges();
             }
+            for (int i = 0; i < IDs.Length; i++)
+            {
+                var cartItemD = _context.CartItem.Find(Convert.ToInt32(IDs[i]));
+                _context.CartItem.Remove(cartItemD);
+            }
+            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(ConfirmCheckout),new { OrderId=orderId});
             //return View();
         }
@@ -215,7 +221,7 @@ namespace BobBookstore.Controllers
             var address = from c in _context.Address
                           where c.Customer == customer
                           select c;
-            //ViewBag.TGB = "大米时代"+OrderId;
+            
 
             var order = _context.Order.Find(OrderId);
             var orderDeteail = from m in _context.OrderDetail
@@ -230,8 +236,19 @@ namespace BobBookstore.Controllers
             ViewData["orderId"] = OrderId;
             return View(address.ToList());
         }
-        public async Task<IActionResult> Congratulation()
+        public async Task<IActionResult> Congratulation(long OrderIdC)
         {
+            var order = _context.Order.Find(OrderIdC);
+            var OrderItem = from c in _context.OrderDetail
+                           where c.Order == order
+                           select new OrderDetailViewModel()
+                           {
+                               Bookname = c.Book.Name,
+                               Url = c.Book.Back_Url,
+                               price = c.price,
+                               quantity = c.quantity
+                           };
+            ViewData["order"] = OrderItem.ToList();
             return View();
         }
         public async Task<IActionResult> ConfirmOrderAddress(string addressID,long OrderId)
@@ -241,7 +258,7 @@ namespace BobBookstore.Controllers
             order.Address = address;
             _context.Update(order);
             _context.SaveChanges();
-            return RedirectToAction(nameof(Congratulation));
+            return RedirectToAction(nameof(Congratulation), new { OrderIdC = OrderId });
         }
         // GET: CartItems/Details/5
         public async Task<IActionResult> Details(int? id)

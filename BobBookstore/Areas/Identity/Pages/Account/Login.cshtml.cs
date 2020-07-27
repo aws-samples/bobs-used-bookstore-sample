@@ -13,6 +13,10 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using Amazon.Extensions.CognitoAuthentication;
 using Amazon.AspNetCore.Identity.Cognito;
+using BobBookstore.Data;
+using BobBookstore.Models.ViewModels;
+using BobBookstore.Models.Customer;
+using BobBookstore.Models.Carts;
 
 namespace BobBookstore.Areas.Identity.Pages.Account
 {
@@ -20,12 +24,15 @@ namespace BobBookstore.Areas.Identity.Pages.Account
     public class LoginModel : PageModel
     {
         private readonly SignInManager<CognitoUser> _signInManager;
+        private readonly UserManager<CognitoUser> _userManager;
         private readonly ILogger<LoginModel> _logger;
-
-        public LoginModel(SignInManager<CognitoUser> signInManager, ILogger<LoginModel> logger)
+        private readonly UsedBooksContext _context;
+        public LoginModel(SignInManager<CognitoUser> signInManager, ILogger<LoginModel> logger, UsedBooksContext context, UserManager<CognitoUser> userManager)
         {
             _signInManager = signInManager;
             _logger = logger;
+            _context = context;
+            _userManager = userManager ; 
         }
 
         [BindProperty]
@@ -77,6 +84,9 @@ namespace BobBookstore.Areas.Identity.Pages.Account
                 var result = await _signInManager.PasswordSignInAsync(Input.UserName, Input.Password, Input.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
+                    
+
+
                     _logger.LogInformation("User logged in.");
                     return LocalRedirect(returnUrl);
                 }
