@@ -59,6 +59,7 @@ namespace BobBookstore.Controllers
                                 Author = b.Author,
                                 GenreName = b.Genre.Name,
                                 TypeName = b.Type.TypeName,
+                                PublisherName = b.Publisher.Name,
                                 Url = b.Back_Url,
                                 Prices = prices.Where(p => p.Book.Book_Id == b.Book_Id).ToList(),
                                 MinPrice = prices.Where(p => p.Book.Book_Id == b.Book_Id).FirstOrDefault().ItemPrice

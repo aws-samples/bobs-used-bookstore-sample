@@ -19,6 +19,8 @@ namespace BobBookstore.Models.ViewModels
         [Display(Name = "Title")]
         public string BookName { get; set; }
 
+        public string PublisherName { get; set; }
+
         public string Author { get; set; }
 
         public long ISBN { get; set; }

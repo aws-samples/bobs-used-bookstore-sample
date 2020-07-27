@@ -34,24 +34,28 @@ else
         <tbody>
             @foreach (var item in Model)
             {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Subtotal)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Tax)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.DeliveryDate)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Status)
-                    </td>
-                    <td>
-                        <a asp-action="Details" asp-route-id="@item.Order_Id">Details</a> |
-                        <a asp-action="Delete" asp-route-id="@item.Order_Id">Cancel</a>
-                    </td>
-                </tr>
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Subtotal)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Tax)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DeliveryDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Status)
+                </td>
+                <td>
+
+                    <form asp-controller="Orders" asp-action="Detail" method="get">
+                        <input type="hidden" name="id" value="@item.Order_Id" />
+                        <input type="submit" value="details" />
+                    </form>
+                <a asp-action="Delete" asp-route-id="@item.Order_Id">Cancel</a>
+                </td>
+            </tr>
             }
         </tbody>
     </table>
