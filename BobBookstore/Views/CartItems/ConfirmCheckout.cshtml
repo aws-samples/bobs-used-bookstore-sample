@@ -111,7 +111,7 @@
                             @Html.DisplayFor(modelItem => item.ZipCode)
                         </td>
                         <td>
-                            <a asp-action="Edit" asp-route-id="@item.Address_Id">Edit</a> |
+                            <a asp-controller="Addresses" asp-action="Edit" asp-route-id="@item.Address_Id">Edit</a> 
 
                         </td>
                     </tr>
@@ -121,7 +121,12 @@
             <input type="submit" value="Finish your order" style="background-color: #0b71ca ;color: #FFFFFF" />
         }
     </tbody>
+
+
 </table>
+<div>
+    <p style="text-align: center"><a asp-action="AddAddressAtChechout" >add address</a></p>
+</div>
 <table class="table">
     <thead>
         <tr>
