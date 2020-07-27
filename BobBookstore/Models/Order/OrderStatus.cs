@@ -12,5 +12,7 @@ namespace BobBookstore.Models.Order
         public long OrderStatus_Id { get; set; }
 
         public string Status { get; set; }
+
+        public int position { get; set; }
     }
 }
