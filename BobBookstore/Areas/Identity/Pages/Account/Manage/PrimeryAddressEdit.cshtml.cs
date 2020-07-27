@@ -65,13 +65,7 @@ namespace BobBookstore.Areas.Identity.Pages.Account.Manage
         private async Task LoadAsync(CognitoUser user)
         {
             var userName = await _userManager.GetUserNameAsync(user);
-            var address = user.Attributes[CognitoAttribute.Address.AttributeName];
-            var birthDate = user.Attributes[CognitoAttribute.BirthDate.AttributeName];
-            var gender = user.Attributes[CognitoAttribute.Gender.AttributeName];
-            var nickName = user.Attributes[CognitoAttribute.NickName.AttributeName];
-            var phoneNumber = user.Attributes[CognitoAttribute.PhoneNumber.AttributeName];
-            var familyName = user.Attributes[CognitoAttribute.FamilyName.AttributeName];
-            var givenName = user.Attributes[CognitoAttribute.GivenName.AttributeName];
+            
             var addressLine1 = user.Attributes["custom:AddressLine1"];
             var addressLine2 = user.Attributes["custom:AddressLine2"];
             var city = user.Attributes["custom:City"];
@@ -201,26 +195,14 @@ namespace BobBookstore.Areas.Identity.Pages.Account.Manage
             else
             {
 
-                var email = user.Attributes[CognitoAttribute.Email.AttributeName];
-                var customer = from m in _context.Customer
-                               select m;
-                customer = customer.Where(s => s.Email == email);
-                //customer =customer.Where(s=>s.Username.)
+                var id = user.Attributes[CognitoAttribute.Sub.AttributeName];
 
-                string id = "a";
-                foreach (var m in customer)
-                {
-                    if (m.Email == email)
-                    {
-                        id = m.Customer_Id;
-                    }
-
-                }
                 //get customer information
                 var recentCustomer = await _context.Customer.FindAsync(id);
                 var address = from m in _context.Address
+                              where m.Customer==recentCustomer && m.IsPrimary==true
                               select m;
-                address = address.Where(s => s.Customer == recentCustomer);
+                
                 Address recentAddress = new Address();
                 foreach (var add in address)
                 {
@@ -236,6 +218,7 @@ namespace BobBookstore.Areas.Identity.Pages.Account.Manage
                 recentAddress.State = Input.State;
                 recentAddress.Customer = recentCustomer;
                 recentAddress.IsPrimary = true;
+
                 _context.Update(recentAddress);
 
 

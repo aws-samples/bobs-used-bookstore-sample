@@ -90,7 +90,7 @@
                 {
                     <tr>
                         <td>
-                            <input type="radio" id="primary" name="addressID" value="1" />
+                            <input type="radio" id="primary" name="addressID" value="@Html.DisplayFor(modelItem => item.Address_Id)" />
                         </td>
                         <td>
                             @Html.DisplayFor(modelItem => item.AddressLine1)
@@ -111,7 +111,7 @@
                             @Html.DisplayFor(modelItem => item.ZipCode)
                         </td>
                         <td>
-                            <a asp-controller="Addresses" asp-action="Edit" asp-route-id="@item.Address_Id">Edit</a> 
+                            <a  asp-action="EditAddress" asp-route-id="@item.Address_Id">Edit</a> 
 
                         </td>
                     </tr>

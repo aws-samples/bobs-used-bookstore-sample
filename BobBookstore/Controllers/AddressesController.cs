@@ -117,19 +117,7 @@ namespace BobBookstore.Controllers
             {
                 try
                 {
-                    if (address.IsPrimary == true)
-                    {
-                        var user = await _userManager.GetUserAsync(User);
-                        user.Attributes["custom:AddressLine1"] = address.AddressLine1;
-                        user.Attributes["custom:AddressLine2"] = address.AddressLine2;
-                        user.Attributes["custom:City"] = address.City;
-                        user.Attributes["custom:State"] =address.State;
-                        user.Attributes["custom:Country"] = address.Country;
-
-                        user.Attributes["custom:ZipCode"] = Convert.ToString( address.ZipCode);
-
-                        var result = await _userManager.UpdateAsync(user);
-                    }
+                    
                     _context.Update(address);
                     await _context.SaveChangesAsync();
                 }

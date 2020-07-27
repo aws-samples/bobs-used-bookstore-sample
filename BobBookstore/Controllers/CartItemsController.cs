@@ -152,7 +152,7 @@ namespace BobBookstore.Controllers
         public async Task<IActionResult> CheckOut(string[] fruits,string[] IDs,string[] quantity,string[] bookF,string[]priceF)
         {
 
-            
+            //set the origin value
             long statueId = 1;
             var orderStatue = _context.OrderStatus.Find(statueId);
             var user = await _userManager.GetUserAsync(User);
@@ -160,6 +160,7 @@ namespace BobBookstore.Controllers
             var customer = _context.Customer.Find(userId);
             double subTotal = 0.0;
             var itemIdList = new List<CartItem>();
+            //calculate the total price and put all book in a list
             for (int i = 0; i < IDs.Length; i++)
             {
                 var cartItem = from c in _context.CartItem
@@ -171,11 +172,11 @@ namespace BobBookstore.Controllers
                 {
                     item = ii;
                 }
-                //var item = _context.CartItem.Find(Convert.ToInt32(IDs[i]));
+                
                 itemIdList.Add(item);
                 subTotal += Convert.ToDouble( fruits[i]) * Convert.ToInt32(quantity[i]);
             }
-
+            //creat a new order
             var recentOrder = new Order() { OrderStatus = orderStatue, Subtotal = subTotal, Tax = subTotal * 0.1, Customer = customer };
             _context.Add(recentOrder);
             _context.SaveChanges();
@@ -279,6 +280,44 @@ namespace BobBookstore.Controllers
                 await _context.SaveChangesAsync();
                 var orderId = Convert.ToInt64(HttpContext.Request.Cookies["OrderId"]);
                 return RedirectToAction(nameof(ConfirmCheckout), new { OrderId = orderId });
+            }
+            return View(address);
+        }
+
+
+        public async Task<IActionResult> EditAddress(long? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var address = await _context.Address.FindAsync(id);
+            if (address == null)
+            {
+                return NotFound();
+            }
+            return View(address);
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditAddress(long id, [Bind("Address_Id,AddressLine1,AddressLine2,City,State,Country,ZipCode")] Address address)
+        {
+            if (id != address.Address_Id)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                
+                _context.Update(address);
+                await _context.SaveChangesAsync();
+                var orderId = Convert.ToInt64(HttpContext.Request.Cookies["OrderId"]);
+                return RedirectToAction(nameof(ConfirmCheckout), new { OrderId = orderId });
+                
             }
             return View(address);
         }

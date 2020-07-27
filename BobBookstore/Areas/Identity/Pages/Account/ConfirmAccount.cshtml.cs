@@ -90,17 +90,12 @@ namespace BobBookstore.Areas.Identity.Pages.Account
                    
                     //var currentuser = await _userManager.GetUserAsync(User);
                     //var email = user.Attributes[CognitoAttribute.Email.AttributeName];
-                    var currentCustomer = from m in _context.Customer
-                                   select m;
-                    currentCustomer = currentCustomer.Where(s => s.Email == email);
-                    var CustomerId = new Customer();
-                    foreach (var CC in currentCustomer)
-                    {
-                        CustomerId = CC;
-                    }
+                    
+                    var currentCustomerID = _context.Customer.Find(user.Attributes[CognitoAttribute.Sub.AttributeName]);
+                   
                     var cartId = HttpContext.Request.Cookies["CartId"];
-                    var recentCart = await _context.Cart.FindAsync(Convert.ToInt32(cartId));
-                    recentCart.Customer = CustomerId;
+                    var recentCart = await _context.Cart.FindAsync(Convert.ToInt32( cartId));
+                    recentCart.Customer = currentCustomerID;
                     _context.Update(recentCart);
                     await _context.SaveChangesAsync();
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using BobBookstore.Models.Customer;
 
 namespace BobBookstore.Models.Order
 {
@@ -19,7 +20,7 @@ namespace BobBookstore.Models.Order
 
         public OrderStatus OrderStatus { get; set; }
 
-        public Customer Customer { get; set; }
+        public Customer.Customer Customer { get; set; }
 
         public Address Address { get; set; }
 

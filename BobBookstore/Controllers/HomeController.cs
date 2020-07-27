@@ -116,6 +116,7 @@ namespace BobBookstore.Controllers
                     HttpContext.Response.Cookies.Append("CartIp", gu_id.ToString());
                     var IP = new Cart() { IP = ip };
                     _context.Add(IP);
+
                     await _context.SaveChangesAsync();
 
                 }
@@ -126,7 +127,7 @@ namespace BobBookstore.Controllers
                 }
                 var cart = from c in _context.Cart
                            select c;
-                cart = cart.Where(s => s.IP == HttpContext.Request.Cookies["CartIp"]);
+                cart = cart.Where(s => s.IP == ip);
                 Cart currentCart = new Cart();
                 foreach (var ca in cart)
                 {
@@ -137,7 +138,7 @@ namespace BobBookstore.Controllers
                 {
                     CookieOptions options = new CookieOptions();
 
-                    HttpContext.Response.Cookies.Append("CartId", Convert.ToString(currentCart.Cart_Id));
+                    HttpContext.Response.Cookies.Append("CartId",Convert.ToString(currentCart.Cart_Id));
 
 
                 }
