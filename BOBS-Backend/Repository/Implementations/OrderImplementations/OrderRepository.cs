@@ -70,8 +70,13 @@ namespace BOBS_Backend.Repository.Implementations.OrderImplementations
                         {
                             order.Subtotal -= (detail.quantity * detail.price);
                             order.Tax -= (detail.quantity * detail.price * .1);
+
+                            await _context.SaveChangesAsync();
+
                             detail.Price.Quantity += detail.quantity;
                             detail.IsRemoved = true;
+
+                            await _context.SaveChangesAsync();
 
                         }
                     }

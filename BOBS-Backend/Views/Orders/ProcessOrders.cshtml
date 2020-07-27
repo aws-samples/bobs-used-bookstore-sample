@@ -112,11 +112,13 @@
 
         @if(Model.FullOrder.OrderDetails.Count() == Model.FullOrder.itemsRemoved && Model.FullOrder.Order.OrderStatus.Status != "Cancelled" )
         {
+            var cancelId = Model.Statuses.FirstOrDefault(o => o.Status == "Cancelled").OrderStatus_Id;
 
             var data = new Dictionary<string,string>
             {
                 { "orderId", "" + Model.FullOrder.Order.Order_Id },
-                { "status", "5"},
+                { "status", "" + cancelId},
+                {"oldStatus", "" + Model.FullOrder.Order.OrderStatus.OrderStatus_Id }
 
             };
             <a asp-controller="Orders" asp-action="UpdateOrderStatus" asp-all-route-data="data" style="padding-top:.8rem; margin-left:.7rem;" class=" filter-pill badge badge-pill text-white">Cancel Order</a>

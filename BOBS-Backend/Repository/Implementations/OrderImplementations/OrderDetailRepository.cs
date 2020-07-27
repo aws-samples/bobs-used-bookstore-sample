@@ -59,6 +59,8 @@ namespace BOBS_Backend.Repository.Implementations.OrderImplementations
 
                     origOrder.Tax -= (moneyOwe * .10);
 
+                    await _context.SaveChangesAsync();
+
                     origOrderDetail.IsRemoved = true;
 
                     origOrderDetail.Price.Quantity += quantity;
