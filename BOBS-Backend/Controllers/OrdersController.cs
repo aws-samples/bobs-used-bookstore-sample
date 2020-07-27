@@ -59,8 +59,9 @@ namespace BOBS_Backend.Controllers
                     if (isLast)
                     {
                         var cancelled = await _orderStatus.FindOrderStatusByName("Cancelled");
+                        var order = await _order.FindOrderById(orderId);
                         status = cancelled.OrderStatus_Id;
-                        return RedirectToAction("UpdateOrderStatus", new { orderId, status, oldStatus = status });
+                        return RedirectToAction("UpdateOrderStatus", new { orderId, status, oldStatus = order.OrderStatus.OrderStatus_Id });
                     }
                     else
                     {
