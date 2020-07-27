@@ -19,9 +19,9 @@ namespace BobBookstore.Models.Order
 
         public OrderStatus OrderStatus { get; set; }
 
-        public Customer Customer { get; set; }
+        public BobBookstore.Models.Customer.Customer Customer { get; set; }
 
-        public Address Address { get; set; }
+        public BobBookstore.Models.Customer.Address Address { get; set; }
 
         [Timestamp]
         public byte[] Rowversion { get; set; }

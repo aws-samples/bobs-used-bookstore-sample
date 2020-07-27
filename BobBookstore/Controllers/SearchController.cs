@@ -36,10 +36,12 @@ namespace BobBookstore.Controllers
             {
                 ViewBag.currentFilter = searchString;
                 var prices = from p in _context.Price
-                             where p.Book.Name.Contains(searchString) ||
+                             where p.Quantity > 0 &&
+                             p.Active && (
+                            p.Book.Name.Contains(searchString) ||
                             p.Book.Genre.Name.Contains(searchString) ||
                             p.Book.Type.TypeName.Contains(searchString) ||
-                            p.Book.ISBN.ToString().Contains(searchString)
+                            p.Book.ISBN.ToString().Contains(searchString))
                              select p;
 
                 prices = prices.OrderBy(p => p.ItemPrice);
@@ -57,6 +59,7 @@ namespace BobBookstore.Controllers
                                 Author = b.Author,
                                 GenreName = b.Genre.Name,
                                 TypeName = b.Type.TypeName,
+                                Url = b.Back_Url,
                                 Prices = prices.Where(p => p.Book.Book_Id == b.Book_Id).ToList(),
                                 MinPrice = prices.Where(p => p.Book.Book_Id == b.Book_Id).FirstOrDefault().ItemPrice
                             };
