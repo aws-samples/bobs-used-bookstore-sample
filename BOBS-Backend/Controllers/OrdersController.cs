@@ -38,7 +38,7 @@ namespace BOBS_Backend.Controllers
 
             int quant;
             bool res;
-            int status = 0;
+            long status = 0;
             
             res = int.TryParse(quantity,out quant);
 
@@ -58,8 +58,9 @@ namespace BOBS_Backend.Controllers
                     
                     if (isLast)
                     {
-                        status = 5;
-                        return RedirectToAction("UpdateOrderStatus", new { orderId, status });
+                        var cancelled = await _orderStatus.FindOrderStatusByName("Cancelled");
+                        status = cancelled.OrderStatus_Id;
+                        return RedirectToAction("UpdateOrderStatus", new { orderId, status, oldStatus = status });
                     }
                     else
                     {
@@ -121,11 +122,27 @@ namespace BOBS_Backend.Controllers
             }
         }
 
-        public async Task<IActionResult> UpdateOrderStatusAsync(long orderId,long status)
+        public async Task<IActionResult> UpdateOrderStatusAsync(long orderId,long status, long oldStatus)
         {
             var order = await _order.FindOrderById(orderId);
             string errorMessage = "";
-            if(status == 5)
+            var cancelled = await _orderStatus.FindOrderStatusByName("Cancelled");
+            var newStatus = await _orderStatus.FindOrderStatusById(status);
+
+            if (newStatus.position < order.OrderStatus.position || order.OrderStatus.OrderStatus_Id != oldStatus)
+            {
+                errorMessage = "Error Occurred: The order status has changed";
+                return RedirectToAction("ProcessOrders", new { orderId, errorMessage });
+            }
+
+            if (status == order.OrderStatus.OrderStatus_Id)
+            {
+                errorMessage = "Error Occurred: This is already the order status of the order";
+                return RedirectToAction("ProcessOrders", new { orderId, errorMessage });
+            }
+            
+           
+            if(status == cancelled.OrderStatus_Id)
             {
                 order = await _order.CancelOrder(orderId);
             }
@@ -145,7 +162,7 @@ namespace BOBS_Backend.Controllers
             }
     
 
-            return RedirectToAction("ProcessOrders", new { orderId });
+            return RedirectToAction("ProcessOrders", new { orderId, errorMessage });
         }
 
         public IActionResult Error()

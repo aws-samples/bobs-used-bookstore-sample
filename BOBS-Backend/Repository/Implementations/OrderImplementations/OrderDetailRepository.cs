@@ -50,8 +50,11 @@ namespace BOBS_Backend.Repository.Implementations.OrderImplementations
 
                 var origOrder = await orderRepo.FindOrderById(orderId);
 
+                if (origOrderDetail.IsRemoved == true || origOrder.OrderStatus.OrderStatus_Id > 2) return null;
+
                 using(var transaction = _context.Database.BeginTransaction())
                 {
+
                     origOrder.Subtotal -= (moneyOwe);
 
                     origOrder.Tax -= (moneyOwe * .10);
@@ -60,8 +63,8 @@ namespace BOBS_Backend.Repository.Implementations.OrderImplementations
 
                     origOrderDetail.Price.Quantity += quantity;
 
-                    await _context.SaveChangesAsync();
 
+                    await _context.SaveChangesAsync();
 
                     await transaction.CommitAsync();
                     Dictionary<string, string> emailInfo = new Dictionary<string, string>

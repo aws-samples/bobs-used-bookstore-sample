@@ -17,6 +17,10 @@ namespace BOBS_Backend.ViewModel.ProcessOrders
 
         public long Status { get; set; }
 
+        public long oldStatus { get; set; }
+        
+        public Order order { get; set; }
+
         public List<OrderStatus> Statuses {get; set;}
 
         public PartialOrder FullOrder { get; set; }
