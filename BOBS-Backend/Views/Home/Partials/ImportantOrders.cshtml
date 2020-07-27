@@ -1,7 +1,7 @@
 ﻿@model BOBS_Backend.ViewModel.UpdateBooks.LatestUpdates
 @{
     var updates = Model;
-    bool tog = false;
+    string tog = "false";
 }
 
 <style>
@@ -16,59 +16,122 @@
 
     /* Handle */
     ::-webkit-scrollbar-thumb {
-        background: #888;
+        background: #495057;
         border-radius: 2px;
     }
 
         /* Handle on hover */
         ::-webkit-scrollbar-thumb:hover {
-            background: #555;
+            background: #495057 ;
         }
 
-    th {
+     th{
         position: sticky;
         top: 0;
+        z-index:2
     }
-    
+    .table .thead-light th {
+    color: #495057;
+    background-color: white;
+    border-color: #dee2e6;
+}
+
+   th a{
+       color: inherit;
+   }
+    .box{
+        width: 12px;
+        height:12px;
+        display:inline-block;
+    }
+    #boxRed {
+        background-color: #dc3545;
+    }
+    #boxYellow {
+        background-color: #ffc107;
+    }
+    #key{
+      margin:auto;
+    }
+
+    .keyRows td{
+        padding-left: 30px ;
+        padding-right: 30px;
+    }
+
 </style>
 
-
-<div class="p-0 m-0" style="max-height:500px; overflow-y:scroll;">
-    <table class="box-shadow table_font table table-hover table-bordered table-striped  h-auto">
-        
-        <thead >
-            <tr>
-                <th scope="col">Order_ID</th>
-                <th scope="col">Customer_ID</th>
-                <th scope="col">CustomerName</th>
-                <th scope="col"><a style="color:inherit;" asp-route-sortByValue=@((tog)?"price": "price_desc")>Total_Price</a></th>
-                
-                <th scope="col"><a style="color:inherit;" asp-route-sortByValue="date">Delivery_Date</a></th>
-             
-                <th scope="col">Status</th>
-                <th scope="col"> Action</th>
-
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var order in updates.ImpOrders)
-            {
-                var param = new Dictionary<string, string>
-                    {
-                        {"orderId",order.Order_Id + ""}
-                    };
-                var status = order.OrderStatus.OrderStatus_Id;
-
-                <tr class="@((status == 2) ? "table-warning" : "table-danger" )">
-                    <td>@order.Order_Id</td>
-                    <td>@order.Customer.Customer_Id</td>
-                    <td>@order.Customer.FirstName  @order.Customer.LastName</td>
-                    <td>$@(order.Subtotal + order.Tax)</td>
-                    <td> @DateTime.Parse(order.DeliveryDate).ToString("MM/dd/yyyy")</td>
-                    <td>@order.OrderStatus.Status</td>
-                    <td><a class="card-link" asp-controller="Orders" asp-action="ProcessOrders" asp-all-route-data="param">View Details</a></td>
-                </tr>
-            }
-        </tbody>
+<div   class="mb-2">
+    <table id="key"r>
+        <tr class="keyRows">
+            <td><div id="boxRed"class="box">
+                    
+                </div>
+                <span>
+                    Delayed Orders
+                </span>
+            </td>
+            <td>
+                <div id="boxYellow" class="box"></div>
+                <span> Upcoming Orders</span>
+            </td>
+        </tr>
     </table>
+</div>
+
+
+<div class="card mb-3 border-dark shadow">
+    <div class="card-body">
+        <div class="p-0 m-0" style="max-height:500px; overflow-y:scroll;">
+            <table class="orderT box-shadow table_font table table-hover table-bordered  h-auto">
+
+                <thead class="thead-light">
+                    <tr>
+                        <th scope="col">Order_ID</th>
+                        <th scope="col">Customer_ID</th>
+                        <th scope="col">CustomerName</th>
+
+                        <th><a  href="@Url.Action("WelcomePage","Home" ,new {sortByValue = ViewBag.SortPrice })">Price @ViewBag.PriceArrow</a></th>
+                        
+                        <th><a href="@Url.Action("WelcomePage", "Home", new {sortByValue = ViewBag.SortDate })">Delivery Date @ViewBag.DateArrow</a></th>
+                        <th scope="col">Status</th>
+                        <th scope="col"> Action</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (updates.ImpOrders.Count == 0)
+                    {
+                        <tr>
+                            <td colspan="7" rowspan="4" style="text-align:center;"><span><h4>No Updates Currently</h4></span></td>
+
+                        </tr>
+                    }
+                    else
+                    {
+                        @foreach (var order in updates.ImpOrders)
+                        {
+                            var param = new Dictionary<string, string>
+                            {
+                                {"orderId",order.Order_Id + ""}
+                            };
+                            var status = order.OrderStatus.OrderStatus_Id;
+
+                            <tr class="@((status == 2) ? "table-warning" : "table-danger" )">
+                                <td>@order.Order_Id</td>
+                                <td>@order.Customer.Customer_Id</td>
+                                <td>@order.Customer.FirstName  @order.Customer.LastName</td>
+                                <td>$@(order.Subtotal + order.Tax)</td>
+                                <td> @DateTime.Parse(order.DeliveryDate).ToString("MM/dd/yyyy")</td>
+                                <td>@order.OrderStatus.Status</td>
+                                <td><a class="card-link" asp-controller="Orders" asp-action="ProcessOrders" asp-all-route-data="param">View Details</a></td>
+                                
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+
+    </div>
 </div>

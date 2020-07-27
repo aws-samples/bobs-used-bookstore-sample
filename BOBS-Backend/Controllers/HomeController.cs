@@ -40,21 +40,41 @@ namespace BOBS_Backend.Controllers
                 
             adminUsername = User.Claims.FirstOrDefault(c => c.Type.Equals("cognito:username"))?.Value;
             LatestUpdates bookUpdates = new LatestUpdates();
-           
+            // assigns ViewBag a default value just to initialize it 
+            ViewBag.SortPrice = "price";
+            ViewBag.SortDate = "date";
+            ViewBag.PriceArrow = "▲";
+            ViewBag.DateArrow = "▲";
             //Get books updated by current user
             bookUpdates.Books = _customeAdmin.GetUpdatedBooks(adminUsername).Result;
-                // get recent books updated globally
+            // get recent books updated globally
             bookUpdates.GlobalBooks = _customeAdmin.GetGlobalUpdatedBooks(adminUsername).Result;
             bookUpdates.ImpOrders = _customeAdmin.GetImportantOrders().Result;
-
             // get important orders
             if (sortByValue == null)
             {
+                
                 return View(bookUpdates);
             }
             else
             {
-                
+                // assigns ViewBag.Sort with the opposite value of sortByValue
+               if (sortByValue == "price" || sortByValue == "price_desc")
+                    ViewBag.SortPrice = sortByValue == "price"?"price_desc":"price";
+               else if (sortByValue == "date" || sortByValue == "date_desc")
+                    ViewBag.SortDate = sortByValue == "date" ? "date_desc" : "date";
+
+               //to change the arrow on the html anchors based on asc or desc
+                if (ViewBag.SortPrice == "price")
+                    ViewBag.PriceArrow = "▲";
+                else if (ViewBag.SortPrice  == "price_desc")
+                    ViewBag.PriceArrow = "▼";
+                if (ViewBag.SortDate == "date")
+                    ViewBag.DateArrow = "▲";
+                else if (ViewBag.SortDate == "date_desc")
+                    ViewBag.DateArrow = "▼";
+
+               
                 bookUpdates.ImpOrders = _customeAdmin.SortTable(bookUpdates.ImpOrders, sortByValue);
                 return View(bookUpdates);
             }

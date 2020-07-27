@@ -9,3 +9,18 @@
 a.tableSort{
     color:inherit;
 }
+tab-custom {
+    position: relative;
+    z-index: 1;
+    padding: 0.7rem;
+    margin-bottom: -20px;
+    background-color: #2B3A67;
+    border: 0;
+    border-radius: 0.25rem;
+    box-shadow: 0 5px 11px 0 rgba(0,0,0,0.18), 0 4px 15px 0 rgba(0,0,0,0.15);
+}
+
+
+.font_format a:active{
+    color:red;
+}

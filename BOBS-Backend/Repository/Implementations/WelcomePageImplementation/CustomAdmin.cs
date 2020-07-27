@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore.Internal;
 using BOBS_Backend.Models.Book;
 using BOBS_Backend.Models.Order;
 using Amazon.Runtime.Internal.Util;
+using Amazon.S3.Model;
 
 namespace BOBS_Backend.Repository.Implementations.WelcomePageImplementation
 {
@@ -38,6 +39,8 @@ namespace BOBS_Backend.Repository.Implementations.WelcomePageImplementation
                             .Include(p => p.Book)
                                 .ThenInclude(b => b.Type)
                             .Include(p => p.Condition)
+                            .Include(p => p.Book)
+                                .ThenInclude(b => b.Publisher)
                             .OrderByDescending(p => p.UpdatedOn.Date)
                             .Take(8).ToListAsync();
                             
@@ -68,6 +71,8 @@ namespace BOBS_Backend.Repository.Implementations.WelcomePageImplementation
                                 .Include(p => p.Book)
                                     .ThenInclude(b => b.Type)
                                 .Include(p => p.Condition)
+                                .Include(p=>p.Book)
+                                    .ThenInclude(b=>b.Publisher)
                                 .OrderByDescending(p => p.UpdatedOn.Date)
                                 .Take(8).ToListAsync();
                 return books;
@@ -97,7 +102,7 @@ namespace BOBS_Backend.Repository.Implementations.WelcomePageImplementation
                         // check pending orders which are due within 5 days
                        
                         double diff = (time - todayDate).TotalDays;
-                        if (diff >= 0 && diff <= 3)
+                        if ( diff <= 5)
                         {
                             filtered_order.Add(order);
                         }
@@ -113,7 +118,7 @@ namespace BOBS_Backend.Repository.Implementations.WelcomePageImplementation
                         }
                     }
                 }
-
+                filtered_order.OrderBy(o => o.OrderStatus.OrderStatus_Id);
                 return filtered_order;
             }catch(Exception e)
             {
@@ -127,7 +132,7 @@ namespace BOBS_Backend.Repository.Implementations.WelcomePageImplementation
             {
                 
                 var order = await _context.Order
-                                
+                                .Where(o=> o.OrderStatus.OrderStatus_Id == 2 || o.OrderStatus.OrderStatus_Id == 3)
                                 .Include(o => o.Customer)
                                 .Include(o => o.OrderStatus)
                                    
@@ -145,16 +150,16 @@ namespace BOBS_Backend.Repository.Implementations.WelcomePageImplementation
         {
             
             switch(sortByValue){
-                case "price":
+                case "price_desc":
                     orders = orders.OrderByDescending(o => o.Subtotal).ToList();
                     break;
-                case "date":
+                case "date_desc":
                     orders = orders.OrderByDescending(o => o.DeliveryDate).ToList();
                     break;
-                case "price_desc":
+                case "price":
                     orders = orders.OrderBy(o => o.Subtotal).ToList();
                     break;
-                case "date_desc":
+                case "date":
                     orders = orders.OrderBy(o => o.DeliveryDate).ToList();
                     break;
                 default: break;
