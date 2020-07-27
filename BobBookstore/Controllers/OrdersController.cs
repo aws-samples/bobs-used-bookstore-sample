@@ -49,6 +49,30 @@ namespace BobBookstore.Controllers
             return NotFound("You must be signed in.");
         }
 
+        public async Task<IActionResult> Details(long orderId)
+        {
+            if (_SignInManager.IsSignedIn(User))
+            {
+                var user = await _userManager.GetUserAsync(User);
+                string customer_id = user.Attributes[CognitoAttribute.Sub.AttributeName];
+                var order = from o in _context.Order
+                            where o.Customer.Customer_Id == customer_id &&
+                            o.Order_Id == orderId
+                            select new OrderViewModel()
+                            {
+                                Order_Id = o.Order_Id,
+                                Status = o.OrderStatus.Status,
+                                Tax = o.Tax,
+                                Subtotal = o.Subtotal,
+                                DeliveryDate = o.DeliveryDate
+                            };
+
+                return View(order.FirstOrDefault());
+
+            }
+            return NotFound("You must be signed in.");
+        }
+
         public async Task<IActionResult> Delete(long id)
         {
             // needs rework, buggy rn
