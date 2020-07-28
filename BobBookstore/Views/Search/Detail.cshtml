@@ -8,50 +8,72 @@
 }
 else
 {
-    <h2>Name: @Html.DisplayFor(modelitem => Model.BookName)</h2>
-    
-    <h4>Genre: @Html.DisplayFor(modelitem => Model.GenreName)</h4>
-    <h4>Type: @Html.DisplayFor(modelitem => Model.TypeName)</h4>
-    <img src="@Html.DisplayFor(modelitem => Model.Url)" />
-    <p>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-        incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-        exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-        Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat
-        nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia
-        deserunt mollit anim id est laborum
-    </p>
-    @if (Model.Prices.Count == 0)
-    {
-        <p>None in stock</p>
-    }
-    else
-    {
-        @foreach (var price in Model.Prices)
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <div class="media">
+                <img class="mr-3" src="@Html.DisplayFor(modelitem => Model.Url)" />
+                <div class="media-body">
+                    <h3 class="mt-0">Title: @Html.DisplayFor(modelitem => Model.BookName)</h3>
+                    <h3>Author: @Html.DisplayFor(modelitem => Model.Author)</h3>
+                    <h5>Publisher: @Html.DisplayFor(modelitem => Model.PublisherName), Genre: @Html.DisplayFor(modelitem => Model.GenreName)</h5>
+                    Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container mt-5">
+        @if (Model.Prices.Count == 0)
         {
-            <table>
-                <tr>
-                    <td>Price @Html.DisplayFor(modelitem => price.ItemPrice)</td>
-                    <td>Condtion @Html.DisplayFor(modelitem => price.Condition.ConditionName)</td>
-                    <td>
-                        <form asp-controller="Search" asp-action="AddtoCartitem" method="get">
-                            <input type="hidden" name="bookid" value="@Model.BookId" />
-                            <input type="hidden" name="priceid" value="@price.Price_Id" />
-                            <input type="submit" value="Add to cart" />
-                        </form>
-                    </td>
-                    <td>
-                        <form asp-controller="Search" asp-action="AddtoWishList" method="get">
-                            <input type="hidden" name="bookid" value="@Model.BookId" />
-                            <input type="hidden" name="priceid" value="@price.Price_Id" />
-                            <input type="submit" value="Add to WishList" />
-                        </form>
-                    </td>
-                </tr>
-
-            </table>
+            <p>None in stock</p>
         }
-    }
+        else
+        {
+            <div class="row mb-5">
+                <h3>Available in these conditions:</h3>
+            </div>
+            <div class="row">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col">Price</th>
+                            <th scope="col">Condition</th>
+                            <th scope="col"></th>
+                        </tr>
+                    </thead>
+                    @foreach (var price in Model.Prices)
+                    {
+                        <tr>
+                            <td>$@Html.DisplayFor(modelitem => price.ItemPrice)</td>
+                            <td>@Html.DisplayFor(modelitem => price.Condition.ConditionName)</td>
+                            <td>
+                                <form asp-controller="Search" asp-action="AddtoCartitem" method="get">
+                                    <div class="form-group">
+                                        <input type="hidden" name="bookid" value="@Model.BookId" />
+                                        <input type="hidden" name="priceid" value="@price.Price_Id" />
+                                        <input type="submit" value="Add to cart" />
+                                    </div>
+                                </form>
+                                <form asp-controller="Search" asp-action="AddtoWishList" method="get">
+                                    <div class="form-group">
+                                        <input type="hidden" name="bookid" value="@Model.BookId" />
+                                        <input type="hidden" name="priceid" value="@price.Price_Id" />
+                                        <input type="submit" value="Add to WishList" />
+                                    </div>
+                                </form>
+                            </td>
+                        </tr>
+
+
+                    }
+                </table>
+            </div>
+            
+        }
+</div>
+
+    
 
 
 
