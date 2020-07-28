@@ -37,7 +37,15 @@ else
                 <table class="table table-hover">
                     <thead>
                         <tr>
-                            <th scope="col">Price</th>
+                            @if (ViewBag.currentSort != "priceAsc")
+                            {
+                                <th scope="col"><a asp-controller="Search" asp-action="Detail" asp-route-id="@ViewBag.id" asp-route-sortBy="priceAsc">Price</a></th>
+                            }
+                            else
+                            {
+                                <th scope="col"><a asp-controller="Search" asp-action="Detail" asp-route-id="@ViewBag.id" asp-route-sortBy="priceDesc">Price</a></th>
+                            }
+
                             <th scope="col">Condition</th>
                             <th scope="col"></th>
                         </tr>

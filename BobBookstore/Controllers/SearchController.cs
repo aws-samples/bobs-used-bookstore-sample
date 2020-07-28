@@ -104,9 +104,17 @@ namespace BobBookstore.Controllers
             return View();
         }
 
-        public async Task<IActionResult> DetailAsync(long id)
-        {
-            var prices = await (from p in _context.Price where p.Book.Book_Id == id
+        public async Task<IActionResult> DetailAsync(long id, string sortBy)
+        { 
+            if (!String.IsNullOrEmpty(sortBy))
+            {
+                ViewBag.CurrentSort = sortBy;
+            }
+            ViewBag.id = id;
+
+
+            var prices = (from p in _context.Price where p.Book.Book_Id == id &&
+                          p.Active && p.Quantity > 0
                          join c in _context.Condition
                          on p.Condition.Condition_Id equals c.Condition_Id
                          select new Price
@@ -115,18 +123,40 @@ namespace BobBookstore.Controllers
                              Condition = c,
                              ItemPrice = p.ItemPrice,
                              Quantity = p.Quantity
-                         }).ToListAsync();
+                         });
+
+            switch (sortBy)
+            {
+                case "priceAsc":
+                    prices = prices.OrderBy(p => p.ItemPrice);
+                    break;
+                case "priceDesc":
+                    prices = prices.OrderByDescending(p => p.ItemPrice);
+                    break;
+                case "conditionAsc":
+                    prices = prices.OrderBy(p => p.Condition);
+                    break;
+                case "conditionDesc":
+                    prices = prices.OrderByDescending(p => p.Condition);
+                    break;
+                default:
+                    prices = prices.OrderBy(p => p.ItemPrice);
+                    break;
+            }
+            var pricesLst = await prices.ToListAsync();
 
             var book = from m in _context.Book
                        where m.Book_Id == id
                        select new BookViewModel()
                        {
                            BookName = m.Name,
+                           Author = m.Author,
+                           PublisherName = m.Publisher.Name,
                            ISBN = m.ISBN,
                            GenreName = m.Genre.Name,
                            TypeName = m.Type.TypeName,
                            Url = m.Back_Url,
-                           Prices = prices,
+                           Prices = pricesLst,
                            BookId=m.Book_Id
                        };
 

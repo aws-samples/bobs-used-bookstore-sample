@@ -91,6 +91,9 @@ else
             {
                 <tr>
                     <td>
+                        @Html.DisplayFor(modelitem => item.BookName)
+                    </td>
+                    <td>
                         @Html.DisplayFor(modelitem => item.Author)
                     </td>
                     <td>
@@ -111,13 +114,13 @@ else
                     }
                     else
                     {
-                        <td> Available from $item.MinPrice</td>
+                        <td> Available from $@item.MinPrice</td>
                     }
 
 
                     <td>
                         <form asp-controller="Search" asp-action="Detail" method="get">
-                            <input type="hidden" name="id" value="item.BookId" />
+                            <input type="hidden" name="id" value="@item.BookId" />
                             <input type="submit" value="details" />
                         </form>
                     </td>
