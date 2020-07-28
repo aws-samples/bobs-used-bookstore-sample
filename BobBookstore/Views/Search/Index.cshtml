@@ -4,22 +4,28 @@
 }
 
 
-<h2>Search</h2>
-
-<p>Books</p>
+<h2>Search for Books</h2>
 
 <form asp-controller="Search" asp-action="Index" method="get">
-    <p>
-        <select id="selectId" class="col-2 custom-select" name="SortBy" onchange="javascript:this.form.submit()">
-            <option value="Name">Name</option>
-            <option value="Genre">Genre</option>
-            <option value="Type">Type</option>
-            <option value="PriceAsc">Price (ascending)</option>
-            <option value="PriceDesc">Price (descending)</option>
-        </select>
-        <input type="text" name="SearchString" value="@ViewBag.currentFilter" />
-        <input type="submit" value="Search" />
-    </p>
+        <div class="form-group">
+
+            <input class="form-control" type="text" name="SearchString" value="@ViewBag.currentFilter" />
+            <button type="submit" class="btn btn-primary" value="Search">Search</button>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 col-form-label">Sort By:</label>
+            <select id="selectId" class="col-2 custom-select form-control" name="SortBy" onchange="javascript:this.form.submit()">
+                <option value="Name">Name</option>
+                <option value="Genre">Genre</option>
+                <option value="Type">Type</option>
+                <option value="PriceAsc">Price (ascending)</option>
+                <option value="PriceDesc">Price (descending)</option>
+            </select>
+        </div>
+            
+
+        
+    
 </form>
 
 @if (Model == null)
@@ -30,6 +36,30 @@
 }
 else
 {
+    <!--<div class="card-deck">
+        @foreach (var item in Model.Data)
+        {
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card" style="width: 400px">
+                    <img class="card-img-top" src="Html.DisplayFor(modelitem => item.Url)" alt="Book photo" style="width:10rem" />
+                    <h5 class="card-title">Html.DisplayFor(modelitem => item.BookName)</h5>
+                    <p class="card-text">Html.DisplayFor(modelitem => item.GenreName)</p>
+                    if (item.Prices.Count == 0)
+                    {
+                        <p class="card-text">None in stock</p>
+                    }
+                    else
+                    {
+                        <p class="card-text">Available from $Html.DisplayFor(modelitem => item.MinPrice)</p>
+                    }
+                    <a href="#" class="btn btn-primary">Details</a>
+                </div>
+            </div>
+        </div>
+        
+        } 
+    </div> -->
     <table class="table table-striped table-bordered table-sm" cellspacing="0" width="100%">
         <thead>
             <tr>
