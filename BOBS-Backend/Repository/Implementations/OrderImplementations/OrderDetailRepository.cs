@@ -50,25 +50,41 @@ namespace BOBS_Backend.Repository.Implementations.OrderImplementations
 
                 var origOrder = await orderRepo.FindOrderById(orderId);
 
-                origOrder.Subtotal -= (moneyOwe);
+                if (origOrderDetail.IsRemoved == true || origOrder.OrderStatus.OrderStatus_Id > 2) return null;
 
-                origOrder.Tax -= (moneyOwe * .10);
+                using(var transaction = _context.Database.BeginTransaction())
+                {
 
-                origOrderDetail.IsRemoved = true;
+                    origOrder.Subtotal -= (moneyOwe);
 
-                origOrderDetail.Price.Quantity += quantity;
+                    origOrder.Tax -= (moneyOwe * .10);
 
-                await _context.SaveChangesAsync();
+                    await _context.SaveChangesAsync();
 
-                Dictionary<string, string> emailInfo = new Dictionary<string, string>
+                    origOrderDetail.IsRemoved = true;
+
+                    origOrderDetail.Price.Quantity += quantity;
+
+
+                    await _context.SaveChangesAsync();
+
+                    await transaction.CommitAsync();
+                    Dictionary<string, string> emailInfo = new Dictionary<string, string>
                 {
                     { "bookName",origOrderDetail.Book.Name },
                     { "bookCondition",origOrderDetail.Price.Condition.ConditionName },
                     { "customerFirstName",origOrder.Customer.FirstName },
                     { "customerEmail",origOrder.Customer.Email }
                 };
-                return emailInfo;
+                    return emailInfo;
+                }
 
+               
+
+            }
+            catch(DbUpdateConcurrencyException ex)
+            {
+                return null;
             }
             catch (Exception ex)
             {

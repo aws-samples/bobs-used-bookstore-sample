@@ -14,6 +14,8 @@ namespace BOBS_Backend.Repository
          */
         Task<List<OrderStatus>> GetOrderStatuses();
 
+        Task<OrderStatus> FindOrderStatusByName(string status);
+
         Task<OrderStatus> FindOrderStatusById(long id);
 
         Task<Order> UpdateOrderStatus(Order order, long Status_Id);

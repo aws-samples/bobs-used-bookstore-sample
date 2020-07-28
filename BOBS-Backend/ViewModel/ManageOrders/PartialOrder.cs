@@ -23,6 +23,8 @@ namespace BOBS_Backend.ViewModel.ManageOrders
         public string quantity { get; set; }
 
         public bool isLast { get; set; }
+       
+        public int maxQuant { get; set; }
 
         public int itemsRemoved { get; set; }
 
