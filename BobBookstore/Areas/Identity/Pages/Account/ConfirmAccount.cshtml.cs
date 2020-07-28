@@ -88,11 +88,9 @@ namespace BobBookstore.Areas.Identity.Pages.Account
                     _context.Add(customer);
                     _context.SaveChanges();
                    
-                    //var currentuser = await _userManager.GetUserAsync(User);
-                    //var email = user.Attributes[CognitoAttribute.Email.AttributeName];
-                    
                     var currentCustomerID = _context.Customer.Find(user.Attributes[CognitoAttribute.Sub.AttributeName]);
-                   
+                    
+
                     var cartId = HttpContext.Request.Cookies["CartId"];
                     var recentCart = await _context.Cart.FindAsync(Convert.ToInt32( cartId));
                     recentCart.Customer = currentCustomerID;
