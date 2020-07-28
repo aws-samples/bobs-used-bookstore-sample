@@ -36,26 +36,16 @@ namespace BobBookstore.Controllers
         public async Task<IActionResult> Index()
         {
 
-            //Add Guid to session coookie
-            //HttpContext.Response.Cookies.Delete("CartIp");
-            string ip = "0";
+            
+            string ip ;
             if (_SignInManager.IsSignedIn(User))
             {
                 
-
+                //get customer
                 var user = await _userManager.GetUserAsync(User);
-                var email = user.Attributes[CognitoAttribute.Email.AttributeName];
-                var customer = from m in _context.Customer
-                               select m;
-                customer = customer.Where(s => s.Email == email);
+                var currentCustomer = _context.Customer.Find(user.Attributes[CognitoAttribute.Sub.AttributeName]);
 
-
-                Customer currentCustomer = new Customer();
-                foreach (var cus in customer)
-                {
-                    currentCustomer = cus;
-                }
-
+                //get cart
                 var cart = from c in _context.Cart
                            select c;
                 cart = cart.Where(s => s.Customer == currentCustomer);
@@ -64,47 +54,44 @@ namespace BobBookstore.Controllers
                 {
                     currentCart = ca;
                 }
-
+                //put cartid in cookie
                 if (!HttpContext.Request.Cookies.ContainsKey("CartId"))
                 {
                     CookieOptions options = new CookieOptions();
 
                     HttpContext.Response.Cookies.Append("CartId", Convert.ToString(currentCart.Cart_Id));
-
-
                 }
                 else
                 {
                     
-
-                        var id = Convert.ToInt32(HttpContext.Request.Cookies["CartId"]);
-                        var cartC = _context.Cart.Find(id);
-                        var cartItem = from c in _context.CartItem
-                                       where c.Cart == cartC && c.WantToBuy == true
-                                       select c;
-                        var userC = await _userManager.GetUserAsync(User);
-
-                        var UserId = userC.Attributes[CognitoAttribute.Sub.AttributeName];
-
-                        var recentcustomer = _context.Customer.Find(UserId);
-                        var customerCart = from c in _context.Cart
-                                           where c.Customer == recentcustomer
-                                           select c;
-                        Cart recentCart = new Cart();
-                        foreach (var item in customerCart)
-                        {
-                            recentCart = item;
-                        }
-                        foreach (var item in cartItem)
-                        {
-                            item.Cart = recentCart;
-                            _context.Update(item);
-                        }
-                        await _context.SaveChangesAsync();
-                    
                     HttpContext.Response.Cookies.Delete("CartId");
                     HttpContext.Response.Cookies.Append("CartId", Convert.ToString(currentCart.Cart_Id));
                 }
+                //put cart item in user cart
+                var id = Convert.ToInt32(HttpContext.Request.Cookies["CartId"]);
+                var cartC = _context.Cart.Find(id);
+                var cartItem = from c in _context.CartItem
+                               where c.Cart == cartC && c.WantToBuy == true
+                               select c;
+                var userC = await _userManager.GetUserAsync(User);
+
+                var UserId = userC.Attributes[CognitoAttribute.Sub.AttributeName];
+
+                var recentcustomer = _context.Customer.Find(UserId);
+                var customerCart = from c in _context.Cart
+                                   where c.Customer == recentcustomer
+                                   select c;
+                Cart recentCart = new Cart();
+                foreach (var item in customerCart)
+                {
+                    recentCart = item;
+                }
+                foreach (var item in cartItem)
+                {
+                    item.Cart = recentCart;
+                    _context.Update(item);
+                }
+                await _context.SaveChangesAsync();
             }
             else
             {
@@ -137,24 +124,15 @@ namespace BobBookstore.Controllers
                 if (!HttpContext.Request.Cookies.ContainsKey("CartId"))
                 {
                     CookieOptions options = new CookieOptions();
-
                     HttpContext.Response.Cookies.Append("CartId",Convert.ToString(currentCart.Cart_Id));
-
 
                 }
                 else
                 {
-
-
                     HttpContext.Response.Cookies.Delete("CartId");
                     HttpContext.Response.Cookies.Append("CartId", Convert.ToString(currentCart.Cart_Id));
                 }
             }
-
-
-
-
-
             return View();
         }
 

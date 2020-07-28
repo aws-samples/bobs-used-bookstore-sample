@@ -49,7 +49,7 @@ namespace BobBookstore.Controllers
             return NotFound("You must be signed in.");
         }
 
-        public async Task<IActionResult> Details(long orderId)
+        public async Task<IActionResult> Detail(long orderId)
         {
             if (_SignInManager.IsSignedIn(User))
             {
