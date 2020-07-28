@@ -14,6 +14,7 @@ using BOBS_Backend.Models.Book;
 using Amazon.S3.Model;
 using BOBS_Backend.DataModel;
 using BOBS_Backend.ViewModel.ManageInventory;
+using Microsoft.EntityFrameworkCore;
 
 namespace BOBS_Backend.Controllers
 {
@@ -201,23 +202,37 @@ namespace BOBS_Backend.Controllers
             books.front_url = bookdetails.front_url;
             books.back_url = bookdetails.back_url;
             books.left_url = bookdetails.left_url;
-            books.right_url = bookdetails.right_url;
-            ViewData["Types"] = _Inventory.GetVariantsOfTheSelectedBook(bookdetails.BookName);
+            books.right_url = bookdetails.right_url;         
+                
+            ViewData["Types"] = _Inventory.GetFormatsOfTheSelectedBook(bookdetails.BookName);
+            ViewData["Conditions"] = _Inventory.GetConditionsOfTheSelectedBook(bookdetails.BookName);
             ViewData["status"] = "details";
             return View(books);
 
         }
 
         [HttpPost]
-        public IActionResult BookDetails(string type , string BookName , FetchBooksViewModel book)
+        public IActionResult BookDetails(string type , string condition_chosen , string BookName , FetchBooksViewModel book)
         {
-            ViewData["Types"] = _Inventory.GetVariantsOfTheSelectedBook(BookName);
-            ViewData["status"] = "List";
-            ViewData["Books"] = _Inventory.GetRelevantBooks(BookName, type);
-            var lis = _Inventory.GetRelevantBooks(BookName, type);
+            /*
+                *  function to add details to the Book table
+                
+            if (String.IsNullOrEmpty(type))
+            {
+                type = _context.Book.Include(b => b.Type)
+                        .Where(b => b.Name == BookName).ToList()[0].Type.TypeName;               
+            }
+            */
+            ViewData["Types"] = _Inventory.GetFormatsOfTheSelectedBook(BookName);
+            ViewData["Conditions"] = _Inventory.GetConditionsOfTheSelectedBook(BookName);
+            ViewData["status"] = "List";            
+            ViewData["Books"] = _Inventory.GetRelevantBooks(BookName, type , condition_chosen);
+            var lis = _Inventory.GetRelevantBooks(BookName, type , condition_chosen);
             book.BookType = lis[0].BookType.TypeName;
             book.publisher = lis[0].Publisher.Name;
             book.genre = lis[0].Genre.Name;
+            book.front_url = lis[0].front_url;
+            book.back_url = lis[0].back_url;
             return View(book);
         }
         /*
@@ -257,18 +272,18 @@ namespace BOBS_Backend.Controllers
 
             if (pageNum == 0) pageNum++;
 
-            if ((String.IsNullOrEmpty(searchby) && String.IsNullOrEmpty(searchfilter)))
+            if ((String.IsNullOrEmpty(searchby) && String.IsNullOrEmpty(searchfilter)) || (!String.IsNullOrEmpty(searchby) && String.IsNullOrEmpty(searchfilter)))
             {
-                var books = _Inventory.GetAllBooks(pageNum , ViewStyle , SortBy); 
+                var books = _Inventory.GetAllBooks(pageNum , ViewStyle , SortBy);
 
+                books.SortBy = SortBy;
                 return View(books);
             }
             else
             {
-
                 var books = _Inventory.SearchBeta(searchby, searchfilter , ViewStyle, SortBy, pageNum);
-                
 
+                books.SortBy = SortBy;
                 return View(books);
             }          
            

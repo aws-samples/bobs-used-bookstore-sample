@@ -23,20 +23,20 @@ namespace BOBS_Backend.Repository.Implementations.InventoryImplementation
 {
     public class RekognitionNPollyRepository : IRekognitionNPollyRepository
     {
+        IAmazonS3 _s3Client { get; set; }
 
         public DatabaseContext _context;
         private const string photosBucketName = "bookcoverpictures";
         private const string audioBucketName = "audiosummary";
         private static readonly RegionEndpoint bucketRegion = RegionEndpoint.USEast1;
-        private static IAmazonS3 s3Client;
+      //  private static IAmazonS3 s3Client;
         private IHostingEnvironment _env;
 
-
-
-        public RekognitionNPollyRepository(DatabaseContext context, IHostingEnvironment env)
+        public RekognitionNPollyRepository(DatabaseContext context, IHostingEnvironment env , IAmazonS3 s3Client)
         {
             _context = context;
             _env = env;
+            _s3Client = s3Client;
         }
 
         /*
@@ -45,7 +45,7 @@ namespace BOBS_Backend.Repository.Implementations.InventoryImplementation
         public async Task<string> UploadtoS3(IFormFile file , long BookId , string Condition)
         {
             var split = file.FileName.Split(".");
-            var filename = split[0] + BookId.ToString() + Condition + "."+split[1];
+            string filename = split[0] + BookId.ToString() + Condition + "."+split[1];
             var dir = _env.ContentRootPath;
             string url = "";
 
@@ -64,10 +64,9 @@ namespace BOBS_Backend.Repository.Implementations.InventoryImplementation
                 {
                     resizeStream.CopyTo(fileStream);
                 }
-                s3Client = new AmazonS3Client("AKIA6DYNIKQLFG4HU2LU", "4RM8WQL3tH4+c7RgIQ/LPBHqt6ESwleokqsDx1Gf", bucketRegion);
+          //      s3Client = new AmazonS3Client("AKIA6DYNIKQLFG4HU2LU", "4RM8WQL3tH4+c7RgIQ/LPBHqt6ESwleokqsDx1Gf", bucketRegion);
 
-
-                var fileTransferUtility = new TransferUtility(s3Client);
+                var fileTransferUtility = new TransferUtility(_s3Client);
 
                 await fileTransferUtility.UploadAsync(Path.Combine(dir, filename), photosBucketName);
 
@@ -78,7 +77,7 @@ namespace BOBS_Backend.Repository.Implementations.InventoryImplementation
                 {
                     if (await IsBook(photosBucketName, filename))
                     {
-                        url = String.Concat("https://dtdt6j0vhq1rq.cloudfront.net/", file.FileName);
+                        url = String.Concat("https://dtdt6j0vhq1rq.cloudfront.net/", filename);
                         return url;
 
                     }
@@ -268,8 +267,8 @@ namespace BOBS_Backend.Repository.Implementations.InventoryImplementation
                 FileStream output = File.Open(outputFileName, FileMode.Create);
                 response.AudioStream.CopyTo(output);
                 output.Close();
-                s3Client = new AmazonS3Client("AKIA6DYNIKQLFG4HU2LU", "4RM8WQL3tH4+c7RgIQ/LPBHqt6ESwleokqsDx1Gf", bucketRegion);
-                var fileTransferUtility = new TransferUtility(s3Client);
+                //s3Client = new AmazonS3Client("AKIA6DYNIKQLFG4HU2LU", "4RM8WQL3tH4+c7RgIQ/LPBHqt6ESwleokqsDx1Gf", bucketRegion);
+                var fileTransferUtility = new TransferUtility(_s3Client);
                 fileTransferUtility.UploadAsync(outputFileName, audioBucketName);
 
                 var url = String.Concat("https://d3iukz826t8vlr.cloudfront.net/", BookName);

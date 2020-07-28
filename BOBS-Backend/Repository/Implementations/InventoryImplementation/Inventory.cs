@@ -361,6 +361,7 @@ namespace BOBS_Backend
             return lambda;
 
         }
+       
 
         private Expression<Func<Price,object>> GenerateDynamicLambdaSortedFunction(string input, ParameterExpression parameterExpression)
         {
@@ -400,7 +401,6 @@ namespace BOBS_Backend
 
         public PagedSearchViewModel GetAllBooks(int pagenum, string style, string SortBy)
         {
-
             var _booksPerPage = 15;
             var totalPages = 0;
             List<long> BookIdList = new List<long>();
@@ -408,34 +408,45 @@ namespace BOBS_Backend
             List<BookDetails> FilteredBooks = new List<BookDetails>();
             List<Price> books = new List<Price>();
             var query = GetBaseOrderQuery();
+            Dictionary<string, double> Book_price = new Dictionary<string, double>();
+
+            Dictionary<string, int> Book_qty = new Dictionary<string, int>();
+
             var parameterExpression = Expression.Parameter(Type.GetType("BOBS_Backend.Models.Book.Price"), "price");
 
             Expression<Func<Price, object>> lambda_sorting = null;
 
             Expression<Func<Price, int>> lambda_int_sort = null;
 
-            if (!String.IsNullOrEmpty(SortBy))
+           
+                books = query.ToList();
+
+            foreach (var i in books)
             {
-                if (SortBy.Contains("Quantity") || SortBy.Contains("ItemPrice"))
+                if (!Book_price.ContainsKey(i.Book.Name))
                 {
-                    lambda_int_sort = GenerateDynamicLambdaSortedVariantFunction(SortBy, parameterExpression);
-                    books = query.OrderBy(lambda_int_sort).ToList();
+
+                    Book_price[i.Book.Name] = i.ItemPrice * i.Quantity;
                 }
 
                 else
                 {
-                    lambda_sorting = GenerateDynamicLambdaSortedFunction(SortBy, parameterExpression);
-                    books = query.OrderBy(lambda_sorting).ToList();
+                    var data = Book_price.GetValueOrDefault(i.Book.Name);
+                    Book_price[i.Book.Name] = data + i.ItemPrice * i.Quantity;
                 }
-            }
 
-            else
-            {
-                books = query.ToList();
-            }
+                if (!Book_qty.ContainsKey(i.Book.Name))
+                {
 
-            foreach (var i in books)
-            {
+                    Book_qty[i.Book.Name] = i.Quantity;
+                }
+
+                else
+                {
+                    var dat = Book_qty.GetValueOrDefault(i.Book.Name);
+                    Book_qty[i.Book.Name] = dat + i.Quantity;
+                }
+
                 if (!names.Contains(i.Book.Name))
                 {
                     BookIdList.Add(i.Book.Book_Id);
@@ -446,10 +457,39 @@ namespace BOBS_Backend
             foreach (long i in BookIdList)
             {
 
-                var book = (from booke in _context.Book join price in _context.Price on booke.Book_Id equals price.Book.Book_Id where booke.Book_Id == i select new BookDetails { BookId = booke.Book_Id, BookName = booke.Name, Price = price.ItemPrice, Publisher = booke.Publisher, Genre = booke.Genre, BookCondition = price.Condition, BookType = booke.Type, Quantity = price.Quantity, front_url = booke.Front_Url, back_url = booke.Back_Url, left_url = booke.Left_Url, right_url = booke.Right_Url }).ToList();
+                var book = (from booke in _context.Book join price in _context.Price on booke.Book_Id equals price.Book.Book_Id where booke.Book_Id == i select new BookDetails { BookId = booke.Book_Id, BookName = booke.Name, Price = Book_price[booke.Name] / Book_qty[booke.Name], Publisher = booke.Publisher, Genre = booke.Genre, BookCondition = price.Condition, BookType = booke.Type, Quantity = Book_qty[booke.Name], front_url = booke.Front_Url, back_url = booke.Back_Url, left_url = booke.Left_Url, right_url = booke.Right_Url, Author = booke.Author }).ToList();
                 FilteredBooks.Add(book[0]);
             }
 
+
+            if (!String.IsNullOrEmpty(SortBy))
+            {
+                if (SortBy.Contains("Quantity"))
+                {
+                    FilteredBooks = FilteredBooks.OrderBy(x => x.Quantity).ToList();
+
+                }
+
+                if (SortBy.Contains("ItemPrice"))
+                {
+                    FilteredBooks = FilteredBooks.OrderBy(x => x.Price).ToList();
+                }
+
+                if (SortBy.Contains("Name"))
+                {
+
+                    FilteredBooks = FilteredBooks.OrderBy(x => x.BookName).ToList();
+                }
+
+                if (SortBy.Contains("Author"))
+                {
+
+                    FilteredBooks = FilteredBooks.OrderBy(x => x.Author).ToList();
+                }
+
+            }
+
+           
             totalPages = GetTotalPageCount(FilteredBooks);
             int[] pages = Enumerable.Range(1, totalPages).ToArray();
 
@@ -483,68 +523,53 @@ namespace BOBS_Backend
             List<BookDetails> FilteredBooks = new List<BookDetails>();
             List<Price> books = new List<Price>();
 
+            Dictionary<string, double> Book_price = new Dictionary<string,double>();
+
+            Dictionary<string, int> Book_qty = new Dictionary<string, int>();
+
             var parameterExpression = Expression.Parameter(Type.GetType("BOBS_Backend.Models.Book.Price"), "price");
 
             Expression<Func<Price, bool>> lambda;
             Expression<Func<Price,object>> lambda_sorting = null;
             Expression<Func<Price, int>> lambda_int_sort = null;           
-           
-            if (!String.IsNullOrEmpty(SortBy))
-            {
-                if (SortBy.Contains("Quantity") || SortBy.Contains("ItemPrice"))
-                {
-                    lambda_int_sort = GenerateDynamicLambdaSortedVariantFunction(SortBy, parameterExpression);
-                }
-
-                else
-                {
-                    lambda_sorting = GenerateDynamicLambdaSortedFunction(SortBy, parameterExpression);
-                }
-            }
+                   
             var query = GetBaseOrderQuery();
             if (!String.IsNullOrEmpty(searchby))
             {
-                lambda = GenerateDynamicLambdaFunction(searchby, parameterExpression, searchfilter);
-
-                if (!String.IsNullOrEmpty(SortBy))
-                {
-                    if (SortBy.Contains("Quantity") || SortBy.Contains("ItemPrice"))
-                    {
-                        books = query.Where(lambda).OrderBy(lambda_int_sort).ToList();
-                    }
-                    else
-                    {
-                        books = query.Where(lambda).OrderBy(lambda_sorting).ToList();
-                    }
-                }
-                else
-                {
-                    books = query.Where(lambda).ToList();
-                }
+                lambda = GenerateDynamicLambdaFunction(searchby, parameterExpression, searchfilter);           
+                books = query.Where(lambda).ToList();
             }
+
             else
-            {
-                if (!String.IsNullOrEmpty(SortBy))
-                {
-                    if (SortBy.Contains("Quantity" )|| SortBy.Contains("ItemPrice"))
-                    {
-                        books = query.Where(p => p.Book.Name.Contains(searchfilter) || p.Book.Publisher.Name.Contains(searchfilter) || p.Book.Genre.Name.Contains(searchfilter) || p.Condition.ConditionName.Contains(searchfilter) || p.Book.Type.TypeName.Contains(searchfilter)).OrderBy(lambda_int_sort).ToList();
-
-                    }
-                    else 
-                    {
-                        books = query.Where(p => p.Book.Name.Contains(searchfilter) || p.Book.Publisher.Name.Contains(searchfilter) || p.Book.Genre.Name.Contains(searchfilter) || p.Condition.ConditionName.Contains(searchfilter) || p.Book.Type.TypeName.Contains(searchfilter)).OrderBy(lambda_sorting).ToList();
-
-                    }
-                }
-                else
-                {
+            {             
                     books = query.Where(p => p.Book.Name.Contains(searchfilter) || p.Book.Publisher.Name.Contains(searchfilter) || p.Book.Genre.Name.Contains(searchfilter) || p.Condition.ConditionName.Contains(searchfilter) || p.Book.Type.TypeName.Contains(searchfilter)).ToList();
-                }
-
             }
+
             foreach (var i in books)
             {
+                if(!Book_price.ContainsKey(i.Book.Name))
+                {
+                  
+                    Book_price[i.Book.Name] = i.ItemPrice * i.Quantity;
+                }
+
+                else
+                {
+                  var data =  Book_price.GetValueOrDefault(i.Book.Name);
+                    Book_price[i.Book.Name] = data + i.ItemPrice * i.Quantity;
+                }
+
+                if (!Book_qty.ContainsKey(i.Book.Name))
+                {
+
+                    Book_qty[i.Book.Name] = i.Quantity;
+                }
+
+                else
+                {
+                    var dat = Book_qty.GetValueOrDefault(i.Book.Name);
+                    Book_qty[i.Book.Name] = dat + i.Quantity;
+                }
                 if (!BookNames.Contains(i.Book.Name))
                 {
                     BookIdList.Add(i.Book.Book_Id);
@@ -552,10 +577,40 @@ namespace BOBS_Backend
                 }
             }
 
+            var datao = Book_price.Count();
+            var datum = BookIdList.Count();
+
             foreach (long i in BookIdList)
             {
-                var book = (from booke in _context.Book join price in _context.Price on booke.Book_Id equals price.Book.Book_Id where booke.Book_Id == i select new BookDetails { BookId = booke.Book_Id, BookName = booke.Name, Price = price.ItemPrice, Publisher = booke.Publisher, Genre = booke.Genre, BookCondition = price.Condition, BookType = booke.Type, Quantity = price.Quantity, front_url = booke.Front_Url, back_url = booke.Back_Url, left_url = booke.Left_Url, right_url = booke.Right_Url }).ToList();
+                var book = (from booke in _context.Book join price in _context.Price on booke.Book_Id equals price.Book.Book_Id where booke.Book_Id == i select new BookDetails { BookId = booke.Book_Id, BookName = booke.Name, Price = Book_price[booke.Name]/ Book_qty[booke.Name], Publisher = booke.Publisher, Genre = booke.Genre, BookCondition = price.Condition, BookType = booke.Type, Quantity = Book_qty[booke.Name], front_url = booke.Front_Url, back_url = booke.Back_Url, left_url = booke.Left_Url, right_url = booke.Right_Url , Author = booke.Author}).ToList();
                 FilteredBooks.Add(book[0]);
+            }
+
+            if (!String.IsNullOrEmpty(SortBy))
+            {
+                if (SortBy.Contains("Quantity"))
+                {
+                    FilteredBooks = FilteredBooks.OrderBy(x => x.Quantity).ToList();
+
+                }
+
+                if (SortBy.Contains("ItemPrice"))
+                {
+                    FilteredBooks = FilteredBooks.OrderBy( x => x.Price).ToList();
+                }
+
+                if (SortBy.Contains("Name"))
+                {
+                    
+                    FilteredBooks = FilteredBooks.OrderBy(x => x.BookName).ToList();
+                }
+
+                if (SortBy.Contains("Author"))
+                {
+
+                    FilteredBooks = FilteredBooks.OrderBy(x => x.Author).ToList();
+                }
+
             }
 
             totalPages = GetTotalPageCount(FilteredBooks);
@@ -582,8 +637,7 @@ namespace BOBS_Backend
             return viewModel;
         }
 
-
-        public List<string> GetVariantsOfTheSelectedBook(string bookname)
+        public List<string> GetFormatsOfTheSelectedBook(string bookname)
         {
             List<string> types = new List<string>();
             var book = (from booke in _context.Book join price in _context.Price on booke.Book_Id equals price.Book.Book_Id where booke.Name ==  bookname select new BookDetails { BookId = booke.Book_Id, BookName = booke.Name, Price = price.ItemPrice, Publisher = booke.Publisher, Genre = booke.Genre, BookCondition = price.Condition, BookType = booke.Type, Quantity = price.Quantity, front_url = booke.Front_Url, back_url = booke.Back_Url, left_url = booke.Left_Url, right_url = booke.Right_Url }).ToList();
@@ -600,11 +654,47 @@ namespace BOBS_Backend
             return types;
         }
 
-        public List<BookDetails> GetRelevantBooks(string Bookname , string type)
+        public List<string> GetConditionsOfTheSelectedBook(string bookname)
         {
-            var book = (from booke in _context.Book join price in _context.Price on booke.Book_Id equals price.Book.Book_Id where booke.Name == Bookname && booke.Type.TypeName == type select new BookDetails { BookId = booke.Book_Id, BookName = booke.Name, Price = price.ItemPrice, Publisher = booke.Publisher, Genre = booke.Genre, BookCondition = price.Condition, BookType = booke.Type, Quantity = price.Quantity, front_url = booke.Front_Url, back_url = booke.Back_Url, left_url = booke.Left_Url, right_url = booke.Right_Url }).ToList();
+            List<string> conditions = new List<string>();
+            var book = (from booke in _context.Book join price in _context.Price on booke.Book_Id equals price.Book.Book_Id where booke.Name == bookname select new BookDetails { BookId = booke.Book_Id, BookName = booke.Name, Price = price.ItemPrice, Publisher = booke.Publisher, Genre = booke.Genre, BookCondition = price.Condition, BookType = booke.Type, Quantity = price.Quantity, front_url = booke.Front_Url, back_url = booke.Back_Url, left_url = booke.Left_Url, right_url = booke.Right_Url }).ToList();
 
-            return book;
+            foreach (var i in book)
+            {
+                if (!conditions.Contains(i.BookCondition.ConditionName))
+                {
+                    conditions.Add(i.BookCondition.ConditionName);
+
+                }
+            }
+
+            return conditions;
+        }
+
+        public List<BookDetails> GetRelevantBooks(string Bookname , string type , string condition_chosen)
+        {
+
+            if (!string.IsNullOrEmpty(condition_chosen) && !string.IsNullOrEmpty(type))
+            {
+                var book = (from booke in _context.Book join price in _context.Price on booke.Book_Id equals price.Book.Book_Id where booke.Name == Bookname && booke.Type.TypeName == type && price.Condition.ConditionName == condition_chosen select new BookDetails { BookId = booke.Book_Id, BookName = booke.Name, Price = price.ItemPrice, Publisher = booke.Publisher, Genre = booke.Genre, BookCondition = price.Condition, BookType = booke.Type, Quantity = price.Quantity, front_url = booke.Front_Url, back_url = booke.Back_Url, left_url = booke.Left_Url, right_url = booke.Right_Url }).ToList();
+                return book;
+            }
+
+            if (!string.IsNullOrEmpty(condition_chosen))
+            {
+                var book = (from booke in _context.Book join price in _context.Price on booke.Book_Id equals price.Book.Book_Id where booke.Name == Bookname && price.Condition.ConditionName == condition_chosen select new BookDetails { BookId = booke.Book_Id, BookName = booke.Name, Price = price.ItemPrice, Publisher = booke.Publisher, Genre = booke.Genre, BookCondition = price.Condition, BookType = booke.Type, Quantity = price.Quantity, front_url = booke.Front_Url, back_url = booke.Back_Url, left_url = booke.Left_Url, right_url = booke.Right_Url }).ToList();
+                return book;
+            }
+
+            if (!string.IsNullOrEmpty(type))
+            {
+                var book = (from booke in _context.Book join price in _context.Price on booke.Book_Id equals price.Book.Book_Id where booke.Name == Bookname && price.Condition.ConditionName == condition_chosen select new BookDetails { BookId = booke.Book_Id, BookName = booke.Name, Price = price.ItemPrice, Publisher = booke.Publisher, Genre = booke.Genre, BookCondition = price.Condition, BookType = booke.Type, Quantity = price.Quantity, front_url = booke.Front_Url, back_url = booke.Back_Url, left_url = booke.Left_Url, right_url = booke.Right_Url }).ToList();
+                return book;
+            }
+
+            var booker = (from booke in _context.Book join price in _context.Price on booke.Book_Id equals price.Book.Book_Id where booke.Name == Bookname select new BookDetails { BookId = booke.Book_Id, BookName = booke.Name, Price = price.ItemPrice, Publisher = booke.Publisher, Genre = booke.Genre, BookCondition = price.Condition, BookType = booke.Type, Quantity = price.Quantity, front_url = booke.Front_Url, back_url = booke.Back_Url, left_url = booke.Left_Url, right_url = booke.Right_Url }).ToList();
+            return booker;
+    
         }
 
         /*

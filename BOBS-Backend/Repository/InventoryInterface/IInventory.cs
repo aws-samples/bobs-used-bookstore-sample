@@ -55,9 +55,11 @@ namespace BOBS_Backend
 
         public PagedSearchViewModel SearchBeta(string searchby, string Searchfilter , string style , string SortBy , int pagnum);
 
-        public List<string> GetVariantsOfTheSelectedBook(string bookname);
+        public List<string> GetFormatsOfTheSelectedBook(string bookname);
 
-        public List<BookDetails> GetRelevantBooks(string Bookname , string type);
+        public List<string> GetConditionsOfTheSelectedBook(string bookname);
+
+        public List<BookDetails> GetRelevantBooks(string Bookname , string type , string condition_chosen);
 
         public List<Dictionary<string, int>> DashBoard();
 

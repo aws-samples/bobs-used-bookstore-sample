@@ -3,6 +3,7 @@
 @{
     var types = (List<string>)ViewData["Types"];
     var status = (string)ViewData["status"];
+    var conditions = (List<string>)ViewData["Conditions"];
 }
 @{
     var books = (IEnumerable<BOBS_Backend.DataModel.BookDetails>)ViewData["Books"];
@@ -20,9 +21,9 @@
             background: blue !important;
         }
         }
-</style>
+    </style>
 <div class="overview-wrap">
-    <h1 class="title-1 text-center font-weight-light" style="margin-bottom: 45px; font-size: 300">Book Details</h>
+    <h1 class="title-1 text-center font-weight-light" style="margin-bottom: 45px;">Book Details</h>
 </div>
 <!-- Page Content -->
 <div class="container">
@@ -32,112 +33,162 @@
         @Model.BookName
         <small>All that you need , and more...</small>
         </h1>*@
-    <form method="get">
-        <!-- Portfolio Item Row -->
-        <div class="row">
-
-            <div class="col-md-8">
-                <img class="img-fluid" src="http://placehold.it/750x500" alt="">
-                <div class="text-center">
-                    <button name="bookname" value="@Model.BookName" asp-controller="Inventory" asp-action="EditBookDetails" type="submit" class="btn btn-info btn-lg text-center" style="width: 40%; margin-top : 5%"><span class="glyphicon glyphicon-ok-sign"></span>  Add Variant</button>
+    <!-- Portfolio Item Row -->
+    <div class="row">
+        <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    @if (String.IsNullOrEmpty(@Model.front_url))
+                    {
+                      <img class="img-fluid"  src="https://dtdt6j0vhq1rq.cloudfront.net/default0Kind of New.jpg" alt="Ft slide">
+                    }
+                    else
+                    {
+                        <img class="img-fluid" src="@Model.front_url" alt="First slide">
+                    }
+                    </div>
+                <div class="carousel-item">
+                    @if (String.IsNullOrEmpty(@Model.back_url))
+                    {
+                        <img class="img-fluid" src="https://dtdt6j0vhq1rq.cloudfront.net/default0Kind of New.jpg" alt="Second slide">
+                    }
+                    else
+                    {
+                        <img class="img-fluid" src="@Model.back_url" alt="Second slide">
+                    }
+                </div>
+                <div class="carousel-item">
+                    @if (string.IsNullOrEmpty(@Model.left_url))
+                    {
+                        <img class="img-fluid" src="https://dtdt6j0vhq1rq.cloudfront.net/default0Kind of New.jpg" alt="Third slide">
+                    }
+                    else
+                    {
+                        <img class="img-fluid" src="@Model.left_url" alt="Third slide">
+                    }
                 </div>
             </div>
-
-            <div class="col-md-4">
-                <h3 class="my-3 text-center">@Model.BookName</h3>
-                <p>
-                    Harry Potter and the Order of the Phoenix is the fifth novel in the Harry Potter series written by J.K. Rowling.
-                    A special new edition in celebration of the 20th anniversary of the publication of Harry Potter and the Sorcerer's Stone, with a stunning new cover illustration by Caldecott Medalist Brian Selznick.
-                </p>
-                <ul class="list-group">
-                    <li style=" margin-top : 5%">
-                        <button type="button" class=" btn-success btn-lg" style="width: 80% ; "><span class="glyphicon glyphicon-ok-sign"></span> @Model.publisher</button>
-                    </li>
-                    <li style=" margin-top : 5%">
-                        <button type="button" class=" btn btn-danger btn-lg" style="width: 80%;"><span class="glyphicon glyphicon-ok-sign"></span> @Model.genre</button>
-                    </li>
-                    <li style=" margin-top : 5% ; margin-bottom : 5%">
-                        <button type="button" class=" btn btn-warning btn-lg" style="width: 80%;"><span class="glyphicon glyphicon-ok-sign"></span>  @Model.BookType</button>
-                    </li>
-                </ul>
-            </div>
-    </form>
-    @{ var param = new Dictionary<string, string>
-                                 {
-                        {"BookName",Model.BookName + ""}
+            <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+            </a>
+            <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+            </a>
+        </div>
+       
+        <div class="col-md-3">
+            <p>
+                Harry Potter and the Order of the Phoenix is the fifth novel in the Harry Potter series written by J.K. Rowling.
+                A special new edition in celebration of the 20th anniversary of the publication of Harry Potter and the Sorcerer's Stone, with a stunning new cover illustration by Caldecott Medalist Brian Selznick.
+            </p>
+        </div>
+        <div class="col-md-3">
+            <ul class="list-group">
+                <li style=" margin-top : 5%">
+                    <button type="button" class=" btn-success btn-lg" style="width: 80% ; "><span class="glyphicon glyphicon-ok-sign"></span> @Model.publisher</button>
+                </li>
+                <li style=" margin-top : 5%">
+                    <button type="button" class=" btn btn-danger btn-lg" style="width: 80%;"><span class="glyphicon glyphicon-ok-sign"></span> @Model.genre</button>
+                </li>
+                <li style=" margin-top : 5% ; margin-bottom : 5%">
+                    <button type="button" class=" btn btn-warning btn-lg" style="width: 80%;"><span class="glyphicon glyphicon-ok-sign"></span>  @Model.BookType</button>
+                </li>
+                
+            </ul>
+        </div>
+        <div class="col-md-3">
+            @{ var param = new Dictionary<string, string>
+                                                                         {
+                        {"BookName",Model.BookName + ""},
+                        {"type",Model.type + ""},
+                        {"condition_chosen", Model.Condition + "" }
 
                      };
-    }
-</div>
-<!-- /.row -->
-<!-- Related Projects Row -->
-<form method="post" style="padding-bottom: 0px;">
+            }
+            <form asp-controller="Inventory" asp-action="BookDetails" asp-all-route-data="param" style="padding-bottom: 0px;" method="post">
+                <select class="custom-select bg-light text-dark" asp-for="type" style="margin-top: 10%; margin-bottom: 5%; margin-left: 10%; width: 80%">
+                    <option value="">Select the Format</option>
+                    @foreach (var type in types)
+                    {
+                        <option value="@type">@type</option>
+                    }
+                </select>
+                <select class="custom-select bg-light text-dark" asp-for="condition_chosen" style="margin-top: 10%; margin-bottom: 5%; margin-left: 10%; width: 80%">
+                    <option value="">Select the Format</option>
+                    @foreach (var condition in conditions)
+                    {
+                        <option value="@condition">@condition</option>
+                    }
+                </select>
+                <button type="submit" class="btn btn-info btn-lg text-center" style="width: 80%; margin-top: 5%; margin-left: 10%; font-size: 1rem"><span class="glyphicon glyphicon-ok-sign"></span>Choose Format</button>
 
-    <h4 class="my-4 font-weight-light title-1 ">Available formats</h4>
-    <div class="form-group">
-        @foreach (var type in types)
-        {
-            var typechosen = type;
-            <button  onclick="changeColor()" name="type" value="@type" asp-controller="Inventory" asp-action="BookDetails" asp-all-route-data="param" class="btn btn-outline-secondary rounded" type="submit">@type</button>
-        }
+            </form>
+            <form method="get">
+                <div class="text-center">
+                    <button name="bookname" value="@Model.BookName" asp-controller="Inventory" asp-action="EditBookDetails" type="submit" class="btn btn-info btn-lg text-center" style="width: 80%; margin-top : 5%;font-size:1rem "><span class="glyphicon glyphicon-ok-sign"></span>Add Variant</button>
+                    @*   <h3 class="my-3 text-center">@Model.BookName</h3> *@
+                </div>
+            </form>
+        </div>
     </div>
-</form>
-@if (status == "List" && books != null)
- {
 
-    <div class="container">
-        <div class="row">
-
-
-            <div class="col-md-12">
-                <h4>Bootstrap Snipp for Datatable</h4>
-                <div class="table-responsive">
+    @if (status == "List" && books != null)
+    {
+        <hr class="mt-2 mb-5">
+        <div class="container">
+            <div class="row">
 
 
-                    <table id="mytable" class="table table-bordred table-striped">
-                        <thead>
-                        <th>Price</th>
-                        <th>Quantity</th>
-                        <th>Publisher</th>
-                        <th>Type</th>
-                        <th>Condition</th>
-                        <th>Edit</th>
-                        </thead>
-                        <tbody>
-                            <form method="post" style="padding-bottom: 0px;">
-                                @foreach (var m in books)
-                                {
-                                    <tr>
-                                        <td>@m.Price</td>
-                                        <td>@m.Quantity</td>
-                                        <td>@m.Publisher.Name</td>
-                                        <td>@m.BookType.TypeName</td>
-                                        <td>@m.BookCondition.ConditionName</td>
-                                        <td>
-                                            @{ 
-                                                var parm = new Dictionary<string, string>
-                                           {
+                <div class="col-md-12">
+                    <div class="table-responsive">
+
+
+                        <table id="mytable" class="table table-bordred table-striped">
+                            <thead>
+                            <th>Price</th>
+                            <th>Quantity</th>
+                            <th>Publisher</th>
+                            <th>Type</th>
+                            <th>Condition</th>
+                            <th>Edit</th>
+                            </thead>
+                            <tbody>
+                                <form method="post" style="padding-bottom: 0px;">
+                                    @foreach (var m in books)
+                                    {
+                                        <tr>
+                                            <td>@m.Price</td>
+                                            <td>@m.Quantity</td>
+                                            <td>@m.Publisher.Name</td>
+                                            <td>@m.BookType.TypeName</td>
+                                            <td>@m.BookCondition.ConditionName</td>
+                                            <td>
+                                                @{
+                                                    var parm = new Dictionary<string, string>
+                                                                                                           {
 
                                                 {"Condition", m.BookCondition.ConditionName + ""}
 
                                            };
-                                            }
-                                            <button type="submit" name="BookId" value="@m.BookId" asp-controller="Inventory" asp-action="UpdateDetails" asp-all-route-data="parm" class="btn btn-outline-secondary rounded">Edit</button>
+                                                }
+                                                <button type="submit" name="BookId" value="@m.BookId" asp-controller="Inventory" asp-action="UpdateDetails" asp-all-route-data="parm" class="btn btn-outline-secondary rounded">Edit</button>
 
-                                        </td>
-                                    </tr>
-                                }
-                            </form>
-</tbody>
+                                            </td>
+                                        </tr>
+                                    }
+                                </form>
+                            </tbody>
 
-                    </table>
+                        </table>
 
-                    <div class="clearfix"></div>
+                        <div class="clearfix"></div>
+                    </div>
+
                 </div>
-
             </div>
         </div>
-    </div>
 
-   } 
+    }
 

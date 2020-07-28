@@ -46,6 +46,8 @@ namespace BOBS_Backend.DataModel
 
         public DateTime UpdatedOn { get; set; }
 
+        public string Author { get; set; }
+
         public bool Active { get; set; }
 
     }

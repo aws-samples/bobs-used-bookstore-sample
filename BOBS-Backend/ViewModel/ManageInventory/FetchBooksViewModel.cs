@@ -36,5 +36,12 @@ namespace BOBS_Backend.ViewModel
 
         public string ViewStyle { get; set; }
 
+        public string type {get;set;}
+
+        public string condition_chosen { get; set; }
+
+
+        public string Author { get; set; }
+
     }
 }

@@ -12,7 +12,9 @@
                         {"searchfilter",Model.searchfilter},
                         {"searchby",Model.searchby},
                         {"pageNum",Model.CurrentPage-1+""},
-                        {"style",Model.ViewStyle}
+                        {"style",Model.ViewStyle},
+                        {"SortBy",Model.SortBy}
+
 
         };
 
@@ -33,7 +35,8 @@
                         {"searchfilter",Model.searchfilter},
                         {"searchby",Model.searchby},
                         {"pageNum",page+""},
-                        {"style",Model.ViewStyle}
+                        {"style",Model.ViewStyle},
+                        {"SortBy",Model.SortBy}
 
                      };
             <li class="list-group-item page-num website-text"><a asp-controller="Inventory" asp-action="SearchBeta" asp-all-route-data="pag">@(page)</a></li>
@@ -46,8 +49,9 @@
                         {"searchfilter",Model.searchfilter},
                         {"searchby",Model.searchby},
                         {"pageNum",Model.CurrentPage+1+""},
-                        {"style",Model.ViewStyle}
-                
+                        {"style",Model.ViewStyle},
+                        {"SortBy",Model.SortBy}
+
                      };
 
         <a class="page-num page-num-next website-text" asp-controller="Inventory" asp-action="SearchBeta" asp-all-route-data="nextPag">

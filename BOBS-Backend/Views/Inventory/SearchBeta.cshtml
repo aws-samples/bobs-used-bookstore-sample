@@ -115,15 +115,18 @@
                                         <h4 class="card-title text-center">
                                             <a asp-controller="Inventory" asp-action="BookDetails" asp-all-route-data="param" style="text-emphasis-color: #FC4A1A">@book.BookName</a>
                                         </h4>
-                                        <p class="card-text  text-center" style="text-emphasis-color: #FC4A1A">@book.Publisher.Name</p>
+                                        <p class="card-text  text-center">@book.Author</p>
                                         <div class="row">
                                             <div class="col">
-                                                <p class="btn text-white btn-block" style="background-color: #4ABDAC">@book.Price $</p>
+                                                @{
+                                                    var price = (int)book.Price;
+                                                }
+                                                <p class="btn text-white btn-block" style="background-color: #4ABDAC">@price $</p>
                                             </div>
                                             <div class="col">
-                                                <a href="#" class="btn text-white btn-block" style="background-color: #4ABDAC">@book.Quantity Units</a>
+                                                <a href="#" class="btn text-white btn-block" style="background-color: #4ABDAC">@book.Quantity units</a>
                                             </div>
-                                        </div>
+                                        </div>                                        
                                     </div>
                                 </div>
                             </div>
@@ -140,25 +143,24 @@
                                 Book Name
                                 @{
                                     var SortBy = new Dictionary<string, string>
-                                                        {
+                                                                        {
                                         {"searchfilter",Model.searchfilter},
                                         {"searchby",Model.searchby},
                                         {"SortBy","Sort Book.Name"},
                                         {"pageNum",Model.CurrentPage+""},
                                         {"style",Model.ViewStyle}
                                         };
-
-                                    <a asp-controller="Inventory" asp-action="SearchBeta" asp-all-route-data="SortBy">Sort</a>
+                                <a asp-controller="Inventory" asp-action="SearchBeta" asp-all-route-data="SortBy">Sort</a>
                                 }
                             </th>
                             <th>
-                                Publisher
+                                Author
                                 @{
                                     var Sort = new Dictionary<string, string>
                                                                             {
                                         {"searchfilter",Model.searchfilter},
                                         {"searchby",Model.searchby},
-                                        {"SortBy","Sort Book.Publisher.Name"},
+                                        {"SortBy","Sort Book.Author"},
                                         {"pageNum",Model.CurrentPage+""},
                                         {"style",Model.ViewStyle}
 
@@ -206,9 +208,12 @@
                                                 {"BookId",book.BookId + ""}
                                                               };
                                     <tr>
+                                        @{ 
+                                            var price = (int)book.Price;
+                                        }
                                         <td>@book.BookName</td>
-                                        <td>@book.Publisher.Name</td>
-                                        <td>@book.Price</td>
+                                        <td>@book.Author</td>
+                                        <td>$@price</td>
                                         <td>@book.Quantity</td>
                                         <td>
                                             <a asp-controller="Inventory" asp-action="BookDetails" asp-all-route-data="param">View</a>
