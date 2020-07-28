@@ -108,7 +108,7 @@
 
     <div class="row" style="margin-top:35px">
       
-            <h4 class="website-text">Expected Delivery Date: @DateTime.Parse(fullOrder.Order.DeliveryDate).ToString("MM/dd/yyyy")</h4>
+            <h4 class="website-text">Expected Delivery Date: @( (fullOrder.Order.DeliveryDate == null) ? "Pending Confirmation": DateTime.Parse(fullOrder.Order.DeliveryDate).ToString("MM/dd/yyyy") )</h4>
 
         @if(Model.FullOrder.OrderDetails.Count() == Model.FullOrder.itemsRemoved && Model.FullOrder.Order.OrderStatus.Status != "Cancelled" )
         {

@@ -15,25 +15,9 @@ using Amazon.Rekognition.Model;
 using System.Reflection;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-namespace CustomExtensions
-{
-    // Extension methods must be defined in a static class.
-    public static class StringExtension
-    {
-        // This is the extension method.
-        // The first parameter takes the "this" modifier
-        // and specifies the type for which the method is defined.
-        public static int WordCount(this String str)
-        {
-            return str.Split(new char[] { ' ', '.', '?' }, StringSplitOptions.RemoveEmptyEntries).Length;
-        }
-    }
-}
-
 namespace BOBS_Backend.Repository.Implementations.OrderImplementations
 {
 
-    using CustomExtensions;
     public class OrderRepository : IOrderRepository
     {
         /*
@@ -57,7 +41,7 @@ namespace BOBS_Backend.Repository.Implementations.OrderImplementations
                 IOrderDetailRepository orderDetailRepo = new OrderDetailRepository(_context);
                 IOrderStatusRepository orderStatusRepo = new OrderStatusRepository(_context);
 
-                var orderStatus = await orderStatusRepo.FindOrderStatusById(5);
+                var orderStatus = await orderStatusRepo.FindOrderStatusByName("Cancelled");
 
                 var orderDetails = await orderDetailRepo.FindOrderDetailByOrderId(id);
                 var order = await FindOrderById(id);
@@ -216,12 +200,43 @@ namespace BOBS_Backend.Repository.Implementations.OrderImplementations
         }
 
 
+        private MethodCallExpression GenerateExpressionOrder(string type, string subSearch, MethodInfo method, MemberExpression property,bool isEntire)
+        {
+            try
+            {
+                ConstantExpression constant = null;
+                if (type == "System.Int64")
+                {
+                    long value = 0;
+
+                    bool res = long.TryParse(subSearch, out value);
+
+                    constant = Expression.Constant(value);
+                    method = typeof(long).GetMethod("Equals", new Type[] { typeof(int) });
+                }
+                else
+                {
+                    constant = Expression.Constant(subSearch);
+                    method = typeof(string).GetMethod("Contains", new Type[] { typeof(string) });
+                }
+
+                var expression = (isEntire == true) ? Expression.Call(constant, method, property) : Expression.Call(property, method, constant);
+                return expression;
+            }
+            catch
+            {
+                return null;
+            }
+
+        }
+
+
         private BinaryExpression GenerateDynamicLambdaFunctionOrderProperty(string splitFilter, ParameterExpression parameterExpression, string searchString)
         {
             var property = Expression.Property(parameterExpression, splitFilter);
 
             BinaryExpression lambda = null;
-            MethodInfo method;
+            MethodInfo method = null;
             bool isFirst = true;
             searchString = searchString.Trim();
 
@@ -238,23 +253,7 @@ namespace BOBS_Backend.Repository.Implementations.OrderImplementations
                 try
                 {
 
-                    ConstantExpression constant = null;
-                    if (type == "System.Int64")
-                    {
-                        long value = 0;
-
-                        bool res = long.TryParse(subSearch, out value);
-
-                        constant = Expression.Constant(value);
-                        method = typeof(long).GetMethod("Equals", new Type[] { typeof(int) });
-                    }
-                    else
-                    {
-                        constant = Expression.Constant(subSearch);
-                        method = typeof(string).GetMethod("Contains", new Type[] { typeof(string) });
-                    }
-
-                    var expression = Expression.Call(property, method, constant);
+                    var expression = GenerateExpressionOrder(type, subSearch, method, property, false);
 
 
                     if (isFirst)
@@ -277,17 +276,59 @@ namespace BOBS_Backend.Repository.Implementations.OrderImplementations
                 }
             }
 
+            //var exp2 = GenerateExpressionOrder(type, searchString, method, property, true);
+
+            //lambda = (isFirst == true) ? Expression.Or(exp2, exp2) : Expression.Or(lambda, exp2);
+
             return lambda;
 
         }
 
 
+        private MethodCallExpression GenerateExpressionSubOrder(string type,string subSearch, MethodInfo method,string[] splitFilter, ParameterExpression parameterExpression, bool isEntire)
+        {
+            try
+            {
+                ConstantExpression constant = null;
+                if (type == "System.Int64")
+                {
+                    long value = 0;
+
+                    bool res = long.TryParse(subSearch, out value);
+
+                    constant = Expression.Constant(value);
+
+                    method = typeof(long).GetMethod("Equals", new Type[] { typeof(int) });
+                }
+                else
+                {
+                    constant = Expression.Constant(subSearch);
+                    method = typeof(string).GetMethod("Contains", new Type[] { typeof(string) });
+                }
+
+                Expression property2 = parameterExpression;
+
+                foreach (var member in splitFilter)
+                {
+                    property2 = Expression.PropertyOrField(property2, member);
+                }
+
+                var expression = (isEntire == true) ? Expression.Call(constant,method,property2) :Expression.Call(property2, method, constant);
+
+                return expression;
+            }
+            catch
+            {
+                return null;
+            }
+            
+        }
 
 
         private BinaryExpression GenerateDynamicLambdaFunctionSubOrderProperty(string[] splitFilter, ParameterExpression parameterExpression, string searchString)
         {
             BinaryExpression lambda = null;
-            MethodInfo method;
+            MethodInfo method = null;
             bool isFirst = true;
             searchString = searchString.Trim();
 
@@ -303,31 +344,8 @@ namespace BOBS_Backend.Repository.Implementations.OrderImplementations
                 try
                 {
 
-                    ConstantExpression constant = null;
-                    if (type == "System.Int64")
-                    {
-                        long value = 0;
 
-                        bool res = long.TryParse(subSearch, out value);
-
-                        constant = Expression.Constant(value);
-        
-                        method = typeof(long).GetMethod("Equals", new Type[] { typeof(int) });
-                    }
-                    else
-                    {
-                        constant = Expression.Constant(subSearch);
-                        method = typeof(string).GetMethod("Contains", new Type[] { typeof(string) });
-                    }
-
-                    Expression property2 = parameterExpression;
-
-                    foreach (var member in splitFilter)
-                    {
-                        property2 = Expression.PropertyOrField(property2, member);
-                    }
-
-                    var expression = Expression.Call(property2, method, constant);
+                    var expression = GenerateExpressionSubOrder(type, subSearch, method, splitFilter, parameterExpression, false);
 
                     if (isFirst)
                     {
@@ -347,8 +365,10 @@ namespace BOBS_Backend.Repository.Implementations.OrderImplementations
                 {
                 }
             }
-            
 
+            //var exp2 = GenerateExpressionSubOrder(type, searchString, method, splitFilter, parameterExpression, true);
+
+            //lambda = (isFirst == true) ? Expression.Or(exp2, exp2) : Expression.Or(lambda, exp2); 
             return lambda;
 
         }

@@ -63,7 +63,9 @@ namespace BOBS_Backend.Repository.Implementations.OrderImplementations
                 {
                     order.OrderStatus = newStatus;
 
-                    _context.Order.Update(order);
+                    if (order.OrderStatus.Status != "Just Placed" && order.DeliveryDate == null) order.DeliveryDate = DateTime.Now.AddDays(14).ToString();
+
+                    
                     await _context.SaveChangesAsync();
 
                     await transaction.CommitAsync();
