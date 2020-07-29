@@ -17,10 +17,7 @@ else
         <thead>
             <tr>
                 <th>
-                    @Html.DisplayNameFor(model => model.Subtotal)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Tax)
+                    Total Cost
                 </th>
                 <th>
                     @Html.DisplayNameFor(model => model.DeliveryDate)
@@ -36,10 +33,7 @@ else
             {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Subtotal)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Tax)
+                    @Html.DisplayFor(modelItem => item.Subtotal + item.Tax)
                 </td>
                 @if (String.IsNullOrEmpty(item.DeliveryDate))
                 {

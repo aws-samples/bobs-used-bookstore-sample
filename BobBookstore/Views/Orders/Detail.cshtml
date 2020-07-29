@@ -17,7 +17,7 @@
     {
     <h5>Delivery Date: @Model.DeliveryDate</h5>
     }
-    <h5>Total cost: $@Model.Subtotal</h5>
+    <h5>Total cost: $@(Model.Subtotal + Model.Tax)</h5>
 </div>
 <div class="container mt-5">
     <h2>Your Order:</h2>
