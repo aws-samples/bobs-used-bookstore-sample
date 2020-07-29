@@ -31,9 +31,13 @@ else
         <tbody>
             @foreach (var item in Model)
             {
+                @{ 
+                    var totalPrice = item.Subtotal + item.Tax;
+                }
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Subtotal + item.Tax)
+                    @*@Html.DisplayFor(modelItem => item.Subtotal + item.Tax)*@
+                    @totalPrice
                 </td>
                 @if (String.IsNullOrEmpty(item.DeliveryDate))
                 {
