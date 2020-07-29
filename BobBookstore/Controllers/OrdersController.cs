@@ -61,8 +61,8 @@ namespace BobBookstore.Controllers
                                    {
                                        Bookname = od.Book.Name,
                                        Book_Id = od.Book.Book_Id,
-                                       Quantity = od.quantity,
-                                       Price = od.price,
+                                       quantity = od.quantity,
+                                       price = od.price,
                                    };
                 var books = await orderDetails.OrderBy(o => o.Bookname).ToListAsync();
 
