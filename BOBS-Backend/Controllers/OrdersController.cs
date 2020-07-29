@@ -33,27 +33,53 @@ namespace BOBS_Backend.Controllers
             _emailSender = emailSender;
         }
        
-        public async Task<IActionResult> EditOrderDetailAsync(long orderId, long orderDetailId,string quantity,bool isLast)
+        public async Task<IActionResult> EditOrderDetailAsync(long orderId, long orderDetailId,string quantity,int maxQuant,bool isLast)
         {
 
             int quant;
             bool res;
-            int status = 0;
+            long status = 0;
             
             res = int.TryParse(quantity,out quant);
 
+            string errorMessage = "";
+
             if (res)
             {
-                var emailInfo = await _orderDetail.MakeOrderDetailInactive(orderDetailId, orderId, quant);
-                if (emailInfo != null) _emailSender.SendItemRemovalEmail(emailInfo["bookName"], emailInfo["bookCondition"], emailInfo["customerFirstName"], emailInfo["customerEmail"]);
-                if (isLast)
+                if (quant > maxQuant)
                 {
-                    status = 5;
-                    return RedirectToAction("UpdateOrderStatus", new { orderId, status });
+                    errorMessage = "Error Occurred: Quantity must be less or equal to the max quantity";
+                    return RedirectToAction("ProcessOrders", new { orderId, errorMessage });
                 }
+
+                var emailInfo = await _orderDetail.MakeOrderDetailInactive(orderDetailId, orderId, quant);
+                if (emailInfo != null)
+                {
+                    
+                    if (isLast)
+                    {
+                        var cancelled = await _orderStatus.FindOrderStatusByName("Cancelled");
+                        var order = await _order.FindOrderById(orderId);
+                        status = cancelled.OrderStatus_Id;
+                        return RedirectToAction("UpdateOrderStatus", new { orderId, status, oldStatus = order.OrderStatus.OrderStatus_Id });
+                    }
+                    else
+                    {
+                        _emailSender.SendItemRemovalEmail(emailInfo["bookName"], emailInfo["bookCondition"], emailInfo["customerFirstName"], emailInfo["customerEmail"]);
+                    }
+                }
+                else
+                {
+                    errorMessage = "Error Occurred: When trying to remove item. Please try again";
+                }
+
+            }
+            else
+            {
+                errorMessage = " Error Occurred: Quantity must be a integer";
             }
 
-            return RedirectToAction("ProcessOrders", new {orderId });
+            return RedirectToAction("ProcessOrders", new {orderId, errorMessage });
         }
         public async Task<IActionResult> Index(string filterValue, string filterValueText, string searchString, int pageNum)
         {
@@ -97,15 +123,47 @@ namespace BOBS_Backend.Controllers
             }
         }
 
-        public async Task<IActionResult> UpdateOrderStatusAsync(long orderId,long status)
+        public async Task<IActionResult> UpdateOrderStatusAsync(long orderId,long status, long oldStatus)
         {
             var order = await _order.FindOrderById(orderId);
-            order = await _orderStatus.UpdateOrderStatus(order, status);
-            _emailSender.SendOrderStatusUpdateEmail(order.OrderStatus.Status, order.Order_Id, order.Customer.FirstName, order.Customer.Email);
+            string errorMessage = "";
+            var cancelled = await _orderStatus.FindOrderStatusByName("Cancelled");
+            var newStatus = await _orderStatus.FindOrderStatusById(status);
 
-            if (status == 5) await _order.CancelOrder(order.Order_Id);
+            if (newStatus.position < order.OrderStatus.position || order.OrderStatus.OrderStatus_Id != oldStatus)
+            {
+                errorMessage = "Error Occurred: The order status has changed";
+                return RedirectToAction("ProcessOrders", new { orderId, errorMessage });
+            }
 
-            return RedirectToAction("ProcessOrders", new { orderId });
+            if (status == order.OrderStatus.OrderStatus_Id)
+            {
+                errorMessage = "Error Occurred: This is already the order status of the order";
+                return RedirectToAction("ProcessOrders", new { orderId, errorMessage });
+            }
+            
+           
+            if(status == cancelled.OrderStatus_Id)
+            {
+                order = await _order.CancelOrder(orderId);
+            }
+            else
+            {
+                order = await _orderStatus.UpdateOrderStatus(order, status);
+            }    
+            
+            if(order != null)
+            {
+                _emailSender.SendOrderStatusUpdateEmail(order.OrderStatus.Status, order.Order_Id, order.Customer.FirstName, order.Customer.Email);
+
+            }
+            else
+            {
+                errorMessage = "Error Occured: Couldn't updated order status please try again";
+            }
+    
+
+            return RedirectToAction("ProcessOrders", new { orderId, errorMessage });
         }
 
         public IActionResult Error()
@@ -114,7 +172,7 @@ namespace BOBS_Backend.Controllers
         }
 
 
-        public async Task<IActionResult> ProcessOrders(long orderId)
+        public async Task<IActionResult> ProcessOrders(long orderId, string errorMessage)
         {
  
             if(string.IsNullOrEmpty(orderId.ToString()))
@@ -141,6 +199,7 @@ namespace BOBS_Backend.Controllers
 
                 viewModel.Statuses = orderStatus;
                 viewModel.FullOrder = fullOrder;
+                viewModel.errorMessage = string.IsNullOrEmpty(errorMessage) ? "" : errorMessage;
 
                 return View(viewModel);
             }

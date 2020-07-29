@@ -18,5 +18,6 @@ namespace BOBS_Backend.Models.Order
         public string Status { get; set; }
 
         public int position { get; set; }
+
     }
 }

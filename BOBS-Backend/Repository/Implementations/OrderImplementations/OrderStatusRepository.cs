@@ -1,5 +1,6 @@
 ﻿using BOBS_Backend.Database;
 using BOBS_Backend.Models.Order;
+using BOBS_Backend.Repository.OrdersInterface;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -32,10 +33,20 @@ namespace BOBS_Backend.Repository.Implementations.OrderImplementations
             return orderStatus;
         }
 
+        public async Task<OrderStatus> FindOrderStatusByName(string status)
+        {
+            var orderStatus = await _context.OrderStatus
+                                       .Where(os => os.Status == status)
+                                       .FirstAsync();
+            return orderStatus;
+        }
+
         // Returns all Order Statuses in a Table
         public async Task<List<OrderStatus>> GetOrderStatuses()
         {
-            var orderStatus = await _context.OrderStatus.ToListAsync();
+            var orderStatus = await _context.OrderStatus
+                                        .OrderBy(os => os.position)    
+                                        .ToListAsync();
             return orderStatus;
         }
 
@@ -46,19 +57,34 @@ namespace BOBS_Backend.Repository.Implementations.OrderImplementations
             {
                 OrderStatus newStatus = await FindOrderStatusById(Status_Id);
 
-                order.OrderStatus = newStatus;
+                IOrderRepository orderRepo = new OrderRepository(_context);
 
-                _context.Order.Update(order);
-                await _context.SaveChangesAsync();
+                using (var transaction = _context.Database.BeginTransaction())
+                {
+                    order.OrderStatus = newStatus;
 
-                return order;
+                    if (order.OrderStatus.Status != "Just Placed" && order.DeliveryDate == null) order.DeliveryDate = DateTime.Now.AddDays(14).ToString();
+
+                    
+                    await _context.SaveChangesAsync();
+
+                    await transaction.CommitAsync();
+
+                    return order;
+                }
+                    
             }
-            catch (DbUpdateException)
+            catch (DbUpdateConcurrencyException ex)
             {
 
+                return null;
+            }
+            catch (Exception)
+            {
+                return null;
             }
 
-            return order;
+ 
         }
     }
 }

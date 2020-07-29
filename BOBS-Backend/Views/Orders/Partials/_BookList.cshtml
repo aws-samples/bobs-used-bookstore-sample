@@ -79,7 +79,7 @@
                             <p class="card-subtitle mb-2 text-muted website-text">
                                 Max Limit: @detail.quantity
                             </p>
-                            @if(Model.OrderDetails.Count() - 1 == Model.itemsRemoved && detail.IsRemoved != true)
+                            @if (Model.OrderDetails.Count() - 1 == Model.itemsRemoved && detail.IsRemoved != true)
                             {
                                 <select asp-for="isLast" class="invisible">
                                     <option selected value="true">tets</option>
@@ -89,6 +89,9 @@
                             <input asp-for="quantity" type="text" class="form-control website-text" id="quantity" name="quantity" min="1" max="@detail.quantity">
                             <select asp-for="orderDetailId" class="invisible">
                                 <option selected value="@detail.OrderDetail_Id">tets</option>
+                            </select>
+                            <select asp-for="maxQuant" class="invisible">
+                                <option selected value="@detail.quantity">tets</option>
                             </select>
                             <select asp-for="orderId" class="invisible">
                                 <option selected value="@Model.Order.Order_Id">tets</option>
