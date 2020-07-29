@@ -17,7 +17,15 @@ else
                     <h3 class="mt-0">Title: @Html.DisplayFor(modelitem => Model.BookName)</h3>
                     <h3>Author: @Html.DisplayFor(modelitem => Model.Author)</h3>
                     <h5>Publisher: @Html.DisplayFor(modelitem => Model.PublisherName), Genre: @Html.DisplayFor(modelitem => Model.GenreName)</h5>
-                    Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
+                    @if (String.IsNullOrEmpty(Model.Summary))
+                    {
+                        <p>No description found.</p>
+                    }
+                    else
+                    {
+                        <p>@Html.DisplayFor(modelitem => Model.Summary)</p>
+                    }
+
                 </div>
             </div>
         </div>
@@ -44,6 +52,14 @@ else
                             else
                             {
                                 <th scope="col"><a asp-controller="Search" asp-action="Detail" asp-route-id="@ViewBag.id" asp-route-sortBy="priceDesc">Price</a></th>
+                            }
+                            @if (ViewBag.currentSort != "ConditionAsc")
+                            {
+                                <th scope="col"><a asp-controller="Search" asp-action="Detail" asp-route-id="@ViewBag.id" asp-route-sortBy="conditionAsc">Condition</a></th>
+                            }
+                            else
+                            {
+                                <th scope="col"><a asp-controller="Search" asp-action="Detail" asp-route-id="@ViewBag.id" asp-route-sortBy="conditionDesc">Condition</a></th>
                             }
 
                             <th scope="col">Condition</th>

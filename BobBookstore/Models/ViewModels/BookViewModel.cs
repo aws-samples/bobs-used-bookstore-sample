@@ -40,6 +40,8 @@ namespace BobBookstore.Models.ViewModels
         [Display(Name = "$$")]
         public double MinPrice { get; set; }
 
+        public string Summary { get; set; }
+
 
         //public static void sortBy(List<BookViewModel> lst, string prop)
         //{

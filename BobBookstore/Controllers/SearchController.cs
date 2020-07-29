@@ -157,7 +157,8 @@ namespace BobBookstore.Controllers
                            TypeName = m.Type.TypeName,
                            Url = m.Back_Url,
                            Prices = pricesLst,
-                           BookId=m.Book_Id
+                           BookId = m.Book_Id,
+                           Summary = m.Summary
                        };
 
             return View(await book.FirstOrDefaultAsync());
