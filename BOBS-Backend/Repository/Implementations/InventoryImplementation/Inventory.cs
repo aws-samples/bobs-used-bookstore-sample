@@ -37,6 +37,7 @@ using BOBS_Backend.ViewModel.ManageInventory;
 using System.Linq.Expressions;
 using Type = System.Type;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace BOBS_Backend
 {
@@ -50,16 +51,20 @@ namespace BOBS_Backend
         public DatabaseContext _context;
         private readonly int _booksPerPage = 15;
         private readonly IRekognitionNPollyRepository _RekognitionNPollyRepository;
+        private readonly ILogger<Inventory> _logger;
 
-       
-        public Inventory(DatabaseContext context, IRekognitionNPollyRepository RekognitionNPollyRepository)
+
+
+        public Inventory(DatabaseContext context, IRekognitionNPollyRepository RekognitionNPollyRepository , ILogger<Inventory> logger)
         {
             _context = context;
             _RekognitionNPollyRepository = RekognitionNPollyRepository;
+            _logger = logger;
         }
 
         public BookDetails GetBookByID(long BookId)
         {
+
             var book = (from booke in _context.Book join price in _context.Price on booke.Book_Id equals price.Book.Book_Id where booke.Book_Id == BookId select new BookDetails { BookId = booke.Book_Id, BookName = booke.Name, Price = price.ItemPrice, Publisher = booke.Publisher, Genre = booke.Genre, BookCondition = price.Condition, BookType = booke.Type, Quantity = price.Quantity, front_url = booke.Front_Url, back_url = booke.Back_Url, left_url = booke.Left_Url, right_url = booke.Right_Url }).ToList();
             return book[0];
         }
@@ -70,6 +75,7 @@ namespace BOBS_Backend
          */
         public void SaveBook(Book book)
         {
+            _logger.LogInformation("Posting details to Books table");
             _context.Book.Add(book);
             _context.SaveChanges();
         }
@@ -79,6 +85,7 @@ namespace BOBS_Backend
          */
         public void SavePrice(Price price)
         {
+            _logger.LogInformation("Posting details to Price table");
             _context.Price.Add(price);
             _context.SaveChanges();
         }
@@ -88,6 +95,7 @@ namespace BOBS_Backend
          */
         public void SavePublisherDetails(Publisher publisher)
         {
+            _logger.LogInformation("Posting details to the Publisher table");
             var publishers = _context.Publisher.Find(publisher.Name);
             if (publishers == null)
             {
@@ -106,6 +114,7 @@ namespace BOBS_Backend
 
         public int AddPublishers(BOBS_Backend.Models.Book.Publisher publishers)
         {
+            _logger.LogInformation("Posting details to the Publisher table");
             var publishName = _context.Publisher.Where(publisher => publisher.Name == publishers.Name).ToList();
             if (publishName.Count == 0)
             {
@@ -121,6 +130,7 @@ namespace BOBS_Backend
          */
         public int AddGenres(BOBS_Backend.Models.Book.Genre genres)
         {
+            _logger.LogInformation("Posting details to the Genres table");
             var genreName = _context.Genre.Where(genre => genre.Name == genres.Name).ToList();
             if (genreName.Count == 0)
             {
@@ -136,6 +146,7 @@ namespace BOBS_Backend
          */
         public int AddBookTypes(BOBS_Backend.Models.Book.Type booktype)
         {
+            _logger.LogInformation("Posting details to the Types table");
             var typeName = _context.Type.Where(type => type.TypeName == booktype.TypeName).ToList();
             var typeId = _context.Type.Where(type => type.Type_Id == booktype.Type_Id).ToList();
 
@@ -153,6 +164,7 @@ namespace BOBS_Backend
          */
         public int AddBookConditions(BOBS_Backend.Models.Book.Condition bookcondition)
         {
+            _logger.LogInformation("Posting details to the Conditions table");
             _context.Condition.Add(bookcondition);
             _context.SaveChanges();
 
@@ -183,6 +195,7 @@ namespace BOBS_Backend
         */
         public List<BOBS_Backend.Models.Book.Genre> GetGenres()
         {
+
             var genres = _context.Genre.ToList();
             return genres;
         }
@@ -192,6 +205,7 @@ namespace BOBS_Backend
         */
         public List<BOBS_Backend.Models.Book.Type> GetTypes()
         {
+
             var typelist = _context.Type.ToList();
             return typelist;
         }
@@ -201,6 +215,7 @@ namespace BOBS_Backend
         */
         public List<BOBS_Backend.Models.Book.Condition> GetConditions()
         {
+
             var conditions = _context.Condition.ToList();
             return conditions;
         }
@@ -210,6 +225,7 @@ namespace BOBS_Backend
          */
         public BookDetails GetBookDetails(long bookid, long priceid)
         {
+
             var booker = (from booke in _context.Book join price in _context.Price on booke.Book_Id equals price.Book.Book_Id where booke.Book_Id == bookid && price.Price_Id == priceid select new BookDetails { BookName = booke.Name, Price = price.ItemPrice, Publisher = booke.Publisher, Genre = booke.Genre, BookCondition = price.Condition, BookType = booke.Type, Quantity = price.Quantity, front_url = booke.Front_Url, back_url = booke.Back_Url, left_url = booke.Left_Url, right_url = booke.Right_Url }).ToList();
             return booker[0];
         }
@@ -219,6 +235,8 @@ namespace BOBS_Backend
         */
         public int AddToTables(BooksViewModel bookview)
         {
+            _logger.LogInformation("Processing and Posting data to tables and cloud ");
+
             string front_url = "", back_url = "", left_url = "", right_url = "", AudioBookUrl = "";
             if (bookview.FrontPhoto != null)
             {
@@ -318,7 +336,9 @@ namespace BOBS_Backend
         }
        
         private  int GetTotalPageCount(List<BookDetails> FilteredBooks)
-        {   
+        {
+            _logger.LogInformation("Calculating number of page for given query");
+
             var totalPages = 0;
             if ((FilteredBooks.Count() % _booksPerPage) == 0)
             {
@@ -340,6 +360,7 @@ namespace BOBS_Backend
 
         private Expression<Func<Price, bool>> GenerateDynamicLambdaFunction(string input, ParameterExpression parameterExpression, string searchString)
         {
+            _logger.LogInformation("Generating Dynamic Lambda Function");
 
             Expression<Func<Price, bool>> lambda;
 
@@ -365,6 +386,7 @@ namespace BOBS_Backend
 
         private Expression<Func<Price,object>> GenerateDynamicLambdaSortedFunction(string input, ParameterExpression parameterExpression)
         {
+            _logger.LogInformation("Generating Dynamic Lambda Function for sorting ");
 
             var splitter = input.Split(" ");
             Expression<Func<Price,object>> lambda;
@@ -401,6 +423,8 @@ namespace BOBS_Backend
 
         public PagedSearchViewModel GetAllBooks(int pagenum, string style, string SortBy)
         {
+            _logger.LogInformation("Preparing default search results ");
+
             var _booksPerPage = 15;
             var totalPages = 0;
             List<long> BookIdList = new List<long>();
@@ -516,6 +540,8 @@ namespace BOBS_Backend
 
         public PagedSearchViewModel SearchBeta(string searchby, string searchfilter , string style , string SortBy , int pagenum)
         {
+            _logger.LogInformation("Preparing search pages for given search query ");
+
             var _booksPerPage = 15;
             var totalPages = 0;
             List<long> BookIdList = new List<long>();
@@ -639,6 +665,8 @@ namespace BOBS_Backend
 
         public List<string> GetFormatsOfTheSelectedBook(string bookname)
         {
+            _logger.LogInformation("Fetching all possible formats of the given book");
+
             List<string> types = new List<string>();
             var book = (from booke in _context.Book join price in _context.Price on booke.Book_Id equals price.Book.Book_Id where booke.Name ==  bookname select new BookDetails { BookId = booke.Book_Id, BookName = booke.Name, Price = price.ItemPrice, Publisher = booke.Publisher, Genre = booke.Genre, BookCondition = price.Condition, BookType = booke.Type, Quantity = price.Quantity, front_url = booke.Front_Url, back_url = booke.Back_Url, left_url = booke.Left_Url, right_url = booke.Right_Url }).ToList();
 
@@ -656,6 +684,8 @@ namespace BOBS_Backend
 
         public List<string> GetConditionsOfTheSelectedBook(string bookname)
         {
+            _logger.LogInformation("Fetching all possible conditions of the given book");
+
             List<string> conditions = new List<string>();
             var book = (from booke in _context.Book join price in _context.Price on booke.Book_Id equals price.Book.Book_Id where booke.Name == bookname select new BookDetails { BookId = booke.Book_Id, BookName = booke.Name, Price = price.ItemPrice, Publisher = booke.Publisher, Genre = booke.Genre, BookCondition = price.Condition, BookType = booke.Type, Quantity = price.Quantity, front_url = booke.Front_Url, back_url = booke.Back_Url, left_url = booke.Left_Url, right_url = booke.Right_Url }).ToList();
 
@@ -673,6 +703,8 @@ namespace BOBS_Backend
 
         public List<BookDetails> GetRelevantBooks(string Bookname , string type , string condition_chosen)
         {
+            _logger.LogInformation("Fetching all possible books based on type and condition chosen");
+
 
             if (!string.IsNullOrEmpty(condition_chosen) && !string.IsNullOrEmpty(type))
             {
@@ -703,6 +735,8 @@ namespace BOBS_Backend
 
         private List<Dictionary<string, int>> topfivestatsforOrders()
         {
+            _logger.LogInformation("calculating Top 5 stats for orders");
+
             Dictionary<string, int> genre_stats = new Dictionary<string, int>();
             Dictionary<string, int> publisher_stats = new Dictionary<string, int>();
             Dictionary<string, int> condition_stats = new Dictionary<string, int>();
@@ -803,6 +837,7 @@ namespace BOBS_Backend
 
         private Dictionary<string, int>  InventoryStats()
         {
+            _logger.LogInformation("calculating Inventory stats");
 
             int total_merchandise_value = 0;
             int total_books_inventory = 0;
@@ -840,6 +875,8 @@ namespace BOBS_Backend
 
         private Dictionary<string, int> OrderStats()
         {
+            _logger.LogInformation("calculating Order stats");
+
             double total_sales_value = 0;
             int total_quantity_sold = 0;
 
@@ -880,6 +917,7 @@ namespace BOBS_Backend
         }
         public List<Dictionary<string,int>> DashBoard()
         {
+            _logger.LogInformation("Packing together dashboard results ");
 
             var topfive = topfivestatsforOrders();
             var Inventory = InventoryStats();
@@ -896,6 +934,7 @@ namespace BOBS_Backend
         */
         public BookDetails UpdateDetails(int Id, string Condition)
         {
+            _logger.LogInformation("Fetching data to pre-populate edit page ");
 
             var list = (from booke in _context.Book join price in _context.Price on booke.Book_Id equals price.Book.Book_Id where booke.Book_Id == Id && price.Condition.ConditionName == Condition select new BookDetails { BookId = booke.Book_Id, BookName = booke.Name, Price = price.ItemPrice, Publisher = booke.Publisher, Genre = booke.Genre, BookCondition = price.Condition, BookType = booke.Type, Quantity = price.Quantity, front_url = booke.Front_Url, back_url = booke.Back_Url, left_url = booke.Left_Url, right_url = booke.Right_Url }).ToList();
 
@@ -907,7 +946,9 @@ namespace BOBS_Backend
         */
         public void PushDetails(BookDetails details)
         {
-             var output = _context.Price.Where(p => p.Condition.ConditionName == details.BookCondition.ConditionName && p.Book.Book_Id == details.BookId).ToList();
+            _logger.LogInformation("Pushing edited details to database");
+
+            var output = _context.Price.Where(p => p.Condition.ConditionName == details.BookCondition.ConditionName && p.Book.Book_Id == details.BookId).ToList();
             if (details.FrontPhoto != null)
             {
                 details.front_url = _RekognitionNPollyRepository.UploadtoS3(details.FrontPhoto, details.BookId, details.BookCondition.ConditionName).Result;
@@ -947,7 +988,9 @@ namespace BOBS_Backend
         */
         public List<string> autosuggest(string input)
         {
-           List<string> names = new List<string>();
+            _logger.LogInformation("Preparing autosuggestions");
+
+            List<string> names = new List<string>();
 
            var booker = (from booke in _context.Book join price in _context.Price on booke.Book_Id equals price.Book.Book_Id where booke.Name.ToLower().Contains(input.ToLower()) select new BookDetails { BookId = booke.Book_Id, BookName = booke.Name, Price = price.ItemPrice, Publisher = booke.Publisher, Genre = booke.Genre, BookCondition = price.Condition, BookType = booke.Type, Quantity = price.Quantity, front_url = booke.Front_Url, back_url = booke.Back_Url, left_url = booke.Left_Url, right_url = booke.Right_Url }).ToList();
 

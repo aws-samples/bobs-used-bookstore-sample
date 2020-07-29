@@ -47,111 +47,88 @@
         }
     </style>
 *@
-<!-- MAIN CONTENT-->
-<div class="main-content" style="margin-left : 20% ; margin-right : 20%">
-    <div class="section__content section__content--p30">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="overview-wrap">
-                        <h1 class="title-1 text-center font-weight-light" style="margin-bottom: 45px; font-size: 300">Inventory Dashboard</h>
-                    </div>
-                </div>
-            </div>
-            <div class="row m-t-25">
-                <div class="col-sm-6 col-lg-3">
-                    <div class="overview-item overview-item--c1">
-                        <div class="card bg-info text-white">
-                            <div class="card-img-overlay" style="margin-top : 15px ; margin-bottom : 15px">
-                                <div class="icon">
-                                    <i class="zmdi zmdi-account-o"></i>
-                                </div>
-                                <div class="text">
-                                    <h2 class="font-weight-bold  text-center">@total_titles</h2>
-                                    <h1 class="font-weight-lighter  text-center">Titles</h1>
-                                </div>
-                            </div>
-                            <div class="overview-chart">
-                                <canvas id="widgetChart1"></canvas>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-6 col-lg-3">
-                    <div class="overview-item overview-item--c1">
-                        <div class="card bg-info text-white">
-                            <div class="card-img-overlay" style="margin-top: 15px; margin-bottom: 15px">
-                                <div class="icon">
-                                    <i class="zmdi zmdi-account-o"></i>
-                                </div>
-                                <div class="text">
-                                    <h2 class="font-weight-bold  text-center">@total_books</h2>
-                                    <h1 class="font-weight-lighter  text-center">Books</h1>
-                                </div>
-                            </div>
-                            <div class="overview-chart">
-                                <canvas id="widgetChart1"></canvas>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-6 col-lg-3">
-                    <div class="overview-item overview-item--c1">
-                        <div class="card bg-info text-white">
-                            <div class="card-img-overlay" style="margin-top: 15px; margin-bottom: 15px">
-                                <div class="icon">
-                                    <i class="zmdi zmdi-account-o"></i>
-                                </div>
-                                <div class="text">
-                                    <h2 class="font-weight-bold  text-center">@publisher_count</h2>
-                                    <h1 class="font-weight-lighter  text-center">Publishers</h1>
-                                </div>
-                            </div>
-                            <div class="overview-chart">
-                                <canvas id="widgetChart1"></canvas>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-6 col-lg-3">
-                    <div class="overview-item overview-item--c1">
-                        <div class="card bg-info text-white">
-                            <div class="card-img-overlay" style="margin-top: 15px;margin-bottom: 15px">
-                                <div class="icon">
-                                    <i class="zmdi zmdi-account-o"></i>
-                                </div>
-                                <div class="text">
-                                    <h2 class="font-weight-bold  text-center">@type_count</h2>
-                                    <h1 class="font-weight-lighter  text-center">Formats</h1>
-                                </div>
-                            </div>
-                            <div class="overview-chart">
-                                <canvas id="widgetChart1"></canvas>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+    <div class="col-12">
+        <div class="col-md-12">
+            <div class="overview-wrap">
+                <h1 class="title-1 text-center font-weight-light" style="margin-bottom: 45px; font-size: 300">Inventory Dashboard</h>
             </div>
         </div>
-        <div class="main-content">
-            <div class="section__content section__content--p30">
-                <div class="container-fluid">
+    </div>
+<!-- MAIN CONTENT-->
+<div class="main-content" style="margin-left : 20% ; margin-right : 20%">
+        <div class="container-fluid">  
+            <div class="row">
+                <div class="col" style=" margin-right:5%">
                     <div class="row">
-                        <div class="col-md-12">
-
+                        <div class="col-sm-5" style="margin-right:8%">
+                            <div class="overview-item overview-item--c1">
+                                <div class="card bg-info text-white">
+                                    <div class="card-img-overlay">
+                                        <div class="icon">
+                                            <i class="zmdi zmdi-account-o"></i>
+                                        </div>
+                                        <div class="text">
+                                            <h3 class="font-weight-bold  text-center">@total_titles</h3>
+                                            <h2 class="font-weight-lighter  text-center">Titles</h2>
+                                        </div>
+                                    </div>
+                                    <div class="overview-chart">
+                                        <canvas id="widgetChart1"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-sm-5" style="margin-left:8%">
+                            <div class="overview-item overview-item--c1">
+                                <div class="card bg-info text-white">
+                                    <div class="card-img-overlay">
+                                        <div class="icon">
+                                            <i class="zmdi zmdi-account-o"></i>
+                                        </div>
+                                        <div class="text">
+                                            <h3 class="font-weight-bold  text-center">@genre_count</h3>
+                                            <h2 class="font-weight-lighter  text-center">Genres</h2>
+                                        </div>
+                                    </div>
+                                    <div class="overview-chart">
+                                        <canvas id="widgetChart1"></canvas>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="row m-t-25" style="margin-top : 30px ">
-                        <div class="col-sm-6 col-lg-3">
+                    <div class="row">            
+                        <div class="col-sm-5" style="margin-left : 30%; margin-top:5%">
                             <div class="overview-item overview-item--c1">
                                 <div class="card bg-info text-white">
-                                    <div class="card-img-overlay" style="margin-top : 30px">
+                                    <div class="card-img-overlay">
                                         <div class="icon">
                                             <i class="zmdi zmdi-account-o"></i>
                                         </div>
                                         <div class="text">
-                                            <h2 class="font-weight-bold  text-center">@genre_count</h2>
-                                            <h1 class="font-weight-lighter  text-center">Genres</h1>
+                                            <h3 class="font-weight-bold  text-center">@total_books</h3>
+                                            <h2 class="font-weight-lighter  text-center">Total Books</h2>
+                                        </div>
+                                    </div>
+                                    <div class="overview-chart">
+                                        <canvas id="widgetChart1"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>                      
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-5" style="margin-right:8% ; margin-top:5%">
+                            <div class="overview-item overview-item--c1">
+                                <div class="card bg-info text-white">
+                                    <div class="card-img-overlay">
+                                        <div class="icon">
+                                            <i class="zmdi zmdi-account-o"></i>
+                                        </div>
+                                        <div class="text">
+                                            <h3 class="font-weight-bold  text-center">@publisher_count</h3>
+                                            <h2 class="font-weight-lighter  text-center">Publishers</h2>
                                         </div>
                                     </div>
                                     <div class="overview-chart">
@@ -160,52 +137,16 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-sm-6 col-lg-3">
+                        <div class="col-sm-5" style="margin-left:8% ;  margin-top:5%">
                             <div class="overview-item overview-item--c1">
                                 <div class="card bg-info text-white">
-                                    <div class="card-img-overlay" style="margin-top : 30px">
+                                    <div class="card-img-overlay">
                                         <div class="icon">
                                             <i class="zmdi zmdi-account-o"></i>
                                         </div>
                                         <div class="text">
-                                            <h2 class="font-weight-bold  text-center">@total_books_sold</h2>
-                                            <h1 class="font-weight-lighter  text-center">Books Sold</h1>
-                                        </div>
-                                    </div>
-                                    <div class="overview-chart">
-                                        <canvas id="widgetChart1"></canvas>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-6 col-lg-3">
-                            <div class="overview-item overview-item--c1">
-                                <div class="card bg-info text-white">
-                                    <div class="card-img-overlay" style="margin-top : 30px">
-                                        <div class="icon">
-                                            <i class="zmdi zmdi-account-o"></i>
-                                        </div>
-                                        <div class="text">
-                                            <h2 class="font-weight-bold  text-center">$@total_sales</h2>
-                                            <h1 class="font-weight-lighter  text-center">Sales</h1>
-                                        </div>
-                                    </div>
-                                    <div class="overview-chart">
-                                        <canvas id="widgetChart1"></canvas>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-6 col-lg-3">
-                            <div class="overview-item overview-item--c1">
-                                <div class="card bg-info text-white">
-                                    <div class="card-img-overlay" style="margin-top : 30px">
-                                        <div class="icon">
-                                            <i class="zmdi zmdi-account-o"></i>
-                                        </div>
-                                        <div class="text">
-                                            <h2 class="font-weight-bold  text-center">@ordersplaced</h2>
-                                            <h1 class="font-weight-lighter  text-center">Orders </h1>
+                                            <h3 class="font-weight-bold  text-center">@conditons_count</h3>
+                                            <h2 class="font-weight-lighter  text-center">Formats</h2>
                                         </div>
                                     </div>
                                     <div class="overview-chart">
@@ -216,88 +157,138 @@
                         </div>
                     </div>
                 </div>
-                <div class="main-content">
-                    <div class="section__content section__content--p30">
-                        <div class="container-fluid">
-                            <div class="row">
-                                <div class="col-md-12">
-                                </div>
-                            </div>
-                            <div class="row m-t-25" style="margin-top : 30px ">
-                                <div class="col-sm-6 col-lg-3">
-                                    <div class="overview-item overview-item--c1">
-                                        <div class="card bg-info text-white">
-                                            <div class="card-img-overlay" style="margin-top : 30px">
-                                                <div class="icon">
-                                                    <i class="zmdi zmdi-account-o"></i>
-                                                </div>
-                                                <div class="text">
-                                                    <h2 class="font-weight-bold  text-center">@justplaced</h2>
-                                                    <h1 class="font-weight-lighter  text-center">Just Placed </h1>
-                                                </div>
-                                            </div>
-                                            <div class="overview-chart">
-                                                <canvas id="widgetChart1"></canvas>
-                                            </div>
+                <div class="col">
+                    <div class="row">
+                        <div class="col-sm-5" style="margin-right:8%">
+                            <div class="overview-item overview-item--c1">
+                                <div class="card bg-info text-white">
+                                    <div class="card-img-overlay">
+                                        <div class="icon">
+                                            <i class="zmdi zmdi-account-o"></i>
                                         </div>
+                                        <div class="text">
+                                            <h3 class="font-weight-bold text-white text-center">@justplaced</h3>
+                                            @{ var data = new Dictionary<string, string>
+                                                                                    {
+                                                {"filterValue"," OrderStatus.Status"},
+                                                {"filterValueText"," Status"},
+                                                {"searchString", "Just Placed" }
+                                                };
+                                                <a asp-controller="Orders" asp-action="Index" asp-all-route-data="data"><h2 class="font-weight-lighter  text-center">Just Placed</h2></a>
+                                                }
+                                            </div>
                                     </div>
-                                </div>
-                                <div class="col-sm-6 col-lg-3">
-                                    <div class="overview-item overview-item--c1">
-                                        <div class="card bg-info text-white">
-                                            <div class="card-img-overlay" style="margin-top : 30px">
-                                                <div class="icon">
-                                                    <i class="zmdi zmdi-account-o"></i>
-                                                </div>
-                                                <div class="text">
-                                                    <h2 class="font-weight-bold  text-center">@enroute</h2>
-                                                    <h1 class="font-weight-lighter  text-center">Enroute</h1>
-                                                </div>
-                                            </div>
-                                            <div class="overview-chart">
-                                                <canvas id="widgetChart1"></canvas>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-sm-6 col-lg-3">
-                                    <div class="overview-item overview-item--c1">
-                                        <div class="card bg-info text-white">
-                                            <div class="card-img-overlay" style="margin-top : 30px">
-                                                <div class="icon">
-                                                    <i class="zmdi zmdi-account-o"></i>
-                                                </div>
-                                                <div class="text">
-                                                    <h2 class="font-weight-bold  text-center">@delivered</h2>
-                                                    <h1 class="font-weight-lighter  text-center">Delivered</h1>
-                                                </div>
-                                            </div>
-                                            <div class="overview-chart">
-                                                <canvas id="widgetChart1"></canvas>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-sm-6 col-lg-3">
-                                    <div class="overview-item overview-item--c1">
-                                        <div class="card bg-info text-white">
-                                            <div class="card-img-overlay" style="margin-top : 30px">
-                                                <div class="icon">
-                                                    <i class="zmdi zmdi-account-o"></i>
-                                                </div>
-                                                <div class="text">
-                                                    <h2 class="font-weight-bold  text-center">@pending</h2>
-                                                    <h1 class="font-weight-lighter  text-center">Pending</h1>
-                                                </div>
-                                            </div>
-                                            <div class="overview-chart">
-                                                <canvas id="widgetChart1"></canvas>
-                                            </div>
-                                        </div>
+                                    <div class="overview-chart">
+                                        <canvas id="widgetChart1"></canvas>
                                     </div>
                                 </div>
                             </div>
                         </div>
+
+                        <div class="col-sm-5" style="margin-left:8%">
+                            <div class="overview-item overview-item--c1">
+                                <div class="card bg-info text-white">
+                                    <div class="card-img-overlay">
+                                        <div class="icon">
+                                            <i class="zmdi zmdi-account-o"></i>
+                                        </div>
+                                        <div class="text">
+                                            <h3 class="font-weight-bold  text-center">@pending</h3>
+                                            @{ var dat = new Dictionary<string, string>
+                                                                                    {
+                                                {"filterValue"," OrderStatus.Status"},
+                                                {"filterValueText"," Status"},
+                                                {"searchString", "Pending" }
+                                                };
+                                                <a asp-controller="Orders" asp-action="Index" asp-all-route-data="dat"><h2 class="font-weight-lighter  text-center">Pending</h2></a>
+                                                }
+
+                                            </div>
+                                    </div>
+                                    <div class="overview-chart">
+                                        <canvas id="widgetChart1"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-5" style="margin-left : 30%; margin-top:5%">
+                            <div class="overview-item overview-item--c1">
+                                <div class="card bg-info text-white">
+                                    <div class="card-img-overlay">
+                                        <div class="icon">
+                                            <i class="zmdi zmdi-account-o"></i>
+                                        </div>
+                                        <div class="text">
+                                            <h3 class="font-weight-bold  text-center">@ordersplaced</h3>
+                                            <h2 class="font-weight-lighter  text-center">Total Orders</h2>
+                                        </div>
+                                    </div>
+                                    <div class="overview-chart">
+                                        <canvas id="widgetChart1"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-5" style="margin-right:8% ; margin-top:5%">
+                            <div class="overview-item overview-item--c1">
+                                <div class="card bg-info text-white">
+                                    <div class="card-img-overlay">
+                                        <div class="icon">
+                                            <i class="zmdi zmdi-account-o"></i>
+                                        </div>
+                                        <div class="text">
+                                            <h3 class="font-weight-bold  text-center">@enroute</h3>
+                                           @{ var da = new Dictionary<string, string>
+                                                {
+                                                {"filterValue"," OrderStatus.Status"},
+                                                {"filterValueText"," Status"},
+                                                {"searchString", "Route" }
+                                                };
+
+                                                <a asp-controller="Orders" asp-action="Index" asp-all-route-data="da"> <h2 class="font-weight-lighter  text-center">Enroute</h2></a>
+                                               }
+
+                                        </div>
+                                    </div>
+                                    <div class="overview-chart">
+                                        <canvas id="widgetChart1"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-5" style="margin-left:8% ;  margin-top:5%">
+                            <div class="overview-item overview-item--c1">
+                                <div class="card bg-info text-white">
+                                    <div class="card-img-overlay">
+                                        <div class="icon">
+                                            <i class="zmdi zmdi-account-o"></i>
+                                        </div>
+                                        <div class="text">
+                                            <h3 class="font-weight-bold  text-center">@delivered</h3>
+                                            @{ var d = new Dictionary<string, string>
+                                                                                    {
+                                                {"filterValue"," OrderStatus.Status"},
+                                                {"filterValueText"," Status"},
+                                                {"searchString", "Delivered" }
+                                                };
+                                                <a asp-controller="Orders" asp-action="Index" asp-all-route-data="d"><h2 class="font-weight-lighter  text-center">Delivered</h2></a>
+                                           
+                                              }
+                                        </div>
+                                    </div>
+                                    <div class="overview-chart">
+                                        <canvas id="widgetChart1"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+             </div>        
                         <div class="main-content">
                             <div class="section__content section__content--p30">
                                 <div class="container-fluid">
@@ -314,8 +305,8 @@
                                                             <i class="zmdi zmdi-account-o"></i>
                                                         </div>
                                                         <div class="text">
-                                                            <h2 class="font-weight-lighter  text-center">Top 5</h2>
-                                                            <h1 class="font-weight-bold  text-center">Genres</h1>
+                                                            <h3 class="font-weight-lighter  text-center">Top 5</h3>
+                                                            <h2 class="font-weight-bold  text-center">Genres</h2>
                                                         </div>
                                                     </div>
                                                     <div class="overview-chart">
@@ -332,8 +323,8 @@
                                                             <i class="zmdi zmdi-account-o"></i>
                                                         </div>
                                                         <div class="text">
-                                                            <h2 class="font-weight-lighter  text-center">Top 5</h2>
-                                                            <h1 class="font-weight-bold  text-center">Publishers</h1>
+                                                            <h3 class="font-weight-lighter  text-center">Top 5</h3>
+                                                            <h2 class="font-weight-bold  text-center">Publishers</h2>
                                                         </div>
                                                     </div>
                                                     <div class="overview-chart">
@@ -350,8 +341,8 @@
                                                             <i class="zmdi zmdi-account-o"></i>
                                                         </div>
                                                         <div class="text">
-                                                            <h2 class="font-weight-light  text-center">Top 5</h2>
-                                                            <h1 class="font-weight-bold  text-center">Formats</h1>
+                                                            <h3 class="font-weight-light  text-center">Top 5</h3>
+                                                            <h2 class="font-weight-bold  text-center">Formats</h2>
                                                         </div>
                                                     </div>
                                                     <div class="overview-chart">
@@ -365,8 +356,8 @@
                                                 <div class="card bg-warning text-white" style="margin-top : 30px ; margin-bottom : 30px">
                                                     <div class="card-img-overlay">
                                                         <div class="text">
-                                                            <h2 class="font-weight-light  text-center">Top 5</h2>
-                                                            <h1 class="font-weight-bold  text-center">Books</h1>
+                                                            <h3 class="font-weight-light  text-center">Top 5</h3>
+                                                            <h2 class="font-weight-bold  text-center">Books</h2>
                                                         </div>
                                                     </div>
                                                     <div class="overview-chart">

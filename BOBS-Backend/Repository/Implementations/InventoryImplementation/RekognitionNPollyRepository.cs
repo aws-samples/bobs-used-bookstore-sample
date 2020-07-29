@@ -18,12 +18,19 @@ using Amazon.Polly;
 using Microsoft.AspNetCore.Hosting;
 using System.Linq;
 using BOBS_Backend.Models.Book;
+using Microsoft.Extensions.Logging;
 
 namespace BOBS_Backend.Repository.Implementations.InventoryImplementation
 {
     public class RekognitionNPollyRepository : IRekognitionNPollyRepository
     {
         IAmazonS3 _s3Client { get; set; }
+        IAmazonRekognition _rekognitionClient { get; set; }
+
+        IAmazonPolly _pollyClient { get; set; }
+
+        private readonly ILogger<RekognitionNPollyRepository> _logger;
+
 
         public DatabaseContext _context;
         private const string photosBucketName = "bookcoverpictures";
@@ -32,11 +39,14 @@ namespace BOBS_Backend.Repository.Implementations.InventoryImplementation
       //  private static IAmazonS3 s3Client;
         private IHostingEnvironment _env;
 
-        public RekognitionNPollyRepository(DatabaseContext context, IHostingEnvironment env , IAmazonS3 s3Client)
+        public RekognitionNPollyRepository(DatabaseContext context, IHostingEnvironment env , IAmazonS3 s3Client , IAmazonRekognition rekognitionClient, IAmazonPolly pollyClient , ILogger<RekognitionNPollyRepository> logger)
         {
             _context = context;
             _env = env;
             _s3Client = s3Client;
+            _rekognitionClient = rekognitionClient;
+            _pollyClient = pollyClient;
+            _logger = logger;
         }
 
         /*
@@ -44,6 +54,8 @@ namespace BOBS_Backend.Repository.Implementations.InventoryImplementation
         */
         public async Task<string> UploadtoS3(IFormFile file , long BookId , string Condition)
         {
+            _logger.LogInformation("Uploading Picture to S3 Bucket");
+
             var split = file.FileName.Split(".");
             string filename = split[0] + BookId.ToString() + Condition + "."+split[1];
             var dir = _env.ContentRootPath;
@@ -64,7 +76,6 @@ namespace BOBS_Backend.Repository.Implementations.InventoryImplementation
                 {
                     resizeStream.CopyTo(fileStream);
                 }
-          //      s3Client = new AmazonS3Client("AKIA6DYNIKQLFG4HU2LU", "4RM8WQL3tH4+c7RgIQ/LPBHqt6ESwleokqsDx1Gf", bucketRegion);
 
                 var fileTransferUtility = new TransferUtility(_s3Client);
 
@@ -104,11 +115,11 @@ namespace BOBS_Backend.Repository.Implementations.InventoryImplementation
 
         public async Task<bool> IsBook(string bucket, string key)
         {
+            _logger.LogInformation("Checking if uploaded picture is of a Book");
             HashSet<string> validlabels = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
         {
             "book", "paper", "magazine", "newspaper" ,"storybook" ,"textbook" , "novel"
         };
-            AmazonRekognitionClient rekognitionClient = new AmazonRekognitionClient("AKIA6DYNIKQLFG4HU2LU", "4RM8WQL3tH4+c7RgIQ/LPBHqt6ESwleokqsDx1Gf", bucketRegion);
 
             DetectLabelsRequest detectlabelsRequest = new DetectLabelsRequest()
             {
@@ -125,7 +136,7 @@ namespace BOBS_Backend.Repository.Implementations.InventoryImplementation
             };
 
             int c = 0;
-            DetectLabelsResponse detectLabelsResponse = await rekognitionClient.DetectLabelsAsync(detectlabelsRequest);
+            DetectLabelsResponse detectLabelsResponse = await _rekognitionClient.DetectLabelsAsync(detectlabelsRequest);
             foreach (Label label in detectLabelsResponse.Labels)
                 if (validlabels.Contains(label.Name) && label.Confidence >= 90)
                 {
@@ -152,8 +163,9 @@ namespace BOBS_Backend.Repository.Implementations.InventoryImplementation
        */
         public async Task<bool> IsImageSafe(string bucket, string key)
         {
-            var RekognitionClient = new AmazonRekognitionClient("AKIA6DYNIKQLFG4HU2LU", "4RM8WQL3tH4+c7RgIQ/LPBHqt6ESwleokqsDx1Gf", bucketRegion);
-            var response = await RekognitionClient.DetectModerationLabelsAsync(new DetectModerationLabelsRequest
+            _logger.LogInformation("Content Moderation : Checks for profanity");
+        //    var RekognitionClient = new AmazonRekognitionClient("AKIA6DYNIKQLFG4HU2LU", "4RM8WQL3tH4+c7RgIQ/LPBHqt6ESwleokqsDx1Gf", bucketRegion);
+            var response = await _rekognitionClient.DetectModerationLabelsAsync(new DetectModerationLabelsRequest
             {
                 Image = new Amazon.Rekognition.Model.Image
                 {
@@ -195,6 +207,7 @@ namespace BOBS_Backend.Repository.Implementations.InventoryImplementation
        */
         public async Task<Stream> ResizeImage(IFormFile file, string fileExt)
         {
+            _logger.LogInformation("Resizing Image");
             // create new memory stream.
             Stream result = new MemoryStream();
             int new_size = 300;
@@ -221,6 +234,7 @@ namespace BOBS_Backend.Repository.Implementations.InventoryImplementation
        */
         public IImageEncoder selectEncoder(string extension)
         {
+            _logger.LogInformation("Encoding Picture");
             IImageEncoder encoder = null;
             // get the encoder based on file extension
             switch (extension)
@@ -254,14 +268,15 @@ namespace BOBS_Backend.Repository.Implementations.InventoryImplementation
        */
         public string GenerateAudioSummary(string BookName, string Summary, string targetLanguageCode, VoiceId voice)
         {
-            using (var client = new AmazonPollyClient("AKIA6DYNIKQLFG4HU2LU", "4RM8WQL3tH4+c7RgIQ/LPBHqt6ESwleokqsDx1Gf", bucketRegion))
+            _logger.LogInformation("Converting text to speech");
+            using (_pollyClient)
             {
                 var request = new Amazon.Polly.Model.SynthesizeSpeechRequest();
                 request.LanguageCode = targetLanguageCode;
                 request.Text = Summary;
                 request.OutputFormat = OutputFormat.Mp3;
                 request.VoiceId = voice;
-                var response = client.SynthesizeSpeechAsync(request).GetAwaiter().GetResult();
+                var response = _pollyClient.SynthesizeSpeechAsync(request).GetAwaiter().GetResult();
 
                 string outputFileName = $".\\-{targetLanguageCode}.mp3";
                 FileStream output = File.Open(outputFileName, FileMode.Create);

@@ -23,6 +23,8 @@ using BOBS_Backend.Notifications.Implementations;
 using BOBS_Backend.Repository.Implementations.InventoryImplementation;
 using Amazon.S3;
 using Microsoft.Extensions.Logging;
+using Amazon.Polly;
+using BOBS_Backend.Models;
 
 namespace BOBS_Backend
 {
@@ -41,13 +43,16 @@ namespace BOBS_Backend
         {
             services.AddDefaultAWSOptions(Configuration.GetAWSOptions());
             services.AddAWSService<IAmazonS3>();
+            services.AddAWSService<IAmazonPolly>();
+            services.AddAWSService<Amazon.Rekognition.IAmazonRekognition>();
+            services.AddAWSService<Amazon.Translate.IAmazonTranslate>();
+            services.AddAWSService<Amazon.CloudWatch.IAmazonCloudWatch>();
 
             services.AddControllersWithViews();
             services.AddDbContext<Database.DatabaseContext>(option => option.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddTransient<IInventory, Inventory>();
             services.AddTransient<IRekognitionNPollyRepository, RekognitionNPollyRepository>();
-
 
             services.AddTransient<IOrderDetailRepository, OrderDetailRepository>();
             services.AddTransient<IOrderRepository, OrderRepository>();
