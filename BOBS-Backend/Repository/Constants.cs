@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
     public class Constants
     {
+        public const int TOTAL_RESULTS = 8;
         public string ErrorStatusYes = "Yes";
         public string GenreExistsStatus = "Given Genre already exists in the database";
         public string TypeExistsStatus = "Given Format already exists in the database";
