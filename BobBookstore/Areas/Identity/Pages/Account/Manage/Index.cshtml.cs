@@ -34,9 +34,7 @@ namespace BobBookstore.Areas.Identity.Pages.Account.Manage
 
         public class InputModel
         {
-            [Phone]
-            [Display(Name = "Phone number")]
-            public string PhoneNumber { get; set; }
+            
             [EmailAddress]
             [Display(Name = "email")]
             public string EmailAddress { get; set; }
@@ -45,14 +43,13 @@ namespace BobBookstore.Areas.Identity.Pages.Account.Manage
         private async Task LoadAsync(CognitoUser user)
         {
             var userName = await _userManager.GetUserNameAsync(user);
-            var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
             var emailAddress = await _userManager.GetEmailAsync(user);
             
             Username = userName;
 
             Input = new InputModel
             {
-                PhoneNumber = phoneNumber,
+                
                 EmailAddress=emailAddress
 
             };

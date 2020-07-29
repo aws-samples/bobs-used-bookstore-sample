@@ -122,7 +122,7 @@ namespace BobBookstore.Controllers
             return RedirectToAction("WishListIndex");
         }
         
-
+        //add book to cart
         public async Task<IActionResult> AddtoCartitem(long bookid,long priceid)
         {
             var book = _context.Book.Find(bookid);

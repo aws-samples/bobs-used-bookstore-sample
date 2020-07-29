@@ -24,6 +24,7 @@
     <table class="table table-hover mt-5">
         <thead>
             <tr>
+                <th cope="col">Cover</thscope="col">
                 <th scope="col">Title</th>
                 <th scope="col">Quantity</th>
                 <th scope="col">Price</th>
@@ -33,6 +34,7 @@
             @foreach (var book in Model.Books)
             {
                 <tr>
+                    <td><img src="@book.Url" height="80" width="50" /></td>
                     <td>
                         <a asp-controller="Search" asp-action="Detail" asp-route-id="@book.Book_Id">
                             @book.Bookname

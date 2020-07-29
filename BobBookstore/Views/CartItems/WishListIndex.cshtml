@@ -12,95 +12,119 @@
 
 
 
-<body>
-    <h1>Wish List</h1>
-    
-    
-    @*<h3>Total price：$ <span id="totalprice">0</span></h3>*@
-    <table class="table">
-        <thead>
-            <tr>
-                <th>
-                    Cover
-                </th>
-                <th>
-                    @Html.DisplayNameFor(Model => Model.BookName)
-                </th>
-                <th>
-                    <input type="checkbox" name="selectall" value="choose" onclick="selectall();count()" />choose all &nbsp;@Html.DisplayNameFor(Model => Model.Prices) 
-                </th>
-
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @using (Html.BeginForm(new { action = "AllMoveToCart" }))
-            {
-            @foreach (var item in Model)
-                        {
-                            <tr>
-                                <td>
-                                    <img src="@Html.DisplayFor(modelitem => item.Url)" />
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelitem => item.BookName)
-                                </td>
-
-                                <td>
-
-                                    <input type="checkbox" name="fruits" value="@Html.DisplayFor(modelitem => item.CartItem_Id)"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$@Html.DisplayFor(modelitem => item.Prices)&nbsp;&nbsp;
-                                </td>
-
-                                <td>
-
-                                    <a asp-action="Delete" asp-route-id="@item.CartItem_Id">Remove</a>
-                                </td>
-                                <td>
-
-                                    <a asp-action="MoveToCart" asp-route-id="@item.CartItem_Id">Move to cart</a>
-                                </td>
-                            </tr>
-                        }
-            <input type="submit" value="Move to cart" />
-            }
-        </tbody>
-    </table>
+    <body>
+        <h1>Wish List</h1>
 
 
+        @*<h3>Total price：$ <span id="totalprice">0</span></h3>*@
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        Cover
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(Model => Model.BookName)
+                    </th>
+                    <th>
+                        <input type="checkbox" name="selectall" value="choose" onclick="selectall();count()" />choose all &nbsp;@Html.DisplayNameFor(Model => Model.Prices)
+                    </th>
 
-    <script>
-        var fruits = document.getElementsByName('fruits');
-        var numbers = document.getElementsByClassName("numbers");
-        
-        var list = new Array();
-        for (var i = 0; i < fruits.length; i++) {
-            fruits[i].onclick = count;
-        }
-        for (var i = 0; i < numbers.length; i++) {
-            numbers[i].onclick = count;
-        }
-        function count() {
-            var totalprice = 0;
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @using (Html.BeginForm(new { action = "AllMoveToCart" }))
+                {
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                <img src="@Html.DisplayFor(modelitem => item.Url)" />
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelitem => item.BookName)
+                            </td>
+
+                            <td>
+
+                                <input type="checkbox" name="fruits" value="@Html.DisplayFor(modelitem => item.CartItem_Id)"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$@Html.DisplayFor(modelitem => item.Prices)&nbsp;&nbsp;
+                            </td>
+
+                            <td>
+
+                                <a asp-action="Delete" asp-route-id="@item.CartItem_Id">Remove</a>
+                            </td>
+                            <td>
+
+                                <a asp-action="MoveToCart" asp-route-id="@item.CartItem_Id">Move to cart</a>
+                            </td>
+                        </tr>
+                    }
+                    <input type="submit" value="Move to cart" />
+                }
+            </tbody>
+        </table>
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+
+
+
+        <script>
+            var fruits = document.getElementsByName('fruits');
+            var numbers = document.getElementsByClassName("numbers");
+
+            var list = new Array();
             for (var i = 0; i < fruits.length; i++) {
-                if (fruits[i].checked) {
-                    var number = fruits[i].nextSibling.nextSibling.value;
-                    totalprice += parseFloat(fruits[i].value) * number;
+                fruits[i].onclick = count;
+            }
+            for (var i = 0; i < numbers.length; i++) {
+                numbers[i].onclick = count;
+            }
+            function count() {
+                var totalprice = 0;
+                for (var i = 0; i < fruits.length; i++) {
+                    if (fruits[i].checked) {
+                        var number = fruits[i].nextSibling.nextSibling.value;
+                        totalprice += parseFloat(fruits[i].value) * number;
+                    }
+                }
+                document.getElementById('totalprice').innerHTML = totalprice;
+            }
+            function selectall() {
+                var sports = document.getElementsByName("fruits");
+                for (i = 0; i < sports.length; i++) {
+                    var sportname = sports[i];
+                    if (sportname.checked == true) {
+                        sportname.checked = false
+
+                    }
+                    else { sportname.checked = true; }
+
                 }
             }
-            document.getElementById('totalprice').innerHTML = totalprice;
-        }
-        function selectall() {
-            var sports = document.getElementsByName("fruits");
-            for (i = 0; i < sports.length; i++) {
-                var sportname = sports[i];
-                if (sportname.checked == true) {
-                    sportname.checked = false
 
-                }
-                else { sportname.checked = true; }
-
-            }
-        }
-
-    </script>
-</body>
+        </script>
+    </body>

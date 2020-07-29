@@ -13,5 +13,6 @@ namespace BobBookstore.Models.ViewModels
         public double Tax { get; set; }
         public string DeliveryDate { get; set; }
         public List<OrderDetailViewModel> Books { get; set; }
+        public string Url { get; set; }
     }
 }

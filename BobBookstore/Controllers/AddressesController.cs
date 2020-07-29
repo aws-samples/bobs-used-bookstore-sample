@@ -44,26 +44,7 @@ namespace BobBookstore.Controllers
 
             return View(await address.ToListAsync());
         }
-
-       
-        public async Task<IActionResult> Details(long? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var address = await _context.Address
-                .FirstOrDefaultAsync(m => m.Address_Id == id);
-            if (address == null)
-            {
-                return NotFound();
-            }
-
-            return View(address);
-        }
-
-        
+        //creat address
         public IActionResult Create()
         {
             return View();
@@ -87,7 +68,7 @@ namespace BobBookstore.Controllers
             return View(address);
         }
 
-        
+        //edit address
         public async Task<IActionResult> Edit(long? id)
         {
             if (id == null)
@@ -137,7 +118,7 @@ namespace BobBookstore.Controllers
             return View(address);
         }
 
-        
+        //delete address
         public async Task<IActionResult> Delete(long? id)
         {
             if (id == null)

@@ -50,6 +50,7 @@ namespace BobBookstore.Areas.Identity.Pages.Account
             returnUrl = returnUrl ?? Url.Content("~/");
             if (ModelState.IsValid)
             {
+                //get user id
                 var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name).Value;
 
                 var user = await _userManager.FindByIdAsync(userId);

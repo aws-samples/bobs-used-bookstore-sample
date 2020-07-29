@@ -98,14 +98,14 @@ namespace BobBookstore.Areas.Identity.Pages.Account
                 user.Attributes.Add(CognitoAttribute.PhoneNumber.AttributeName, "+01234567890");
                 user.Attributes.Add(CognitoAttribute.FamilyName.AttributeName, Input.LastName);
                 user.Attributes.Add(CognitoAttribute.GivenName.AttributeName, Input.FirstName);
+                //check if the email has been used
                 var existuser = await _userManager.FindByEmailAsync(Input.Email);
                 if (existuser!=null)
                 {
-                    //throw new InvalidOperationException("E-mail address has been used");
                     ModelState.AddModelError(string.Empty, "E-mail address has been used");
                     return Page();
                 }
-
+                //creat account
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
                 {

@@ -3,6 +3,11 @@
 @{
     ViewData["Title"] = "Orders";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    foreach (var item in Model)
+
+    {
+        item.Subtotal += item.Tax;
+    }
 }
 
 <h1>Your Orders</h1>
@@ -31,13 +36,12 @@ else
         <tbody>
             @foreach (var item in Model)
             {
-                @{ 
-                    var totalPrice = item.Subtotal + item.Tax;
-                }
+                
+                
             <tr>
                 <td>
-                    @*@Html.DisplayFor(modelItem => item.Subtotal + item.Tax)*@
-                    @totalPrice
+                    @Html.DisplayFor(modelItem => item.Subtotal)
+                    
                 </td>
                 @if (String.IsNullOrEmpty(item.DeliveryDate))
                 {

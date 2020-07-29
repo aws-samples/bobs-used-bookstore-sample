@@ -258,7 +258,7 @@ namespace BobBookstore.Areas.Identity.Pages.Account.Manage
             {
                 Input.ZipCode = "default";
             }
-           
+           //update cognito
             user.Attributes[CognitoAttribute.Address.AttributeName] = Input.Address;
             user.Attributes[CognitoAttribute.BirthDate.AttributeName] = Input.BirthDate;
             user.Attributes[CognitoAttribute.Gender.AttributeName] = Input.Gender;
