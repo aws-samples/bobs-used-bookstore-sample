@@ -19,7 +19,7 @@
 
 
 <form asp-controller="Search" asp-action="Index" method="get">
-
+        
     <div class="form-group mt-5">
         <label class="col-sm-2 col-form-label">Sort By:</label>
         <select id="selectId" class="col-2 custom-select form-control" name="SortBy" onchange="javascript:this.form.submit()">
@@ -34,12 +34,12 @@
         <input class="form-control col-md-3" type="text" name="SearchString" value="@ViewBag.currentFilter" />
         <button type="submit" class="btn btn-primary" value="Search">Search</button>
     </div>
+        
 
 
+        
 
-
-
-
+    
 </form>
 
 @if (Model != null && Model.Count == 0)
@@ -51,7 +51,7 @@
 else if (Model != null)
 {
     <!--<div class="card-deck">
-        @foreach (var item in Model.Data)
+        foreach (var item in Model.Data)
         {
         <div class="row">
             <div class="col-md-4">
@@ -71,9 +71,10 @@ else if (Model != null)
                 </div>
             </div>
         </div>
-
-        }
+        
+        } 
     </div> -->
+    <!--
     <table class="table table-striped table-bordered table-sm" cellspacing="0" width="100%">
         <thead>
             <tr>
@@ -101,105 +102,105 @@ else if (Model != null)
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in Model.Data)
+            foreach (var item in Model.Data)
             {
                 <tr>
                     <td>
-                        @Html.DisplayFor(modelitem => item.BookName)
+                        Html.DisplayFor(modelitem => item.BookName)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelitem => item.Author)
+                        Html.DisplayFor(modelitem => item.Author)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelitem => item.ISBN)
+                        Html.DisplayFor(modelitem => item.ISBN)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.GenreName)
+                        Html.DisplayFor(modelItem => item.GenreName)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelitem => item.PublisherName)
+                        Html.DisplayFor(modelitem => item.PublisherName)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelitem => item.TypeName)
+                        Html.DisplayFor(modelitem => item.TypeName)
                     </td>
-                    @if (item.Prices.Count == 0)
+                    if (item.Prices.Count == 0)
                     {
                         <td> None in stock </td>
                     }
                     else
                     {
-                        <td> Available from $@item.MinPrice</td>
+                        <td> Available from $item.MinPrice</td>
                     }
 
 
                     <td>
                         <form asp-controller="Search" asp-action="Detail" method="get">
-                            <input type="hidden" name="id" value="@item.BookId" />
+                            <input type="hidden" name="id" value="item.BookId" />
                             <input type="submit" value="details" />
                         </form>
                     </td>
                 </tr>
             }
         </tbody>
-    </table>
-
-    <!--
-        <body>
-
-                <div class="container">
-                    <h2>Search Results:</h2>
-
-                        <div class="recent-book-sec">
-                            <div class="row">
-
-                                foreach (var item in Model.Data) {
+    </table> -->
 
 
-                                    <div class="col-md-3">
-                                        <div class="item">
-                                            <img src="Html.DisplayFor(modelItem => item.Url)" alt="img">
-                                            <h3>Html.DisplayFor(modelitem => item.BookName)</h3>
-                                            if (item.Prices.Count != 0)
-                                            {
+    <body>
+        <section class="static about-sec">
+            <div class="container">
+                <h2>Search Results:</h2>
+                
+                    <div class="recent-book-sec">
+                        <div class="row">
 
-                                                <h6><span class="price">$item.MinPrice </span> </h6>
-                                            }
-                                            else
-                                            {
-                                                <h6> Out Of Stock</h6>
-                                            }
-                                            <div class="hover">
-                                                <form asp-controller="Search" asp-action="Detail" method="get">
-                                                    <input type="hidden" name="id" value="item.BookId" />
-                                                    <input type="submit" value="details" />
-                                                </form>
+                            @foreach (var item in Model.Data) {
 
-                                            </div>
+
+                                <div class="col-md-3">
+                                    <div class="item">
+                                        <img src="@Html.DisplayFor(modelItem => item.Url)" alt="img">
+                                        <h3>@Html.DisplayFor(modelitem => item.BookName)</h3>
+                                        @if (item.Prices.Count != 0)
+                                        {
+
+                                            <h6><span class="price">$@item.MinPrice </span> </h6>
+                                        }
+                                        else
+                                        {
+                                            <h6> Out Of Stock</h6>
+                                        }
+                                        <div class="hover">
+                                            <form asp-controller="Search" asp-action="Detail" method="get">
+                                                <input type="hidden" name="id" value="@item.BookId" />
+                                                <input type="submit" value="details" />
+                                            </form>
 
                                         </div>
 
                                     </div>
-                                }
-                            </div>
-                        </div> -->
 
-    <div>
-        <ul class="pagination">
-            @for (var i = 1; i <= (int)Math.Ceiling(Model.Count / 10.0); i++)
-            {
-                <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
-                    <a asp-route-page="@i" asp-route-sortBy="@ViewBag.CurrentSort" asp-route-searchstring="@ViewBag.currentFilter" class="page-link">@i</a>
-                </li>
-            }
-        </ul>
-    </div>
-    <section class="static about-sec">
-    </section>
-
-    <script src="js/jquery.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="js/owl.carousel.min.js"></script>
-    <script src="js/custom.js"></script>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                
+                <div>
+                    <ul class="pagination">
+                        @for (var i = 1; i <= (int)Math.Ceiling(Model.Count / 10.0); i++)
+                        {
+                            <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+                                <a asp-route-page="@i" asp-route-sortBy="@ViewBag.CurrentSort" asp-route-searchstring="@ViewBag.currentFilter" class="page-link">@i</a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+</section>
+        
+        <script src="js/jquery.min.js"></script>
+        <script src="js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="js/owl.carousel.min.js"></script>
+        <script src="js/custom.js"></script>
+    </body>
     <br />
 
 }
