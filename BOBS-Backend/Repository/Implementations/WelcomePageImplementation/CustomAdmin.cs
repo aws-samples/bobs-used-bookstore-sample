@@ -42,7 +42,7 @@ namespace BOBS_Backend.Repository.Implementations.WelcomePageImplementation
                             .Include(p => p.Book)
                                 .ThenInclude(b => b.Publisher)
                             .OrderByDescending(p => p.UpdatedOn.Date)
-                            .Take(8).ToListAsync();
+                            .Take(Constants.TOTAL_RESULTS).ToListAsync();
                             
                                 
 
@@ -74,7 +74,7 @@ namespace BOBS_Backend.Repository.Implementations.WelcomePageImplementation
                                 .Include(p=>p.Book)
                                     .ThenInclude(b=>b.Publisher)
                                 .OrderByDescending(p => p.UpdatedOn.Date)
-                                .Take(8).ToListAsync();
+                                .Take(Constants.TOTAL_RESULTS).ToListAsync();
                 return books;
             }catch(Exception e)
             {
@@ -82,13 +82,35 @@ namespace BOBS_Backend.Repository.Implementations.WelcomePageImplementation
                 return null;
             }
         }
-        private List<Order> FilterOrders(List<Order> allOrders)
+
+        private int GetOrderSeverity(Order order, double timeDiff )
+        {
+            int severity = 0;
+            long status = order.OrderStatus.OrderStatus_Id;
+            switch (status)
+            {
+                case 2:
+                    if (timeDiff <= 0)
+                        severity = 2;
+                    else
+                        severity = 1;
+                    break;
+                case 3: 
+                    severity = 2;
+                    break;
+                
+            }
+
+
+            return severity;
+        }
+        private List<FilterOrders> FilterOrders(List<Order> allOrders)
         {
             //filters the orders based on priority
-            try
-            {
+            try {
+                
                 // list of filtered orders to be returned 
-                List<Order> filtered_order = new List<Order>();
+                List<FilterOrders> filtered_order = new List<FilterOrders>();
                 // Date at the time 
                 DateTime todayDate = DateTime.Now;
                 foreach (var order in allOrders)
@@ -104,7 +126,11 @@ namespace BOBS_Backend.Repository.Implementations.WelcomePageImplementation
                         double diff = (time - todayDate).TotalDays;
                         if ( diff <= 5)
                         {
-                            filtered_order.Add(order);
+                            int severity = GetOrderSeverity(order, diff);
+                            FilterOrders new_order = new FilterOrders();
+                            new_order.Order = order;
+                            new_order.Severity = severity;
+                            filtered_order.Add(new_order);
                         }
 
                     }
@@ -114,11 +140,15 @@ namespace BOBS_Backend.Repository.Implementations.WelcomePageImplementation
                         double diff = (todayDate - time).TotalDays;
                         if (diff > 0 && diff < 5)
                         {
-                            filtered_order.Add(order);
+                            int severity = GetOrderSeverity(order, diff);
+                            FilterOrders new_order = new FilterOrders();
+                            new_order.Order = order;
+                            new_order.Severity = severity;
+                            filtered_order.Add(new_order);
                         }
                     }
                 }
-                filtered_order.OrderBy(o => o.OrderStatus.OrderStatus_Id);
+                filtered_order.OrderBy(o => o.Order.OrderStatus.OrderStatus_Id);
                 return filtered_order;
             }catch(Exception e)
             {
@@ -126,7 +156,7 @@ namespace BOBS_Backend.Repository.Implementations.WelcomePageImplementation
                 return null;
             }
         }
-        public async Task<List<Order>> GetImportantOrders()
+        public async Task<List<FilterOrders>> GetImportantOrders()
         {
             try
             {
@@ -146,21 +176,21 @@ namespace BOBS_Backend.Repository.Implementations.WelcomePageImplementation
             }
 
         }
-        public List<Order> SortTable(List<Order> orders, string sortByValue)
+        public List<FilterOrders> SortTable(List<FilterOrders> orders, string sortByValue)
         {
             
             switch(sortByValue){
                 case "price_desc":
-                    orders = orders.OrderByDescending(o => o.Subtotal).ToList();
+                    orders = orders.OrderByDescending(o => o.Order.Subtotal).ToList();
                     break;
                 case "date_desc":
-                    orders = orders.OrderByDescending(o => o.DeliveryDate).ToList();
+                    orders = orders.OrderByDescending(o => o.Order.DeliveryDate).ToList();
                     break;
                 case "price":
-                    orders = orders.OrderBy(o => o.Subtotal).ToList();
+                    orders = orders.OrderBy(o => o.Order.Subtotal).ToList();
                     break;
                 case "date":
-                    orders = orders.OrderBy(o => o.DeliveryDate).ToList();
+                    orders = orders.OrderBy(o => o.Order.DeliveryDate).ToList();
                     break;
                 default: break;
             }

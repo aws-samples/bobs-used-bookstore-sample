@@ -13,9 +13,11 @@ using BOBS_Backend.Database;
 using BOBS_Backend.Models.Book;
 using Amazon.S3.Model;
 using BOBS_Backend.DataModel;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BOBS_Backend.Controllers
 {
+    [Authorize]
     public class InventoryController : Controller
     {
         private readonly IInventory _Inventory;

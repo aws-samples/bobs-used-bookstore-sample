@@ -12,6 +12,6 @@ namespace BOBS_Backend.ViewModel.UpdateBooks
         public List<Price> Books { get; set; }
         public List<Price> GlobalBooks { get; set; }
 
-        public List<Order> ImpOrders { get; set; }
+        public List<FilterOrders> ImpOrders { get; set; }
     }
 }

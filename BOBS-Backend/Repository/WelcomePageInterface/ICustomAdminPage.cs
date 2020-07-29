@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Amazon.S3.Model;
 using BOBS_Backend.Models.Book;
 using BOBS_Backend.Models.Order;
 using BOBS_Backend.ViewModel.UpdateBooks;
@@ -12,7 +13,7 @@ namespace BOBS_Backend.Repository.WelcomePageInterface
     {
         Task<List<Price>> GetUpdatedBooks(string adminUsername);
         Task<List<Price>> GetGlobalUpdatedBooks(string adminUsername);
-        Task<List<Order>> GetImportantOrders();
-        List<Order> SortTable(List<Order> order, string sortByValue);
+        Task<List<FilterOrders>> GetImportantOrders();
+        List<FilterOrders> SortTable(List<FilterOrders> order, string sortByValue);
     }
 }

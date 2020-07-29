@@ -49,8 +49,9 @@ namespace BOBS_Backend.Controllers
             bookUpdates.Books = _customeAdmin.GetUpdatedBooks(adminUsername).Result;
             // get recent books updated globally
             bookUpdates.GlobalBooks = _customeAdmin.GetGlobalUpdatedBooks(adminUsername).Result;
-            bookUpdates.ImpOrders = _customeAdmin.GetImportantOrders().Result;
             // get important orders
+            bookUpdates.ImpOrders = _customeAdmin.GetImportantOrders().Result;
+            
             if (sortByValue == null)
             {
                 
