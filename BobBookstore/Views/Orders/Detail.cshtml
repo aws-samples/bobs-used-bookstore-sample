@@ -1,4 +1,4 @@
-﻿@model BobBookstore.Models.Order.OrderDetail
+﻿@model BobBookstore.Models.ViewModels.OrderViewModel
 
 @{
     ViewData["Title"] = "Details";
@@ -11,17 +11,23 @@
     <h4>OrderDetails</h4>
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.price)
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Subtotal)
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.price)
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Subtotal)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.quantity)
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.DeliveryDate)
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.quantity)
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.DeliveryDate)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Status)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Status)
         </dd>
     </dl>
 </div>

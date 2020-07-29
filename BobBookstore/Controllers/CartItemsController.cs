@@ -196,13 +196,14 @@ namespace BobBookstore.Controllers
             }
             for (int i = 0; i < bookF.Length; i++)
             {
-                //var orderDetailBook = itemIdList[i].Book;
+                
                 var orderDetailBook = _context.Book.Find(Convert.ToInt64(bookF[i]));
                 //var orderDetailPrice = itemIdList[i].Price;
                 var orderDetailPrice = _context.Price.Find(Convert.ToInt64(priceF[i]));
                 var newOrderDetail = new OrderDetail() { };
                 var OrderDetail = new OrderDetail() { Book = orderDetailBook, Price = orderDetailPrice, price =Convert.ToDouble(fruits[i]), quantity = Convert.ToInt32(quantity[i]), Order = recentOrder, IsRemoved = false };
-                //var orderDetail = new CartViewModel();
+                orderDetailPrice.Quantity = orderDetailPrice.Quantity - Convert.ToInt32(quantity[i]);
+                _context.Update(orderDetailPrice);
                 _context.Add(OrderDetail);
                 _context.SaveChanges();
             }
@@ -211,6 +212,8 @@ namespace BobBookstore.Controllers
                 var cartItemD = _context.CartItem.Find(Convert.ToInt32(IDs[i]));
                 _context.CartItem.Remove(cartItemD);
             }
+
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(ConfirmCheckout),new { OrderId=orderId});
             //return View();
@@ -321,98 +324,7 @@ namespace BobBookstore.Controllers
             }
             return View(address);
         }
-        //// GET: CartItems/Details/5
-        //public async Task<IActionResult> Details(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    var cartItem = await _context.CartItem
-        //        .FirstOrDefaultAsync(m => m.CartItem_Id == id);
-        //    if (cartItem == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    return View(cartItem);
-        //}
-
-        // GET: CartItems/Create
-        //public IActionResult Create()
-        //{
-        //    return View();
-        //}
-
-        //// POST: CartItems/Create
-        //// To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        //// more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Create([Bind("CartItem_Id")] CartItem cartItem)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        _context.Add(cartItem);
-        //        await _context.SaveChangesAsync();
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    return View(cartItem);
-        //}
-
-        //// GET: CartItems/Edit/5
-        //public async Task<IActionResult> Edit(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    var cartItem = await _context.CartItem.FindAsync(id);
-        //    if (cartItem == null)
-        //    {
-        //        return NotFound();
-        //    }
-        //    return View(cartItem);
-        //}
-
-        //// POST: CartItems/Edit/5
-        //// To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        //// more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Edit(int id, [Bind("CartItem_Id")] CartItem cartItem)
-        //{
-        //    if (id != cartItem.CartItem_Id)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    if (ModelState.IsValid)
-        //    {
-        //        try
-        //        {
-        //            _context.Update(cartItem);
-        //            await _context.SaveChangesAsync();
-        //        }
-        //        catch (DbUpdateConcurrencyException)
-        //        {
-        //            if (!CartItemExists(cartItem.CartItem_Id))
-        //            {
-        //                return NotFound();
-        //            }
-        //            else
-        //            {
-        //                throw;
-        //            }
-        //        }
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    return View(cartItem);
-        //}
-
-        // GET: CartItems/Delete/5
+        
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)

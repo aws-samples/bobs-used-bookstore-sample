@@ -14,44 +14,137 @@
     var user = await UserManager.GetUserAsync(User);
 }
 
-<h4>Hello @user.Attributes[Amazon.AspNetCore.Identity.Cognito.CognitoAttribute.GivenName.AttributeName]!</h4>
-<partial name="_StatusMessage" model="Model.StatusMessage" />
-<div class="row">
-    <div class="col-md-6">
-        <form id="profile-form" method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                @*<label asp-for="Username"></label>
-        <input asp-for="Username" class="form-control" disabled />*@
-                Username : @UserManager.GetUserName(User)
-            </div>
 
-            <div class="form-group">
-                @*<label asp-for="Input.EmailAddress"></label>
-        <input asp-for="Input.EmailAddress" class="form-control" disabled />*@
-                Email Address : @user.Attributes[Amazon.AspNetCore.Identity.Cognito.CognitoAttribute.Email.AttributeName]
-            </div>
-            
-        </form>
-    </div>
-</div>
 
-<div>
-    <h4>Manage your account</h4>
-    <hr />
-    <div class="row">
-        <div class="col-md-3">
-            <partial name="_ManageNav" />
-            
-                <a  asp-area="" asp-controller="Addresses" asp-action="Index">Manage Address</a>
-                
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Register</title>
+
+    <link href="css/sb-admin-2.min.css" rel="stylesheet">
+
+</head>
+
+<body class="bg-gradient-primary">
+
+    <div class="container" style="color:blueviolet">
+
+        <div class="card o-hidden border-0 shadow-lg my-5">
+            <div class="card-body p-0">
+                <!-- Nested Row within Card Body -->
+                <div class="row">
+                    @*<div>
+                        <h4>Hello @user.Attributes[Amazon.AspNetCore.Identity.Cognito.CognitoAttribute.GivenName.AttributeName]!</h4>
+                        <partial name="_StatusMessage" model="Model.StatusMessage" />
+                        <div class="row">
+                            <div class="col-md-6">
+                                <form id="profile-form" method="post">
+                                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                    <div class="form-group">
+                                       
+                                        Username : @UserManager.GetUserName(User)
+                                    </div>
+
+                                    <div class="form-group">
+                                        
+                                        Email Address : @user.Attributes[Amazon.AspNetCore.Identity.Cognito.CognitoAttribute.Email.AttributeName]
+                                    </div>
+
+                                </form>
+                            </div>
+                        </div>
+
+                    </div>*@
+                    <div class="col-lg-5 d-none d-lg-block bg-register-image">
+                        <img src=" https://dtdt6j0vhq1rq.cloudfront.net/ManagerPage.jpg" height="1000" width="1000" />
+                        <span style="position: absolute; top: 0; left: 0;">
+                            <br /><br /><br /><br /><br /><br /><br />
+                            <h2>
+                                &nbsp;&nbsp;
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Hello @user.Attributes[Amazon.AspNetCore.Identity.Cognito.CognitoAttribute.GivenName.AttributeName]!
+                            </h2><br />
+                            
+
+                            <h4 style="color:blue">
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                &nbsp;&nbsp;&nbsp;
+                                Username :
+                            </h4>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            
+                            @UserManager.GetUserName(User)<br /><br />
+
+                            <h4 style="color:blue">
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                &nbsp;&nbsp;&nbsp;
+                                Email Address :
+                            </h4>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            
+                            @user.Attributes[Amazon.AspNetCore.Identity.Cognito.CognitoAttribute.Email.AttributeName]<br />
+                        </span>
+
+                        &
+
+                    </div>
+
+                    <div class="col-lg-7">
+                        <div class="p-5">
+                            
+                            <div>
+                                <br /><br /><br /><br /><br /><br /><br />
+                                <h4>Manage your account</h4>
+                                <hr />
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <partial name="_ManageNav" />
+
+
+
+                                    </div>
+
+
+                                </div>
+                            </div>
+                            <hr>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <a asp-area="" asp-controller="Orders" asp-action="Index">Order</a>
-
     </div>
-</div>
-
-
+</body>
+</html>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

@@ -49,7 +49,7 @@ namespace BobBookstore.Controllers
             return NotFound("You must be signed in.");
         }
 
-        public async Task<IActionResult> Details(long orderId)
+        public async Task<IActionResult> Detail(long id)
         {
             if (_SignInManager.IsSignedIn(User))
             {
@@ -57,7 +57,7 @@ namespace BobBookstore.Controllers
                 string customer_id = user.Attributes[CognitoAttribute.Sub.AttributeName];
                 var order = from o in _context.Order
                             where o.Customer.Customer_Id == customer_id &&
-                            o.Order_Id == orderId
+                            o.Order_Id == id
                             select new OrderViewModel()
                             {
                                 Order_Id = o.Order_Id,

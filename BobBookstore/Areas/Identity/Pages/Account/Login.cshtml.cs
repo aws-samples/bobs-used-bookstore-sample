@@ -90,10 +90,7 @@ namespace BobBookstore.Areas.Identity.Pages.Account
                     _logger.LogInformation("User logged in.");
                     return LocalRedirect(returnUrl);
                 }
-                else if (result.RequiresTwoFactor)
-                {
-                    return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, RememberMe = Input.RememberMe });
-                }
+                
                 else if (result.IsCognitoSignInResult())
                 {
                     if (result is CognitoSignInResult cognitoResult)

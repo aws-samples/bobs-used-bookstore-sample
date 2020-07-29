@@ -287,44 +287,49 @@ namespace BobBookstore.Areas.Identity.Pages.Account.Manage
             else
             {
 
-                var email = user.Attributes[CognitoAttribute.Email.AttributeName];
-                var customer = from m in _context.Customer
-                               select m;
-                customer = customer.Where(s => s.Email==email);
-                //customer =customer.Where(s=>s.Username.)
                 
-                string id="a";
-                foreach (var m in customer)
-                {
-                    if(m.Email==email)
-                    {
-                        id = m.Customer_Id;
-                    }
-                       
-                }
+                var id = user.Attributes[CognitoAttribute.Sub.AttributeName];
                 //get customer information
                 var recentCustomer = await _context.Customer.FindAsync(id);
                 var address = from m in _context.Address
+                              where m.Customer==recentCustomer && m.IsPrimary==true
                               select m;
-                address = address.Where(s => s.Customer==recentCustomer);
-                Address recentAddress = new Address();
-                foreach (var add in address)
+                if (address == null)
                 {
-                    //addressId = add.Address_Id;
-                    recentAddress = add;
-                }
-                //var recentAddress =await  _context.Address.FindAsync(addressId);
-                recentAddress.AddressLine1 = Input.AddressLine1;
-                recentAddress.AddressLine2 = Input.AddressLine2;
-                recentAddress.City = Input.City;
-                recentAddress.Country = Input.Country;
-                //recentAddress.ZipCode = Convert.ToInt32(Input.ZipCode);
-                recentAddress.State = Input.State;
-                recentAddress.Customer = recentCustomer;
-                recentAddress.IsPrimary = true;
-                _context.Update(recentAddress);
-                
+                    var newAddress = new Address { 
+                        IsPrimary = true, 
+                        AddressLine1 = Input.AddressLine1, 
+                        AddressLine2 = Input.AddressLine2, 
+                        City = Input.City, 
+                        Country = Input.Country, 
+                        State = Input.State,
+                        Customer = recentCustomer, 
+                        ZipCode = Convert.ToInt32(Input.ZipCode) 
+                    };
+                    _context.Add(newAddress);
 
+                }
+                else
+                {
+                    Address recentAddress = new Address();
+                    foreach (var add in address)
+                    {
+                        
+                        recentAddress = add;
+                    }
+                    //var recentAddress =await  _context.Address.FindAsync(addressId);
+                    recentAddress.AddressLine1 = Input.AddressLine1;
+                    recentAddress.AddressLine2 = Input.AddressLine2;
+                    recentAddress.City = Input.City;
+                    recentAddress.Country = Input.Country;
+                    
+                    recentAddress.ZipCode = Convert.ToInt32(Input.ZipCode);
+                    recentAddress.State = Input.State;
+                    recentAddress.Customer = recentCustomer;
+                    recentAddress.IsPrimary = true;
+                    _context.Update(recentAddress);
+
+                }
                 await _context.SaveChangesAsync();
 
                 
