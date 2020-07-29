@@ -1,13 +1,19 @@
-﻿@*The view partial for last update book by current user*@
+﻿@*The view partial for last update book by global user*@
 @model BOBS_Backend.ViewModel.UpdateBooks.LatestUpdates;
 @{
     var updates = Model;
 }
 
-<div class="card mb-3 border-dark">
+<style>
+    .card-border{
+        border-radius: 2px 2px 2px 2px;
+    }
+</style>
+
+<div class="card shadow card-border border-dark mb-3">
     <div class="card-body">
-        <div class=" p-0 m-0">
-            <table class="table_font table table-bordered  table-hover">
+        <div class="p-0 m-0">
+            <table class="table_font  table  table-bordered table-hover">
 
                 <thead>
                     <tr>
@@ -24,50 +30,39 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @if (updates.Books.Count == 0)
+                    @if (updates.GlobalBooks.Count == 0)
                     {
                         <tr>
                             <td colspan="10" rowspan="4" style="text-align:center;"><span><h4>No Updates Currently</h4></span></td>
+
                         </tr>
                     }
                     else
                     {
-                        @foreach (var b in updates.Books)
+                        @foreach (var b in updates.GlobalBooks)
                         {
                             var param = new Dictionary<string, string>{
-                                             {"BookId",b.Book.Book_Id + ""}
+                                         {"BookId",b.Book.Book_Id + ""}
                                         };
                             <tr>
                                 <td>@b.Book.Book_Id</td>
                                 <td>@b.Book.Name</td>
                                 <td>@b.Book.Author</td>
-                                <td>@b.Book.Publisher</td>
+                                <td>@b.Book.Publisher.Name</td>
                                 <td>@b.Book.Genre.Name</td>
                                 <td>@b.Book.Type.TypeName</td>
                                 <td>@b.Condition.ConditionName</td>
                                 <td>@b.ItemPrice</td>
                                 <td>@b.UpdatedOn.ToShortDateString()</td>
-                                <td><a class="card-link" asp-controller="Inventory" asp-action="BookDetails" asp-all-route-data="param">Details</a></td>
+                                <td><a class="card-link" asp-action="BookDetails" asp-controller="Inventory" asp-all-route-data="param">Details</a></td>
                             </tr>
                         }
                     }
                 </tbody>
             </table>
-
-
-
         </div>
     </div>
 </div>
 
-
-
-       
-           
-                
-               
-
-           
-     
 
 

@@ -1,30 +1,137 @@
-﻿
+﻿@model BOBS_Backend.ViewModel.UpdateBooks.LatestUpdates
+@{
+    var updates = Model;
+    string tog = "false";
+}
 
-<div class="table-responsive-sm p-0 m-0">
-    <table class="table_font table table-sm table-hover table-bordered w-auto h-auto">
-        <caption class="p-0 text-dark captiontable"> Important Orders</caption>
-        <thead class="thead-dark">
-            <tr>
-                <th scope="col">Order_ID</th>
-                <th scope="col">Customer_ID</th>
-                <th scope="col">Customer Name</th>
-                <th scope="col">Total Price</th>
-                <th scope="col">Delivery Date</th>
-                <th scope="col">Status</th>
-                <th scope="col"> Action</th>
+<style>
+    ::-webkit-scrollbar {
+        width: 5px;
+    }
 
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>011</td>
-                <td>200</td>
-                <td>Jaideep Bhide</td>
-                <td>$10</td>
-                <td>08/01/2020</td>
-                <td>En-Route</td>
-                <td><a class="card-link" href="#">Details</a></td>
-            </tr>
-        </tbody>
+    /* Track */
+    ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+    }
+
+    /* Handle */
+    ::-webkit-scrollbar-thumb {
+        background: #495057;
+        border-radius: 2px;
+    }
+
+        /* Handle on hover */
+        ::-webkit-scrollbar-thumb:hover {
+            background: #495057 ;
+        }
+
+     th{
+        position: sticky;
+        top: 0;
+        z-index:2
+    }
+    .table .thead-light th {
+    color: #495057;
+    background-color: white;
+    border-color: #dee2e6;
+}
+
+   th a{
+       color: inherit;
+   }
+    .box{
+        width: 12px;
+        height:12px;
+        display:inline-block;
+    }
+    #boxRed {
+        background-color: #dc3545;
+    }
+    #boxYellow {
+        background-color: #ffc107;
+    }
+    #key{
+      margin:auto;
+    }
+
+    .keyRows td{
+        padding-left: 30px ;
+        padding-right: 30px;
+    }
+
+</style>
+
+<div   class="mb-2">
+    <table id="key"r>
+        <tr class="keyRows">
+            <td><div id="boxRed"class="box">
+                    
+                </div>
+                <span>
+                    Delayed Orders
+                </span>
+            </td>
+            <td>
+                <div id="boxYellow" class="box"></div>
+                <span> Upcoming Orders</span>
+            </td>
+        </tr>
     </table>
+</div>
+
+
+<div class="card mb-3 border-dark shadow">
+    <div class="card-body">
+        <div class="p-0 m-0" style="max-height:500px; overflow-y:scroll;">
+            <table class="orderT box-shadow table_font table table-hover table-bordered  h-auto">
+
+                <thead class="thead-light">
+                    <tr>
+                        <th scope="col">Order_ID</th>
+                        <th scope="col">Customer_ID</th>
+                        <th scope="col">CustomerName</th>
+
+                        <th><a  href="@Url.Action("WelcomePage","Home" ,new {sortByValue = ViewBag.SortPrice })">Price @ViewBag.PriceArrow</a></th>
+                        
+                        <th><a href="@Url.Action("WelcomePage", "Home", new {sortByValue = ViewBag.SortDate })">Delivery Date @ViewBag.DateArrow</a></th>
+                        <th scope="col">Status</th>
+                        <th scope="col"> Action</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (updates.ImpOrders.Count == 0)
+                    {
+                        <tr>
+                            <td colspan="7" rowspan="4" style="text-align:center;"><span><h4>No Updates Currently</h4></span></td>
+
+                        </tr>
+                    }
+                    else
+                    {
+                        @foreach (var order in updates.ImpOrders)
+                        {
+                            var param = new Dictionary<string, string>
+                            {
+                                {"orderId",order.Order.Order_Id + ""}
+                            };
+                            var status = order.Order.OrderStatus.OrderStatus_Id;
+
+                            <tr class="@((order.Severity == 1) ? "table-warning" : "table-danger" )">
+                                <td>@order.Order.Order_Id</td>
+                                <td>@order.Order.Customer.Customer_Id</td>
+                                <td>@order.Order.Customer.FirstName  @order.Order.Customer.LastName</td>
+                                <td>$@(order.Order.Subtotal + order.Order.Tax)</td>
+                                <td> @DateTime.Parse(order.Order.DeliveryDate).ToString("MM/dd/yyyy")</td>
+                                <td>@order.Order.OrderStatus.Status</td>
+                                <td><a class="card-link" asp-controller="Orders" asp-action="ProcessOrders" asp-all-route-data="param">View Details</a></td>
+                                
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+
+    </div>
 </div>
