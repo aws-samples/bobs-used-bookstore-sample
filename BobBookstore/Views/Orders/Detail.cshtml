@@ -5,32 +5,37 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Details</h1>
+<h1>Order: #@Model.Order_Id</h1>
 
-<div>
-    <h4>OrderDetails</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Subtotal)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Subtotal)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.DeliveryDate)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.DeliveryDate)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Status)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Status)
-        </dd>
-    </dl>
+<div class="container">
+    <h3>Status: @Model.Status</h3>
+    <h3>Delivery Date: @Model.DeliveryDate</h3>
+    <h3>Total cost: @Model.Subtotal</h3>
 </div>
-<div>
-    <a asp-action="Index">Back to List</a>
+<div class="container">
+    <h2>Your Order:</h2>
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th scope="col">Title</th>
+                <th scope="col">Quantity</th>
+                <th scope="col">Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var book in Model.Books)
+            {
+                <tr>
+                    <td>
+                        <a asp-controller="Search" asp-action="Detail" asp-route-id="@book.Book_Id">
+                            @book.Bookname
+                        </a>
+                    </td>
+                    <td>@book.Quantity</td>
+                    <td>@book.Price</td>
+                </tr>
+            }
+        </tbody>
+
+    </table>
 </div>

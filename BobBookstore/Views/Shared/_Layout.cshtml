@@ -3,6 +3,9 @@
 
 @inject SignInManager<CognitoUser> SignInManager
 @inject UserManager<CognitoUser> UserManager
+@{
+    var user = await UserManager.GetUserAsync(User);
+}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -34,9 +37,12 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Orders" asp-action="Index">View Orders</a>
-                        </li>
+                        @if (SignInManager.IsSignedIn(User))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Orders" asp-action="Index">View Orders</a>
+                            </li>
+                        }
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Search" asp-action="Index">Search Books</a>
                         </li>
@@ -109,7 +115,7 @@
                             </li>
                         </ul>
                     </div>
-               
+
                 </div>
                 <div class="col-md-5">
                     <div class="form">

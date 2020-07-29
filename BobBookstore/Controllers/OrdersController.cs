@@ -55,6 +55,17 @@ namespace BobBookstore.Controllers
             {
                 var user = await _userManager.GetUserAsync(User);
                 string customer_id = user.Attributes[CognitoAttribute.Sub.AttributeName];
+                var orderDetails = from od in _context.OrderDetail
+                                   where od.Order.Order_Id == id && !od.IsRemoved
+                                   select new OrderDetailViewModel()
+                                   {
+                                       Bookname = od.Book.Name,
+                                       Book_Id = od.Book.Book_Id,
+                                       Quantity = od.quantity,
+                                       Price = od.price,
+                                   };
+                var books = await orderDetails.OrderBy(o => o.Bookname).ToListAsync();
+
                 var order = from o in _context.Order
                             where o.Customer.Customer_Id == customer_id &&
                             o.Order_Id == id
@@ -64,9 +75,9 @@ namespace BobBookstore.Controllers
                                 Status = o.OrderStatus.Status,
                                 Tax = o.Tax,
                                 Subtotal = o.Subtotal,
-                                DeliveryDate = o.DeliveryDate
+                                DeliveryDate = o.DeliveryDate,
+                                Books = books
                             };
-
                 return View(order.FirstOrDefault());
 
             }

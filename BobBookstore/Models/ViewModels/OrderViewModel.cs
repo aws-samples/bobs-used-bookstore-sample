@@ -12,5 +12,6 @@ namespace BobBookstore.Models.ViewModels
         public double Subtotal { get; set; }
         public double Tax { get; set; }
         public string DeliveryDate { get; set; }
+        public List<OrderDetailViewModel> Books { get; set; }
     }
 }
