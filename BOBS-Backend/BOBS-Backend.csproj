@@ -20,11 +20,13 @@
   <ItemGroup>
     <PackageReference Include="Amazon.Extensions.CognitoAuthentication" Version="1.0.4" />
     <PackageReference Include="AWS.Logger.Core" Version="1.6.0" />
+    <PackageReference Include="AWS.Logger.NLog" Version="1.5.2" />
     <PackageReference Include="AWSSDK.CloudWatch" Version="3.3.108" />
     <PackageReference Include="AWSSDK.CloudWatchLogs" Version="3.3.102.37" />
     <PackageReference Include="AWSSDK.CognitoIdentity" Version="3.3.101.114" />
     <PackageReference Include="AWSSDK.CognitoIdentityProvider" Version="3.3.111.10" />
-    <PackageReference Include="AWSSDK.Core" Version="3.3.107.28" />
+	<PackageReference Include="AWSSDK.Core" Version="3.3.107.29" />
+    <PackageReference Include="AWSSDK.Extensions.NETCore.Setup" Version="3.3.101" />
     <PackageReference Include="AWSSDK.SecurityToken" Version="3.3.105.32" />
     <PackageReference Include="AWSSDK.SimpleEmail" Version="3.3.101.182" />
     <PackageReference Include="AWSSDK.SimpleNotificationService" Version="3.3.102.5" />
@@ -45,13 +47,22 @@
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
 	<PackageReference Include="AWSSDK.Rekognition" Version="3.3.106.15" />
 	<PackageReference Include="AWSSDK.S3" Version="3.3.111.30" />
+	<PackageReference Include="NLog.Web" Version="4.9.2" />
 	<PackageReference Include="SixLabors.ImageSharp" Version="1.0.0-rc0003" />
 	  <PackageReference Include="AWSSDK.Translate" Version="3.3.101.90" />
 	  <PackageReference Include="AWSSDKCPP-Polly" Version="1.6.20160610.25" />
 	  <PackageReference Include="AWSSDKCPP-Text-To-Speech" Version="1.6.25" />
 	  <PackageReference Include="AWSSDK.Polly" Version="3.3.104.18" />
+	  <PackageReference Include="AWS.Logger.NLog" Version="1.5.2" />
+	  <PackageReference Include="AWSSDK.Extensions.NETCore.Setup" Version="3.3.101" />
+	  <PackageReference Include="AWSSDK.S3" Version="3.3.111.31" />
+	  <PackageReference Include="NLog" Version="4.7.2" />
+	  <PackageReference Include="NLog.Web.AspNetCore" Version="4.9.2" />
 
+  </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Repository\Implementations\NewFolder\" />
   </ItemGroup>
 
 </Project>

@@ -16,34 +16,43 @@ using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Http;
 using BOBS_Backend.Repository.OrdersInterface;
 using BOBS_Backend.Repository.Implementations.OrderImplementations;
-
-
-
 using BOBS_Backend.Repository.WelcomePageInterface;
 using BOBS_Backend.Repository.Implementations.WelcomePageImplementation;
 using BOBS_Backend.Notifications.NotificationsInterface;
 using BOBS_Backend.Notifications.Implementations;
+using BOBS_Backend.Repository.Implementations.InventoryImplementation;
+using Amazon.S3;
+using Microsoft.Extensions.Logging;
+using Amazon.Polly;
+using BOBS_Backend.Models;
 
 namespace BOBS_Backend
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration )
         {
             Configuration = configuration;
         }
 
         public IConfiguration Configuration { get; }
 
+
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDefaultAWSOptions(Configuration.GetAWSOptions());
+            services.AddAWSService<IAmazonS3>();
+            services.AddAWSService<IAmazonPolly>();
+            services.AddAWSService<Amazon.Rekognition.IAmazonRekognition>();
+            services.AddAWSService<Amazon.Translate.IAmazonTranslate>();
+            services.AddAWSService<Amazon.CloudWatch.IAmazonCloudWatch>();
 
-          
             services.AddControllersWithViews();
             services.AddDbContext<Database.DatabaseContext>(option => option.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddTransient<IInventory, Inventory>();
+            services.AddTransient<IRekognitionNPollyRepository, RekognitionNPollyRepository>();
 
             services.AddTransient<IOrderDetailRepository, OrderDetailRepository>();
             services.AddTransient<IOrderRepository, OrderRepository>();
@@ -87,6 +96,7 @@ namespace BOBS_Backend
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+           
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

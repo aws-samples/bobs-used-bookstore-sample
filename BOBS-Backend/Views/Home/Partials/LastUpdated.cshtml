@@ -1,83 +1,71 @@
-﻿@*The view parrtial for last update book by current user and global user*@
-@model BOBS_Backend.ViewModel.UpdateBooks.BookUpdates;
+﻿@*The view partial for last update book by current user*@
+@model BOBS_Backend.ViewModel.UpdateBooks.LatestUpdates;
 @{
-    var books = Model;
+    var updates = Model;
 }
 
+<div class="card mb-3 border-dark">
+    <div class="card-body">
+        <div class=" p-0 m-0">
+            <table class="table_font table table-bordered  table-hover">
+
+                <thead>
+                    <tr>
+                        <th scope="col">Book_ID</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Author</th>
+                        <th scope="col">Publisher</th>
+                        <th scope="col">Genre</th>
+                        <th scope="col">Type</th>
+                        <th scope="col">Condition</th>
+                        <th scope="col">Price</th>
+                        <th scope="col">Updated</th>
+                        <th scope="col">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (updates.Books.Count == 0)
+                    {
+                        <tr>
+                            <td colspan="10" rowspan="4" style="text-align:center;"><span><h4>No Updates Currently</h4></span></td>
+                        </tr>
+                    }
+                    else
+                    {
+                        @foreach (var b in updates.Books)
+                        {
+                            var param = new Dictionary<string, string>{
+                                             {"BookId",b.Book.Book_Id + ""}
+                                        };
+                            <tr>
+                                <td>@b.Book.Book_Id</td>
+                                <td>@b.Book.Name</td>
+                                <td>@b.Book.Author</td>
+                                <td>@b.Book.Publisher</td>
+                                <td>@b.Book.Genre.Name</td>
+                                <td>@b.Book.Type.TypeName</td>
+                                <td>@b.Condition.ConditionName</td>
+                                <td>@b.ItemPrice</td>
+                                <td>@b.UpdatedOn.ToShortDateString()</td>
+                                <td><a class="card-link" asp-controller="Inventory" asp-action="BookDetails" asp-all-route-data="param">Details</a></td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+
+
+
+        </div>
+    </div>
+</div>
 
 
 
        
            
                 
-                <div class="table-responsive-sm p-0 m-0">
-                    <table id="scrollTable" class="table_font table table-sm table-bordered  table-hover w-auto h-auto">
-                        <caption class="p-0 text-dark captiontable">Inventory Updated by You</caption>
-                        <thead class="thead-dark">
-                            <tr>
-                                <th scope="col">Book_ID</th>
-                                <th scope="col">Name</th>
-                                <th scope="col">Genre</th>
-                                <th scope="col">Type</th>
-                                <th scope="col">Condition</th>
-                                <th scope="col">Price</th>
-                                <th scope="col">Update Date</th>
-                                <th scope="col">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var b in books.Books)
-                            {
-                                <tr>
-                                    <td>@b.Book.Book_Id</td>
-                                    <td>@b.Book.Name</td>
-                                    <td>@b.Book.Genre.Name</td>
-                                    <td>@b.Book.Type.TypeName</td>
-                                    <td>@b.Condition.ConditionName</td>
-                                    <td>@b.ItemPrice</td>
-                                    <td>@b.UpdatedOn</td>
-                                    <td><a class="card-link" href="#">Modify</a></td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                
-
-                   
-                    <div style="clear:both;"></div>
-                        
-                        <table class="table_font  table table-sm table-bordered table-hover h-auto w-auto">
-                            <caption class="pb-0 captiontable text-dark">Inventory Updated Globally</caption>
-                            <thead class="thead-dark">
-                                <tr>
-                                    <th scope="col">Book_ID</th>
-                                    <th scope="col">Name</th>
-                                    <th scope="col">Genre</th>
-                                    <th scope="col">Type</th>
-                                    <th scope="col">Condition</th>
-                                    <th scope="col">Price</th>
-                                    <th scope="col">Update Date</th>
-                                    <th scope="col">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var b in books.GlobalBooks)
-                                {
-                                    <tr>
-                                        <td>@b.Book.Book_Id</td>
-                                        <td>@b.Book.Name</td>
-                                        <td>@b.Book.Genre.Name</td>
-                                        <td>@b.Book.Type.TypeName</td>
-                                        <td>@b.Condition.ConditionName</td>
-                                        <td>@b.ItemPrice</td>
-                                        <td>@b.UpdatedOn</td>
-                                        <td><a class="card-link" href="#">Modify</a></td>
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
-                    
-                </div>
+               
 
            
      

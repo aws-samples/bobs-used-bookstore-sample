@@ -41,5 +41,14 @@ namespace BOBS_Backend.DataModel
         public IFormFile RearPhoto { get; set; }
         public IFormFile LeftSidePhoto { get; set; }
         public IFormFile RightSidePhoto { get; set; }
+
+        public string UpdatedBy { get; set; }
+
+        public DateTime UpdatedOn { get; set; }
+
+        public string Author { get; set; }
+
+        public bool Active { get; set; }
+
     }
 }

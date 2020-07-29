@@ -6,13 +6,11 @@
 
 }
 
-
-
-<div>
+<div  style="margin-left : 20% ; margin-right : 20%">
     <div>
         <div>
             <h1 class ="text-center"style="margin-top:35px">
-                <span class="title-1 text-center font-weight-light"  style="margin-bottom: 45px; font-size: 400 ; font-family : 'Lucida Handwriting'">Update book details</span>
+                <span class="title-1 text-center font-weight-light"  style="margin-bottom: 45px;">Update book details</span>
             </h1>
             @if (errorstatus == "Yes")
             {
@@ -70,48 +68,63 @@
                         </div>
                     </div>
                 </div>
+                <div>
+                    <select class="col-2 custom-select title-1 text-center font-weight-light " style="margin-bottom:2% " id="inputGroupSelect01" asp-for="Active">
+                        <option selected value="true">Active</option>
+                        <option value="false">In-Active</option>
+                    </select>
+                </div>
+
+
+                <!-- Page Content -->
+                <div class="container">
+                    <div class="text-center">
+                    <h3 class="font-weight-light text-center text-lg-left mt-4 mb-0">Cover Pictures Gallery</h3>
+                    </div>
+                    <hr class="mt-2 mb-5">
+
+                    <div class="row text-center text-lg-left">
+                        @if (!String.IsNullOrEmpty(Model.front_url))
+                        {
+                            <div class="col-lg-3 col-md-4 col-6">
+                                <a href="#" class="d-block mb-4 h-100">
+                                    <img class="img-fluid img-thumbnail" src="@Model.front_url" alt="">
+                                    <h4 class="text-center font-weight-light">1</h4>
+                                </a>
+                            </div>
+                        }
+                        @if (!String.IsNullOrEmpty(Model.back_url))
+                        {
+                            <div class="col-lg-3 col-md-4 col-6">
+                                <a href="#" class="d-block mb-4 h-100">
+                                    <img class="img-fluid img-thumbnail" src="@Model.back_url" alt="">
+                                    <h4 class="text-center font-weight-light">2</h4>
+                                </a>
+                            </div>
+                        }
+                        @if (!String.IsNullOrEmpty(Model.left_url))
+                        {
+                            <div class="col-lg-3 col-md-4 col-6">
+                                <a href="#" class="d-block mb-4 h-100">
+                                    <img class="img-fluid img-thumbnail" src="@Model.left_url" alt="">
+                                    <h4 class="text-center font-weight-light">2</h4>
+                                </a>
+                            </div>
+                        }
+                        @if (!String.IsNullOrEmpty(Model.right_url))
+                        {
+                            <div class="col-lg-3 col-md-4 col-6">
+                                <a href="#" class="d-block mb-4 h-100">
+                                    <img class="img-fluid img-thumbnail" src="@Model.right_url" alt="">
+                                    <h4 class="text-center font-weight-light">2</h4>
+                                </a>
+                            </div>
+                        }
+                    </div>
+                    <hr class="mt-2 mb-5">
+                </div>
 
                 <div class="container">
-                    <div class="image-grid-container">
-                        <div class="row">
-                            @if (Model.front_url != null)
-                            {
-                                <div class="col-sm">
-
-                                    <img src="@Model.front_url">
-                                    <h4 class="text-center font-weight-light">1</h4>
-
-                                </div>
-                            }
-                            @if (Model.back_url != null)
-                            {
-                                <div class="col-sm">
-
-                                    <img src="@Model.back_url">
-                                    <h4 class="text-center font-weight-light">2</h4>
-
-                                </div>
-                            }
-                            @if (Model.left_url != null)
-                            {
-                                <div class="col-sm">
-
-                                    <img src="@Model.left_url">
-                                    <h4 class="text-center font-weight-light">3</h4>
-
-                                </div>
-                            }
-                            @if (Model.right_url != null)
-                            {
-                                <div class="col-sm">
-
-                                    <img src="@Model.right_url">
-                                    <h4 class="text-center font-weight-light">4</h4>
-
-                                </div>
-                            }
-                        </div>
-                    </div>
                     <input asp-for="@Model.front_url" hidden class="form-control custom-file-input">
                     <input asp-for="@Model.back_url" hidden class="form-control custom-file-input">
                     <input asp-for="@Model.left_url" hidden class="form-control custom-file-input">
@@ -156,8 +169,19 @@
                     <div class="form-group text-center">
                         <button class="btn btn-outline-primary" type="submit">Submit</button>
                     </div>
+                    @section Scripts {
+                        <script>
+            $(document).ready(function () {
+                $('.custom-file-input').on("change", function () {
+                    var fileName = $(this).val().split("\\").pop();
+                    $(this).next('.custom-file-label').html(fileName);
+                });
+            });
+                        </script>
+                    }
                 </div>
-</form>
+            </div>
+        </form>
 
     </div>
 </div>

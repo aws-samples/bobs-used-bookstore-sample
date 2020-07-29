@@ -14,6 +14,7 @@ using BOBS_Backend.Views.Orders.Shared;
 using BOBS_Backend.Repository.Implementations.WelcomePageImplementation;
 using BOBS_Backend.Repository.Implementations.WelcomePageImplementation;
 using BOBS_Backend.ViewModel.UpdateBooks;
+using BOBS_Backend.Models.Book;
 
 namespace BOBS_Backend.Controllers
 {
@@ -21,7 +22,7 @@ namespace BOBS_Backend.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private ICustomAdminPage _customeAdmin;
-
+        private string adminUsername;
 
         public HomeController(ICustomAdminPage customAdmin)
         {
@@ -34,15 +35,52 @@ namespace BOBS_Backend.Controllers
             return View();
         }
         [Authorize]
-        public IActionResult WelcomePage()
+        public IActionResult WelcomePage(string sortByValue)
         {
+                
+            adminUsername = User.Claims.FirstOrDefault(c => c.Type.Equals("cognito:username"))?.Value;
+            LatestUpdates bookUpdates = new LatestUpdates();
+            // assigns ViewBag a default value just to initialize it 
+            ViewBag.SortPrice = "price";
+            ViewBag.SortDate = "date";
+            ViewBag.PriceArrow = "▲";
+            ViewBag.DateArrow = "▲";
+            //Get books updated by current user
+            bookUpdates.Books = _customeAdmin.GetUpdatedBooks(adminUsername).Result;
+            // get recent books updated globally
+            bookUpdates.GlobalBooks = _customeAdmin.GetGlobalUpdatedBooks(adminUsername).Result;
+            // get important orders
+            bookUpdates.ImpOrders = _customeAdmin.GetImportantOrders().Result;
             
-            // change global orders into getting orders not updated by current user
-            BookUpdates bookUpdates = new BookUpdates();
-            bookUpdates.Books = _customeAdmin.GetUpdatedBooks(User.Claims).Result;
-            bookUpdates.GlobalBooks = _customeAdmin.GetGlobalUpdatedBooks().Result;
+            if (sortByValue == null)
+            {
+                
+                return View(bookUpdates);
+            }
+            else
+            {
+                // assigns ViewBag.Sort with the opposite value of sortByValue
+               if (sortByValue == "price" || sortByValue == "price_desc")
+                    ViewBag.SortPrice = sortByValue == "price"?"price_desc":"price";
+               else if (sortByValue == "date" || sortByValue == "date_desc")
+                    ViewBag.SortDate = sortByValue == "date" ? "date_desc" : "date";
+
+               //to change the arrow on the html anchors based on asc or desc
+                if (ViewBag.SortPrice == "price")
+                    ViewBag.PriceArrow = "▲";
+                else if (ViewBag.SortPrice  == "price_desc")
+                    ViewBag.PriceArrow = "▼";
+                if (ViewBag.SortDate == "date")
+                    ViewBag.DateArrow = "▲";
+                else if (ViewBag.SortDate == "date_desc")
+                    ViewBag.DateArrow = "▼";
+
+               
+                bookUpdates.ImpOrders = _customeAdmin.SortTable(bookUpdates.ImpOrders, sortByValue);
+                return View(bookUpdates);
+            }
             
-             return View(bookUpdates);
+            
         }
         public IActionResult Logout()
         {
