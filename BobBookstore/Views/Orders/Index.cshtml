@@ -1,11 +1,11 @@
 ﻿@model IEnumerable<BobBookstore.Models.ViewModels.OrderViewModel>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Orders";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Index</h1>
+<h1>Your Orders</h1>
 
 @if (Model.Count() == 0)
 {
@@ -13,7 +13,7 @@
 }
 else
 {
-    <table class="table">
+    <table class="table table-hover mt-5">
         <thead>
             <tr>
                 <th>
@@ -41,9 +41,16 @@ else
                 <td>
                     @Html.DisplayFor(modelItem => item.Tax)
                 </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.DeliveryDate)
-                </td>
+                @if (String.IsNullOrEmpty(item.DeliveryDate))
+                {
+                    <td>Unknown</td>
+                }
+                else
+                {
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DeliveryDate)
+                    </td>
+                }
                 <td>
                     @Html.DisplayFor(modelItem => item.Status)
                 </td>
@@ -53,7 +60,7 @@ else
                         <input type="hidden" name="id" value="@item.Order_Id" />
                         <input type="submit" value="details" />
                     </form>
-                <a asp-action="Delete" asp-route-id="@item.Order_Id">Cancel</a>
+                    <a asp-action="Delete" asp-route-id="@item.Order_Id">Cancel</a>
                 </td>
             </tr>
             }
