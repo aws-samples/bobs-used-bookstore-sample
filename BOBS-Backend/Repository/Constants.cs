@@ -8,33 +8,32 @@ using System.Threading.Tasks;
 
     public class Constants
     {
-        public const string ErrorStatusYes = "Yes";
-        public const string GenreExistsStatus = "Given Genre already exists in the database";
-        public const string TypeExistsStatus = "Given Format already exists in the database";
-        public const string ConditionExistsStatus = "Given Condition already exists in the database";
-        public const string PublisherExistsStatus = "Given Publisher already exists in the database";
-        public const string BookDetailsStatusDetails = "details";
-        public const string BookDetailsStatusList = "List";
-        public const int BooksPerPage = 15;
-        public const string TextToSpeechLanguageCode = "fr-CA";
-        public const string OrderStatusDelivered = "Delivered";
-        public const string OrderStatusJustPlaced = "Just Placed";
-        public const string OrderStatusEnRoute = "En Route";
-        public const string OrderStatusPending = "Pending";
-        public const string ViewStyleDefault = "Tabular";
-        public const string SortByNamePhrase = "Name";
-        public const string SortByPricePhrase = "ItemPrice";
-        public const string SortByQuantityPhrase = "Quantity";
-        public const string SortByAuthorPhrase = "Author";
-        public const string LambdaExpressionType = "BOBS_Backend.Models.Book.Price";
-        public const string LambdaExpressionPhrase = "price";
-        public const string photosBucketName = "bookcoverpictures";
-        public const string audioBucketName = "audiosummary";
-        public RegionEndpoint bucketRegion = RegionEndpoint.USEast1;
-        public const string CoverPicturesCloudFrontLink = "https://dtdt6j0vhq1rq.cloudfront.net/";
-        public const string AudioFilesCloudFrontLink = "https://d3iukz826t8vlr.cloudfront.net/";
-        public int resize_width = 200;
-        public int resize_height = 200;
         public const int TOTAL_RESULTS = 8;
-
-}
+        public string ErrorStatusYes = "Yes";
+        public string GenreExistsStatus = "Given Genre already exists in the database";
+        public string TypeExistsStatus = "Given Format already exists in the database";
+        public string ConditionExistsStatus = "Given Condition already exists in the database";
+        public string PublisherExistsStatus = "Given Publisher already exists in the database";
+        public string BookDetailsStatusDetails = "details";
+        public string BookDetailsStatusList = "List";
+        public int BooksPerPage = 15;
+        public string TextToSpeechLanguageCode = "fr-CA";
+        public string OrderStatusDelivered = "Delivered";
+        public string OrderStatusJustPlaced = "Just Placed";
+        public string OrderStatusEnRoute = "En Route";
+        public string OrderStatusPending = "Pending";
+        public string ViewStyleDefault = "Tabular";
+        public string SortByNamePhrase = "Name";
+        public string SortByPricePhrase = "ItemPrice";
+        public string SortByQuantityPhrase = "Quantity";
+        public string SortByAuthorPhrase = "Author";
+        public string LambdaExpressionType = "BOBS_Backend.Models.Book.Price";
+        public string LambdaExpressionPhrase = "price";
+        public string photosBucketName = "bookcoverpictures";
+        public string audioBucketName = "audiosummary";
+        public RegionEndpoint bucketRegion = RegionEndpoint.USEast1;
+        public string CoverPicturesCloudFrontLink = "https://dtdt6j0vhq1rq.cloudfront.net/";
+        public string AudioFilesCloudFrontLink = "https://d3iukz826t8vlr.cloudfront.net/";
+        public int resize_width = 200;
+        public int resize_height = 200;    
+    }

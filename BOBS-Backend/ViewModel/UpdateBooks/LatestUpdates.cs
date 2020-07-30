@@ -9,8 +9,8 @@ namespace BOBS_Backend.ViewModel.UpdateBooks
 {
     public class LatestUpdates
     {
-        public List<Price> Books { get; set; }
-        public List<Price> GlobalBooks { get; set; }
+        public List<Price> UserBooks { get; set; }
+        public List<Price> NotUserBooks { get; set; }
 
         public List<FilterOrders> ImpOrders { get; set; }
     }

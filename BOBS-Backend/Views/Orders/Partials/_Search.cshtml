@@ -26,7 +26,7 @@
     <div class="col-12">
         <form id="hello" class="input-group mb-3" asp-controller="Orders" asp-action="Index" method="get">
 
-            <button class="filter-by-button col-2 text btn text-white" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+            <button class="filter-by-button text btn text-white" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
                 FilterBy
             </button>
             <input asp-for="FilterValue" type="text" style="width:0;padding:0;border:0" class="invisible" readonly="readonly" id="filterValueString" />
@@ -146,12 +146,12 @@
 
         }
 
-        <a asp-controller="Orders" asp-action="Index" asp-all-route-data="allOrdersPill" class="col-1 filter-pill badge badge-pill text-white">All Orders</a>
-        <a asp-controller="Orders" asp-action="Index" asp-all-route-data="justPlaceddPill" class="col-1 filter-pill badge badge-pill text-white">Just Placed</a>
-        <a asp-controller="Orders" asp-action="Index" asp-all-route-data="pendingPill" class="col-1 filter-pill badge badge-pill text-white">Pending</a>
-        <a asp-controller="Orders" asp-action="Index" asp-all-route-data="enRoutePill" class="col-1 filter-pill badge badge-pill text-white">En Route</a>
-        <a asp-controller="Orders" asp-action="Index" asp-all-route-data="deliveredPill" class="col-1 filter-pill badge badge-pill text-white">Delivered</a>
-        <a asp-controller="Orders" asp-action="Index" asp-all-route-data="cancelledPill" class="col-1 filter-pill badge badge-pill text-white">Cancelled</a>
+        <a asp-controller="Orders" asp-action="Index" asp-all-route-data="allOrdersPill" class=" filter-pill badge badge-pill text-white">All Orders</a>
+        <a asp-controller="Orders" asp-action="Index" asp-all-route-data="justPlaceddPill" class="filter-pill badge badge-pill text-white">Just Placed</a>
+        <a asp-controller="Orders" asp-action="Index" asp-all-route-data="pendingPill" class=" filter-pill badge badge-pill text-white">Pending</a>
+        <a asp-controller="Orders" asp-action="Index" asp-all-route-data="enRoutePill" class="filter-pill badge badge-pill text-white">En Route</a>
+        <a asp-controller="Orders" asp-action="Index" asp-all-route-data="deliveredPill" class="filter-pill badge badge-pill text-white">Delivered</a>
+        <a asp-controller="Orders" asp-action="Index" asp-all-route-data="cancelledPill" class="filter-pill badge badge-pill text-white">Cancelled</a>
     </div>
 
     <script>

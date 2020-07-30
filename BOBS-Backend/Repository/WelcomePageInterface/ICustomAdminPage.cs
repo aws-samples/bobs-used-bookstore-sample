@@ -11,8 +11,8 @@ namespace BOBS_Backend.Repository.WelcomePageInterface
 {
     public interface ICustomAdminPage
     {
-        Task<List<Price>> GetUpdatedBooks(string adminUsername);
-        Task<List<Price>> GetGlobalUpdatedBooks(string adminUsername);
+        Task<List<Price>> GetUserUpdatedBooks(string adminUsername);
+        Task<List<Price>> OtherUpdatedBooks(string adminUsername);
         Task<List<FilterOrders>> GetImportantOrders();
         List<FilterOrders> SortTable(List<FilterOrders> order, string sortByValue);
     }

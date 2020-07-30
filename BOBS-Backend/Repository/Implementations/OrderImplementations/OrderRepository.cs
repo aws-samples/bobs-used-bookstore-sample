@@ -167,7 +167,7 @@ namespace BOBS_Backend.Repository.Implementations.OrderImplementations
                             .Include(order => order.Customer)
                             .Include(order => order.Address)
                             .Include(order => order.OrderStatus)
-                            .OrderByDescending(order => order.OrderStatus.Status == "Pending")
+                            .OrderByDescending(order => order.Order_Id)
                             .Skip((pageNum - 1) * _ordersPerPage)
                             .Take(_ordersPerPage)
                             .ToListAsync();

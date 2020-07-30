@@ -11,6 +11,7 @@ using BOBS_Backend.Models.Book;
 using BOBS_Backend.Models.Order;
 using Amazon.Runtime.Internal.Util;
 using Amazon.S3.Model;
+using Microsoft.Data.SqlClient;
 
 namespace BOBS_Backend.Repository.Implementations.WelcomePageImplementation
 {
@@ -24,13 +25,14 @@ namespace BOBS_Backend.Repository.Implementations.WelcomePageImplementation
 
         }
 
-        public async Task<List<Price>> GetUpdatedBooks(string adminUsername)
+        public async Task<List<Price>> GetUserUpdatedBooks(string adminUsername)
         {
             // the query returns the collection of updated book models
             // Return the books updated by the current User. Returns only latest 5
             try
             {
-                
+                if (adminUsername == null)
+                    throw new ArgumentNullException("Admin username cannot be null", "adminUsername");
                 var books = await _context.Price
                             .Where(p => p.UpdatedBy == adminUsername)
                             .Include(p => p.Book)
@@ -48,13 +50,13 @@ namespace BOBS_Backend.Repository.Implementations.WelcomePageImplementation
 
                 return books;
             }
-            catch(Exception e)
+            catch(SqlException e)
             {
-                Console.WriteLine(e);
-                return null;
+                throw new Exception("Cannot connect to database", e);
+                
             }
         }
-        public async Task<List<Price>> GetGlobalUpdatedBooks(string adminUsername)
+        public async Task<List<Price>> OtherUpdatedBooks(string adminUsername)
         {
 
             /*
@@ -63,6 +65,10 @@ namespace BOBS_Backend.Repository.Implementations.WelcomePageImplementation
             */
             try
             {
+                if (adminUsername == null)
+                {
+                    throw new ArgumentNullException("Admin User name cannot be null", "adminUsername");
+                }
                 var books = await _context.Price
                                 .Where(p=>p.UpdatedBy != adminUsername)
                                 .Include(p => p.Book)
@@ -76,33 +82,39 @@ namespace BOBS_Backend.Repository.Implementations.WelcomePageImplementation
                                 .OrderByDescending(p => p.UpdatedOn.Date)
                                 .Take(Constants.TOTAL_RESULTS).ToListAsync();
                 return books;
-            }catch(Exception e)
+            }catch(SqlException e)
             {
-                Console.WriteLine(e);
-                return null;
+                throw new Exception("Cannot connect to database", e);
             }
         }
 
         private int GetOrderSeverity(Order order, double timeDiff )
         {
-            int severity = 0;
-            long status = order.OrderStatus.OrderStatus_Id;
-            switch (status)
+            try
             {
-                case 2:
-                    if (timeDiff <= 0)
+                int severity = 0;
+                long status = order.OrderStatus.OrderStatus_Id;
+                switch (status)
+                {
+                    case 2:
+                        if (timeDiff <= 0)
+                            severity = 2;
+                        else
+                            severity = 1;
+                        break;
+                    case 3:
                         severity = 2;
-                    else
-                        severity = 1;
-                    break;
-                case 3: 
-                    severity = 2;
-                    break;
-                
+                        break;
+
+                }
+
+
+                return severity;
             }
-
-
-            return severity;
+            catch(System.ArgumentNullException e)
+            {
+                throw new System.ArgumentNullException("Order object or timeDiff cannot be null", e);
+            }
         }
         private List<FilterOrders> FilterOrders(List<Order> allOrders)
         {
@@ -118,7 +130,7 @@ namespace BOBS_Backend.Repository.Implementations.WelcomePageImplementation
 
                    
                     DateTime time = Convert.ToDateTime(order.DeliveryDate);
-                    if (order.OrderStatus.OrderStatus_Id == 2)
+                    if (order.OrderStatus.Status == "Pending")
                     
                     {
                         // check pending orders which are due within 5 days
@@ -135,7 +147,7 @@ namespace BOBS_Backend.Repository.Implementations.WelcomePageImplementation
 
                     }
                     // check for delayed orders. i.e today's date is past delivery date
-                    else if (order.OrderStatus.OrderStatus_Id == 3)
+                    else if (order.OrderStatus.Status == "En Route")
                     {
                         double diff = (todayDate - time).TotalDays;
                         if (diff > 0 && diff < 5)
@@ -150,10 +162,10 @@ namespace BOBS_Backend.Repository.Implementations.WelcomePageImplementation
                 }
                 filtered_order.OrderBy(o => o.Order.OrderStatus.OrderStatus_Id);
                 return filtered_order;
-            }catch(Exception e)
+            }catch(System.ArgumentNullException e)
             {
-                Console.WriteLine(e);
-                return null;
+
+                throw new ArgumentNullException("allOrders cannot be null", e);
             }
         }
         public async Task<List<FilterOrders>> GetImportantOrders()
@@ -165,14 +177,13 @@ namespace BOBS_Backend.Repository.Implementations.WelcomePageImplementation
                                 .Where(o=> o.OrderStatus.OrderStatus_Id == 2 || o.OrderStatus.OrderStatus_Id == 3)
                                 .Include(o => o.Customer)
                                 .Include(o => o.OrderStatus)
-                                   
                                   .ToListAsync();
                 var filteredOrders = FilterOrders(order);
                 return filteredOrders;
-            }catch(Exception e)
+            }
+            catch (SqlException e)
             {
-                Console.WriteLine(e);
-                return null;
+                throw new Exception("Cannot connect to database", e);
             }
 
         }
@@ -186,11 +197,18 @@ namespace BOBS_Backend.Repository.Implementations.WelcomePageImplementation
                 case "date_desc":
                     orders = orders.OrderByDescending(o => o.Order.DeliveryDate).ToList();
                     break;
+                case "status_desc":
+                    orders = orders.OrderByDescending(o => o.Order.OrderStatus.Status).ToList();
+                    break;
+
                 case "price":
                     orders = orders.OrderBy(o => o.Order.Subtotal).ToList();
                     break;
                 case "date":
                     orders = orders.OrderBy(o => o.Order.DeliveryDate).ToList();
+                    break;
+                case "status":
+                    orders = orders.OrderBy(o => o.Order.OrderStatus.Status).ToList();
                     break;
                 default: break;
             }
