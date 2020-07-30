@@ -20,7 +20,12 @@ namespace BobBookstore.Controllers
         {
             _context = context;
         }
-        public async Task<IActionResult> Index(string SortBy, string currentFilter, string searchString, int? page)
+
+        // Load Search results page
+        // SortBy - value to sort results by
+        // searchString - user's search query
+        // page - page for results
+        public async Task<IActionResult> Index(string SortBy, string searchString, int? page)
         {
             if (!String.IsNullOrEmpty(SortBy))
             {
@@ -30,6 +35,10 @@ namespace BobBookstore.Controllers
             if (String.IsNullOrEmpty(searchString))
             {
                 searchString = ViewBag.currentFilter;
+            }
+            else
+            {
+                ViewBag.currentFilter = searchString;
             }
 
             if (!String.IsNullOrEmpty(searchString))
@@ -41,7 +50,8 @@ namespace BobBookstore.Controllers
                             p.Book.Name.Contains(searchString) ||
                             p.Book.Genre.Name.Contains(searchString) ||
                             p.Book.Type.TypeName.Contains(searchString) ||
-                            p.Book.ISBN.ToString().Contains(searchString))
+                            p.Book.ISBN.ToString().Contains(searchString)) ||
+                            p.Book.Publisher.Name.Contains(searchString)
                              select p;
 
                 prices = prices.OrderBy(p => p.ItemPrice);
@@ -50,7 +60,8 @@ namespace BobBookstore.Controllers
                             where b.Name.Contains(searchString) ||
                             b.Genre.Name.Contains(searchString) ||
                             b.Type.TypeName.Contains(searchString) ||
-                            b.ISBN.ToString().Contains(searchString)
+                            b.ISBN.ToString().Contains(searchString) ||
+                            b.Book.Publisher.Name.Contains(searchString)
                             select new BookViewModel
                             {
                                 BookId = b.Book_Id,
@@ -104,6 +115,7 @@ namespace BobBookstore.Controllers
             return View();
         }
 
+        // Load book details page
         public async Task<IActionResult> DetailAsync(long id, string sortBy)
         { 
             if (!String.IsNullOrEmpty(sortBy))
