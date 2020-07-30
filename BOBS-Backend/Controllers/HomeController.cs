@@ -15,6 +15,7 @@ using BOBS_Backend.Repository.Implementations.WelcomePageImplementation;
 using BOBS_Backend.Repository.Implementations.WelcomePageImplementation;
 using BOBS_Backend.ViewModel.UpdateBooks;
 using BOBS_Backend.Models.Book;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace BOBS_Backend.Controllers
 {
@@ -37,46 +38,56 @@ namespace BOBS_Backend.Controllers
         [Authorize]
         public IActionResult WelcomePage(string sortByValue)
         {
-                
+
             adminUsername = User.Claims.FirstOrDefault(c => c.Type.Equals("cognito:username"))?.Value;
             LatestUpdates bookUpdates = new LatestUpdates();
+            // the sortByValue input for different sorting parameters. 
+            List<string> orderByMethods = new List<string>{"price", "price_desc", "date", "date_desc"};
             // assigns ViewBag a default value just to initialize it 
             ViewBag.SortPrice = "price";
             ViewBag.SortDate = "date";
+            ViewBag.SortStatus = "status";
             ViewBag.PriceArrow = "▲";
             ViewBag.DateArrow = "▲";
+            ViewBag.StatusArrow = "▲";
             //Get books updated by current user
-            bookUpdates.Books = _customeAdmin.GetUpdatedBooks(adminUsername).Result;
+            bookUpdates.UserBooks = _customeAdmin.GetUserUpdatedBooks(adminUsername).Result;
             // get recent books updated globally
-            bookUpdates.GlobalBooks = _customeAdmin.GetGlobalUpdatedBooks(adminUsername).Result;
+            bookUpdates.NotUserBooks = _customeAdmin.OtherUpdatedBooks(adminUsername).Result;
             // get important orders
             bookUpdates.ImpOrders = _customeAdmin.GetImportantOrders().Result;
-            
-            if (sortByValue == null)
-            {
-                
-                return View(bookUpdates);
-            }
-            else
+            if (bookUpdates.UserBooks == null || bookUpdates.NotUserBooks == null || bookUpdates.ImpOrders == null)
+                throw new ArgumentNullException("The LatestUpdates View model cannot have a null value", "bookupdates");
+
+            if (orderByMethods.Contains(sortByValue))
             {
                 // assigns ViewBag.Sort with the opposite value of sortByValue
-               if (sortByValue == "price" || sortByValue == "price_desc")
-                    ViewBag.SortPrice = sortByValue == "price"?"price_desc":"price";
-               else if (sortByValue == "date" || sortByValue == "date_desc")
+                if (sortByValue == "price" || sortByValue == "price_desc")
+                    ViewBag.SortPrice = sortByValue == "price" ? "price_desc" : "price";
+                else if (sortByValue == "date" || sortByValue == "date_desc")
                     ViewBag.SortDate = sortByValue == "date" ? "date_desc" : "date";
-
-               //to change the arrow on the html anchors based on asc or desc
+                else if (sortByValue == "status" || sortByValue == "status_desc")
+                    ViewBag.SortDate = sortByValue == "status" ? "status_desc" : "status";
+                //to change the arrow on the html anchors based on asc or desc
                 if (ViewBag.SortPrice == "price")
                     ViewBag.PriceArrow = "▲";
-                else if (ViewBag.SortPrice  == "price_desc")
+                else if (ViewBag.SortPrice == "price_desc")
                     ViewBag.PriceArrow = "▼";
                 if (ViewBag.SortDate == "date")
                     ViewBag.DateArrow = "▲";
                 else if (ViewBag.SortDate == "date_desc")
                     ViewBag.DateArrow = "▼";
+                if (ViewBag.SortStatus == "status")
+                    ViewBag.DateArrow = "▲";
+                else if (ViewBag.SortStatus == "status_desc")
+                    ViewBag.DateArrow = "▼";
 
-               
                 bookUpdates.ImpOrders = _customeAdmin.SortTable(bookUpdates.ImpOrders, sortByValue);
+                return View(bookUpdates);
+            }
+            else
+            {
+                
                 return View(bookUpdates);
             }
             
@@ -96,5 +107,8 @@ namespace BOBS_Backend.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
+       
+
     }
 }

@@ -7,7 +7,7 @@
 <div class="card mb-3 border-dark">
     <div class="card-body">
         <div class=" p-0 m-0">
-            <table class="table_font table table-bordered  table-hover">
+            <table class="table_font table table-striped  table-hover">
 
                 <thead>
                     <tr>
@@ -24,7 +24,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @if (updates.Books.Count == 0)
+                    @if (updates.UserBooks.Count == 0)
                     {
                         <tr>
                             <td colspan="10" rowspan="4" style="text-align:center;"><span><h4>No Updates Currently</h4></span></td>
@@ -32,7 +32,7 @@
                     }
                     else
                     {
-                        @foreach (var b in updates.Books)
+                        @foreach (var b in updates.UserBooks)
                         {
                             var param = new Dictionary<string, string>{
                                              {"BookId",b.Book.Book_Id + ""}
