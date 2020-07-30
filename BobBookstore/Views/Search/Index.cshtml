@@ -19,8 +19,18 @@
 
 
 <form asp-controller="Search" asp-action="Index" method="get">
-        
-    <div class="form-group mt-5">
+
+
+    <div class="input-group mt-5">
+
+
+        <input class="form-control" type="text" placeholder="Search by book title, author, genre ..." name="SearchString" value="@ViewBag.currentFilter" />
+        <div class="input-group-append">
+            <button type="submit" class="btn btn-primary" value="Search">Search</button>
+        </div>
+
+    </div>
+    <div class="input-group">
         <label class="col-sm-2 col-form-label">Sort By:</label>
         <select id="selectId" class="col-2 custom-select form-control" name="SortBy" onchange="javascript:this.form.submit()">
             <option value="Name">Name</option>
@@ -30,16 +40,9 @@
             <option value="PriceDesc">Price (descending)</option>
         </select>
     </div>
-    <div class="form-group">
-        <input class="form-control col-md-3" type="text" name="SearchString" value="@ViewBag.currentFilter" />
-        <button type="submit" class="btn btn-primary" value="Search">Search</button>
-    </div>
-        
 
 
-        
 
-    
 </form>
 
 @if (Model != null && Model.Count == 0)

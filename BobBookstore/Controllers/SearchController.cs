@@ -31,6 +31,10 @@ namespace BobBookstore.Controllers
             {
                 searchString = ViewBag.currentFilter;
             }
+            else
+            {
+                ViewBag.currentFilter = searchString;
+            }
 
             if (!String.IsNullOrEmpty(searchString))
             {
@@ -41,7 +45,8 @@ namespace BobBookstore.Controllers
                             p.Book.Name.Contains(searchString) ||
                             p.Book.Genre.Name.Contains(searchString) ||
                             p.Book.Type.TypeName.Contains(searchString) ||
-                            p.Book.ISBN.ToString().Contains(searchString))
+                            p.Book.ISBN.ToString().Contains(searchString)) ||
+                            p.Book.Publisher.Name.Contains(searchString)
                              select p;
 
                 prices = prices.OrderBy(p => p.ItemPrice);
@@ -50,7 +55,8 @@ namespace BobBookstore.Controllers
                             where b.Name.Contains(searchString) ||
                             b.Genre.Name.Contains(searchString) ||
                             b.Type.TypeName.Contains(searchString) ||
-                            b.ISBN.ToString().Contains(searchString)
+                            b.ISBN.ToString().Contains(searchString) ||
+                            p.Book.Publisher.Name.Contains(searchString)
                             select new BookViewModel
                             {
                                 BookId = b.Book_Id,
