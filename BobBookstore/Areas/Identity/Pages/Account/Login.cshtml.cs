@@ -93,12 +93,7 @@ namespace BobBookstore.Areas.Identity.Pages.Account
                 {
                     if (result is CognitoSignInResult cognitoResult)
                     {
-                        if (cognitoResult.RequiresPasswordChange)
-                        {
-                            _logger.LogWarning("User password needs to be changed");
-                            return RedirectToPage("./ChangePassword");
-                        }
-                        else if (cognitoResult.RequiresPasswordReset)
+                        if (cognitoResult.RequiresPasswordReset)
                         {
                             _logger.LogWarning("User password needs to be reset");
                             return RedirectToPage("./ResetPassword");

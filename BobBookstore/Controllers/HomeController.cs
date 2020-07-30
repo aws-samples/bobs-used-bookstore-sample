@@ -112,6 +112,7 @@ namespace BobBookstore.Controllers
                     string CartIp = HttpContext.Request.Cookies["CartIp"];
                     ip = CartIp;
                 }
+                //get new cart ip for the broswer
                 var cart = from c in _context.Cart
                            select c;
                 cart = cart.Where(s => s.IP == ip);

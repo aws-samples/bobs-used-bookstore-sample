@@ -67,7 +67,7 @@ namespace BobBookstore.Areas.Identity.Pages.Account
                 }
                 else
                 {
-                    //this part is to add customer information into the DB,birthday need to be convert
+                    //this part is to add customer information into the DB
                     var userName = await _userManager.GetUserNameAsync(user);
                     
                     var firstName = user.Attributes[CognitoAttribute.GivenName.AttributeName];
@@ -91,7 +91,7 @@ namespace BobBookstore.Areas.Identity.Pages.Account
                    
                     var currentCustomerID = _context.Customer.Find(user.Attributes[CognitoAttribute.Sub.AttributeName]);
                     
-
+                    //get cardid
                     var cartId = HttpContext.Request.Cookies["CartId"];
                     var recentCart = await _context.Cart.FindAsync(Convert.ToInt32( cartId));
                     recentCart.Customer = currentCustomerID;

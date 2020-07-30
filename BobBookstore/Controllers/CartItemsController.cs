@@ -123,32 +123,32 @@ namespace BobBookstore.Controllers
         }
         
         //add book to cart
-        public async Task<IActionResult> AddtoCartitem(long bookid,long priceid)
-        {
-            var book = _context.Book.Find(bookid);
-            var price = _context.Price.Find(priceid);
-            var cartId = HttpContext.Request.Cookies["CartId"];
-            var cart = _context.Cart.Find(Convert.ToInt32(cartId));
+        //public async Task<IActionResult> AddtoCartitem(long bookid,long priceid)
+        //{
+        //    var book = _context.Book.Find(bookid);
+        //    var price = _context.Price.Find(priceid);
+        //    var cartId = HttpContext.Request.Cookies["CartId"];
+        //    var cart = _context.Cart.Find(Convert.ToInt32(cartId));
 
-            var cartItem = new CartItem() { Book = book, Price = price, Cart = cart,WantToBuy=true };
+        //    var cartItem = new CartItem() { Book = book, Price = price, Cart = cart,WantToBuy=true };
 
-            _context.Add(cartItem);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-        public async Task<IActionResult> AddtoWishlist(long bookid, long priceid)
-        {
-            var book = _context.Book.Find(bookid);
-            var price = _context.Price.Find(priceid);
-            var cartId = HttpContext.Request.Cookies["CartId"];
-            var cart = _context.Cart.Find(Convert.ToInt32(cartId));
+        //    _context.Add(cartItem);
+        //    await _context.SaveChangesAsync();
+        //    return RedirectToAction(nameof(Index));
+        //}
+        //public async Task<IActionResult> AddtoWishlist(long bookid, long priceid)
+        //{
+        //    var book = _context.Book.Find(bookid);
+        //    var price = _context.Price.Find(priceid);
+        //    var cartId = HttpContext.Request.Cookies["CartId"];
+        //    var cart = _context.Cart.Find(Convert.ToInt32(cartId));
 
-            var cartItem = new CartItem() { Book = book, Price = price, Cart = cart, WantToBuy = true };
+        //    var cartItem = new CartItem() { Book = book, Price = price, Cart = cart, WantToBuy = true };
 
-            _context.Add(cartItem);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
+        //    _context.Add(cartItem);
+        //    await _context.SaveChangesAsync();
+        //    return RedirectToAction(nameof(Index));
+        //}
         public async Task<IActionResult> CheckOut(string[] fruits,string[] IDs,string[] quantity,string[] bookF,string[]priceF)
         {
 
@@ -324,7 +324,7 @@ namespace BobBookstore.Controllers
             }
             return View(address);
         }
-        
+
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)

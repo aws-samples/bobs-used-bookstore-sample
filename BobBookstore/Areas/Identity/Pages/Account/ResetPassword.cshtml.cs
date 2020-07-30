@@ -64,10 +64,7 @@ namespace BobBookstore.Areas.Identity.Pages.Account
         public async Task<IActionResult> OnPostSecondAsync(string returnUrl = null)
         {
             HandlerName = "Second";
-            //if (!ModelState.IsValid)
-            //{
-            //    return Page();
-            //}
+            
 
             returnUrl = returnUrl ?? Url.Content("~/");
 

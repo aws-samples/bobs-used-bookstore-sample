@@ -258,6 +258,7 @@ namespace BobBookstore.Areas.Identity.Pages.Account.Manage
             {
                 Input.ZipCode = "default";
             }
+
            //update cognito
             user.Attributes[CognitoAttribute.Address.AttributeName] = Input.Address;
             user.Attributes[CognitoAttribute.BirthDate.AttributeName] = Input.BirthDate;
@@ -283,7 +284,7 @@ namespace BobBookstore.Areas.Identity.Pages.Account.Manage
                     ModelState.AddModelError(string.Empty, error.Description);
                 }
             }
-            //input customer information into the DB
+            //input and update customer address information into the DB
             else
             {
 
