@@ -20,7 +20,12 @@ namespace BobBookstore.Controllers
         {
             _context = context;
         }
-        public async Task<IActionResult> Index(string SortBy, string currentFilter, string searchString, int? page)
+
+        // Load Search results page
+        // SortBy - value to sort results by
+        // searchString - user's search query
+        // page - page for results
+        public async Task<IActionResult> Index(string SortBy, string searchString, int? page)
         {
             if (!String.IsNullOrEmpty(SortBy))
             {
@@ -56,7 +61,7 @@ namespace BobBookstore.Controllers
                             b.Genre.Name.Contains(searchString) ||
                             b.Type.TypeName.Contains(searchString) ||
                             b.ISBN.ToString().Contains(searchString) ||
-                            p.Book.Publisher.Name.Contains(searchString)
+                            b.Book.Publisher.Name.Contains(searchString)
                             select new BookViewModel
                             {
                                 BookId = b.Book_Id,
@@ -110,6 +115,7 @@ namespace BobBookstore.Controllers
             return View();
         }
 
+        // Load book details page
         public async Task<IActionResult> DetailAsync(long id, string sortBy)
         { 
             if (!String.IsNullOrEmpty(sortBy))
