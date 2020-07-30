@@ -1,24 +1,103 @@
 ﻿@model BOBS_Backend.Models.Book.Publisher
 
-<div>
-    <div>
-        <div>
-            <h1>
-                <span>@ViewData["Status"]</span>
-            </h1>
+
+<style>
+
+    
+
+    .form {
+        position: relative;
+        z-index: 1;
+        background: #FFFFFF;
+        max-width: 1000px;
+        margin: 0 auto 20px;
+        padding: 45px;
+        text-align: center;
+        box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+    }
+
+        .form input {
+            font-family: "Roboto", sans-serif;
+            outline: 0;
+            background: #f2f2f2;
+            width: 100%;
+            border: 0;
+            margin: 0 0 15px;
+            padding: 15px;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+
+        .form input-placeholder 
+        {
+            font-size:4px;
+        }
+
+        .form button {
+            font-family: "Roboto", sans-serif;
+            text-transform: uppercase;
+            outline: 0;
+            background: #7D53DE;
+            width: 100%;
+            border: 0;
+            padding: 15px;
+            color: #FFFFFF;
+            font-size: 14px;
+            -webkit-transition: all 0.3 ease;
+            transition: all 0.3 ease;
+            cursor: pointer;
+        }
+
+            .form button:hover, .form button:active, .form button:focus {
+                background: #7D53DE;
+            }
+
+        .form .message {
+            margin: 15px 0 0;
+            color: #b3b3b3;
+            font-size: 12px;
+        }
+
+            .form .message a {
+                color: #4CAF50;
+                text-decoration: none;
+            }
+
+    .container {
+        position: relative;
+        z-index: 1;
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+
+    .form h1 {
+        font-weight: lighter 100;
+        color: #7D53DE;
+    }
+
+    body {
+        background: #76b852; /* fallback for old browsers */
+        background: -webkit-linear-gradient(right, #FFFFFF, #FFFFFF);
+        background: -moz-linear-gradient(right, #FFFFFF, #FFFFFF);
+        background: -o-linear-gradient(right, #FFFFFF, #FFFFFF);
+        background: linear-gradient(to left, #FFFFFF, #FFFFFF);
+        font-family: "Roboto", sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+
+    .main-text {
+        font-family: 'Arvo', serif
+    }
+</style>
+
+<div class="login-page" style="margin-left:5%; height:60%">
+        <div class="form" style="width: 200%;height:350px;margin-left:20%">
+            <form class="login-form">
+                <h1 class="  title-1 text-center font-weight-light" style="margin-bottom:10%; margin-top:1%">ADD NEW PUBLISHER</h>
+                    <input class="main-text " style="margin-top:5%;height:3%" type="text" placeholder="PUBLISHER NAME" />
+                    <button class="main-text" type="submit">SUBMIT</button>
+                    <h4 class="main-text  message">@ViewData["Status"]</h4>
+            </form>
         </div>
-        <form enctype="multipart/form-data" asp-controller="Inventory" asp-action="AddPublishers" method="post" style="padding-bottom: 0px;">
-            <div asp-validation-summary="All"></div>
-            <div class="panel-body">
-               
-                <div class="form-group">
-                    <label class="form-check-label" asp-for="Name">Publisher Name</label>
-                    <input class="form-control" asp-for="Name" required />
-                </div>
-                <div class="form-group">
-                    <button class="btn btn-outline-primary" type="submit">Submit</button>
-                </div>
-            </div>
-        </form>
-    </div>
 </div>

@@ -34,12 +34,13 @@ namespace BOBS_Backend.Controllers
         }
 
         [HttpGet]
-        public IActionResult EditBookDetails( string bookname)
+        public IActionResult EditBookDetails(string BookName , string status)
         {
             _logger.LogInformation("Loading add new Book View");
             try
             {
                 ViewData["user"] = @User.Claims.FirstOrDefault(c => c.Type.Equals("cognito:username"))?.Value;
+                ViewData["Status"] = status;
 
             }
 
@@ -50,21 +51,32 @@ namespace BOBS_Backend.Controllers
             }
                 DateTime time = DateTime.Now;
             try
-            { 
-                if (bookname != null)
+            {
+                if (!string.IsNullOrEmpty(BookName))
                 {
-                    ViewData["Book"] = bookname;
+                    var temp = _context.Book.Where(b => b.Name == BookName).ToList()[0];
+                    var variant = _Inventory.GetBookByID(temp.Book_Id);
+                    ViewData["ISBN"] = variant.ISBN;
+                    ViewData["Author"] = variant.Author;
+                    ViewData["Summary"] = variant.Summary;
+                }
+
+                if (BookName != null)
+                {
+                    ViewData["Book"] = BookName;
+                    
                 }
                 ViewData["Types"] = _Inventory.GetTypes();
                 ViewData["Publishers"] = _Inventory.GetAllPublishers();
                 ViewData["Genres"] = _Inventory.GetGenres();
                 ViewData["Conditions"] = _Inventory.GetConditions();
-            }
 
-            catch(Exception e)
-            {
-                _logger.LogError(e,"Error in loading dropdownlists for Books Action Method");
             }
+               catch(Exception e)
+               {
+
+                _logger.LogError(e,"Error in loading dropdownlists for Books Action Method");
+               }
 
 
             return View();
@@ -270,6 +282,9 @@ namespace BOBS_Backend.Controllers
                 books.back_url = bookdetails.back_url;
                 books.left_url = bookdetails.left_url;
                 books.right_url = bookdetails.right_url;
+                books.Author = bookdetails.Author;
+                books.ISBN = bookdetails.ISBN;
+                books.Summary = bookdetails.Summary;
 
                 ViewData["Types"] = _Inventory.GetFormatsOfTheSelectedBook(bookdetails.BookName);
                 ViewData["Conditions"] = _Inventory.GetConditionsOfTheSelectedBook(bookdetails.BookName);
@@ -309,7 +324,11 @@ namespace BOBS_Backend.Controllers
                 book.publisher = lis[0].Publisher.Name;
                 book.genre = lis[0].Genre.Name;
                 book.front_url = lis[0].front_url;
-                book.back_url = lis[0].back_url;                
+                book.back_url = lis[0].back_url;
+                book.Author = lis[0].Author;
+                book.Author = lis[0].Author;
+                book.ISBN = lis[0].ISBN;
+                book.Summary = lis[0].Summary;
             }
 
             catch(Exception e)

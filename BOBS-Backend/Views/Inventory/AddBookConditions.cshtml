@@ -1,4 +1,4 @@
-﻿@model BOBS_Backend.Models.Book.Genre
+﻿@model BOBS_Backend.Models.Book.Condition
 
 <style>
 
@@ -84,18 +84,19 @@
         -moz-osx-font-smoothing: grayscale;
     }
 
-    .main-text {
+    .main-text 
+    {
         font-family: 'Arvo', serif
     }
 </style>
 
 <div class="login-page" style="margin-left:5%; height:60%">
     <div class="form" style="width: 200%;height:350px;margin-left:20%">
-        <form class="login-form" enctype="multipart/form-data" asp-controller="Inventory" asp-action="AddGenres" method="post" style="padding-bottom: 0px;">
+        <form class="login-form" enctype="multipart/form-data" asp-controller="Inventory" asp-action="AddBookConditions" method="post" style="padding-bottom: 0px;">
             <div asp-validation-summary="All"></div>
-            <h1 class="main-text title-1 text-center font-weight-light" style="margin-bottom:10%; margin-top:1%">ADD NEW GENRE</h>
-                <input class="main-text" asp-for="Name" style="margin-top:5%;height:3%" type="text" placeholder="GENRE NAME" />
-                <button type="main-text submit">SUBMIT</button>
+            <h1 class="main-text title-1 text-center font-weight-light" style="margin-bottom:10%; margin-top:1%">ADD NEW CONDITION</h>
+                <input class="main-text"  asp-for="ConditionName" style="margin-top:5%;height:3%" type="text" placeholder="CONDITION NAME" />
+                <button class="main-text" type="submit">SUBMIT</button>
                 <h4 class="main-text message">@ViewData["Status"]</h4>
         </form>
     </div>

@@ -9,7 +9,12 @@
     var error = (string)ViewData["Error"];
 
 }
-
+<style>
+    .main-text 
+    {
+        font-family: 'Arvo', serif
+    }
+</style>
 
 
 <div>
@@ -21,10 +26,10 @@
             @if (errorstatus == "Yes")
             {
                 <div>
-                    <li> "Please re-upload the photos as they violate one or more of our content policies "</li>
-                    <li>"1) Photo must be  of type .jpg or .png or .gif"</li>
-                    <li>"2) Photo content must not contain profanity"</li>
-                    <li>"3) Photo must be that of a book"</li>
+                    <li class="main-text"> "Please re-upload the photos as they violate one or more of our content policies "</li>
+                    <li class="main-text">"1) Photo must be  of type .jpg or .png or .gif"</li>
+                    <li class="main-text">"2) Photo content must not contain profanity"</li>
+                    <li class="main-text">"3) Photo must be that of a book"</li>
                 </div>
 
             }
@@ -33,29 +38,29 @@
             <div asp-validation-summary="All"></div>
             <div class="panel-body">
                 <div class="form-group">
-                    <label class="form-check-label text-secondary" asp-for="BookName">Book Name</label>
-                    <input class="form-control bg-light text-dark" asp-for="BookName" required />
+                    <label class="main-text form-check-label text-secondary" asp-for="BookName">Book Name</label>
+                    <input class="main-text form-control bg-light text-dark" asp-for="BookName" required />
                 </div>
                 <div class="form-group">
-                    <label class="form-check-label" asp-for="ISBN">ISBN</label>
-                    <input class="form-control bg-light text-dark" asp-for="ISBN" required />
+                    <label class="main-text form-check-label" asp-for="ISBN">ISBN</label>
+                    <input class="main-text form-control bg-light text-dark" asp-for="ISBN" required />
                 </div>
                 <div class="form-group">
-                    <label class="form-check-label text-secondary" asp-for="Author">Author</label>
-                    <input class="form-control bg-light text-dark" asp-for="Author" required />
+                    <label class="main-text form-check-label text-secondary" asp-for="Author">Author</label>
+                    <input class="main-text form-control bg-light text-dark" asp-for="Author" required />
                 </div>
                 <div class="container">
                     <div class="row">
                         <div class="col-sm">
                             <div class="form-group">
-                                <label class="form-check-label" asp-for="price">Price</label>
-                                <input class="form-control bg-light text-dark" asp-for="price" required />
+                                <label class="main-text form-check-label" asp-for="price">Price</label>
+                                <input class="main-text form-control bg-light text-dark" asp-for="price" required />
                             </div>
                         </div>
                         <div class="col-sm">
                             <div class="form-group">
-                                <label class="form-check-label" asp-for="quantity">Quantity</label>
-                                <input class="form-control bg-light text-dark" asp-for="quantity" required />
+                                <label class="main-text form-check-label" asp-for="quantity">Quantity</label>
+                                <input class="main-text form-control bg-light text-dark" asp-for="quantity" required />
                             </div>
                         </div>
                     </div>
@@ -64,28 +69,28 @@
                     <div class="row">
                         <div class="col-sm">
                             <div class="form-group">
-                                <label class="form-check-label" asp-for="PublisherName">Publisher Name</label>
-                                <select class="custom-select bg-light text-dark" asp-for="PublisherName">
+                                <label class="main-text form-check-label" asp-for="PublisherName">Publisher Name</label>
+                                <select class="main-text custom-select bg-light text-dark" asp-for="PublisherName">
                                     <option value="">Select the Publisher</option>
                                     @foreach (var publisher in publishers)
                                     {
                                         <option value="@publisher.Name">@publisher.Name</option>
                                     }
                                 </select>
-                                <a asp-action="AddPublishers" asp-controller="Inventory">Click here if you don't find the Publisher in the list above</a>
+                                <a class="main-text" asp-action="AddPublishers" asp-controller="Inventory">Click here if you don't find the Publisher in the list above</a>
                             </div>
                         </div>
                         <div class="col-sm">
                             <div class="form-group">
-                                <label class="form-check-label" asp-for="genre">Genre</label>
-                                <select class="custom-select bg-light text-dark" asp-for="genre">
+                                <label class="main-text form-check-label" asp-for="genre">Genre</label>
+                                <select class="main-text custom-select bg-light text-dark" asp-for="genre">
                                     <option value="">Select the Genre</option>
                                     @foreach (var genre in genres)
                                     {
                                         <option value="@genre.Name">@genre.Name</option>
                                     }
                                 </select>
-                                <a asp-action="AddGenres" asp-controller="Inventory">Click here if you don't find the Genre in the list above</a>
+                                <a class="main-text" asp-action="AddGenres" asp-controller="Inventory">Click here if you don't find the Genre in the list above</a>
                             </div>
                         </div>
                     </div>
@@ -94,8 +99,8 @@
                     <div class="row">
                         <div class="col-sm">
                             <div class="form-group">
-                                <label class="form-check-label" asp-for="BookType">Book Type</label>
-                                <select class="custom-select bg-light text-dark" asp-for="BookType">
+                                <label class="main-text form-check-label" asp-for="BookType">Book Type</label>
+                                <select class="main-text custom-select bg-light text-dark" asp-for="BookType">
                                     <option value="">Select the Book Type</option>
                                     @foreach (var type in types)
                                     {
@@ -103,13 +108,13 @@
                                     }
 
                                 </select>
-                                <a asp-action="AddBookTypes" asp-controller="Inventory">Click here if you don't find the BookType in the list above</a>
+                                <a class="main-text" asp-action="AddBookTypes" asp-controller="Inventory">Click here if you don't find the BookType in the list above</a>
                             </div>
                         </div>
                         <div class="col-sm">
                             <div class="form-group">
-                                <label class="form-check-label" asp-for="BookCondition">Book Condition</label>
-                                <select class="custom-select bg-light text-dark" asp-for="BookCondition">
+                                <label class="main-text form-check-label" asp-for="BookCondition">Book Condition</label>
+                                <select class="main-text custom-select bg-light text-dark" asp-for="BookCondition">
                                     <option value="">Select the Book Condition</option>
                                     @foreach (var condition in conditions)
                                     {
@@ -117,53 +122,53 @@
                                     }
 
                                 </select>
-                                <a asp-action="AddBookTypes" asp-controller="Inventory">Click here if you don't find the Condition in the list above</a>
+                                <a class="main-text" asp-action="AddBookTypes" asp-controller="Inventory">Click here if you don't find the Condition in the list above</a>
                             </div>
                         </div>
 
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label asp-for="FrontPhoto" class="col-sm-2 col-form-label">Picture 1</label>
+                    <label asp-for="FrontPhoto" class="main-text col-sm-2 col-form-label">Picture 1</label>
                     <div class="col-sm-10">
                         <div class="custom-file">
-                            <input asp-for="FrontPhoto" class="form-control custom-file-input">
-                            <label class="custom-file-label">Choose File...</label>
+                            <input asp-for="FrontPhoto" class="main-text form-control custom-file-input">
+                            <label class="main-text custom-file-label">Choose File...</label>
                         </div>
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label asp-for="BackPhoto" class="col-sm-2 col-form-label">Picture 2</label>
+                    <label asp-for="BackPhoto" class="main-text col-sm-2 col-form-label">Picture 2</label>
                     <div class="col-sm-10">
                         <div class="custom-file">
-                            <input asp-for="BackPhoto" class="form-control custom-file-input">
-                            <label class="custom-file-label">Choose File...</label>
+                            <input asp-for="BackPhoto" class="main-text form-control custom-file-input">
+                            <label class="main-text custom-file-label">Choose File...</label>
                         </div>
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label asp-for="LeftSidePhoto" class="col-sm-2 col-form-label">Picture 3</label>
+                    <label asp-for="LeftSidePhoto" class="main-text col-sm-2 col-form-label">Picture 3</label>
                     <div class="col-sm-10">
                         <div class="custom-file">
-                            <input asp-for="LeftSidePhoto" class="form-control custom-file-input">
-                            <label class="custom-file-label">Choose File...</label>
+                            <input asp-for="LeftSidePhoto" class="main-text form-control custom-file-input">
+                            <label class="main-text custom-file-label">Choose File...</label>
                         </div>
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label asp-for="RightSidePhoto" class="col-sm-2 col-form-label">Picture 4</label>
+                    <label asp-for="RightSidePhoto" class="main-text col-sm-2 col-form-label">Picture 4</label>
                     <div class="col-sm-10">
                         <div class="custom-file">
-                            <input asp-for="RightSidePhoto" class="form-control custom-file-input">
-                            <label class="custom-file-label">Choose File...</label>
+                            <input asp-for="RightSidePhoto" class="main-text form-control custom-file-input">
+                            <label class="main-text custom-file-label">Choose File...</label>
                         </div>
                     </div>
                 </div>
                 <div class="form-group">
-                    <textarea class="form-control bg-light text-dark" asp-for="Summary" placeholder=" Please enter the Book Summary / Description"></textarea>
+                    <textarea class="main-text form-control bg-light text-dark" asp-for="Summary" placeholder=" Please enter the Book Summary / Description"></textarea>
                 </div>
                 <div class="form-group text-center">
-                    <button class="btn btn-outline-primary" type="submit">Submit</button>
+                    <button class="main-text btn btn-outline-primary" type="submit">Submit</button>
                 </div>
             </div>
         </form>
