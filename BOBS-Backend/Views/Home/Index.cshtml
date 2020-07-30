@@ -3,6 +3,11 @@
 }
 @*The view for when is the user is logged in*@
 
+<style>
+   
+</style>
+
+
 @if (User.Identity.IsAuthenticated)
 {
     
@@ -16,17 +21,18 @@
     
 
 }
-@*the carousel for when the user is not authenticated*@
 else
 {
     @* <partial name="~/Views/Home/Partials/_UnAuthIndex.cshtml" />*@
-    <div class="position-relative overflow-hidden p-3 m-md-3 text-center ">
+
+    <div class="position-relative overflow-hidden p-3 m-md-3 text-center">
         <div class="col-md-5 p-lg-5 mx-auto my-5">
-            <h1 class="display-4 font-weight-normal">Bob's Used Bookstore</h1>
-            <p class="lead font-weight-normal">Login in to manage your workspace</p>
+            <h1 class="display-4  font-weight-normal">Bob's Used Bookstore</h1>
+            <p class="lead  font-weight-normal">Login in to manage your workspace</p>
             @Html.ActionLink("Login", "WelcomePage", "Home", null, new { @class = "btn-group-sm btn btn-outline-light btn btn-dark" })
         </div>
     </div>
+
 
     <hr class="featurette-divider">
 

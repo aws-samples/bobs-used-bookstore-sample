@@ -17,7 +17,7 @@ namespace BOBS_Backend.Controllers
 
             var exception = HttpContext.Features.Get<IExceptionHandlerPathFeature>();
             ViewData["Path"] = exception?.Path;
-            var error = Problem();
+            
 
             ViewData["StatusCode"] = code;
             return View();
