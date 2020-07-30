@@ -1,0 +1,72 @@
+﻿@{ 
+    var inventory_stats = (List<int>)ViewData["Inventory"];
+
+    var total_titles = inventory_stats[0];
+    var total_books = inventory_stats[1];
+    var total_merchandise_value = inventory_stats[2];
+    var genre_count = inventory_stats[3];
+    var publisher_count = inventory_stats[4];
+    var type_count = inventory_stats[5];
+    var conditions_count = inventory_stats[6];
+
+    var order_stats = (List<int>)ViewData["Orders"];
+    var total_books_sold = order_stats[4];
+    var total_sales = order_stats[6];
+}
+
+
+<div class="card col-lg-2 col-md-2 col-sm-4 card-color">
+    <div class="card-body">
+        <h4 class="text-center text-white website-text">@total_titles</h4>
+        <p class="text-center text-white website-text">Total Titles</p>
+    </div>
+</div>
+
+<div class="card col-lg-2 col-md-2 col-sm-4 card-color">
+    <div class="card-body">
+        <h4 class="text-center text-white website-text">@total_books</h4>
+        <p class="text-center text-white website-text">Total Books</p>
+    </div>
+</div>
+
+<div class="card col-lg-2 col-md-2 col-sm-4 card-color">
+    <div class="card-body">
+        <h4 class="text-center text-white website-text">$@total_merchandise_value</h4>
+        <p class="text-center text-white website-text">Total Value of Books</p>
+    </div>
+</div>
+
+<div class="card col-lg-2 col-md-2 col-sm-4 card-color">
+    <div class="card-body">
+        <h4 class="text-center text-white website-text">$@total_sales</h4>
+        <p class="text-center text-white website-text">Total Sales</p>
+    </div>
+</div>
+
+<div class="card col-lg-2 col-md-2 col-sm-4 card-color">
+    <div class="card-body">
+        <h4 class="text-center text-white website-text">@total_books_sold</h4>
+        <p class="text-center text-white website-text">Total Books Sold</p>
+    </div>
+</div>
+
+<div class="card col-lg-2 col-md-2 col-sm-4 card-color">
+    <div class="card-body">
+        <h4 class="text-center text-white website-text">@genre_count</h4>
+        <p class="text-center text-white website-text">Genre Count</p>
+    </div>
+</div>
+
+<div class="card col-lg-2 col-md-2 col-sm-4 card-color">
+    <div class="card-body">
+        <h4 class="text-center text-white website-text">@type_count</h4>
+        <p class="text-center text-white website-text">Type Count</p>
+    </div>
+</div>
+
+<div class="card col-lg-2 col-md-2 col-sm-4 card-color">
+    <div class="card-body">
+        <h4 class="text-center text-white website-text">@conditions_count</h4>
+        <p class="text-center text-white website-text">Condition Count</p>
+    </div>
+</div>

@@ -100,30 +100,28 @@
     </div>
 
     <div class="row" style="margin-top:35px">
+        <div class="col-6">
+            <h4 class="website-text col-12">Expected Delivery Date: </h4>
 
-        <div class="col-12">
-            <partial name="./Partials/_BookList" model="fullOrder" />
-        </div>
-    </div>
+            <h4 style="margin-top:10px;" class="website-text text-center col-12">@( (fullOrder.Order.DeliveryDate == null) ? "Pending Confirmation": DateTime.Parse(fullOrder.Order.DeliveryDate).ToString("MM/dd/yyyy") )</h4>
+            @if (Model.FullOrder.OrderDetails.Count() == Model.FullOrder.itemsRemoved && Model.FullOrder.Order.OrderStatus.Status != "Cancelled")
+            {
+                var cancelId = Model.Statuses.FirstOrDefault(o => o.Status == "Cancelled").OrderStatus_Id;
 
-    <div class="row" style="margin-top:35px">
-      
-            <h4 class="website-text">Expected Delivery Date: @( (fullOrder.Order.DeliveryDate == null) ? "Pending Confirmation": DateTime.Parse(fullOrder.Order.DeliveryDate).ToString("MM/dd/yyyy") )</h4>
-
-        @if(Model.FullOrder.OrderDetails.Count() == Model.FullOrder.itemsRemoved && Model.FullOrder.Order.OrderStatus.Status != "Cancelled" )
-        {
-            var cancelId = Model.Statuses.FirstOrDefault(o => o.Status == "Cancelled").OrderStatus_Id;
-
-            var data = new Dictionary<string,string>
+                var data = new Dictionary<string, string>
             {
                 { "orderId", "" + Model.FullOrder.Order.Order_Id },
                 { "status", "" + cancelId},
                 {"oldStatus", "" + Model.FullOrder.Order.OrderStatus.OrderStatus_Id }
 
             };
-            <a asp-controller="Orders" asp-action="UpdateOrderStatus" asp-all-route-data="data" style="padding-top:.8rem; margin-left:.7rem;" class=" filter-pill badge badge-pill text-white">Cancel Order</a>
-        }
-            
+                <a asp-controller="Orders" asp-action="UpdateOrderStatus" asp-all-route-data="data" style="padding-top:.8rem; margin-left:.7rem;" class=" filter-pill badge badge-pill text-white">Cancel Order</a>
+            }
 
+        </div>
+        <div class="col-6">
+            <partial name="./Partials/_BookList" model="fullOrder" />
+        </div>
     </div>
+
 </div>
