@@ -165,7 +165,6 @@ namespace BOBS_Backend.Repository.Implementations.WelcomePageImplementation
                                 .Where(o=> o.OrderStatus.OrderStatus_Id == 2 || o.OrderStatus.OrderStatus_Id == 3)
                                 .Include(o => o.Customer)
                                 .Include(o => o.OrderStatus)
-                                   
                                   .ToListAsync();
                 var filteredOrders = FilterOrders(order);
                 return filteredOrders;
