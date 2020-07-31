@@ -54,101 +54,6 @@
 }
 else if (Model != null)
 {
-    <!--<div class="card-deck">
-        foreach (var item in Model.Data)
-        {
-        <div class="row">
-            <div class="col-md-4">
-                <div class="card" style="width: 400px">
-                    <img class="card-img-top" src="Html.DisplayFor(modelitem => item.Url)" alt="Book photo" style="width:10rem" />
-                    <h5 class="card-title">Html.DisplayFor(modelitem => item.BookName)</h5>
-                    <p class="card-text">Html.DisplayFor(modelitem => item.GenreName)</p>
-                    if (item.Prices.Count == 0)
-                    {
-                        <p class="card-text">None in stock</p>
-                    }
-                    else
-                    {
-                        <p class="card-text">Available from $Html.DisplayFor(modelitem => item.MinPrice)</p>
-                    }
-                    <a href="#" class="btn btn-primary">Details</a>
-                </div>
-            </div>
-        </div>
-        
-        } 
-    </div> -->
-    <!--
-    <table class="table table-striped table-bordered table-sm" cellspacing="0" width="100%">
-        <thead>
-            <tr>
-                <th>
-                    Title
-                </th>
-                <th>
-                    Author
-                </th>
-                <th>
-                    ISBN
-                </th>
-                <th>
-                    Genre
-                </th>
-                <th>
-                    Publisher
-                </th>
-                <th>
-                    Type
-                </th>
-                <th>
-                    Available from
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-            foreach (var item in Model.Data)
-            {
-                <tr>
-                    <td>
-                        Html.DisplayFor(modelitem => item.BookName)
-                    </td>
-                    <td>
-                        Html.DisplayFor(modelitem => item.Author)
-                    </td>
-                    <td>
-                        Html.DisplayFor(modelitem => item.ISBN)
-                    </td>
-                    <td>
-                        Html.DisplayFor(modelItem => item.GenreName)
-                    </td>
-                    <td>
-                        Html.DisplayFor(modelitem => item.PublisherName)
-                    </td>
-                    <td>
-                        Html.DisplayFor(modelitem => item.TypeName)
-                    </td>
-                    if (item.Prices.Count == 0)
-                    {
-                        <td> None in stock </td>
-                    }
-                    else
-                    {
-                        <td> Available from $item.MinPrice</td>
-                    }
-
-
-                    <td>
-                        <form asp-controller="Search" asp-action="Detail" method="get">
-                            <input type="hidden" name="id" value="item.BookId" />
-                            <input type="submit" value="details" />
-                        </form>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table> -->
-
-
     <body>
         <section class="static about-sec">
             <div class="container">
@@ -194,7 +99,7 @@ else if (Model != null)
                         @for (var i = 1; i <= (int)Math.Ceiling(Model.Count / 10.0); i++)
                         {
                             <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
-                                <a asp-route-page="@i" asp-route-sortBy="@ViewBag.CurrentSort" asp-route-searchstring="@ViewBag.currentFilter" class="page-link">@i</a>
+                                    <a  class="btn black" asp-route-page="@i" asp-route-sortBy="@ViewBag.CurrentSort" asp-route-searchstring="@ViewBag.currentFilter" class="page-link">@i</a>
                             </li>
                         }
                     </ul>
