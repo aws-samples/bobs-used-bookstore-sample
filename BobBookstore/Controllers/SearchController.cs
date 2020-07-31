@@ -21,10 +21,12 @@ namespace BobBookstore.Controllers
             _context = context;
         }
 
-        // Load Search results page
-        // SortBy - value to sort results by
-        // searchString - user's search query
-        // page - page for results
+        /// <summary>
+        /// returns the search results view
+        /// </summary>
+        /// <param name="SortBy">Parameter to sort the results by</param>
+        /// <param name="searchString">user's sort query</param>
+        /// <param name="page">page of results</param>
         public async Task<IActionResult> Index(string SortBy, string searchString, int? page)
         {
             if (!String.IsNullOrEmpty(SortBy))
@@ -76,7 +78,7 @@ namespace BobBookstore.Controllers
                                 MinPrice = prices.Where(p => p.Book.Book_Id == b.Book_Id).FirstOrDefault().ItemPrice
                             };
 
-                // sort query
+                // sort query results
                 switch (ViewBag.CurrentSort)
                 {
                     case "Name":
@@ -99,6 +101,7 @@ namespace BobBookstore.Controllers
                         break;
                 }
 
+                // pagination info
                 int pageSize = 10;
                 int currentPage = (page ?? 1);
                 
@@ -115,7 +118,11 @@ namespace BobBookstore.Controllers
             return View();
         }
 
-        // Load book details page
+        /// <summary>
+        /// Returns the detail page view of a book
+        /// </summary>
+        /// <param name="id">Book id</param>
+        /// <param name="sortBy">paramer to sort the prices by</param>
         public async Task<IActionResult> DetailAsync(long id, string sortBy)
         { 
             if (!String.IsNullOrEmpty(sortBy))

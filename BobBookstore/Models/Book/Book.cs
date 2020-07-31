@@ -32,6 +32,7 @@ namespace BobBookstore.Models.Book
         public string AudioBook_Url { get; set; }
 
         public string Summary { get; set; }
+
         public string Author { get; set; }
     }
 }

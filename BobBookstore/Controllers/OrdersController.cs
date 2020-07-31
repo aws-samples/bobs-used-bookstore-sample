@@ -26,6 +26,10 @@ namespace BobBookstore.Controllers
             _SignInManager = SignInManager;
             _userManager = userManager;
         }
+
+        /// <summary>
+        /// Returns a view displaying all of the orders for the signed-in user
+        /// </summary>
         public async Task<IActionResult> Index()
         {
             if (_SignInManager.IsSignedIn(User))
@@ -49,6 +53,10 @@ namespace BobBookstore.Controllers
             return NotFound("You must be signed in.");
         }
 
+        /// <summary>
+        /// Returns detail view for an order
+        /// </summary>
+        /// <param name="id">order id</param>
         public async Task<IActionResult> Detail(long id)
         {
             if (_SignInManager.IsSignedIn(User))
@@ -85,10 +93,12 @@ namespace BobBookstore.Controllers
             return NotFound("You must be signed in.");
         }
 
+        /// <summary>
+        /// Cancels a given order
+        /// </summary>
+        /// <param name="id">id of the order</param>
         public async Task<IActionResult> Delete(long id)
         {
-            // needs rework, buggy rn
-            //TODO Create new order_status (cancel), reassign to order
             var order = (from o in _context.Order where o.Order_Id == id select o).First();
 
             if (order == null)
@@ -98,6 +108,7 @@ namespace BobBookstore.Controllers
 
             var cancel_status = (from o in _context.OrderStatus where o.Status.Equals("Cancelled") select o).First();
 
+            // if the cancel_status does not yet exist, we must create it
             if (cancel_status == null)
             {
                 // create it
@@ -113,7 +124,7 @@ namespace BobBookstore.Controllers
 
             await _context.SaveChangesAsync();
 
-            return View();
+            return await Index();
         }
     }
 }
