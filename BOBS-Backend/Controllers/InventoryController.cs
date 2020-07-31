@@ -89,8 +89,7 @@ namespace BOBS_Backend.Controllers
             bookview.UpdatedBy = @User.Claims.FirstOrDefault(c => c.Type.Equals("cognito:username"))?.Value;
             bookview.UpdatedOn = DateTime.Now;
             bookview.Active = true;
-            try
-            {
+          
                 if (ModelState.IsValid)
                 {
 
@@ -108,13 +107,7 @@ namespace BOBS_Backend.Controllers
                     ViewData["Genres"] = _Inventory.GetGenres();
                     ViewData["Conditions"] = _Inventory.GetConditions();
                 }
-            }
-
-            catch(Exception e)
-            {
-                _logger.LogError(e, "Error in posting new Book details to database or loading dropdown list");
-            }
-
+           
 
             return View(bookview);
         }

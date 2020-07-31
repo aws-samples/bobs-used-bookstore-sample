@@ -104,7 +104,7 @@
                             <div class="row">
                                 <div class="col-sm-6">
                                     <div class="row-sm-12">
-                                        @if (string.IsNullOrEmpty(BookNamePlaceHolder))
+                                        @if (BookNamePlaceHolder == "BOOK NAME")
                                         {
                                             <input class="main-text form-control bg-light text-dark" asp-for="BookName" placeholder="@BookNamePlaceHolder" required />
 
@@ -115,7 +115,7 @@
                                         }
                                     </div>
                                     <div class="row-sm-12">
-                                        @if (string.IsNullOrEmpty(BookNamePlaceHolder))
+                                        @if (AuthorPlaceHolder == "AUTHOR")
                                         {
                                             <input class="main-text form-control bg-light text-dark" asp-for="Author" placeholder="@AuthorPlaceHolder" required />
                                         }

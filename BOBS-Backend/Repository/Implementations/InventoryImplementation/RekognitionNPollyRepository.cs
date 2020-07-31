@@ -212,10 +212,10 @@ namespace BOBS_Backend.Repository.Implementations.InventoryImplementation
             Stream result = new MemoryStream();
             int new_size = 300;
             // create new image variable
-            using var img = SixLabors.ImageSharp.Image.Load(file.OpenReadStream());
+           var img = SixLabors.ImageSharp.Image.Load(file.OpenReadStream());
             // set height and width proportional
-            var div = img.Width / new_size;
-            var hgt = Convert.ToInt32(Math.Round((decimal)(img.Height / div)));
+           // var div = img.Width / new_size;
+           // var hgt = Convert.ToInt32(Math.Round((decimal)(img.Height / div)));
 
             // change size of image
             img.Mutate(x => x.Resize(200, 200));
