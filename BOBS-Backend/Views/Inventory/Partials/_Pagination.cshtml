@@ -13,7 +13,9 @@
                         {"searchby",Model.searchby},
                         {"pageNum",Model.CurrentPage-1+""},
                         {"style",Model.ViewStyle},
-                        {"SortBy",Model.SortBy}
+                        {"SortBy",Model.SortBy},
+                        {"ascdesc",Model.Ascdesc},
+                        {"pagination","pg"}
 
 
         };
@@ -36,7 +38,11 @@
                         {"searchby",Model.searchby},
                         {"pageNum",page+""},
                         {"style",Model.ViewStyle},
-                        {"SortBy",Model.SortBy}
+                        {"SortBy",Model.SortBy},
+                        {"ascdesc",Model.Ascdesc},
+                        {"pagination","pg"}
+
+
 
                      };
             <li class="list-group-item page-num website-text"><a asp-controller="Inventory" asp-action="SearchBeta" asp-all-route-data="pag">@(page)</a></li>
@@ -50,7 +56,11 @@
                         {"searchby",Model.searchby},
                         {"pageNum",Model.CurrentPage+1+""},
                         {"style",Model.ViewStyle},
-                        {"SortBy",Model.SortBy}
+                        {"SortBy",Model.SortBy},
+                        {"ascdesc",Model.Ascdesc},
+                        {"pagination","pg"}
+
+
 
                      };
 

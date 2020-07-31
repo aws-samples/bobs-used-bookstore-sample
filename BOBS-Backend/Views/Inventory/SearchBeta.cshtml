@@ -132,31 +132,54 @@
                         @foreach (var book in Model.Books)
                         {
                             var param = new Dictionary<string, string>
-                                                                                        {
+                            { 
                                 {"BookId",book.BookId + ""}
-                            };
+                             };
 
                             <div class="col-12 col-md-6 col-lg-4">
                                 <div class="card">
-                                    <img class="card-img-top" src="@book.back_url" alt="Card image cap">
-                                    <div class="main-text card-body">
-                                        <h4 class="card-title text-center">
-                                            <a asp-controller="Inventory" asp-action="BookDetails" asp-all-route-data="param" style="text-emphasis-color: #FC4A1A">@book.BookName</a>
-                                        </h4>
-                                        <p class="main-text card-text  text-center" style="  font-style:'arovo', serif">@book.Author</p>
-                                        <div class="row">
-                                            <div class="col">
-                                                @{
-                                                    var price = (int)book.Price;
-                                                }
-                                                <p class="main-text btn text-white btn-block" style="   background-color: #7D53DE">@price $</p>
+                                        @if(!String.IsNullOrEmpty(@book.front_url))
+                                        {
+                                            <img class="card-img-top" src="@book.front_url" alt="Card image cap"> 
+                                        }
+
+                                        else if (!String.IsNullOrEmpty(@book.back_url))
+                                        {
+                                            <img class="card-img-top" src="@book.back_url" alt="Card image cap">
+                                        }
+
+                                        else if (!String.IsNullOrEmpty(@book.left_url))
+                                        {
+                                            <img class="card-img-top" src="@book.left_url" alt="Card image cap">
+                                        }
+
+                                        else if (!String.IsNullOrEmpty(@book.right_url))
+                                        {
+                                            <img class="card-img-top" src="@book.right_url" alt="Card image cap">
+                                        }
+
+                                        else
+                                        {
+                                            <img style="width:100%;height:100%" img-fluid" src="https://dtdt6j0vhq1rq.cloudfront.net/default0Kind of New.jpg" alt="Ft slide">
+                                        }
+                                        <div class="main-text card-body">
+                                            <h4 class="card-title text-center">
+                                                <a asp-controller="Inventory" asp-action="BookDetails" asp-all-route-data="param" style="text-emphasis-color: #FC4A1A">@book.BookName</a>
+                                            </h4>
+                                            <p class="main-text card-text  text-center" style="  font-style:'arovo', serif">@book.Author</p>
+                                            <div class="row">
+                                                <div class="col">
+                                                    @{
+                                                        var price = (int)book.Price;
+                                                    }
+                                                    <p class="main-text btn text-white btn-block" style="   background-color: #7D53DE">@price $</p>
+                                                </div>
+                                                <div class="col">
+                                                    <a href="#" class="main-text btn text-white btn-block" style="    background-color: #7D53DE">@book.Quantity units</a>
+                                                </div>
                                             </div>
-                                            <div class="col">
-                                                <a href="#" class="main-text btn text-white btn-block" style="    background-color: #7D53DE">@book.Quantity units</a>
-                                            </div>
-                                        </div>                                        
+                                        </div>
                                     </div>
-                                </div>
                             </div>
                         }
                     }
@@ -175,7 +198,8 @@
                                         {"searchby",Model.searchby},
                                         {"SortBy","Sort Book.Name"},
                                         {"pageNum",Model.CurrentPage+""},
-                                        {"style",Model.ViewStyle}
+                                        {"style",Model.ViewStyle},
+                                        {"ascdesc",Model.Ascdesc}
                                         };
                                    <a class = "main-text text font-weight-light" asp-controller="Inventory" asp-action="SearchBeta" asp-all-route-data="SortBy">BookName ▲</a>
                                 }
@@ -188,7 +212,8 @@
                                         {"searchby",Model.searchby},
                                         {"SortBy","Sort Book.Author"},
                                         {"pageNum",Model.CurrentPage+""},
-                                        {"style",Model.ViewStyle}
+                                        {"style",Model.ViewStyle},
+                                        {"ascdesc",Model.Ascdesc}
 
                                         };
 
@@ -203,7 +228,8 @@
                                         {"searchby",Model.searchby},
                                         {"SortBy","Sort ItemPrice"},
                                         {"pageNum",Model.CurrentPage+""},
-                                        {"style",Model.ViewStyle}
+                                        {"style",Model.ViewStyle},
+                                        {"ascdesc",Model.Ascdesc}
                                         };
 
                                       <a class = "main-text text font-weight-light" asp-controller="Inventory" asp-action="SearchBeta" asp-all-route-data="sort"> Price ▲ </a>
@@ -217,7 +243,8 @@
                                         {"searchby",Model.searchby},
                                         {"SortBy","Sort Quantity"},
                                         {"pageNum",Model.CurrentPage+""},
-                                        {"style",Model.ViewStyle}
+                                        {"style",Model.ViewStyle},
+                                        {"ascdesc",Model.Ascdesc}
                                         };
 
                                       <a class = "main-text text font-weight-light" asp-controller="Inventory" asp-action="SearchBeta" asp-all-route-data="sortby"> Quantity ▲</a>

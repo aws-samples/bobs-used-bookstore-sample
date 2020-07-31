@@ -8,17 +8,17 @@
 @{
     var books = (IEnumerable<BOBS_Backend.DataModel.BookDetails>)ViewData["Books"];
     var Genre = Model.genre.ToUpper();
-     var Author = Model.Author.ToUpper();
-    var Publisher = Model.publisher.ToUpper();
+    var Author = Model.Author.ToUpper();
     var BookName = Model.BookName.ToUpper();
+    var fetch_status = (string)ViewData["fetchstatus"];
 }
 
-    <style>
-        .main-text {
-            font-family: 'Arvo', serif
-        }
-    </style>
-   
+<style>
+    .main-text {
+        font-family: 'Arvo', serif
+    }
+</style>
+
 <div class="overview-wrap">
     <h1 class="title-1 text-center font-weight-light" style="margin-bottom: 45px;">Book Details</h>
 </div>
@@ -38,31 +38,31 @@
                     <div class="carousel-item active">
                         @if (String.IsNullOrEmpty(@Model.front_url))
                         {
-                            <img style="width:100%;height:100%" img-fluid" src="https://dtdt6j0vhq1rq.cloudfront.net/default0Kind of New.jpg" alt="Ft slide">
+                            <img class="img-thumbnail" style="width:100%;height:100%" src="https://dtdt6j0vhq1rq.cloudfront.net/default0Kind of New.jpg" alt="Ft slide">
                         }
                         else
                         {
-                            <img style="width:100%;height:100%" class="img-fluid" src="@Model.front_url" alt="First slide">
+                            <img class="img-thumbnail" style="width:100%;height:100%" src="@Model.front_url" alt="First slide">
                         }
                     </div>
                     <div class="carousel-item">
                         @if (String.IsNullOrEmpty(@Model.back_url))
                         {
-                            <img style="width:100%;height:100%" class="img-fluid" src="https://dtdt6j0vhq1rq.cloudfront.net/default0Kind of New.jpg" alt="Second slide">
+                            <img class="img-thumbnail" style="width:100%;height:100%" src="https://dtdt6j0vhq1rq.cloudfront.net/default0Kind of New.jpg" alt="Second slide">
                         }
                         else
                         {
-                            <img style="width:100%;height:100%" class="img-fluid" src="@Model.back_url" alt="Second slide">
+                            <img class="img-thumbnail" style="width:100%;height:100%" src="@Model.back_url" alt="Second slide">
                         }
                     </div>
                     <div class="carousel-item">
                         @if (string.IsNullOrEmpty(@Model.left_url))
                         {
-                            <img style="width:100%;height:100%" class="img-fluid" src="https://dtdt6j0vhq1rq.cloudfront.net/default0Kind of New.jpg" alt="Third slide">
+                            <img class="img-thumbnail" style="width:100%;height:100%" src="https://dtdt6j0vhq1rq.cloudfront.net/default0Kind of New.jpg" alt="Third slide">
                         }
                         else
                         {
-                            <img style="width:100%;height:100%" class="img-fluid" src="@Model.left_url" alt="Third slide">
+                            <img class="img-thumbnail" style="width:100%;height:100%" src="@Model.left_url" alt="Third slide">
                         }
                     </div>
                 </div>
@@ -75,138 +75,148 @@
                 <span class="carousel-control-next-icon" aria-hidden="true"></span>
                 <span class="main-text sr-only">Next</span>
             </a>
+            @if (!String.IsNullOrEmpty(@fetch_status))
+            {
+                <h4 class="main text font-weight-light" style="margin-top:10% ;margin-left:5%">@fetch_status</h4>
+            }
         </div>
         <div class="col-lg-6">
+
             <div class="row">
-                <h1 class="text-center" style="margin-top:10px;margin-left:20%">
-                    <span class=" title-1 text-center font-weight-light" style="margin-bottom: 20px;font-size:35px">@BookName</span>
-                </h1>
-            </div>
-            <div class="col">
-                <div class="row"  style=" margin-top : 5% ; margin-left:1%">
-                    <div class="col">
-                        <h3 class=" title-1 text-center font-weight-light text">GENRE</h3>
-                    </div>
-                    <div class="col">
-                         <h3 class=" title-1 text-center font-weight-light text">@Genre</h3>
-                    </div>
+                <div class="col">
+                    <button type="submit" class="main-text btn  btn-lg text-white text-center" style="background-color: #7D53DE;width: 90%;margin-top: 4%;margin-left: 25%;font-size: 1rem">BOOK NAME</button>
                 </div>
-                <div class="row" style="margin-top: 5%; margin-left: 1%">
-                    <div class="col">
-                        <h3 class=" title-1 text-center font-weight-light text">AUTHOR</h3>
-                    </div>
-                    <div class="col">
-                        <h3 class="title-1 text-center font-weight-light text">@Author</h3>
-                    </div>
+                <div class="col">
+                    <button type="submit" class="main-text btn  btn-lg text-white text-center" style="background-color: #7D53DE;width: 90%;margin-top: 4%;margin-left: 25%;font-size: 1rem">@BookName</button>
                 </div>
             </div>
+            <div class="row">
+                <div class="col">
+                    <button type="submit" class="main-text btn  btn-lg text-white text-center" style="background-color: #7D53DE;width: 90%;margin-top: 4%;margin-left: 25%;font-size: 1rem">GENRE</button>
+                </div>
+                <div class="col">
+                    <button type="submit" class="main-text btn  btn-lg text-white text-center" style="background-color: #7D53DE;width: 90%;margin-top: 4%;margin-left: 25%;font-size: 1rem">@Genre</button>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col">
+                    <button type="submit" class="main-text btn  btn-lg text-white text-center" style="background-color: #7D53DE;width: 90%;margin-top: 4%;margin-left: 25%;font-size: 1rem">AUTHOR</button>
+                </div>
+                <div class="col">
+                    <button type="submit" class="main-text btn  btn-lg text-white text-center" style="background-color: #7D53DE;width: 90%;margin-top: 4%;margin-left: 25%;font-size: 1rem">@Author</button>
+                </div>
+            </div>
+
+
+
             <p class="main-text" style="margin-left:12%;margin-top:3%">
                 @Model.Summary
             </p>
 
-            
-                @{ var param = new Dictionary<string, string>
-                                                                                             {
+
+            @{ var param = new Dictionary<string, string>
+                                                                                                                     {
                         {"BookName",Model.BookName + ""},
                         {"type",Model.type + ""},
                         {"condition_chosen", Model.Condition + "" }
 
                      };
-                }
-                <form asp-controller="Inventory" asp-action="BookDetails" asp-all-route-data="param" style="padding-bottom: 0px;" method="post">
-                    <div class="row">
-                        <div class="col">
-                            <select class="main-text custom-select bg-light text-dark" asp-for="type" style="margin-top: 3%; margin-bottom: 2%; margin-left: 25%; width: 90%">
-                                <option value="">Select the Format</option>
-                                @foreach (var type in types)
-                                {
-                                    <option value="@type">@type</option>
-                                }
-                            </select>
-                        </div>
-                        <div class="col">
-                            <select class="main-text custom-select bg-light text-dark" asp-for="condition_chosen" style="margin-top: 3%; margin-bottom: 2%; margin-left: 25%; width: 90%">
-                                <option value="">Select the Condition</option>
-                                @foreach (var condition in conditions)
-                                {
-                                    <option value="@condition">@condition</option>
-                                }
-                            </select>
-                        </div>
+            }
+            <form asp-controller="Inventory" asp-action="BookDetails" asp-all-route-data="param" style="padding-bottom: 0px;" method="post">
+                <div class="row">
+                    <div class="col">
+                        <select class="main-text custom-select bg-light text-dark" asp-for="type" style="margin-top: 3%; margin-bottom: 2%; margin-left: 25%; width: 90%">
+                            <option value="">Select the Format</option>
+                            @foreach (var type in types)
+                            {
+                                <option value="@type">@type</option>
+                            }
+                        </select>
                     </div>
-                        <div class="row" style="margin-left:20%">
-                            <button type="submit" class="main-text btn  btn-lg text-white text-center" style="background-color: #7D53DE;width: 40%;margin-top: 4%;margin-left: 25%;font-size: 1rem">Get Book List</button>
-                        </div>
-                </form>
-                <form method="get">
-                    <div class="text-center">                     
-                            <button name="BookName" value="@Model.BookName" asp-controller="Inventory" asp-action="EditBookDetails"  type="submit" class="main-text btn btn-lg text-center text-white" style=" background-color: #7D53DE; margin-left: 15%; width: 33%; margin-top: 4%; font-size: 1rem "><span class="glyphicon glyphicon-ok-sign"></span>Add New Variant</button>
-                            @*   <h3 class="my-3 text-center">@Model.BookName</h3> *@
+                    <div class="col">
+                        <select class="main-text custom-select bg-light text-dark" asp-for="condition_chosen" style="margin-top: 3%; margin-bottom: 2%; margin-left: 25%; width: 90%">
+                            <option value="">Select the Condition</option>
+                            @foreach (var condition in conditions)
+                            {
+                                <option value="@condition">@condition</option>
+                            }
+                        </select>
                     </div>
-                </form>
-            </div>
+                </div>
+                <div class="row" style="margin-left:20%">
+                    <button type="submit" class="main-text btn  btn-lg text-white text-center" style="background-color: #7D53DE;width: 40%;margin-top: 4%;margin-left: 25%;font-size: 1rem">Show Book List</button>
+                </div>
+            </form>
+            <form method="get">
+                <div class="text-center">
+                    <button name="BookName" value="@Model.BookName" asp-controller="Inventory" asp-action="EditBookDetails" type="submit" class="main-text btn btn-lg text-center text-white" style=" background-color: #7D53DE; margin-left: 15%; width: 33%; margin-top: 4%; font-size: 1rem "><span class="glyphicon glyphicon-ok-sign"></span>Add Book Variant</button>
+                    @*   <h3 class="my-3 text-center">@Model.BookName</h3> *@
+                </div>
+            </form>
         </div>
-
     </div>
 
-    
-       
-
-        @if (status == "List" && books != null)
-        {
-            <hr class="mt-2 mb-5">
-            <div class="container" >
-                <div class="row" style="margin-left:2%">
+</div>
 
 
-                    <div class="col-md-12">
-                        <div class="table-responsive">
 
 
-                            <table id="mytable" class="table table-bordred table-striped">
-                                <thead>
-                                <th>Price</th>
-                                <th>Quantity</th>
-                                <th>Publisher</th>
-                                <th>Type</th>
-                                <th>Condition</th>
-                                <th>Edit</th>
-                                </thead>
-                                <tbody>
-                                    <form method="post" style="padding-bottom: 0px;">
-                                        @foreach (var m in books)
-                                        {
-                                            <tr>
-                                                <td>@m.Price</td>
-                                                <td>@m.Quantity</td>
-                                                <td>@m.Publisher.Name</td>
-                                                <td>@m.BookType.TypeName</td>
-                                                <td>@m.BookCondition.ConditionName</td>
-                                                <td>
-                                                    @{
-                                                        var parm = new Dictionary<string, string>
-                                                                                                                                                                                                                                                   {
+@if (status == "List" && books != null)
+{
+    <hr class="mt-2 mb-5">
+    <div class="container">
+        <div class="row" style="margin-left:2%">
+
+
+            <div class="col-md-12">
+                <div class="table-responsive">
+
+
+                    <table id="mytable" class="table table-bordred table-striped">
+                        <thead>
+                        <th>Price</th>
+                        <th>Quantity</th>
+                        <th>Publisher</th>
+                        <th>Type</th>
+                        <th>Condition</th>
+                        <th>Edit</th>
+                        </thead>
+                        <tbody>
+                            <form method="post" style="padding-bottom: 0px;">
+                                @foreach (var m in books)
+                                {
+                                    <tr>
+                                        <td>@m.Price</td>
+                                        <td>@m.Quantity</td>
+                                        <td>@m.Publisher.Name</td>
+                                        <td>@m.BookType.TypeName</td>
+                                        <td>@m.BookCondition.ConditionName</td>
+                                        <td>
+                                            @{
+                                                var parm = new Dictionary<string, string>
+                                                                                                                                                                                                                                                                               {
 
                                                 {"Condition", m.BookCondition.ConditionName + ""}
 
                                            };
-                                                    }
-                                                    <button type="submit" name="BookId" value="@m.BookId" asp-controller="Inventory" asp-action="UpdateDetails" asp-all-route-data="parm" class="btn btn-outline-secondary rounded">Edit</button>
+                                            }
+                                            <button type="submit" name="BookId" value="@m.BookId" asp-controller="Inventory" asp-action="UpdateDetails" asp-all-route-data="parm" class="btn btn-outline-secondary rounded">Edit</button>
 
-                                                </td>
-                                            </tr>
-                                        }
-                                    </form>
-                                </tbody>
+                                        </td>
+                                    </tr>
+                                }
+                            </form>
+                        </tbody>
 
-                            </table>
+                    </table>
 
-                            <div class="clearfix"></div>
-                        </div>
-
-                    </div>
+                    <div class="clearfix"></div>
                 </div>
-            </div>
 
-        }
+            </div>
+        </div>
+    </div>
+
+}
 

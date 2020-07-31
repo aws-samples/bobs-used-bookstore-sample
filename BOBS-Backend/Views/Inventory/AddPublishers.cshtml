@@ -1,9 +1,12 @@
 ﻿@model BOBS_Backend.Models.Book.Publisher
 
+@{ 
+   var status = (string)ViewData["Status"];
+}
 
 <style>
 
-    
+
 
     .form {
         position: relative;
@@ -28,9 +31,8 @@
             font-size: 14px;
         }
 
-        .form input-placeholder 
-        {
-            font-size:4px;
+        .form input-placeholder {
+            font-size: 4px;
         }
 
         .form button {
@@ -89,15 +91,26 @@
     .main-text {
         font-family: 'Arvo', serif
     }
+    .form h3{
+        color : #ff0000;
+    }
 </style>
 
 <div class="login-page" style="margin-left:5%; height:60%">
-        <div class="form" style="width: 200%;height:350px;margin-left:20%">
-            <form class="login-form">
-                <h1 class="  title-1 text-center font-weight-light" style="margin-bottom:10%; margin-top:1%">ADD NEW PUBLISHER</h>
-                    <input class="main-text " style="margin-top:5%;height:3%" type="text" placeholder="PUBLISHER NAME" />
-                    <button class="main-text" type="submit">SUBMIT</button>
-                    <h4 class="main-text  message">@ViewData["Status"]</h4>
-            </form>
-        </div>
+    <div class="form" style="width: 200%;height:350px;margin-left:20%">
+        <form class="login-form" enctype="multipart/form-data" asp-controller="Inventory" asp-action="AddPublishers" method="post" style="padding-bottom: 0px;">
+            <div asp-validation-summary="All"></div>
+            <h1 class="main-text title-1 text-center font-weight-light" style="margin-bottom:10%; margin-top:1%">
+                ADD NEW PUBLISHER</h>
+                <input class="main-text" asp-for="Name" style="margin-top:5%;height:3%" type="text" placeholder="PUBLISHER NAME" />
+                <button type="main-text submit">SUBMIT</button>
+                @if (status.Contains("already"))
+                {
+                    <h3 class="main-text message">@ViewData["Status"]</h3>
+
+                }
+</form>
+    </div>
 </div>
+
+

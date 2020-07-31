@@ -22,7 +22,7 @@ namespace BOBS_Backend
 
         public void SaveBook(Book book );
 
-        public PagedSearchViewModel GetAllBooks(int pagenum, string style , string SortBy);
+        public PagedSearchViewModel GetAllBooks(int pagenum, string style , string SortBy , string ascdesc , string pagination);
 
         public BookDetails GetBookByID(long Id);
 
@@ -53,7 +53,7 @@ namespace BOBS_Backend
 
         public IEnumerable<BookDetails> GetDetails(long BookId);
 
-        public PagedSearchViewModel SearchBeta(string searchby, string Searchfilter , string style , string SortBy , int pagnum);
+        public PagedSearchViewModel SearchBeta(string searchby, string Searchfilter , string style , string SortBy , int pagnum , string ascdesc ,  string pagination);
 
         public List<string> GetFormatsOfTheSelectedBook(string bookname);
 
