@@ -60,8 +60,8 @@ namespace BobBookstore.Controllers
                             where b.Name.Contains(searchString) ||
                             b.Genre.Name.Contains(searchString) ||
                             b.Type.TypeName.Contains(searchString) ||
-                            b.ISBN.ToString().Contains(searchString) ||
-                            b.Book.Publisher.Name.Contains(searchString)
+                            b.ISBN.ToString().Contains(searchString)||
+                            b.Publisher.Name.Contains(searchString)
                             select new BookViewModel
                             {
                                 BookId = b.Book_Id,
