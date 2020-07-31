@@ -30,13 +30,12 @@ namespace BOBS_Backend.Controllers
             _Inventory = Inventory;
             _context = context;
             _logger = logger;
-            _logger.LogDebug(1, "NLog injected into HomeController");
         }
 
         [HttpGet]
         public IActionResult EditBookDetails(string BookName , string status)
         {
-            _logger.LogInformation("Loading add new Book View");
+            _logger.LogInformation("Loading : Add New Book View");
             try
             {
                 ViewData["user"] = @User.Claims.FirstOrDefault(c => c.Type.Equals("cognito:username"))?.Value;
@@ -78,45 +77,57 @@ namespace BOBS_Backend.Controllers
                 _logger.LogError(e,"Error in loading dropdownlists for Books Action Method");
                }
 
+            ViewData["check"] = "yes";
 
             return View();
         }
 
         [HttpPost] //Post Data from forms to tables
-        public IActionResult EditBookDetails(BooksViewModel bookview )
+        public IActionResult EditBookDetails(BooksViewModel bookview)
         {
             _logger.LogInformation("Posting new book details from form to Database ");
             bookview.UpdatedBy = @User.Claims.FirstOrDefault(c => c.Type.Equals("cognito:username"))?.Value;
             bookview.UpdatedOn = DateTime.Now;
             bookview.Active = true;
-          
-                if (ModelState.IsValid)
+            if (String.IsNullOrEmpty(bookview.Author))
+            {
+                var temp = _context.Book.Where(b => b.Name == bookview.BookName).ToList()[0];
+                var variant = _Inventory.GetBookByID(temp.Book_Id);
+                bookview.Author = variant.Author;
+                bookview.Summary = variant.Summary;
+            }
+            if (ModelState.IsValid)
+            {
+
+                var status = _Inventory.AddToTables(bookview);
+
+                if (status != 1)
                 {
 
-                    var status = _Inventory.AddToTables(bookview);
+                    ViewData["ErrorStatus"] = "Yes";
 
-                    if (status != 1)
-                    {
 
-                        ViewData["ErrorStatus"] = "Yes";
-
-                    }
 
                     ViewData["Types"] = _Inventory.GetTypes();
                     ViewData["Publishers"] = _Inventory.GetAllPublishers();
                     ViewData["Genres"] = _Inventory.GetGenres();
                     ViewData["Conditions"] = _Inventory.GetConditions();
-                }
-           
+                    return View(bookview);
+                }                
+                    
+                var temp = _context.Book.Where(b => b.Name == bookview.BookName).ToList()[0];
+                var BookId = temp.Book_Id;
+                return RedirectToAction("BookDetails", new { BookId });
 
-            return View(bookview);
+            }
+
+            return View (bookview);
         }
-
         //Get list of all books in the inventory
         public IActionResult GetAllBooks()
         {
 
-            var books = _Inventory.GetAllBooks(1 , "" , "");
+            var books = _Inventory.GetAllBooks(1 , "" , "" , "","");
             return View(books);
         }       
 
@@ -313,6 +324,17 @@ namespace BOBS_Backend.Controllers
                 ViewData["status"] = "List";
                 ViewData["Books"] = _Inventory.GetRelevantBooks(BookName, type, condition_chosen);
                 var lis = _Inventory.GetRelevantBooks(BookName, type, condition_chosen);
+                if(lis.Count == 0)
+                {                  
+                    var temp = _context.Book.Where(b => b.Name == BookName).ToList()[0];
+                    var variant = _Inventory.GetBookByID(temp.Book_Id);
+                    book.genre = variant.Genre.Name;
+                    book.Author = variant.Author;
+                    book.Summary = variant.Summary;
+                    ViewData["status"] = "details";
+                    ViewData["fetchstatus"] =  "Sorry , We don't currently have any relevant results for the given Combination";
+                    return View(book);
+                }
                 book.BookType = lis[0].BookType.TypeName;
                 book.publisher = lis[0].Publisher.Name;
                 book.genre = lis[0].Genre.Name;
@@ -330,34 +352,8 @@ namespace BOBS_Backend.Controllers
             }
             return View(book);
         }
-        /*
-         * Order Repository contains all functions associated with Order Model
-        
-        public IActionResult SearchBeta(string style)
-        {
-            PagedSearchViewModel books = new PagedSearchViewModel();
-            books.Books = _Inventory.GetAllBooks();
-            var stats = _Inventory.DashBoard();
-            ViewData["genre"] = stats[0].OrderByDescending(x => x.Value).First().Key;                  
-            ViewData["type"] = stats[1].OrderByDescending(x => x.Value).First().Key;
-            ViewData["publisher"] = stats[2].OrderByDescending(x => x.Value).First().Key;
-            ViewData["name"] = stats[3].OrderByDescending(x => x.Value).First().Key;
-            if (style != null)
-            {
-                books.ViewStyle = style;
-            }
-
-            else
-            {
-                books.ViewStyle = "Tabular";
-            }
-            return View(books);
-
-            
-        }
-         */
-
-        public IActionResult SearchBeta(string searchfilter, string searchby, int pageNum, string ViewStyle, string SortBy)
+       
+        public IActionResult SearchBeta(string searchfilter, string searchby, int pageNum, string ViewStyle, string SortBy , string ascdesc , string pagination)
         {
             _logger.LogInformation("Search Page");
             try
@@ -382,7 +378,7 @@ namespace BOBS_Backend.Controllers
                 {
 
 
-                    var books = _Inventory.GetAllBooks(pageNum, ViewStyle, SortBy);
+                    var books = _Inventory.GetAllBooks(pageNum, ViewStyle, SortBy , ascdesc , pagination);
 
                     books.SortBy = SortBy;
                     return View(books);
@@ -392,7 +388,7 @@ namespace BOBS_Backend.Controllers
 
                 else
                 {
-                    var books = _Inventory.SearchBeta(searchby, searchfilter, ViewStyle, SortBy, pageNum);
+                    var books = _Inventory.SearchBeta(searchby, searchfilter, ViewStyle, SortBy, pageNum , ascdesc , pagination);
 
                     books.SortBy = SortBy;
                     return View(books);

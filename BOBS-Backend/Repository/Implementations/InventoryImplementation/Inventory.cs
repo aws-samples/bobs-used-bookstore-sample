@@ -164,9 +164,7 @@ namespace BOBS_Backend
         public int AddBookConditions(BOBS_Backend.Models.Book.Condition bookcondition)
         {
             _logger.LogInformation("Posting details to the Conditions table");
-            _context.Condition.Add(bookcondition);
-            _context.SaveChanges();
-
+           
             var conditionName = _context.Condition.Where(condition => condition.ConditionName == bookcondition.ConditionName).ToList();
 
             if (conditionName.Count == 0)
@@ -264,7 +262,7 @@ namespace BOBS_Backend
 
             if (bookview.Summary != null)
             {
-                AudioBookUrl = _RekognitionNPollyRepository.GenerateAudioSummary(bookview.BookName, bookview.Summary, "fr-CA", VoiceId.Emma);
+                //AudioBookUrl = _RekognitionNPollyRepository.GenerateAudioSummary(bookview.BookName, bookview.Summary, "fr-CA", VoiceId.Emma);           
             }
 
             Book book = new Book();
@@ -420,7 +418,7 @@ namespace BOBS_Backend
             return lambda;
         }
 
-        public PagedSearchViewModel GetAllBooks(int pagenum, string style, string SortBy)
+        public PagedSearchViewModel GetAllBooks(int pagenum, string style, string SortBy , string ascdesc , string pagination)
         {
             _logger.LogInformation("Preparing default search results ");
 
@@ -489,25 +487,64 @@ namespace BOBS_Backend
             {
                 if (SortBy.Contains("Quantity"))
                 {
-                    FilteredBooks = FilteredBooks.OrderBy(x => x.Quantity).ToList();
+                    if (ascdesc == "asc" || ascdesc == null)
+                    {
+                        FilteredBooks = FilteredBooks.OrderBy(x => x.Quantity).ToList();
+                        ascdesc = "desc";
+                    }
+                    else
+                    {
+                        FilteredBooks = FilteredBooks.OrderByDescending(x => x.Quantity).ToList();
+                        ascdesc = "asc";
+                    }
 
                 }
 
                 if (SortBy.Contains("ItemPrice"))
                 {
-                    FilteredBooks = FilteredBooks.OrderBy(x => x.Price).ToList();
+                    if (ascdesc == "asc" || ascdesc == null)
+                    {
+                        FilteredBooks = FilteredBooks.OrderBy(x => x.Price).ToList();
+                        ascdesc = "desc";
+                    }
+                                      
+                    else
+                    {
+                        FilteredBooks = FilteredBooks.OrderByDescending(x => x.Price).ToList();
+                        ascdesc = "asc";
+                    }
+
                 }
 
                 if (SortBy.Contains("Name"))
                 {
+                    if (ascdesc == "asc" || ascdesc == null)
+                    {
+                        FilteredBooks = FilteredBooks.OrderBy(x => x.BookName).ToList();
+                        ascdesc = "desc";
+                    }
 
-                    FilteredBooks = FilteredBooks.OrderBy(x => x.BookName).ToList();
+                    else
+                    {
+                        FilteredBooks = FilteredBooks.OrderByDescending(x => x.BookName).ToList();
+                        ascdesc = "asc";
+                    }
+
                 }
 
                 if (SortBy.Contains("Author"))
                 {
+                    if (ascdesc == "asc" || ascdesc == null)
+                    {
+                        FilteredBooks = FilteredBooks.OrderBy(x => x.Author).ToList();
+                        ascdesc = "desc";
+                    }
 
-                    FilteredBooks = FilteredBooks.OrderBy(x => x.Author).ToList();
+                    else
+                    {
+                        FilteredBooks = FilteredBooks.OrderByDescending(x => x.Author).ToList();
+                        ascdesc = "asc";
+                    }
                 }
 
             }
@@ -525,6 +562,7 @@ namespace BOBS_Backend
             viewModel.HasPreviousPages = (pagenum > 1);
             viewModel.CurrentPage = pagenum;
             viewModel.HasNextPages = (pagenum < totalPages);
+            viewModel.Ascdesc = ascdesc;
             if (string.IsNullOrEmpty(style))
             {
                 viewModel.ViewStyle = "Tabular";
@@ -537,7 +575,7 @@ namespace BOBS_Backend
             return viewModel;
         }
 
-        public PagedSearchViewModel SearchBeta(string searchby, string searchfilter , string style , string SortBy , int pagenum)
+        public PagedSearchViewModel SearchBeta(string searchby, string searchfilter , string style , string SortBy , int pagenum , string ascdesc , string pagination)
         {
             _logger.LogInformation("Preparing search pages for given search query ");
 
@@ -611,29 +649,93 @@ namespace BOBS_Backend
                 FilteredBooks.Add(book[0]);
             }
 
+
             if (!String.IsNullOrEmpty(SortBy))
             {
                 if (SortBy.Contains("Quantity"))
                 {
-                    FilteredBooks = FilteredBooks.OrderBy(x => x.Quantity).ToList();
+                    if (ascdesc == "asc" || ascdesc == null)
+                    {
+                        FilteredBooks = FilteredBooks.OrderBy(x => x.Quantity).ToList();
+                        if (pagination != "pg")
+                        {
+                            ascdesc = "desc";
+                        }
+                    }
+                    else
+                    {
+                        FilteredBooks = FilteredBooks.OrderByDescending(x => x.Quantity).ToList();
+                        if (pagination != "pg")
+                        {
+                            ascdesc = "asc";
+                        }
+                    }
 
                 }
 
                 if (SortBy.Contains("ItemPrice"))
                 {
-                    FilteredBooks = FilteredBooks.OrderBy( x => x.Price).ToList();
+                    if (ascdesc == "asc" || ascdesc == null)
+                    {
+                        FilteredBooks = FilteredBooks.OrderBy(x => x.Price).ToList();
+                        if (pagination != "pg")
+                        {
+                            ascdesc = "desc";
+                        }
+                    }
+
+                    else
+                    {
+                        FilteredBooks = FilteredBooks.OrderByDescending(x => x.Price).ToList();
+                        if (pagination != "pg")
+                        {
+                            ascdesc = "asc";
+                        }
+                    }
+
                 }
 
                 if (SortBy.Contains("Name"))
                 {
-                    
-                    FilteredBooks = FilteredBooks.OrderBy(x => x.BookName).ToList();
+                    if (ascdesc == "asc" || ascdesc == null)
+                    {
+                        FilteredBooks = FilteredBooks.OrderBy(x => x.BookName).ToList();
+                        if (pagination != "pg")
+                        {
+                            ascdesc = "desc";
+                        }
+                    }
+
+                    else
+                    {
+                        FilteredBooks = FilteredBooks.OrderByDescending(x => x.BookName).ToList();
+                        if (pagination != "pg")
+                        {
+                            ascdesc = "asc";
+                        }
+                    }
+
                 }
 
                 if (SortBy.Contains("Author"))
                 {
+                    if (ascdesc == "asc" || ascdesc == null)
+                    {
+                        FilteredBooks = FilteredBooks.OrderBy(x => x.Author).ToList();
+                        if (pagination != "pg")
+                        {
+                            ascdesc = "desc";
+                        }
+                    }
 
-                    FilteredBooks = FilteredBooks.OrderBy(x => x.Author).ToList();
+                    else
+                    {
+                        FilteredBooks = FilteredBooks.OrderByDescending(x => x.Author).ToList();
+                        if (pagination != "pg")
+                        {
+                            ascdesc = "asc";
+                        }
+                    }
                 }
 
             }
@@ -650,6 +752,7 @@ namespace BOBS_Backend
             viewModel.HasPreviousPages = (pagenum > 1);
             viewModel.CurrentPage = pagenum;
             viewModel.HasNextPages = (pagenum < totalPages);
+            viewModel.Ascdesc = ascdesc;
             if (string.IsNullOrEmpty(style))
             {
                 viewModel.ViewStyle = "Tabular";
@@ -935,7 +1038,7 @@ namespace BOBS_Backend
         {
             _logger.LogInformation("Fetching data to pre-populate edit page ");
 
-            var list = (from booke in _context.Book join price in _context.Price on booke.Book_Id equals price.Book.Book_Id where booke.Book_Id == Id && price.Condition.ConditionName == Condition select new BookDetails { BookId = booke.Book_Id, BookName = booke.Name, Price = price.ItemPrice, Publisher = booke.Publisher, Genre = booke.Genre, BookCondition = price.Condition, BookType = booke.Type, Quantity = price.Quantity, front_url = booke.Front_Url, back_url = booke.Back_Url, left_url = booke.Left_Url, right_url = booke.Right_Url }).ToList();
+            var list = (from booke in _context.Book join price in _context.Price on booke.Book_Id equals price.Book.Book_Id where booke.Book_Id == Id && price.Condition.ConditionName == Condition select new BookDetails {Author = booke.Author, Active = price.Active, BookId = booke.Book_Id, BookName = booke.Name, Price = price.ItemPrice, Publisher = booke.Publisher, Genre = booke.Genre, BookCondition = price.Condition, BookType = booke.Type, Quantity = price.Quantity, front_url = booke.Front_Url, back_url = booke.Back_Url, left_url = booke.Left_Url, right_url = booke.Right_Url }).ToList();
 
             return list[0];
         }
