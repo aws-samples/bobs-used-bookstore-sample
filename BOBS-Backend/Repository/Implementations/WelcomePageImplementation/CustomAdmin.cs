@@ -12,6 +12,7 @@ using BOBS_Backend.Models.Order;
 using Amazon.Runtime.Internal.Util;
 using Amazon.S3.Model;
 using Microsoft.Data.SqlClient;
+using System.Data.Common;
 
 namespace BOBS_Backend.Repository.Implementations.WelcomePageImplementation
 {
@@ -50,9 +51,9 @@ namespace BOBS_Backend.Repository.Implementations.WelcomePageImplementation
 
                 return books;
             }
-            catch(SqlException e)
+            catch(DbException e)
             {
-                throw new Exception("Cannot connect to database", e);
+                throw e;
                 
             }
         }
@@ -82,9 +83,9 @@ namespace BOBS_Backend.Repository.Implementations.WelcomePageImplementation
                                 .OrderByDescending(p => p.UpdatedOn.Date)
                                 .Take(Constants.TOTAL_RESULTS).ToListAsync();
                 return books;
-            }catch(SqlException e)
+            }catch(DbException e)
             {
-                throw new Exception("Cannot connect to database", e);
+                throw e;
             }
         }
 
@@ -181,9 +182,9 @@ namespace BOBS_Backend.Repository.Implementations.WelcomePageImplementation
                 var filteredOrders = FilterOrders(order);
                 return filteredOrders;
             }
-            catch (SqlException e)
+            catch (DbException e)
             {
-                throw new Exception("Cannot connect to database", e);
+                throw e;
             }
 
         }
