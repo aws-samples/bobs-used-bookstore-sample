@@ -50,5 +50,8 @@ namespace BOBS_Backend.DataModel
 
         public bool Active { get; set; }
 
+        public string Summary { get; set; }
+
+        public long ISBN { get; set; }
     }
 }

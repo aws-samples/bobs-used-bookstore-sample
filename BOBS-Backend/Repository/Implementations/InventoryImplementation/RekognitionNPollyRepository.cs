@@ -118,7 +118,7 @@ namespace BOBS_Backend.Repository.Implementations.InventoryImplementation
             _logger.LogInformation("Checking if uploaded picture is of a Book");
             HashSet<string> validlabels = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
         {
-            "book", "paper", "magazine", "newspaper" ,"storybook" ,"textbook" , "novel"
+            "Book", "Paper", "Magazine", "Newspaper" ,"Storybook" ,"Textbook" , "Novel" ,"Flyer" ,"Text" ,"Poster" , "Brochure" ,"Advertisment"
         };
 
             DetectLabelsRequest detectlabelsRequest = new DetectLabelsRequest()
@@ -138,7 +138,7 @@ namespace BOBS_Backend.Repository.Implementations.InventoryImplementation
             int c = 0;
             DetectLabelsResponse detectLabelsResponse = await _rekognitionClient.DetectLabelsAsync(detectlabelsRequest);
             foreach (Label label in detectLabelsResponse.Labels)
-                if (validlabels.Contains(label.Name) && label.Confidence >= 90)
+                if (validlabels.Contains(label.Name) && label.Confidence >= 70)
                 {
 
                     c++;
@@ -212,10 +212,10 @@ namespace BOBS_Backend.Repository.Implementations.InventoryImplementation
             Stream result = new MemoryStream();
             int new_size = 300;
             // create new image variable
-            using var img = SixLabors.ImageSharp.Image.Load(file.OpenReadStream());
+           var img = SixLabors.ImageSharp.Image.Load(file.OpenReadStream());
             // set height and width proportional
-            var div = img.Width / new_size;
-            var hgt = Convert.ToInt32(Math.Round((decimal)(img.Height / div)));
+           // var div = img.Width / new_size;
+           // var hgt = Convert.ToInt32(Math.Round((decimal)(img.Height / div)));
 
             // change size of image
             img.Mutate(x => x.Resize(200, 200));

@@ -66,6 +66,7 @@ namespace BOBS_Backend.Repository.Implementations.WelcomePageImplementation
             */
             try
             {
+                
                 if (adminUsername == null)
                 {
                     throw new ArgumentNullException("Admin User name cannot be null", "adminUsername");

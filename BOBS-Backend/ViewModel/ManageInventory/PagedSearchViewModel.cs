@@ -1,4 +1,5 @@
-﻿using BOBS_Backend.DataModel;
+﻿using Amazon.Rekognition.Model;
+using BOBS_Backend.DataModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,5 +29,9 @@ namespace BOBS_Backend.ViewModel.ManageInventory
         public string ViewStyle { get; set; }
 
         public string SortBy { get; set; }
+
+        public string Ascdesc { get; set; }
+
+        public string Pagination { get; set; }
     }
 }

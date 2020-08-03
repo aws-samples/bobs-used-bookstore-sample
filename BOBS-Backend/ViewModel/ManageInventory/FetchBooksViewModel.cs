@@ -43,5 +43,9 @@ namespace BOBS_Backend.ViewModel
 
         public string Author { get; set; }
 
+        public string Summary { get; set; }
+
+        public long ISBN { get; set; }
+
     }
 }
