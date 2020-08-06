@@ -34,7 +34,38 @@ namespace BobBookstore.Controllers
             
             if (String.IsNullOrEmpty(searchString))
             {
-                searchString = ViewBag.currentFilter;
+                //searchString = ViewBag.currentFilter;
+                var prices = from p in _context.Price
+                             where p.Quantity > 0 &&
+                             p.Active 
+                             select p;
+                var books = from b in _context.Book
+                            
+                            select new BookViewModel
+                            {
+                                BookId = b.Book_Id,
+                                BookName = b.Name,
+                                ISBN = b.ISBN,
+                                Author = b.Author,
+                                GenreName = b.Genre.Name,
+                                TypeName = b.Type.TypeName,
+                                PublisherName = b.Publisher.Name,
+                                Url = b.Back_Url,
+                                Prices = prices.Where(p => p.Book.Book_Id == b.Book_Id).ToList(),
+                                MinPrice = prices.Where(p => p.Book.Book_Id == b.Book_Id).FirstOrDefault().ItemPrice
+                            };
+
+                int pageSize = 10;
+                int currentPage = (page ?? 1);
+
+                return View(new PaginationModel
+                {
+                    Count = books.Count(),
+                    Data = await books.Skip((currentPage - 1) * pageSize).Take(pageSize).ToListAsync(),
+                    CurrentPage = currentPage,
+                    PageSize = pageSize,
+                    CurrentFilter = searchString
+                });
             }
             else
             {
@@ -56,6 +87,7 @@ namespace BobBookstore.Controllers
 
                 prices = prices.OrderBy(p => p.ItemPrice);
 
+                
                 var books = from b in _context.Book
                             where b.Name.Contains(searchString) ||
                             b.Genre.Name.Contains(searchString) ||

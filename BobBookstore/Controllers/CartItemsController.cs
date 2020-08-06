@@ -16,6 +16,8 @@ using Amazon.Extensions.CognitoAuthentication;
 using Microsoft.AspNetCore.Identity;
 using Amazon.AspNetCore.Identity.Cognito;
 using BobBookstore.Models.Customer;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Components.Web;
 
 namespace BobBookstore.Controllers
 {
@@ -349,12 +351,36 @@ namespace BobBookstore.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
-            var cartItem = await _context.CartItem.FindAsync(id);
-            _context.CartItem.Remove(cartItem);
+            var user = await _userManager.GetUserAsync(User);
+            var userId = user.Attributes[CognitoAttribute.Sub.AttributeName];
+            var cartItem = from c in _context.CartItem
+                           where c.CartItem_Id == id
+                           select new CartDelete
+                           {customerId=c.Cart.Customer.Customer_Id
+                           };
+
+            //var list = await cartItem.ToListAsync();
+            
+            var ccc = new CartDelete();
+            foreach (var item in cartItem)
+            {
+                ccc = item;
+            }
+            if (ccc.customerId!=userId)
+            {
+                
+
+                return RedirectToAction(nameof(Error));
+            }
+            var trueDelete = _context.CartItem.Find(id);
+            _context.CartItem.Remove(trueDelete);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
-
+        public async Task<IActionResult> Error()
+        {
+            return View();
+        }
         private bool CartItemExists(string id)
         {
             return _context.CartItem.Any(e => e.CartItem_Id == id);

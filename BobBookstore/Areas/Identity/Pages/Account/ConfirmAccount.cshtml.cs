@@ -93,7 +93,7 @@ namespace BobBookstore.Areas.Identity.Pages.Account
                     
                     //get cardid
                     var cartId = HttpContext.Request.Cookies["CartId"];
-                    var recentCart = await _context.Cart.FindAsync(Convert.ToInt32( cartId));
+                    var recentCart = await _context.Cart.FindAsync(Convert.ToString ( cartId));
                     recentCart.Customer = currentCustomerID;
                     _context.Update(recentCart);
                     await _context.SaveChangesAsync();
