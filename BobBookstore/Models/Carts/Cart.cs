@@ -10,9 +10,7 @@ namespace BobBookstore.Models.Carts
     {
         [Key]
         public int Cart_Id { get; set; }
-
         public Customer.Customer Customer { get; set; }
-
         public string IP { get; set; }
 
     }

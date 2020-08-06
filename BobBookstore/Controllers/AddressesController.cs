@@ -39,9 +39,6 @@ namespace BobBookstore.Controllers
                           where c.Customer == customer
                           select c;
 
-
-
-
             return View(await address.ToListAsync());
         }
         //creat address

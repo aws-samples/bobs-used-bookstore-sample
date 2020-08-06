@@ -9,7 +9,18 @@
         item.Subtotal += item.Tax;
     }
 }
+<head>
+    <meta charset="UTF-8">
+    <title>Bob's Book Store</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://dtdt6j0vhq1rq.cloudfront.net/bootstrap.min.css">
 
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:200,300,400,500,600,700,800,900" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="https://dtdt6j0vhq1rq.cloudfront.net/owl.carousel.min.css">
+    <link rel="stylesheet" href="https://dtdt6j0vhq1rq.cloudfront.net/styles.css">
+
+</head>
 <h1>Your Orders</h1>
 
 @if (Model.Count() == 0)
@@ -36,37 +47,49 @@ else
         <tbody>
             @foreach (var item in Model)
             {
-                
-                
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Subtotal)
-                    
-                </td>
-                @if (String.IsNullOrEmpty(item.DeliveryDate))
-                {
-                    <td>Unknown</td>
-                }
-                else
-                {
-                    <td>
-                        @Html.DisplayFor(modelItem => item.DeliveryDate)
-                    </td>
-                }
-                <td>
-                    @Html.DisplayFor(modelItem => item.Status)
-                </td>
-                <td>
 
-                    <form asp-controller="Orders" asp-action="Detail" method="get">
-                        <input type="hidden" name="id" value="@item.Order_Id" />
-                        <input type="submit" value="details" />
-                    </form>
-                    <a asp-action="Delete" asp-route-id="@item.Order_Id">Cancel</a>
-                </td>
-            </tr>
+
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Subtotal)
+
+                    </td>
+                    @if (String.IsNullOrEmpty(item.DeliveryDate))
+                    {
+                        <td>Unknown</td>
+                    }
+                    else
+                    {
+                        <td>
+                            @Html.DisplayFor(modelItem => item.DeliveryDate)
+                        </td>
+                    }
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Status)
+                    </td>
+                    <td>
+
+                        <form asp-controller="Orders" asp-action="Detail" method="get">
+                            <input type="hidden" name="id" value="@item.Order_Id" />
+                            <input type="submit" value="details" />
+                        </form>
+                        <a asp-action="Delete" asp-route-id="@item.Order_Id">Cancel</a>
+                    </td>
+                </tr>
             }
         </tbody>
     </table>
 
 }
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />

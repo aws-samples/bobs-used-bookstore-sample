@@ -194,6 +194,7 @@ namespace BobBookstore.Controllers
                 HttpContext.Response.Cookies.Delete("OrderId");
                 HttpContext.Response.Cookies.Append("OrderId", Convert.ToString(orderId));
             }
+            //add item to these order
             for (int i = 0; i < bookF.Length; i++)
             {
                 
@@ -207,6 +208,7 @@ namespace BobBookstore.Controllers
                 _context.Add(OrderDetail);
                 _context.SaveChanges();
             }
+            //remove from cart
             for (int i = 0; i < IDs.Length; i++)
             {
                 var cartItemD = _context.CartItem.Find(Convert.ToInt32(IDs[i]));
