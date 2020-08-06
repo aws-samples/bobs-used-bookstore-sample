@@ -148,5 +148,27 @@ namespace BobBookstore.Controllers
         {
             return _context.Address.Any(e => e.Address_Id == id);
         }
+
+        public async Task<IActionResult> SwitchToPrime(long id)
+        {
+           
+            //change origin to not prime
+            var user = await _userManager.GetUserAsync(User);
+            var idd = user.Attributes[CognitoAttribute.Sub.AttributeName];
+            var customer = _context.Customer.Find(idd);
+            var addresses = from c in _context.Address
+                          where c.Customer == customer&&c.IsPrimary==true
+                          select c;
+            foreach (var item in addresses)
+            {
+                item.IsPrimary = false;
+            }
+            //change to prime
+            var address = await _context.Address.FindAsync(id);
+            address.IsPrimary = true;
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
+        }
     }
 }

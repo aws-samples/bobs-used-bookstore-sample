@@ -10,7 +10,7 @@ namespace BobBookstore.Models.Carts
     public class CartItem
     {
         [Key]
-        public int CartItem_Id { get; set; }
+        public string CartItem_Id { get; set; }
         public Price  Price { get; set; }
         public Cart Cart { get; set; }
         public Book.Book Book { get; set; }

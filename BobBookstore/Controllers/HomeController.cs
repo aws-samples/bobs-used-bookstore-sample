@@ -68,7 +68,7 @@ namespace BobBookstore.Controllers
                     HttpContext.Response.Cookies.Append("CartId", Convert.ToString(currentCart.Cart_Id));
                 }
                 //put cart item in user cart
-                var id = Convert.ToInt32(HttpContext.Request.Cookies["CartId"]);
+                var id = Convert.ToString (HttpContext.Request.Cookies["CartId"]);
                 var cartC = _context.Cart.Find(id);
                 var cartItem = from c in _context.CartItem
                                where c.Cart == cartC && c.WantToBuy == true
@@ -86,11 +86,11 @@ namespace BobBookstore.Controllers
                 {
                     recentCart = item;
                 }
-                foreach (var item in cartItem)
-                {
-                    item.Cart = recentCart;
-                    _context.Update(item);
-                }
+                //foreach (var item in cartItem)
+                //{
+                //    item.Cart = recentCart;
+                //    _context.Update(item);
+                //}
                 await _context.SaveChangesAsync();
             }
             else
@@ -101,7 +101,9 @@ namespace BobBookstore.Controllers
                     Guid gu_id = Guid.NewGuid();
                     ip = gu_id.ToString();
                     HttpContext.Response.Cookies.Append("CartIp", gu_id.ToString());
-                    var IP = new Cart() { IP = ip };
+                    Guid gu_id1 = Guid.NewGuid();
+                    string id = gu_id1.ToString();
+                    var IP = new Cart() { IP = ip ,Cart_Id=id};
                     _context.Add(IP);
 
                     await _context.SaveChangesAsync();

@@ -181,9 +181,9 @@ namespace BobBookstore.Controllers
             var book = _context.Book.Find(bookid);
             var price = _context.Price.Find(priceid);
             var cartId = HttpContext.Request.Cookies["CartId"];
-            var cart = _context.Cart.Find(Convert.ToInt32(cartId));
-
-            var cartItem = new CartItem() { Book = book, Price = price, Cart = cart,WantToBuy=true };
+            var cart = _context.Cart.Find(Convert.ToString (cartId));
+            Guid gu_id = Guid.NewGuid();
+            var cartItem = new CartItem() { Book = book, Price = price, Cart = cart,WantToBuy=true, CartItem_Id = gu_id.ToString() };
 
             _context.Add(cartItem);
             _context.SaveChanges();
@@ -195,9 +195,9 @@ namespace BobBookstore.Controllers
             var book = _context.Book.Find(bookid);
             var price = _context.Price.Find(priceid);
             var cartId = HttpContext.Request.Cookies["CartId"];
-            var cart = _context.Cart.Find(Convert.ToInt32(cartId));
-
-            var cartItem = new CartItem() { Book = book, Price = price, Cart = cart};
+            var cart = _context.Cart.Find(Convert.ToString(cartId));
+            Guid gu_id = Guid.NewGuid();
+            var cartItem = new CartItem() { Book = book, Price = price, Cart = cart,CartItem_Id=gu_id.ToString()};
 
             _context.Add(cartItem);
             _context.SaveChanges();

@@ -35,7 +35,7 @@ namespace BobBookstore.Controllers
         public async Task<IActionResult> Index()
         {
             
-            var id = Convert.ToInt32(HttpContext.Request.Cookies["CartId"]);
+            var id = Convert.ToString (HttpContext.Request.Cookies["CartId"]);
             var cart = _context.Cart.Find(id);
             var cartItem = from c in _context.CartItem
                            where c.Cart==cart&&c.WantToBuy==true
@@ -57,7 +57,7 @@ namespace BobBookstore.Controllers
         }
         public async Task<IActionResult> WishListIndex()
         {
-            var id = Convert.ToInt32(HttpContext.Request.Cookies["CartId"]);
+            var id = Convert.ToString(HttpContext.Request.Cookies["CartId"]);
             var cart = _context.Cart.Find(id);
             var cartItem = from c in _context.CartItem
                            where c.Cart == cart && c.WantToBuy==false
@@ -164,7 +164,7 @@ namespace BobBookstore.Controllers
             for (int i = 0; i < IDs.Length; i++)
             {
                 var cartItem = from c in _context.CartItem
-                               where c.CartItem_Id == Convert.ToInt32(IDs[i])
+                               where c.CartItem_Id == Convert.ToString (IDs[i])
                                select c;
                               
                 var item = new CartItem();
@@ -327,7 +327,7 @@ namespace BobBookstore.Controllers
             return View(address);
         }
 
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(string? id)
         {
             if (id == null)
             {
@@ -347,7 +347,7 @@ namespace BobBookstore.Controllers
         // POST: CartItems/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(string id)
         {
             var cartItem = await _context.CartItem.FindAsync(id);
             _context.CartItem.Remove(cartItem);
@@ -355,7 +355,7 @@ namespace BobBookstore.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool CartItemExists(int id)
+        private bool CartItemExists(string id)
         {
             return _context.CartItem.Any(e => e.CartItem_Id == id);
         }

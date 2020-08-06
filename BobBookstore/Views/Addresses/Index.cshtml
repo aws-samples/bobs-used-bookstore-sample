@@ -4,100 +4,7 @@
     ViewData["Title"] = "Index";
 }
 
-@*<h1>Your Addresses</h1>
 
-<p>
-    <a asp-action="Create">Create New Address</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                Primary Address
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.AddressLine1)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.AddressLine2)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.City)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.State)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Country)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ZipCode)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-    @if (item.IsPrimary == true)
-    {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.IsPrimary)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AddressLine1)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AddressLine2)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.City)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.State)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Country)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ZipCode)
-            </td>
-            <td>
-                <a  id="PrimeryAddressEdit" asp-area="Identity" asp-page="/Account/Manage/PrimeryAddressEdit">Edit</a> 
-                
-            </td>
-        </tr>}
-    else {<tr>
-    <td>
-        @Html.DisplayFor(modelItem => item.IsPrimary)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.AddressLine1)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.AddressLine2)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.City)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.State)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.Country)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.ZipCode)
-    </td>
-    <td>
-        <a asp-action="Edit" asp-route-id="@item.Address_Id">Edit</a> |
-       
-        <a asp-action="Delete" asp-route-id="@item.Address_Id">Delete</a>
-    </td>
-</tr> }
-}
-    </tbody>
-</table>*@
 <html lang="en">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -195,9 +102,14 @@
 
                                             </td>
                                         </tr>
-}
-                                    else
+                                    }}
+                                
+                                @foreach (var item in Model)
+                                {
+
+                                    @if (item.IsPrimary == false)
                                     {
+
                                         <tr>
                                             <td>
                                                 @Html.DisplayFor(modelItem => item.IsPrimary)
@@ -223,10 +135,11 @@
                                             <td>
                                                 <a asp-action="Edit" asp-route-id="@item.Address_Id">Edit</a> |
 
-                                                <a asp-action="Delete" asp-route-id="@item.Address_Id">Delete</a>
+                                                <a asp-action="Delete" asp-route-id="@item.Address_Id">Delete</a>|
+                                                <a asp-action="SwitchToPrime" asp-route-id="@item.Address_Id">switch</a>
                                             </td>
                                         </tr>
-           }
+                                    }
                                 }
                             </tbody>
                         </table>

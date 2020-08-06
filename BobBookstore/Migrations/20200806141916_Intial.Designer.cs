@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BobBookstore.Migrations
 {
     [DbContext(typeof(UsedBooksContext))]
-    [Migration("20200722000249_Intial")]
+    [Migration("20200806141916_Intial")]
     partial class Intial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -112,6 +112,9 @@ namespace BobBookstore.Migrations
                         .HasColumnType("bigint")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
+
                     b.Property<long?>("Book_Id")
                         .HasColumnType("bigint");
 
@@ -123,6 +126,11 @@ namespace BobBookstore.Migrations
 
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
 
                     b.Property<string>("UpdatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -171,10 +179,8 @@ namespace BobBookstore.Migrations
 
             modelBuilder.Entity("BobBookstore.Models.Carts.Cart", b =>
                 {
-                    b.Property<int>("Cart_Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                    b.Property<string>("Cart_Id")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Customer_Id")
                         .HasColumnType("nvarchar(450)");
@@ -191,16 +197,14 @@ namespace BobBookstore.Migrations
 
             modelBuilder.Entity("BobBookstore.Models.Carts.CartItem", b =>
                 {
-                    b.Property<int>("CartItem_Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                    b.Property<string>("CartItem_Id")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<long?>("Book_Id")
                         .HasColumnType("bigint");
 
-                    b.Property<int?>("Cart_Id")
-                        .HasColumnType("int");
+                    b.Property<string>("Cart_Id")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<long?>("Price_Id")
                         .HasColumnType("bigint");
@@ -304,6 +308,11 @@ namespace BobBookstore.Migrations
                     b.Property<long?>("OrderStatus_Id")
                         .HasColumnType("bigint");
 
+                    b.Property<byte[]>("Rowversion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
                     b.Property<double>("Subtotal")
                         .HasColumnType("float");
 
@@ -340,6 +349,11 @@ namespace BobBookstore.Migrations
                     b.Property<long?>("Price_Id")
                         .HasColumnType("bigint");
 
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
                     b.Property<double>("price")
                         .HasColumnType("float");
 
@@ -366,6 +380,9 @@ namespace BobBookstore.Migrations
 
                     b.Property<string>("Status")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("position")
+                        .HasColumnType("int");
 
                     b.HasKey("OrderStatus_Id");
 

@@ -15,7 +15,7 @@ namespace BobBookstore.Models.ViewModels
         public double Prices { get; set; }
         public string Url { get; set; }
 
-        public int CartItem_Id { get; set; }
+        public string CartItem_Id { get; set; }
 
         public int quantity { get; set; }
         public long PriceId { get; set; }
