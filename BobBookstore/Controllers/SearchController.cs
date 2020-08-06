@@ -37,10 +37,10 @@ namespace BobBookstore.Controllers
                 //searchString = ViewBag.currentFilter;
                 var prices = from p in _context.Price
                              where p.Quantity > 0 &&
-                             p.Active 
+                             p.Active
                              select p;
                 var books = from b in _context.Book
-                            
+
                             select new BookViewModel
                             {
                                 BookId = b.Book_Id,
