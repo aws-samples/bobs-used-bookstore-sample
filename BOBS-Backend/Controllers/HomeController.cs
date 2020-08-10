@@ -50,12 +50,16 @@ namespace BOBS_Backend.Controllers
             ViewBag.PriceArrow = "▲";
             ViewBag.DateArrow = "▲";
             ViewBag.StatusArrow = "▲";
+            // get the date range from the user
+            int dateMinRange = 0;
+            int dateMaxRange = 5;
+
             //Get books updated by current user
             bookUpdates.UserBooks = _customeAdmin.GetUserUpdatedBooks(adminUsername).Result;
             // get recent books updated globally
             bookUpdates.NotUserBooks = _customeAdmin.OtherUpdatedBooks(adminUsername).Result;
             // get important orders
-            bookUpdates.ImpOrders = _customeAdmin.GetImportantOrders().Result;
+            bookUpdates.ImpOrders = _customeAdmin.GetImportantOrders(dateMaxRange, dateMinRange).Result;
             if (bookUpdates.UserBooks == null || bookUpdates.NotUserBooks == null || bookUpdates.ImpOrders == null)
                 throw new ArgumentNullException("The LatestUpdates View model cannot have a null value", "bookupdates");
 

@@ -118,11 +118,10 @@ namespace BOBS_Backend.Repository.Implementations.WelcomePageImplementation
                 throw new System.ArgumentNullException("Order object or timeDiff cannot be null", e);
             }
         }
-        private List<FilterOrders> FilterOrders(List<Order> allOrders)
+        private List<FilterOrders> FilterOrders(List<Order> allOrders, int orderDayRangeMax, int orderDayRangeMin)
         {
             //filters the orders based on priority
             try {
-                
                 // list of filtered orders to be returned 
                 List<FilterOrders> filtered_order = new List<FilterOrders>();
                 // Date at the time 
@@ -138,7 +137,7 @@ namespace BOBS_Backend.Repository.Implementations.WelcomePageImplementation
                         // check pending orders which are due within 5 days
                        
                         double diff = (time - todayDate).TotalDays;
-                        if ( diff <= 5)
+                        if ( diff <= orderDayRangeMax)
                         {
                             int severity = GetOrderSeverity(order, diff);
                             FilterOrders new_order = new FilterOrders();
@@ -152,7 +151,7 @@ namespace BOBS_Backend.Repository.Implementations.WelcomePageImplementation
                     else if (order.OrderStatus.Status == "En Route")
                     {
                         double diff = (todayDate - time).TotalDays;
-                        if (diff > 0 && diff < 5)
+                        if (diff > orderDayRangeMin && diff < orderDayRangeMax)
                         {
                             int severity = GetOrderSeverity(order, diff);
                             FilterOrders new_order = new FilterOrders();
@@ -170,7 +169,7 @@ namespace BOBS_Backend.Repository.Implementations.WelcomePageImplementation
                 throw new ArgumentNullException("allOrders cannot be null", e);
             }
         }
-        public async Task<List<FilterOrders>> GetImportantOrders()
+        public async Task<List<FilterOrders>> GetImportantOrders(int dateMaxRange, int dateMinRange)
         {
             try
             {
@@ -180,7 +179,7 @@ namespace BOBS_Backend.Repository.Implementations.WelcomePageImplementation
                                 .Include(o => o.Customer)
                                 .Include(o => o.OrderStatus)
                                   .ToListAsync();
-                var filteredOrders = FilterOrders(order);
+                var filteredOrders = FilterOrders(order, dateMaxRange, dateMinRange);
                 return filteredOrders;
             }
             catch (DbException e)
