@@ -38,6 +38,8 @@ using System.Linq.Expressions;
 using Type = System.Type;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using BOBS_Backend.ViewModel.SearchBooks;
+using BOBS_Backend.Repository.SearchImplementations;
 
 namespace BOBS_Backend
 {
@@ -50,14 +52,17 @@ namespace BOBS_Backend
 
         public DatabaseContext _context;
         private readonly int _booksPerPage = 15;
+        private readonly string[] PriceIncludes = { "Book", "Condition" };
         private readonly IRekognitionNPollyRepository _RekognitionNPollyRepository;
+        private readonly ISearchRepository _searchRepo;
         private readonly ILogger<Inventory> _logger;
 
 
 
-        public Inventory(DatabaseContext context, IRekognitionNPollyRepository RekognitionNPollyRepository , ILogger<Inventory> logger)
+        public Inventory(DatabaseContext context, ISearchRepository searchRepository,IRekognitionNPollyRepository RekognitionNPollyRepository , ILogger<Inventory> logger)
         {
             _context = context;
+            _searchRepo = searchRepository;
             _RekognitionNPollyRepository = RekognitionNPollyRepository;
             _logger = logger;
         }
@@ -331,23 +336,7 @@ namespace BOBS_Backend
                            .Include(price => price.Book);
             return query;
         }
-       
-        private  int GetTotalPageCount(List<BookDetails> FilteredBooks)
-        {
-            _logger.LogInformation("Calculating number of page for given query");
-
-            var totalPages = 0;
-            if ((FilteredBooks.Count() % _booksPerPage) == 0)
-            {
-                totalPages = (FilteredBooks.Count() / _booksPerPage);
-            }
-            else
-            {
-                totalPages = (FilteredBooks.Count() / _booksPerPage) + 1;
-            }
-
-            return totalPages;
-        }
+      
 
         public IEnumerable<BookDetails> GetDetails(long BookId)
         {
@@ -355,415 +344,169 @@ namespace BOBS_Backend
             return booker;
         }
 
-        private Expression<Func<Price, bool>> GenerateDynamicLambdaFunction(string input, ParameterExpression parameterExpression, string searchString)
+
+        private List<FullBook> RetrieveUniqueBookList(IQueryable<Price> query)
         {
-            _logger.LogInformation("Generating Dynamic Lambda Function");
+            List<Price> books = null;
 
-            Expression<Func<Price, bool>> lambda;
+            List<string> BookIds = new List<string>();
+            List<FullBook> finalBooksList = new List<FullBook>();
 
-            var constant = Expression.Constant(searchString);
-
-            Expression property2 = parameterExpression;
-           
-                foreach (var member in input.Split('.'))
-                {
-                    property2 = Expression.PropertyOrField(property2, member);
-                }
-
-                var method = typeof(string).GetMethod("Contains", new Type[] { typeof(string) });
-
-                var expression = Expression.Call(property2, method, constant);
-
-                lambda = Expression.Lambda<Func<Price, bool>>(expression, parameterExpression);
-
-            return lambda;
-
-        }
-       
-
-        private Expression<Func<Price,object>> GenerateDynamicLambdaSortedFunction(string input, ParameterExpression parameterExpression)
-        {
-            _logger.LogInformation("Generating Dynamic Lambda Function for sorting ");
-
-            var splitter = input.Split(" ");
-            Expression<Func<Price,object>> lambda;
-
-            Expression property2 = parameterExpression;
-
-              foreach (var member in splitter[1].Split('.'))
-              {
-                    property2 = Expression.PropertyOrField(property2, member);
-              }
-
-            lambda = Expression.Lambda<Func<Price,object>>(property2, parameterExpression);
-
-                return lambda;                 
-        }
-
-        private Expression<Func<Price, int>> GenerateDynamicLambdaSortedVariantFunction(string input, ParameterExpression parameterExpression)
-        {
-
-            var splitter = input.Split(" ");
-            Expression<Func<Price, int>> lambda;
-
-            Expression property2 = parameterExpression;
-
-            foreach (var member in splitter[1].Split('.'))
+            books = query.ToList();
+            foreach (var book in books)
             {
-                property2 = Expression.PropertyOrField(property2, member);
-            }
-
-            lambda = Expression.Lambda<Func<Price, int>>(property2, parameterExpression);
-
-            return lambda;
-        }
-
-        public PagedSearchViewModel GetAllBooks(int pagenum, string style, string SortBy , string ascdesc , string pagination)
-        {
-            _logger.LogInformation("Preparing default search results ");
-
-            var _booksPerPage = 15;
-            var totalPages = 0;
-            List<long> BookIdList = new List<long>();
-            List<string> names = new List<string>();
-            List<BookDetails> FilteredBooks = new List<BookDetails>();
-            List<Price> books = new List<Price>();
-            var query = GetBaseOrderQuery();
-            Dictionary<string, double> Book_price = new Dictionary<string, double>();
-
-            Dictionary<string, int> Book_qty = new Dictionary<string, int>();
-
-            var parameterExpression = Expression.Parameter(Type.GetType("BOBS_Backend.Models.Book.Price"), "price");
-
-            Expression<Func<Price, object>> lambda_sorting = null;
-
-            Expression<Func<Price, int>> lambda_int_sort = null;
-
-           
-                books = query.ToList();
-
-            foreach (var i in books)
-            {
-                if (!Book_price.ContainsKey(i.Book.Name))
+                if (!BookIds.Contains(book.Book.Name))
                 {
-
-                    Book_price[i.Book.Name] = i.ItemPrice * i.Quantity;
+                    BookIds.Add(book.Book.Name);
+                    finalBooksList.Add(new FullBook { LowestPrice = (int)book.ItemPrice, TotalQuantity = book.Quantity, Price = book });
                 }
-
                 else
                 {
-                    var data = Book_price.GetValueOrDefault(i.Book.Name);
-                    Book_price[i.Book.Name] = data + i.ItemPrice * i.Quantity;
-                }
-
-                if (!Book_qty.ContainsKey(i.Book.Name))
-                {
-
-                    Book_qty[i.Book.Name] = i.Quantity;
-                }
-
-                else
-                {
-                    var dat = Book_qty.GetValueOrDefault(i.Book.Name);
-                    Book_qty[i.Book.Name] = dat + i.Quantity;
-                }
-
-                if (!names.Contains(i.Book.Name))
-                {
-                    BookIdList.Add(i.Book.Book_Id);
-                    names.Add(i.Book.Name);
-                }
-            }
-
-            foreach (long i in BookIdList)
-            {
-
-                var book = (from booke in _context.Book join price in _context.Price on booke.Book_Id equals price.Book.Book_Id where booke.Book_Id == i select new BookDetails { BookId = booke.Book_Id, BookName = booke.Name, Price = Book_price[booke.Name] / Book_qty[booke.Name], Publisher = booke.Publisher, Genre = booke.Genre, BookCondition = price.Condition, BookType = booke.Type, Quantity = Book_qty[booke.Name], front_url = booke.Front_Url, back_url = booke.Back_Url, left_url = booke.Left_Url, right_url = booke.Right_Url, Author = booke.Author }).ToList();
-                FilteredBooks.Add(book[0]);
-            }
-
-
-            if (!String.IsNullOrEmpty(SortBy))
-            {
-                if (SortBy.Contains("Quantity"))
-                {
-                    if (ascdesc == "asc" || ascdesc == null)
-                    {
-                        FilteredBooks = FilteredBooks.OrderBy(x => x.Quantity).ToList();
-                        ascdesc = "desc";
-                    }
-                    else
-                    {
-                        FilteredBooks = FilteredBooks.OrderByDescending(x => x.Quantity).ToList();
-                        ascdesc = "asc";
-                    }
-
-                }
-
-                if (SortBy.Contains("ItemPrice"))
-                {
-                    if (ascdesc == "asc" || ascdesc == null)
-                    {
-                        FilteredBooks = FilteredBooks.OrderBy(x => x.Price).ToList();
-                        ascdesc = "desc";
-                    }
-                                      
-                    else
-                    {
-                        FilteredBooks = FilteredBooks.OrderByDescending(x => x.Price).ToList();
-                        ascdesc = "asc";
-                    }
-
-                }
-
-                if (SortBy.Contains("Name"))
-                {
-                    if (ascdesc == "asc" || ascdesc == null)
-                    {
-                        FilteredBooks = FilteredBooks.OrderBy(x => x.BookName).ToList();
-                        ascdesc = "desc";
-                    }
-
-                    else
-                    {
-                        FilteredBooks = FilteredBooks.OrderByDescending(x => x.BookName).ToList();
-                        ascdesc = "asc";
-                    }
-
-                }
-
-                if (SortBy.Contains("Author"))
-                {
-                    if (ascdesc == "asc" || ascdesc == null)
-                    {
-                        FilteredBooks = FilteredBooks.OrderBy(x => x.Author).ToList();
-                        ascdesc = "desc";
-                    }
-
-                    else
-                    {
-                        FilteredBooks = FilteredBooks.OrderByDescending(x => x.Author).ToList();
-                        ascdesc = "asc";
-                    }
+                    var fullBook = finalBooksList.Where(find => find.Price.Book.Name == book.Book.Name).FirstOrDefault();
+                    fullBook.TotalQuantity += book.Quantity;
+                    fullBook.LowestPrice = (fullBook.LowestPrice > (int)book.ItemPrice) ? (int)book.ItemPrice : fullBook.LowestPrice;
                 }
 
             }
 
-           
-            totalPages = GetTotalPageCount(FilteredBooks);
-            int[] pages = Enumerable.Range(1, totalPages).ToArray();
+            return finalBooksList;
+        }
 
-            PagedSearchViewModel viewModel = new PagedSearchViewModel();
+        private List<FullBook> RetrieveSortedBookList(List<FullBook> finalBooksList, string SortBy, string ascdesc)
+        {
+            var parameterExpression2 = Expression.Parameter(Type.GetType("BOBS_Backend.ViewModel.SearchBooks.FullBook"), "fullbook");
 
-            viewModel.searchby = "";
-            viewModel.searchfilter = "";
-            viewModel.Books = FilteredBooks.Skip((pagenum - 1) * _booksPerPage).Take(_booksPerPage);
-            viewModel.Pages = pages;
-            viewModel.HasPreviousPages = (pagenum > 1);
-            viewModel.CurrentPage = pagenum;
-            viewModel.HasNextPages = (pagenum < totalPages);
-            viewModel.Ascdesc = ascdesc;
-            if (string.IsNullOrEmpty(style))
+            Expression property = null;
+
+            if (String.IsNullOrEmpty(SortBy))
             {
-                viewModel.ViewStyle = "Tabular";
+                return finalBooksList;
+            }
+            else if (!SortBy.Contains("."))
+            {
+                property = Expression.Property(parameterExpression2, SortBy);
+
+                var sortBy = Expression.Lambda<Func<FullBook, int>>(property, new[] { parameterExpression2 });
+
+                if (string.IsNullOrEmpty(ascdesc)) ascdesc = "asc";
+
+                var bookList = (ascdesc.Contains("asc")) ? finalBooksList.AsQueryable().OrderBy(sortBy) : finalBooksList.AsQueryable().OrderByDescending(sortBy);
+
+                return bookList.ToList();
             }
             else
             {
-                viewModel.ViewStyle = style;
+                property = parameterExpression2;
+                foreach (var member in SortBy.Split('.'))
+                {
+                    property = Expression.PropertyOrField(property, member);
+                }
+
+                var sortBy = Expression.Lambda<Func<FullBook, string>>(property, new[] { parameterExpression2 });
+
+                if (string.IsNullOrEmpty(ascdesc)) ascdesc = "asc";
+
+                var bookList = (ascdesc.Contains("asc")) ? finalBooksList.AsQueryable().OrderBy(sortBy) : finalBooksList.AsQueryable().OrderByDescending(sortBy);
+
+                return bookList.ToList();
+
             }
+        }
+
+        private SearchBookViewModel RetrieveViewModel(string ascdesc,string style, string filterValue, string searchString, int pageNum, int totalPages, int[] pages, List<FullBook> books)
+        {
+            SearchBookViewModel viewModel = new SearchBookViewModel();
+
+            viewModel.searchby = searchString;
+            viewModel.searchfilter = filterValue;
+            viewModel.Books = books;
+            viewModel.Pages = pages;
+            viewModel.HasPreviousPages = (pageNum > 1);
+            viewModel.CurrentPage = pageNum;
+            viewModel.HasNextPages = (pageNum < totalPages);
+            viewModel.Ascdesc = ascdesc;
+            viewModel.ViewStyle = style;
 
             return viewModel;
         }
 
-        public PagedSearchViewModel SearchBeta(string searchby, string searchfilter , string style , string SortBy , int pagenum , string ascdesc , string pagination)
+        private SearchBookViewModel RetrieveFilterViewModel(List<FullBook> filterQuery, string ascdesc, string style, int totalPages, int pageNum, string filterValue, string searchString)
         {
-            _logger.LogInformation("Preparing search pages for given search query ");
+            SearchBookViewModel viewModel = new SearchBookViewModel();
 
-            var _booksPerPage = 15;
-            var totalPages = 0;
-            List<long> BookIdList = new List<long>();
-            List<string> BookNames = new List<string>();
-            List<BookDetails> FilteredBooks = new List<BookDetails>();
-            List<Price> books = new List<Price>();
+            var books = filterQuery
+                            .Skip((pageNum - 1) * _booksPerPage)
+                            .Take(_booksPerPage)
+                            .ToList();
 
-            Dictionary<string, double> Book_price = new Dictionary<string,double>();
+            int[] pages = _searchRepo.GetModifiedPagesArr(pageNum, totalPages);
 
-            Dictionary<string, int> Book_qty = new Dictionary<string, int>();
+            viewModel = RetrieveViewModel(ascdesc, style, filterValue, searchString, pageNum, totalPages, pages, filterQuery);
 
+            return viewModel;
+
+        }
+            
+        public SearchBookViewModel GetAllBooks(int pagenum, string style, string SortBy, string ascdesc)
+        {
+
+            var query = (IQueryable<Price>) _searchRepo.GetBaseQuery("BOBS_Backend.Models.Book.Price");
+
+            query = query.Include(PriceIncludes);
+
+            var finalBooksList = RetrieveUniqueBookList(query);
+
+            finalBooksList = RetrieveSortedBookList(finalBooksList, SortBy, ascdesc);
+
+            int totalPages = _searchRepo.GetTotalPages(finalBooksList.Count(), _booksPerPage);
+
+
+            SearchBookViewModel viewModel = new SearchBookViewModel();
+
+            viewModel = RetrieveFilterViewModel(finalBooksList, ascdesc, style, totalPages, pagenum, "", "");
+
+            return viewModel;
+
+        }
+
+        public SearchBookViewModel SearchBooks(string searchby, string searchfilter, string style, string SortBy, int pagenum, string ascdesc)
+        {
+
+            searchby = " " + searchby;
+
+            SearchBookViewModel viewModel = new SearchBookViewModel();
             var parameterExpression = Expression.Parameter(Type.GetType("BOBS_Backend.Models.Book.Price"), "price");
 
-            Expression<Func<Price, bool>> lambda;
-            Expression<Func<Price,object>> lambda_sorting = null;
-            Expression<Func<Price, int>> lambda_int_sort = null;           
-                   
-            var query = GetBaseOrderQuery();
-            if (!String.IsNullOrEmpty(searchby))
+
+            var expression = _searchRepo.ReturnExpression(parameterExpression, searchby, searchfilter);
+
+            Expression<Func<Price, bool>> lambda = Expression.Lambda<Func<Price, bool>>(expression, parameterExpression);
+
+            if (lambda == null)
             {
-                lambda = GenerateDynamicLambdaFunction(searchby, parameterExpression, searchfilter);           
-                books = query.Where(lambda).ToList();
+                int[] pages = Enumerable.Range(1, 1).ToArray();
+
+                viewModel = RetrieveViewModel(ascdesc, style, "","",1, 1, pages, null);
+                return viewModel;
             }
 
-            else
-            {             
-                    books = query.Where(p => p.Book.Name.Contains(searchfilter) || p.Book.Publisher.Name.Contains(searchfilter) || p.Book.Genre.Name.Contains(searchfilter) || p.Condition.ConditionName.Contains(searchfilter) || p.Book.Type.TypeName.Contains(searchfilter)).ToList();
-            }
+            var query = (IQueryable<Price>)_searchRepo.GetBaseQuery("BOBS_Backend.Models.Book.Price");
 
-            foreach (var i in books)
-            {
-                if(!Book_price.ContainsKey(i.Book.Name))
-                {
-                  
-                    Book_price[i.Book.Name] = i.ItemPrice * i.Quantity;
-                }
+            query = query.Include(PriceIncludes);
 
-                else
-                {
-                  var data =  Book_price.GetValueOrDefault(i.Book.Name);
-                    Book_price[i.Book.Name] = data + i.ItemPrice * i.Quantity;
-                }
+            var filterQuery = query.Where(lambda);
 
-                if (!Book_qty.ContainsKey(i.Book.Name))
-                {
+            var finalBooksList = RetrieveUniqueBookList(filterQuery);
 
-                    Book_qty[i.Book.Name] = i.Quantity;
-                }
+            finalBooksList = RetrieveSortedBookList(finalBooksList, SortBy, ascdesc);
 
-                else
-                {
-                    var dat = Book_qty.GetValueOrDefault(i.Book.Name);
-                    Book_qty[i.Book.Name] = dat + i.Quantity;
-                }
-                if (!BookNames.Contains(i.Book.Name))
-                {
-                    BookIdList.Add(i.Book.Book_Id);
-                    BookNames.Add(i.Book.Name);                  
-                }
-            }
+            int totalPages = _searchRepo.GetTotalPages(finalBooksList.Count(), _booksPerPage);
 
-            var datao = Book_price.Count();
-            var datum = BookIdList.Count();
-
-            foreach (long i in BookIdList)
-            {
-                var book = (from booke in _context.Book join price in _context.Price on booke.Book_Id equals price.Book.Book_Id where booke.Book_Id == i select new BookDetails { BookId = booke.Book_Id, BookName = booke.Name, Price = Book_price[booke.Name]/ Book_qty[booke.Name], Publisher = booke.Publisher, Genre = booke.Genre, BookCondition = price.Condition, BookType = booke.Type, Quantity = Book_qty[booke.Name], front_url = booke.Front_Url, back_url = booke.Back_Url, left_url = booke.Left_Url, right_url = booke.Right_Url , Author = booke.Author}).ToList();
-                FilteredBooks.Add(book[0]);
-            }
-
-
-            if (!String.IsNullOrEmpty(SortBy))
-            {
-                if (SortBy.Contains("Quantity"))
-                {
-                    if (ascdesc == "asc" || ascdesc == null)
-                    {
-                        FilteredBooks = FilteredBooks.OrderBy(x => x.Quantity).ToList();
-                        if (pagination != "pg")
-                        {
-                            ascdesc = "desc";
-                        }
-                    }
-                    else
-                    {
-                        FilteredBooks = FilteredBooks.OrderByDescending(x => x.Quantity).ToList();
-                        if (pagination != "pg")
-                        {
-                            ascdesc = "asc";
-                        }
-                    }
-
-                }
-
-                if (SortBy.Contains("ItemPrice"))
-                {
-                    if (ascdesc == "asc" || ascdesc == null)
-                    {
-                        FilteredBooks = FilteredBooks.OrderBy(x => x.Price).ToList();
-                        if (pagination != "pg")
-                        {
-                            ascdesc = "desc";
-                        }
-                    }
-
-                    else
-                    {
-                        FilteredBooks = FilteredBooks.OrderByDescending(x => x.Price).ToList();
-                        if (pagination != "pg")
-                        {
-                            ascdesc = "asc";
-                        }
-                    }
-
-                }
-
-                if (SortBy.Contains("Name"))
-                {
-                    if (ascdesc == "asc" || ascdesc == null)
-                    {
-                        FilteredBooks = FilteredBooks.OrderBy(x => x.BookName).ToList();
-                        if (pagination != "pg")
-                        {
-                            ascdesc = "desc";
-                        }
-                    }
-
-                    else
-                    {
-                        FilteredBooks = FilteredBooks.OrderByDescending(x => x.BookName).ToList();
-                        if (pagination != "pg")
-                        {
-                            ascdesc = "asc";
-                        }
-                    }
-
-                }
-
-                if (SortBy.Contains("Author"))
-                {
-                    if (ascdesc == "asc" || ascdesc == null)
-                    {
-                        FilteredBooks = FilteredBooks.OrderBy(x => x.Author).ToList();
-                        if (pagination != "pg")
-                        {
-                            ascdesc = "desc";
-                        }
-                    }
-
-                    else
-                    {
-                        FilteredBooks = FilteredBooks.OrderByDescending(x => x.Author).ToList();
-                        if (pagination != "pg")
-                        {
-                            ascdesc = "asc";
-                        }
-                    }
-                }
-
-            }
-
-            totalPages = GetTotalPageCount(FilteredBooks);
-            int[] pages = Enumerable.Range(1, totalPages).ToArray();
-
-            PagedSearchViewModel viewModel = new PagedSearchViewModel();
-
-            viewModel.searchby = searchby;
-            viewModel.searchfilter = searchfilter;
-            viewModel.Books = FilteredBooks.Skip((pagenum - 1) * _booksPerPage).Take(_booksPerPage);
-            viewModel.Pages = pages;
-            viewModel.HasPreviousPages = (pagenum > 1);
-            viewModel.CurrentPage = pagenum;
-            viewModel.HasNextPages = (pagenum < totalPages);
-            viewModel.Ascdesc = ascdesc;
-            if (string.IsNullOrEmpty(style))
-            {
-                viewModel.ViewStyle = "Tabular";
-            }
-            else
-            {
-                viewModel.ViewStyle = style;
-            }
+            viewModel = RetrieveFilterViewModel(finalBooksList, ascdesc, style, totalPages, pagenum,searchby,searchfilter);
 
             return viewModel;
         }
+
 
         public List<string> GetFormatsOfTheSelectedBook(string bookname)
         {

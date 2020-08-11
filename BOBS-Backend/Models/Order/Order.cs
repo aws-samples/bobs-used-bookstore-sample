@@ -33,6 +33,7 @@ namespace BOBS_Backend.Models.Order
         // Many to One Relationship with Address Table 
         public Address Address { get; set; }
 
+
         [Timestamp]
         public byte[] RowVersion { get; set; }
     }
