@@ -14,15 +14,17 @@ using Amazon.Polly;
 using Amazon.Polly.Model;
 using BOBS_Backend.Models.Order;
 using BOBS_Backend.ViewModel.ManageInventory;
+using BOBS_Backend.ViewModel.SearchBooks;
 
 namespace BOBS_Backend
 {
     public interface IInventory
     {
+        public SearchBookViewModel SearchBooks(string searchby, string searchfilter, string style, string SortBy, int pagenum, string ascdesc);
 
         public void SaveBook(Book book );
 
-        public PagedSearchViewModel GetAllBooks(int pagenum, string style , string SortBy , string ascdesc , string pagination);
+        public SearchBookViewModel GetAllBooks(int pagenum, string style, string SortBy, string ascdesc);
 
         public BookDetails GetBookByID(long Id);
 
@@ -53,7 +55,6 @@ namespace BOBS_Backend
 
         public IEnumerable<BookDetails> GetDetails(long BookId);
 
-        public PagedSearchViewModel SearchBeta(string searchby, string Searchfilter , string style , string SortBy , int pagnum , string ascdesc ,  string pagination);
 
         public List<string> GetFormatsOfTheSelectedBook(string bookname);
 

@@ -14,8 +14,6 @@ namespace BOBS_Backend.Repository.OrdersInterface
          * Order Detail Repository Interface
          */
 
-        Task<Order> CancelOrder(long id);
-
         Task<Order> FindOrderById(long id);
 
         Task<ManageOrderViewModel> GetAllOrders(int pageNum);

@@ -1,10 +1,15 @@
-﻿@model BOBS_Backend.ViewModel.ManageInventory.PagedSearchViewModel;
+﻿@model BOBS_Backend.ViewModel.SearchBooks.SearchBookViewModel;
 
 <head>
     <link rel="stylesheet" href="~/css/Orders/ManageOrders/Pagination.css" />
 </head>
 
 <ul class="list-group-horizontal list-group text-center">
+    @{ 
+        var ascdesc = "";
+        if (!string.IsNullOrEmpty(Model.Ascdesc)) ascdesc = (Model.Ascdesc.Contains("asc")) ? "desc" : "asc";
+        else ascdesc = "asc";
+    }
     @if (Model.HasPreviousPages)
     {
         var prevPag = new Dictionary<string, string>
@@ -15,7 +20,6 @@
                         {"style",Model.ViewStyle},
                         {"SortBy",Model.SortBy},
                         {"ascdesc",Model.Ascdesc},
-                        {"pagination","pg"}
 
 
         };
@@ -39,8 +43,7 @@
                         {"pageNum",page+""},
                         {"style",Model.ViewStyle},
                         {"SortBy",Model.SortBy},
-                        {"ascdesc",Model.Ascdesc},
-                        {"pagination","pg"}
+                        {"ascdesc",Model.Ascdesc}
 
 
 
@@ -57,8 +60,7 @@
                         {"pageNum",Model.CurrentPage+1+""},
                         {"style",Model.ViewStyle},
                         {"SortBy",Model.SortBy},
-                        {"ascdesc",Model.Ascdesc},
-                        {"pagination","pg"}
+                        {"ascdesc",Model.Ascdesc}
 
 
 

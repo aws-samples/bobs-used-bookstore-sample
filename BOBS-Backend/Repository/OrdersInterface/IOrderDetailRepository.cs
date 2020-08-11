@@ -12,6 +12,8 @@ namespace BOBS_Backend.Repository.OrdersInterface
          * Order Detail Repository Interface
          */
 
+        Task<Order> CancelOrder(long id);
+
         Task<int> FindOrderDetailsRemovedCountAsync(long id);
 
         Task<Dictionary<string,string>> MakeOrderDetailInactive(long id,long orderId, int quantity);

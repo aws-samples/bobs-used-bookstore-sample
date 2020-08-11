@@ -42,6 +42,7 @@
     <PackageReference Include="AWSSDK.SimpleEmail" Version="3.3.101.182" />
     <PackageReference Include="AWSSDK.SimpleNotificationService" Version="3.3.102.5" />
     <PackageReference Include="AWSSDKCPP-Polly.redist" Version="1.6.20160610.25" />
+    <PackageReference Include="EntityFramework" Version="6.4.4" />
     <PackageReference Include="jQuery" Version="3.5.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="3.1.6" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.6" />
@@ -69,11 +70,12 @@
 	  <PackageReference Include="AWSSDK.S3" Version="3.3.111.31" />
 	  <PackageReference Include="NLog" Version="4.7.2" />
 	  <PackageReference Include="NLog.Web.AspNetCore" Version="4.9.2" />
+	  <PackageReference Include="System.Linq.Dynamic.Core" Version="1.2.0" />
 
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Repository\Implementations\NewFolder\" />
+    <None Include="..\.editorconfig" Link=".editorconfig" />
   </ItemGroup>
 
 </Project>

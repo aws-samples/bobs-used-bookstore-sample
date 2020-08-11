@@ -25,6 +25,8 @@ using Amazon.S3;
 using Microsoft.Extensions.Logging;
 using Amazon.Polly;
 using BOBS_Backend.Models;
+using BOBS_Backend.Repository.SearchImplementations;
+using BOBS_Backend.Repository.Implementations.SearchImplementation;
 
 namespace BOBS_Backend
 {
@@ -54,8 +56,9 @@ namespace BOBS_Backend
             services.AddTransient<IInventory, Inventory>();
             services.AddTransient<IRekognitionNPollyRepository, RekognitionNPollyRepository>();
 
-            services.AddTransient<IOrderDetailRepository, OrderDetailRepository>();
+            services.AddTransient<ISearchRepository, SearchRepository>();
             services.AddTransient<IOrderRepository, OrderRepository>();
+            services.AddTransient<IOrderDetailRepository, OrderDetailRepository>();
             services.AddTransient<IOrderStatusRepository, OrderStatusRepository>();
 
             services.AddTransient<INotifications, Notifications.Implementations.Notifications>();

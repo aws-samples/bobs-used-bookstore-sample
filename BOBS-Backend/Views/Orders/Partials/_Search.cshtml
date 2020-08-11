@@ -56,9 +56,32 @@
             </a>
         </div>
 
+        @functions {
+            public static Dictionary<string,string> GenerateFilterCategory(string filterText, string filterVal)
+            {
+                var filterCategory = new Dictionary<string, string>
+                {
+                    { filterText,filterVal },
+                };
+
+                return filterCategory;
+            }
+        }
+        @{
+
+            List<Dictionary<string, string>> orderCat;
+            var filterCategory = new Dictionary<string, string>
+            {
+                { "test1","test" },
+            };
+
+            string test1 = " Order Id";
+            string test2 = "Order_Id";
+        }
+
         <div class="row collapse" id="orderInfoCollapse" style="padding-left:1.75rem">
             <div class="form-check form-check-inline">
-                <input class="form-check-input" onclick="updateFilterValue(' Order Id', 'Order_Id')" type="checkbox" id="inlineCheckbox1" checked="@IsCheck("Order Id")">
+                <input class="form-check-input" onclick="updateFilterValue('@test1', '@test2')" type="checkbox" id="inlineCheckbox1" checked="@IsCheck("Order Id")">
                 <label class="form-check-label text" for="inlineCheckbox1">Order Id</label>
             </div>
         </div>
