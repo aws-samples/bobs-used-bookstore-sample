@@ -478,7 +478,7 @@ namespace BOBS_Backend
             var parameterExpression = Expression.Parameter(Type.GetType("BOBS_Backend.Models.Book.Price"), "price");
 
 
-            var expression = _searchRepo.ReturnExpression(parameterExpression, searchby, searchfilter, pagenum);
+            var expression = _searchRepo.ReturnExpression(parameterExpression, searchby, searchfilter);
 
             Expression<Func<Price, bool>> lambda = Expression.Lambda<Func<Price, bool>>(expression, parameterExpression);
 

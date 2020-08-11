@@ -228,7 +228,7 @@ namespace BOBS_Backend.Repository.Implementations.SearchImplementation
 
         }
 
-        public BinaryExpression ReturnExpression(ParameterExpression parameterExpression, string filterValue, string searchString, int pageNum)
+        public BinaryExpression ReturnExpression(ParameterExpression parameterExpression, string filterValue, string searchString)
         {
             string[] listOfFilters = filterValue.Split(' ');
             bool isFirst = true;

@@ -18,6 +18,7 @@ using System.Linq.Dynamic.Core;
 using Microsoft.EntityFrameworkCore;
 using System.Data.Entity;
 using BOBS_Backend.Repository.SearchImplementations;
+using System.Runtime.InteropServices;
 
 namespace BOBS_Backend.Repository.Implementations.OrderImplementations
 {
@@ -128,7 +129,7 @@ namespace BOBS_Backend.Repository.Implementations.OrderImplementations
             var parameterExpression = Expression.Parameter(Type.GetType("BOBS_Backend.Models.Order.Order"), "order");
 
 
-            var expression = _searchRepo.ReturnExpression(parameterExpression, filterValue, searchString, pageNum);
+            var expression = _searchRepo.ReturnExpression(parameterExpression, filterValue, searchString);
 
             Expression<Func<Order,bool>> lambda = Expression.Lambda<Func<Order,bool>>(expression,parameterExpression);
          
@@ -152,6 +153,25 @@ namespace BOBS_Backend.Repository.Implementations.OrderImplementations
             viewModel = await RetrieveFilterViewModel(filterQuery, totalPages, pageNum, filterValue, searchString);
             return viewModel;
 
+        }
+
+
+        public IQueryable<Order> FilterOrder(string filterValue, string searchString)
+        {
+
+            var parameterExpression = Expression.Parameter(Type.GetType("BOBS_Backend.Models.Order.Order"), "order");
+
+            var expression = _searchRepo.ReturnExpression(parameterExpression, filterValue, searchString);
+
+            Expression<Func<Order, bool>> lambda = Expression.Lambda<Func<Order, bool>>(expression, parameterExpression);
+
+            var query = (IQueryable<Order>)_searchRepo.GetBaseQuery("BOBS_Backend.Models.Order.Order");
+
+            query = query.Include(OrderIncludes);
+
+            var filterQuery = query.Where(lambda);
+
+            return filterQuery;
         }
 
     }

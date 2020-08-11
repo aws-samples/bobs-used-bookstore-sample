@@ -11,7 +11,7 @@ namespace BOBS_Backend.Repository.SearchImplementations
 
         IQueryable GetBaseQuery(string objPath);
 
-        BinaryExpression ReturnExpression(ParameterExpression parameterExpression, string filterValue, string searchString, int pageNum);
+        BinaryExpression ReturnExpression(ParameterExpression parameterExpression, string filterValue, string searchString);
 
         int GetTotalPages(int totalCount, int valsPerPage);
 
