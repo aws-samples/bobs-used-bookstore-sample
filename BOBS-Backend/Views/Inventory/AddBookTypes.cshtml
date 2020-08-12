@@ -1,4 +1,10 @@
 ﻿@model BOBS_Backend.Models.Book.Type
+
+
+@{
+    var status = (string)ViewData["Status"];
+}
+
 <style>
 
 
@@ -83,20 +89,60 @@
         -moz-osx-font-smoothing: grayscale;
     }
 
-    .main-text 
-    {
+    .main-text {
         font-family: 'Arvo', serif
     }
 </style>
 
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="text-center font-weight-light modal-title" id="exampleModalLabel">Message</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <li class="main-text">@status</li>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button style="margin-left:5%" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+
+@if (status.Contains("already"))
+{
+    <script type="text/javascript">
+
+        $(
+            function () {
+                $('#exampleModal').modal('show');
+
+            });
+
+
+    </script>
+
+}
+
 <div class="login-page" style="margin-left:5%; height:60%">
     <div class="form" style="width: 200%;height:350px;margin-left:20%">
-        <form class = "login-form" enctype="multipart/form-data" asp-controller="Inventory" asp-action="AddBookTypes" method="post" style="padding-bottom: 0px;">
+        <form class="login-form" enctype="multipart/form-data" asp-controller="Inventory" asp-action="AddBookTypes" method="post" style="padding-bottom: 0px;">
             <div asp-validation-summary="All"></div>
-            <h1 class="main-text title-1 text-center font-weight-light" style="margin-bottom:10%; margin-top:1%">ADD NEW FORMAT</h>
-                <input class="main-text"  asp-for="TypeName" style="margin-top:5%;height:3%" type="text" placeholder="FORMAT NAME" />
+            <h1 class="main-text title-1 text-center font-weight-light" style="margin-bottom:10%; margin-top:1%">
+                ADD NEW FORMAT</h1>
+                <input class="main-text" asp-for="TypeName" style="margin-top:5%;height:3%" type="text" required placeholder="FORMAT NAME" />
                 <button class="main-text" type="submit">SUBMIT</button>
-                <h4 class="main-text message">@ViewData["Status"]</h4>
+                <a asp-controller="Inventory" asp-action="EditType">Edit Types</a>
         </form>
     </div>
 </div>

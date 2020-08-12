@@ -140,27 +140,27 @@
                                 <div class="card">
                                         @if(!String.IsNullOrEmpty(@book.front_url))
                                         {
-                                            <img class="card-img-top" src="@book.front_url" alt="Card image cap"> 
+                                            <img class="img-thumbnail" src="@book.front_url" alt="Card image cap"> 
                                         }
 
                                         else if (!String.IsNullOrEmpty(@book.back_url))
                                         {
-                                            <img class="card-img-top" src="@book.back_url" alt="Card image cap">
+                                            <img class="img-thumbnail" src="@book.back_url" alt="Card image cap">
                                         }
 
                                         else if (!String.IsNullOrEmpty(@book.left_url))
                                         {
-                                            <img class="card-img-top" src="@book.left_url" alt="Card image cap">
+                                            <img class="img-thumbnail" src="@book.left_url" alt="Card image cap">
                                         }
 
                                         else if (!String.IsNullOrEmpty(@book.right_url))
                                         {
-                                            <img class="card-img-top" src="@book.right_url" alt="Card image cap">
+                                            <img class="img-thumbnail" src="@book.right_url" alt="Card image cap">
                                         }
 
                                         else
                                         {
-                                            <img style="width:100%;height:100%" img-fluid" src="https://dtdt6j0vhq1rq.cloudfront.net/default0Kind of New.jpg" alt="Ft slide">
+                                            <img class="img-thumbnail" style="width:100%;height:100%" img-fluid" src="https://dtdt6j0vhq1rq.cloudfront.net/default0Kind of New.jpg" alt="Ft slide">
                                         }
                                         <div class="main-text card-body">
                                             <h4 class="card-title text-center">

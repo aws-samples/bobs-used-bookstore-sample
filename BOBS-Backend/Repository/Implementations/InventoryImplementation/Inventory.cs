@@ -49,7 +49,6 @@ namespace BOBS_Backend
     {
 
         public DatabaseContext _context;
-        private readonly int _booksPerPage = 15;
         private readonly IRekognitionNPollyRepository _RekognitionNPollyRepository;
         private readonly ILogger<Inventory> _logger;
 
@@ -89,24 +88,6 @@ namespace BOBS_Backend
             _context.SaveChanges();
         }
 
-        /*
-         *  function to add  details to the Publisher table
-         */
-        public void SavePublisherDetails(Publisher publisher)
-        {
-            _logger.LogInformation("Posting details to the Publisher table");
-            var publishers = _context.Publisher.Find(publisher.Name);
-            if (publishers == null)
-            {
-                _context.Publisher.Add(publisher);
-                _context.SaveChanges();
-            }
-        }
-
-        /*
-         *  function to add  process search input and display paged output 
-         */
-       
         /*
          *  function to add  details to the Publisher table
          */
@@ -174,6 +155,105 @@ namespace BOBS_Backend
                 return 0;
             }
             return 1;
+
+        }
+
+        public void EditPublisher(string Actual , string New)
+        {
+            _logger.LogInformation("Posting details to the Conditions table");
+
+            try
+            {
+                var publishName = _context.Publisher.Where(x => x.Name == Actual).ToList();
+                using (var transaction = _context.Database.BeginTransaction())
+                {
+                    publishName[0].Name = New;
+                    _context.SaveChanges();
+                    transaction.Commit();
+                }
+
+            }
+            catch (DbUpdateConcurrencyException ex)
+            {
+                _logger.LogError(ex, "DBConcurrency Error");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error");
+            }
+
+        }
+
+        public void EditGenre(string Actual, string New)
+        {
+            _logger.LogInformation("Posting details to the Conditions table");
+            try
+            {
+                var GenreName = _context.Genre.Where(x => x.Name == Actual).ToList();
+                using (var transaction = _context.Database.BeginTransaction())
+                {
+                    GenreName[0].Name = New;
+                    _context.SaveChanges();
+                }
+            }
+
+            catch (DbUpdateConcurrencyException ex)
+            {
+                _logger.LogError(ex, "DBConcurrency Error");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error");
+            }
+
+        }
+
+        public void EditCondition(string Actual, string New)
+        {
+            _logger.LogInformation("Posting details to the Conditions table");
+            try
+            {
+                var conditionName = _context.Condition.Where(x => x.ConditionName == Actual).ToList();
+                using (var transaction = _context.Database.BeginTransaction())
+                {
+                    conditionName[0].ConditionName = New;
+                    _context.SaveChanges();
+                }
+            }
+
+            catch (DbUpdateConcurrencyException ex)
+            {
+                _logger.LogError(ex, "DBConcurrency Error");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error");
+            }
+
+        }
+
+        public void EditType(string Actual, string New)
+        {
+            _logger.LogInformation("Posting details to the Conditions table");
+            try
+            {
+                var typeName = _context.Type.Where(x => x.TypeName == Actual).ToList();
+                using (var transaction = _context.Database.BeginTransaction())
+                {
+                    typeName[0].TypeName = New;
+                    _context.SaveChanges();
+                }
+            }
+
+            catch (DbUpdateConcurrencyException ex)
+            {
+                _logger.LogError(ex, "DBConcurrency Error");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error");
+            }
+
 
         }
 
@@ -262,7 +342,7 @@ namespace BOBS_Backend
 
             if (bookview.Summary != null)
             {
-                //AudioBookUrl = _RekognitionNPollyRepository.GenerateAudioSummary(bookview.BookName, bookview.Summary, "fr-CA", VoiceId.Emma);           
+                AudioBookUrl = _RekognitionNPollyRepository.GenerateAudioSummary(bookview.BookName, bookview.Summary, Constants.TEXTTOSPEECHLANGUAGECODE, VoiceId.Emma);           
             }
 
             Book book = new Book();
@@ -337,13 +417,13 @@ namespace BOBS_Backend
             _logger.LogInformation("Calculating number of page for given query");
 
             var totalPages = 0;
-            if ((FilteredBooks.Count() % _booksPerPage) == 0)
+            if ((FilteredBooks.Count() % Constants.BooksPerPage) == 0)
             {
-                totalPages = (FilteredBooks.Count() / _booksPerPage);
+                totalPages = (FilteredBooks.Count() / Constants.BooksPerPage);
             }
             else
             {
-                totalPages = (FilteredBooks.Count() / _booksPerPage) + 1;
+                totalPages = (FilteredBooks.Count() / Constants.BooksPerPage) + 1;
             }
 
             return totalPages;
@@ -433,7 +513,7 @@ namespace BOBS_Backend
 
             Dictionary<string, int> Book_qty = new Dictionary<string, int>();
 
-            var parameterExpression = Expression.Parameter(Type.GetType("BOBS_Backend.Models.Book.Price"), "price");
+            var parameterExpression = Expression.Parameter(Type.GetType("BOBS_Backend.Models.Book.Price"),  Constants.LAMBDAEXPRESSIONPHRASE);
 
             Expression<Func<Price, object>> lambda_sorting = null;
 
@@ -485,7 +565,7 @@ namespace BOBS_Backend
 
             if (!String.IsNullOrEmpty(SortBy))
             {
-                if (SortBy.Contains("Quantity"))
+                if (SortBy.Contains(Constants.SortByQuantityPhrase))
                 {
                     if (ascdesc == "asc" || ascdesc == null)
                     {
@@ -500,7 +580,7 @@ namespace BOBS_Backend
 
                 }
 
-                if (SortBy.Contains("ItemPrice"))
+                if (SortBy.Contains(Constants.SortByPricePhrase))
                 {
                     if (ascdesc == "asc" || ascdesc == null)
                     {
@@ -516,7 +596,7 @@ namespace BOBS_Backend
 
                 }
 
-                if (SortBy.Contains("Name"))
+                if (SortBy.Contains(Constants.SortByNamePhrase))
                 {
                     if (ascdesc == "asc" || ascdesc == null)
                     {
@@ -532,7 +612,7 @@ namespace BOBS_Backend
 
                 }
 
-                if (SortBy.Contains("Author"))
+                if (SortBy.Contains(Constants.SortByAuthorPhrase))
                 {
                     if (ascdesc == "asc" || ascdesc == null)
                     {
@@ -557,7 +637,7 @@ namespace BOBS_Backend
 
             viewModel.searchby = "";
             viewModel.searchfilter = "";
-            viewModel.Books = FilteredBooks.Skip((pagenum - 1) * _booksPerPage).Take(_booksPerPage);
+            viewModel.Books = FilteredBooks.Skip((pagenum - 1) * Constants.BooksPerPage).Take(Constants.BooksPerPage);
             viewModel.Pages = pages;
             viewModel.HasPreviousPages = (pagenum > 1);
             viewModel.CurrentPage = pagenum;
@@ -565,7 +645,7 @@ namespace BOBS_Backend
             viewModel.Ascdesc = ascdesc;
             if (string.IsNullOrEmpty(style))
             {
-                viewModel.ViewStyle = "Tabular";
+                viewModel.ViewStyle = Constants.ViewStyleDefault;
             }
             else
             {
@@ -590,7 +670,7 @@ namespace BOBS_Backend
 
             Dictionary<string, int> Book_qty = new Dictionary<string, int>();
 
-            var parameterExpression = Expression.Parameter(Type.GetType("BOBS_Backend.Models.Book.Price"), "price");
+            var parameterExpression = Expression.Parameter(Type.GetType("BOBS_Backend.Models.Book.Price"),Constants.LAMBDAEXPRESSIONPHRASE);
 
             Expression<Func<Price, bool>> lambda;
             Expression<Func<Price,object>> lambda_sorting = null;
@@ -652,7 +732,7 @@ namespace BOBS_Backend
 
             if (!String.IsNullOrEmpty(SortBy))
             {
-                if (SortBy.Contains("Quantity"))
+                if (SortBy.Contains(Constants.SortByQuantityPhrase))
                 {
                     if (ascdesc == "asc" || ascdesc == null)
                     {
@@ -673,7 +753,7 @@ namespace BOBS_Backend
 
                 }
 
-                if (SortBy.Contains("ItemPrice"))
+                if (SortBy.Contains(Constants.SortByPricePhrase))
                 {
                     if (ascdesc == "asc" || ascdesc == null)
                     {
@@ -695,7 +775,7 @@ namespace BOBS_Backend
 
                 }
 
-                if (SortBy.Contains("Name"))
+                if (SortBy.Contains(Constants.SortByNamePhrase))
                 {
                     if (ascdesc == "asc" || ascdesc == null)
                     {
@@ -717,7 +797,7 @@ namespace BOBS_Backend
 
                 }
 
-                if (SortBy.Contains("Author"))
+                if (SortBy.Contains(Constants.SortByAuthorPhrase))
                 {
                     if (ascdesc == "asc" || ascdesc == null)
                     {
@@ -755,7 +835,7 @@ namespace BOBS_Backend
             viewModel.Ascdesc = ascdesc;
             if (string.IsNullOrEmpty(style))
             {
-                viewModel.ViewStyle = "Tabular";
+                viewModel.ViewStyle = Constants.ViewStyleDefault;
             }
             else
             {
@@ -984,10 +1064,10 @@ namespace BOBS_Backend
 
             Dictionary<string, int> count_stats = new Dictionary<string, int>();
             
-                var delivered = _context.Order.Where(x => x.OrderStatus.Status == "Delivered").ToList().Count();
-                var justplaced = _context.Order.Where(x => x.OrderStatus.Status == "Just Placed").ToList().Count();
-                var enroute = _context.Order.Where(x => x.OrderStatus.Status == "En Route").ToList().Count();
-                var pending = _context.Order.Where(x => x.OrderStatus.Status == "Pending").ToList().Count();
+                var delivered = _context.Order.Where(x => x.OrderStatus.Status == Constants.OrderStatusDelivered).ToList().Count();
+                var justplaced = _context.Order.Where(x => x.OrderStatus.Status == Constants.OrderStatusJustPlaced).ToList().Count();
+                var enroute = _context.Order.Where(x => x.OrderStatus.Status == Constants.OrderStatusEnRoute).ToList().Count();
+                var pending = _context.Order.Where(x => x.OrderStatus.Status == Constants.OrderStatusPending).ToList().Count();
                 var ordersplaced = delivered + justplaced + enroute + pending;
 
                 var orderdetailsList = _context.OrderDetail.ToList();
@@ -999,10 +1079,10 @@ namespace BOBS_Backend
 
            
             count_stats["Orders_placed"] = ordersplaced;
-            count_stats["delivered"] = delivered;
-            count_stats["enroute"] = enroute;
-            count_stats["pending"] = pending;
-            count_stats["justplaced"] = justplaced;
+            count_stats[Constants.OrderStatusDelivered] = delivered;
+            count_stats[Constants.OrderStatusEnRoute] = enroute;
+            count_stats[Constants.OrderStatusPending] = pending;
+            count_stats[Constants.OrderStatusJustPlaced] = justplaced;
             count_stats["total_books_sold"] = total_quantity_sold;
             count_stats["total_sales"] = (int)total_sales_value;
 
@@ -1050,39 +1130,56 @@ namespace BOBS_Backend
         {
             _logger.LogInformation("Pushing edited details to database");
 
-            var output = _context.Price.Where(p => p.Condition.ConditionName == details.BookCondition.ConditionName && p.Book.Book_Id == details.BookId).ToList();
-            if (details.FrontPhoto != null)
+            try
             {
-                details.front_url = _RekognitionNPollyRepository.UploadtoS3(details.FrontPhoto, details.BookId, details.BookCondition.ConditionName).Result;
+                var output = _context.Price.Where(p => p.Condition.ConditionName == details.BookCondition.ConditionName && p.Book.Book_Id == details.BookId).ToList();
+                if (details.FrontPhoto != null)
+                {
+                    details.front_url = _RekognitionNPollyRepository.UploadtoS3(details.FrontPhoto, details.BookId, details.BookCondition.ConditionName).Result;
+                }
+
+                if (details.BackPhoto != null)
+                {
+                    details.back_url = _RekognitionNPollyRepository.UploadtoS3(details.BackPhoto, details.BookId, details.BookCondition.ConditionName).Result;
+                }
+
+
+                if (details.LeftSidePhoto != null)
+                {
+                    details.left_url = _RekognitionNPollyRepository.UploadtoS3(details.LeftSidePhoto, details.BookId, details.BookCondition.ConditionName).Result;
+                }
+
+                if (details.RightSidePhoto != null)
+                {
+                    details.right_url = _RekognitionNPollyRepository.UploadtoS3(details.RightSidePhoto, details.BookId, details.BookCondition.ConditionName).Result;
+                }
+
+                using (var transaction = _context.Database.BeginTransaction())
+                {
+                    var book = _context.Book.Where(p => p.Book_Id == details.BookId).ToList();
+                    book[0].Front_Url = details.front_url;
+                    book[0].Back_Url = details.back_url;
+                    book[0].Left_Url = details.left_url;
+                    book[0].Right_Url = details.right_url;
+                    output[0].Quantity = details.Quantity;
+                    output[0].ItemPrice = details.Price;
+                    output[0].UpdatedBy = details.UpdatedBy;
+                    output[0].UpdatedOn = details.UpdatedOn;
+                    output[0].Active = details.Active;
+                    _context.SaveChanges();
+                    transaction.Commit();
+
+                }
             }
 
-            if (details.BackPhoto != null)
+            catch (DbUpdateConcurrencyException ex)
             {
-                details.back_url = _RekognitionNPollyRepository.UploadtoS3(details.BackPhoto, details.BookId, details.BookCondition.ConditionName).Result;
+                _logger.LogError(ex, "DBConcurrency Error");
             }
-
-
-            if (details.LeftSidePhoto != null)
+            catch (Exception ex)
             {
-                details.left_url = _RekognitionNPollyRepository.UploadtoS3(details.LeftSidePhoto, details.BookId, details.BookCondition.ConditionName).Result;
+                _logger.LogError(ex, "Error");
             }
-
-            if (details.RightSidePhoto != null)
-            {
-                details.right_url = _RekognitionNPollyRepository.UploadtoS3(details.RightSidePhoto, details.BookId, details.BookCondition.ConditionName).Result;
-            }
-
-            var book = _context.Book.Where(p => p.Book_Id == details.BookId).ToList();
-            book[0].Front_Url = details.front_url;
-            book[0].Back_Url = details.back_url;
-            book[0].Left_Url = details.left_url;
-            book[0].Right_Url = details.right_url;
-            output[0].Quantity = details.Quantity;
-            output[0].ItemPrice = details.Price;
-            output[0].UpdatedBy = details.UpdatedBy;
-            output[0].UpdatedOn = details.UpdatedOn;
-            output[0].Active = details.Active;
-            _context.SaveChanges();
         }
 
         /*
@@ -1141,6 +1238,29 @@ namespace BOBS_Backend
             return names;
         }
 
+
+
+
+        public List<string> ScreenInventory()
+        {
+            List <string> BookList = new List<string>();
+            var query = _context.Price
+                                       .Include(price => price.Condition)
+                                       .Include(price => price.Book)
+                                       .Include(p => p.Book.Publisher)
+                                       .Include(p => p.Book.Genre)
+                                       .Include(p => p.Book.Type).ToList();
+            foreach(var i in query)
+            {
+                if (i.Quantity <= 5)
+                {
+                    var detail = i.Book.Name + "*" + i.Book.Publisher.Name + "*" + i.Book.Type.TypeName + "*" + i.Condition.ConditionName + "*" + i.Quantity;
+                    BookList.Add(detail);
+                }
+            }
+
+            return BookList;
+        }
 
     }
 

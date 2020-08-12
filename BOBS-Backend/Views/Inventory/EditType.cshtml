@@ -1,12 +1,12 @@
-﻿@model BOBS_Backend.Models.Book.Publisher
+﻿@model BOBS_Backend.ViewModel.ManageInventory.EditViewModel
 
 @{
     var status = (string)ViewData["Status"];
+    var types = (List<BOBS_Backend.Models.Book.Type>)ViewData["Types"];
 }
 
+
 <style>
-
-
 
     .form {
         position: relative;
@@ -97,7 +97,7 @@
     }
 </style>
 
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="Modal" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -108,7 +108,7 @@
             </div>
             <div class="modal-body">
                 <div>
-                    <li class="main-text">@status</li>                  
+                    <li class="main-text">@status</li>
                 </div>
             </div>
             <div class="modal-footer">
@@ -120,34 +120,88 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
-
-@if (status.Contains("already"))
+@if (!String.IsNullOrEmpty(status))
 {
+
     <script type="text/javascript">
 
-        $(
-            function () {
-                $('#exampleModal').modal('show');
+            $(
+                function () {
+                    $('#Modal').modal('show');
 
-            });
+                });
 
 
     </script>
 
+
 }
 
-<div class="login-page" style="margin-left:5%; height:60%">
-    <div class="form" style="width: 200%;height:350px;margin-left:20%">
-        <form class="login-form" enctype="multipart/form-data" asp-controller="Inventory" asp-action="AddPublishers" method="post" style="padding-bottom: 0px;">
-            <div asp-validation-summary="All"></div>
-            <h1 class="main-text title-1 text-center font-weight-light" style="margin-bottom:10%; margin-top:1%">
-                ADD NEW GENRE</h>
-                <input class="main-text" asp-for="Name" style="margin-top:5%;height:3%" type="text" required placeholder="PUBLISHER NAME" />
-                <button type="main-text submit">SUBMIT</button>
-                <h4 class="main-text message">@ViewData["Status"]</h4>
-                <a asp-controller="Inventory" asp-action="EditPublisher">Edit Publishers</a>
-        </form>
+<form asp-controller="Inventory" asp-action="EditType" method="post">
+    <div class="login-page" style="margin-left:5%; height:60%">
+        <div class="form" style="width: 200%;height:350px;margin-left:20%">
+            <h1 class="main-text title-1 text-center font-weight-light" style="margin-bottom:5%; margin-top:1%">
+                EDIT TYPE DETAILS
+            </h1>
+            <select asp-for="Actual" style="margin-bottom:5%; width:40%;height:20%" class="list text-lg-center font-weight-light" id="list" onchange="LoadtText();">
+                <option selected value="Hey">SELECT THE PUBLISHER</option>
+                @foreach (var type in types)
+                {
+                    <option value="@type.TypeName">@type.TypeName</option>
+                }
+            </select>
+            <button type="button" class="main-text btn btn-primary" data-toggle="modal" data-target="#exampleModal">SUBMIT</button>
+        </div>
     </div>
-</div>
 
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Edit</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-body">
+                    <input type="text" id="name" name="name" asp-for="Edited" />
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</form>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<script type="text/javascript">
+    var text;
+    function LoadtText() {
+        text = document.getElementById('list').value;
+        console.log(text);
+        $('#actual').val()
+        return text;
+    }
+</script>
+
+<script>
+    $(document).ready(function () {
+        $('#exampleModal').on('shown.bs.modal', function () {
+            var metrics_key = $('.list').val();
+            // Now you have the key and label in variables.
+
+            // Write the key into the textfield.
+            $('#exampleModal input[name="name"]').val(metrics_key);
+            // Change the HTML of an element to the label.
+            console.log("Hey");
+        })
+    });
+</script>
 

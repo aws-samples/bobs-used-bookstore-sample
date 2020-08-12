@@ -1,0 +1,207 @@
+﻿@model BOBS_Backend.ViewModel.ManageInventory.EditViewModel
+
+@{
+    var status = (string)ViewData["Status"];
+    var conditions = (List<BOBS_Backend.Models.Book.Condition>)ViewData["Conditions"];
+}
+
+
+<style>
+
+    .form {
+        position: relative;
+        z-index: 1;
+        background: #FFFFFF;
+        max-width: 1000px;
+        margin: 0 auto 20px;
+        padding: 45px;
+        text-align: center;
+        box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+    }
+
+        .form input {
+            font-family: "Roboto", sans-serif;
+            outline: 0;
+            background: #f2f2f2;
+            width: 100%;
+            border: 0;
+            margin: 0 0 15px;
+            padding: 15px;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+
+        .form input-placeholder {
+            font-size: 4px;
+        }
+
+        .form button {
+            font-family: "Roboto", sans-serif;
+            text-transform: uppercase;
+            outline: 0;
+            background: #7D53DE;
+            width: 100%;
+            border: 0;
+            padding: 15px;
+            color: #FFFFFF;
+            font-size: 14px;
+            -webkit-transition: all 0.3 ease;
+            transition: all 0.3 ease;
+            cursor: pointer;
+        }
+
+            .form button:hover, .form button:active, .form button:focus {
+                background: #7D53DE;
+            }
+
+        .form .message {
+            margin: 15px 0 0;
+            color: #b3b3b3;
+            font-size: 12px;
+        }
+
+            .form .message a {
+                color: #4CAF50;
+                text-decoration: none;
+            }
+
+    .container {
+        position: relative;
+        z-index: 1;
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+
+    .form h1 {
+        font-weight: lighter 100;
+        color: #7D53DE;
+    }
+
+    body {
+        background: #76b852; /* fallback for old browsers */
+        background: -webkit-linear-gradient(right, #FFFFFF, #FFFFFF);
+        background: -moz-linear-gradient(right, #FFFFFF, #FFFFFF);
+        background: -o-linear-gradient(right, #FFFFFF, #FFFFFF);
+        background: linear-gradient(to left, #FFFFFF, #FFFFFF);
+        font-family: "Roboto", sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+
+    .main-text {
+        font-family: 'Arvo', serif
+    }
+
+    .form h3 {
+        color: #ff0000;
+    }
+</style>
+
+<div class="modal fade" id="Modal" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="text-center font-weight-light modal-title" id="exampleModalLabel">Message</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <li class="main-text">@status</li>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button style="margin-left:5%" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+@if (!String.IsNullOrEmpty(status))
+{
+
+    <script type="text/javascript">
+
+            $(
+                function () {
+                    $('#Modal').modal('show');
+
+                });
+
+
+    </script>
+
+
+}
+
+<form asp-controller="Inventory" asp-action="EditCondition" method="post">
+    <div class="login-page" style="margin-left:5%; height:60%">
+        <div class="form" style="width: 200%;height:350px;margin-left:20%">
+            <h1 class="main-text title-1 text-center font-weight-light" style="margin-bottom:5%; margin-top:1%">
+                EDIT CONDITION DETAILS
+            </h1>
+            <select asp-for="Actual" style="margin-bottom:5%; width:40%;height:20%" class="list text-lg-center font-weight-light" id="list" onchange="LoadtText();">
+                <option selected value="Hey">SELECT THE GENRE</option>
+                @foreach (var condition in conditions)
+                {
+                    <option value="@condition.ConditionName">@condition.ConditionName</option>
+                }
+            </select>
+            <button type="button" class="main-text btn btn-primary" data-toggle="modal" data-target="#exampleModal">SUBMIT</button>
+        </div>
+    </div>
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Edit</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-body">
+                    <input type="text" id="name" name="name" asp-for="Edited" />
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</form>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<script type="text/javascript">
+    var text;
+    function LoadtText() {
+        text = document.getElementById('list').value;
+        console.log(text);
+        $('#actual').val()
+        return text;
+    }
+</script>
+
+<script>
+    $(document).ready(function () {
+        $('#exampleModal').on('shown.bs.modal', function () {
+            var metrics_key = $('.list').val();
+            // Now you have the key and label in variables.
+
+            // Write the key into the textfield.
+            $('#exampleModal input[name="name"]').val(metrics_key);
+            // Change the HTML of an element to the label.
+            console.log("Hey");
+        })
+    });
+</script>
+

@@ -72,8 +72,4 @@
 
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Repository\Implementations\NewFolder\" />
-  </ItemGroup>
-
 </Project>

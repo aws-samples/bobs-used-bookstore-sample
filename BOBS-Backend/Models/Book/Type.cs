@@ -14,5 +14,8 @@ namespace BOBS_Backend.Models.Book
         public long Type_Id { get; set; }
 
         public string TypeName { get; set; }
+
+        [Timestamp]
+        public byte[] RowVersion { get; set; }
     }
 }

@@ -15,10 +15,7 @@ namespace BOBS_Backend.Controllers
     {
        
         public async Task SignOut()
-        {
-
-
-            
+        {            
             // deletes the cookies from the local machine
             await HttpContext.SignOutAsync("Cookies");
             // the cognito logout URL; should be the same as the signout URL on cognito

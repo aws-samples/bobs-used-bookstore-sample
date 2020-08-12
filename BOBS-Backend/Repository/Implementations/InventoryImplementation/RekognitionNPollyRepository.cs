@@ -30,13 +30,7 @@ namespace BOBS_Backend.Repository.Implementations.InventoryImplementation
         IAmazonPolly _pollyClient { get; set; }
 
         private readonly ILogger<RekognitionNPollyRepository> _logger;
-
-
         public DatabaseContext _context;
-        private const string photosBucketName = "bookcoverpictures";
-        private const string audioBucketName = "audiosummary";
-        private static readonly RegionEndpoint bucketRegion = RegionEndpoint.USEast1;
-      //  private static IAmazonS3 s3Client;
         private IHostingEnvironment _env;
 
         public RekognitionNPollyRepository(DatabaseContext context, IHostingEnvironment env , IAmazonS3 s3Client , IAmazonRekognition rekognitionClient, IAmazonPolly pollyClient , ILogger<RekognitionNPollyRepository> logger)
@@ -79,16 +73,16 @@ namespace BOBS_Backend.Repository.Implementations.InventoryImplementation
 
                 var fileTransferUtility = new TransferUtility(_s3Client);
 
-                await fileTransferUtility.UploadAsync(Path.Combine(dir, filename), photosBucketName);
+                await fileTransferUtility.UploadAsync(Path.Combine(dir, filename), Constants.photosBucketName);
 
 
-                bool check = await IsImageSafe(photosBucketName, filename);
+                bool check = await IsImageSafe(Constants.photosBucketName, filename);
 
                 if (check)
                 {
-                    if (await IsBook(photosBucketName, filename))
+                    if (await IsBook(Constants.photosBucketName, filename))
                     {
-                        url = String.Concat("https://dtdt6j0vhq1rq.cloudfront.net/", filename);
+                        url = String.Concat(Constants.CoverPicturesCloudFrontLink, filename);
                         return url;
 
                     }
@@ -210,15 +204,10 @@ namespace BOBS_Backend.Repository.Implementations.InventoryImplementation
             _logger.LogInformation("Resizing Image");
             // create new memory stream.
             Stream result = new MemoryStream();
-            int new_size = 300;
             // create new image variable
            var img = SixLabors.ImageSharp.Image.Load(file.OpenReadStream());
-            // set height and width proportional
-           // var div = img.Width / new_size;
-           // var hgt = Convert.ToInt32(Math.Round((decimal)(img.Height / div)));
-
-            // change size of image
-            img.Mutate(x => x.Resize(200, 200));
+               // change size of image
+            img.Mutate(x => x.Resize(Constants.resize_width, Constants.resize_height));
             //get the extension encoder
             IImageEncoder encoder = selectEncoder(fileExt);
             img.Save(result, encoder);
@@ -282,11 +271,9 @@ namespace BOBS_Backend.Repository.Implementations.InventoryImplementation
                 FileStream output = File.Open(outputFileName, FileMode.Create);
                 response.AudioStream.CopyTo(output);
                 output.Close();
-                //s3Client = new AmazonS3Client("AKIA6DYNIKQLFG4HU2LU", "4RM8WQL3tH4+c7RgIQ/LPBHqt6ESwleokqsDx1Gf", bucketRegion);
                 var fileTransferUtility = new TransferUtility(_s3Client);
-                fileTransferUtility.UploadAsync(outputFileName, audioBucketName);
-
-                var url = String.Concat("https://d3iukz826t8vlr.cloudfront.net/", BookName);
+                fileTransferUtility.UploadAsync(outputFileName,Constants.audioBucketName);
+                var url = String.Concat(Constants.AudioFilesCloudFrontLink, BookName);
                 return url;
             }
         }
