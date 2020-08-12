@@ -75,7 +75,7 @@ namespace BobBookstore.Controllers
             if (!String.IsNullOrEmpty(searchString))
             {
                 ViewBag.currentFilter = searchString;
-                var prices = from p in _context.Price
+                var pricesQuery = from p in _context.Price
                              where p.Quantity > 0 &&
                              p.Active && (
                             p.Book.Name.Contains(searchString) ||
@@ -85,10 +85,14 @@ namespace BobBookstore.Controllers
                             p.Book.Publisher.Name.Contains(searchString)
                              select p;
 
-                prices = prices.OrderBy(p => p.ItemPrice);
+                pricesQuery = pricesQuery.OrderBy(p => p.ItemPrice);
 
+<<<<<<< Updated upstream
                 
                 var books = from b in _context.Book
+=======
+                var booksQuery = from b in _context.Book
+>>>>>>> Stashed changes
                             where b.Name.Contains(searchString) ||
                             b.Genre.Name.Contains(searchString) ||
                             b.Type.TypeName.Contains(searchString) ||
@@ -104,30 +108,30 @@ namespace BobBookstore.Controllers
                                 TypeName = b.Type.TypeName,
                                 PublisherName = b.Publisher.Name,
                                 Url = b.Back_Url,
-                                Prices = prices.Where(p => p.Book.Book_Id == b.Book_Id).ToList(),
-                                MinPrice = prices.Where(p => p.Book.Book_Id == b.Book_Id).FirstOrDefault().ItemPrice
+                                Prices = pricesQuery.Where(p => p.Book.Book_Id == b.Book_Id).ToList(),
+                                MinPrice = pricesQuery.Where(p => p.Book.Book_Id == b.Book_Id).FirstOrDefault().ItemPrice
                             };
 
                 // sort query
                 switch (ViewBag.CurrentSort)
                 {
                     case "Name":
-                        books = books.OrderByDescending(b => b.BookName);
+                        booksQuery = booksQuery.OrderByDescending(b => b.BookName);
                         break;
                     case "Genre":
-                        books = books.OrderBy(b => b.GenreName);
+                        booksQuery = booksQuery.OrderBy(b => b.GenreName);
                         break;
                     case "Type":
-                        books = books.OrderBy(b => b.TypeName);
+                        booksQuery = booksQuery.OrderBy(b => b.TypeName);
                         break;
                     case "PriceAsc":
-                        books = books.OrderBy(b => b.MinPrice);
+                        booksQuery = booksQuery.OrderBy(b => b.MinPrice);
                         break;
                     case "PriceDesc":
-                        books = books.OrderByDescending(b => b.MinPrice);
+                        booksQuery = booksQuery.OrderByDescending(b => b.MinPrice);
                         break;
                     default:
-                        books = books.OrderBy(b => b.BookName);
+                        booksQuery = booksQuery.OrderBy(b => b.BookName);
                         break;
                 }
 
@@ -136,11 +140,12 @@ namespace BobBookstore.Controllers
                 
                 return View(new PaginationModel 
                     {
-                    Count = books.Count(),
-                    Data = await books.Skip((currentPage - 1) * pageSize).Take(pageSize).ToListAsync(),
+                    Count = booksQuery.Count(),
+                    Data = await booksQuery.Skip((currentPage - 1) * pageSize).Take(pageSize).ToListAsync(),
                     CurrentPage = currentPage,
                     PageSize = pageSize,
-                    CurrentFilter = searchString});
+                    CurrentFilter = searchString
+                });
 
             }
 
