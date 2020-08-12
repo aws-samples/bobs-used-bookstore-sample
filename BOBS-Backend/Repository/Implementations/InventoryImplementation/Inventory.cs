@@ -417,8 +417,8 @@ namespace BOBS_Backend
         {
             SearchBookViewModel viewModel = new SearchBookViewModel();
 
-            viewModel.searchby = searchString;
-            viewModel.searchfilter = filterValue;
+            viewModel.searchby = filterValue;
+            viewModel.searchfilter = searchString;
             viewModel.Books = books;
             viewModel.Pages = pages;
             viewModel.HasPreviousPages = (pageNum > 1);
@@ -480,6 +480,7 @@ namespace BOBS_Backend
 
             var expression = _searchRepo.ReturnExpression(parameterExpression, searchby, searchfilter);
 
+            searchby = searchby.Trim();
             Expression<Func<Price, bool>> lambda = Expression.Lambda<Func<Price, bool>>(expression, parameterExpression);
 
             if (lambda == null)
