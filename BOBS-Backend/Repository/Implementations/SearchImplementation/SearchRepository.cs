@@ -250,6 +250,7 @@ namespace BOBS_Backend.Repository.Implementations.SearchImplementation
 
         }
 
+
         public BinaryExpression ReturnExpression(ParameterExpression parameterExpression, string filterValue, string searchString)
         {
             string[] listOfFilters = filterValue.Split(' ');
@@ -280,7 +281,7 @@ namespace BOBS_Backend.Repository.Implementations.SearchImplementation
                 }
                 if (isFirst)
                 {
-                    expression = Expression.And(exp2, exp2);
+                    expression = exp2;
                     isFirst = false;
 
 
