@@ -213,7 +213,7 @@ namespace BobBookstore.Controllers
             //remove from cart
             for (int i = 0; i < IDs.Length; i++)
             {
-                var cartItemD = _context.CartItem.Find(Convert.ToInt32(IDs[i]));
+                var cartItemD = _context.CartItem.Find(Convert.ToString (IDs[i]));
                 _context.CartItem.Remove(cartItemD);
             }
 
