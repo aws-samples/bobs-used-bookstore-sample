@@ -13,7 +13,7 @@ namespace BOBS_Backend.Repository.WelcomePageInterface
     {
         Task<List<Price>> GetUserUpdatedBooks(string adminUsername);
         Task<List<Price>> OtherUpdatedBooks(string adminUsername);
-        Task<List<FilterOrders>> GetImportantOrders();
+        Task<List<FilterOrders>> GetImportantOrders(int maxRange, int minRange);
         List<FilterOrders> SortTable(List<FilterOrders> order, string sortByValue);
     }
 }

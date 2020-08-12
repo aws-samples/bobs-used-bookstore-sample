@@ -16,30 +16,44 @@
         .error-actions .btn {
             margin-right: 10px;
         }
+    .errbutton {
+        font-weight: normal;
+        
+        padding: .6em;
+        border-top-left-radius: 12rem;
+        border-bottom-left-radius: 12rem;
+        border-top-right-radius: 12rem;
+        border-bottom-right-radius: 12rem;
+        background-color: #7D53DE;
+        min-width: 10rem
+    }
+    .err-text {
+        font-family: 'Arvo',serif;
+    }
 </style>
 
 <div class="container">
     <div class="row">
         <div class="col-md-12">
-            <div class="error-template">
+            <div class="error-template err-text">
                 <h1>
                     Oops!
                 </h1>
-                <h2>
+                <h2 class="err-text">
                      Error Code @ViewData["StatusCode"]
                     
                 </h2>
-                <div class="error-details">
+                <div class="err-text">
                     
                     Sorry, an error has occured
                 </div>
                 <div class="error-actions">
-                    <a href="javascript:history.go(-1)" class="btn btn-primary btn-lg">
-                        <span class="glyphicon glyphicon-home"></span>
+                    <a href="javascript:history.go(-1)" class="errbutton" style="color:white;">
+                        <span class=" text-white "></span>
                         Take Me Back
                     </a>
-                    <a asp-action="Index" asp-controller="Home" class="btn btn-primary btn-lg">
-                        <span class="glyphicon glyphicon-home"></span>
+                    <a asp-action="Index" asp-controller="Home" class="errbutton" style="color:white;">
+                        <span class=" text-white err-text"></span>
                         Home
                     </a>
 
@@ -48,3 +62,4 @@
         </div>
     </div>
 </div>
+    

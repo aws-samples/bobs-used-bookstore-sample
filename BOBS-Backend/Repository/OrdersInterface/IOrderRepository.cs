@@ -14,8 +14,6 @@ namespace BOBS_Backend.Repository.OrdersInterface
          * Order Detail Repository Interface
          */
 
-        Task<Order> CancelOrder(long id);
-
         Task<Order> FindOrderById(long id);
 
         Task<ManageOrderViewModel> GetAllOrders(int pageNum);
@@ -23,7 +21,7 @@ namespace BOBS_Backend.Repository.OrdersInterface
         Task<ManageOrderViewModel> FilterList(string filterValue, string searchString, int pageNum);
 
 
-
+        IQueryable<Order> FilterOrder(string filterValue, string searchString);
 
      }
 }

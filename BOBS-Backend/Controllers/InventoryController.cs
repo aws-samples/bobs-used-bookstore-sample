@@ -120,13 +120,7 @@ namespace BOBS_Backend.Controllers
 
             return View (bookview);
         }
-        //Get list of all books in the inventory
-        public IActionResult GetAllBooks()
-        {
-
-            var books = _Inventory.GetAllBooks(1 , "" , "" , "","");
-            return View(books);
-        }       
+    
 
         [HttpGet]
         public IActionResult AddPublishers()
@@ -476,22 +470,21 @@ namespace BOBS_Backend.Controllers
             {
                 if (pageNum == 0) pageNum++;
 
-                if ((String.IsNullOrEmpty(searchby) && String.IsNullOrEmpty(searchfilter)) || (!String.IsNullOrEmpty(searchby) && String.IsNullOrEmpty(searchfilter)))
+                if ( (String.IsNullOrEmpty(searchby) || String.IsNullOrEmpty(searchfilter)) )
                 {
 
 
-                    var books = _Inventory.GetAllBooks(pageNum, ViewStyle, SortBy , ascdesc , pagination);
+                    var books = _Inventory.GetAllBooks(pageNum, ViewStyle, SortBy , ascdesc);
 
                     books.SortBy = SortBy;
                     return View(books);
                 }
 
-
-
                 else
                 {
-                    var books = _Inventory.SearchBeta(searchby, searchfilter, ViewStyle, SortBy, pageNum , ascdesc , pagination);
+                    //var books = _Inventory.SearchBeta(searchby, searchfilter, ViewStyle, SortBy, pageNum , ascdesc , pagination);
 
+                    var books = _Inventory.SearchBooks(searchby, searchfilter, ViewStyle, SortBy, pageNum, ascdesc);
                     books.SortBy = SortBy;
                     return View(books);
                 }

@@ -14,6 +14,11 @@ using System.Threading;
 using Amazon.Rekognition.Model;
 using System.Reflection;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System.Linq.Dynamic.Core;
+using Microsoft.EntityFrameworkCore;
+using System.Data.Entity;
+using BOBS_Backend.Repository.SearchImplementations;
+using System.Runtime.InteropServices;
 
 namespace BOBS_Backend.Repository.Implementations.OrderImplementations
 {
@@ -26,76 +31,28 @@ namespace BOBS_Backend.Repository.Implementations.OrderImplementations
 
         private DatabaseContext _context;
         private readonly int _ordersPerPage = 20;
-
+        private readonly string[] OrderIncludes = { "Customer", "Address", "OrderStatus" };
+        private ISearchRepository _searchRepo;
 
         // Set up connection to Database 
-        public OrderRepository(DatabaseContext context)
+        public OrderRepository(DatabaseContext context, ISearchRepository searchRepo)
         {
             _context = context;
+            _searchRepo = searchRepo;
         }
 
-        public async Task<Order> CancelOrder(long id)
-        {
-            try
-            {
-                IOrderDetailRepository orderDetailRepo = new OrderDetailRepository(_context);
-                IOrderStatusRepository orderStatusRepo = new OrderStatusRepository(_context);
 
-                var orderStatus = await orderStatusRepo.FindOrderStatusByName("Cancelled");
-
-                var orderDetails = await orderDetailRepo.FindOrderDetailByOrderId(id);
-                var order = await FindOrderById(id);
-
-                using (var transaction = _context.Database.BeginTransaction())
-                {
-                    foreach (var detail in orderDetails)
-                    {
-                        if (detail.IsRemoved != true)
-                        {
-                            order.Subtotal -= (detail.quantity * detail.price);
-                            order.Tax -= (detail.quantity * detail.price * .1);
-
-                            await _context.SaveChangesAsync();
-
-                            detail.Price.Quantity += detail.quantity;
-                            detail.IsRemoved = true;
-
-                            await _context.SaveChangesAsync();
-
-                        }
-                    }
-
-                    order.OrderStatus = orderStatus;
-
-                    await _context.SaveChangesAsync();
-
-                    await transaction.CommitAsync();
-
-                    return order;
-                }
-                   
-            }
-            catch(DbUpdateConcurrencyException ex)
-            {
-                return null;
-            }
-            catch (Exception ex)
-            {
-                return null;
-            }
-           
-
-        }
 
         // Find Single Order by the Order Id
         public async Task<Order> FindOrderById(long id)
         {
-            var order = await _context.Order
+
+            string[] pass = { "Customer", "Address", "OrderStatus" };
+
+            var order = _context.Order
                             .Where(order => order.Order_Id == id)
-                            .Include(order => order.Customer)
-                            .Include(order => order.Address)
-                            .Include(order => order.OrderStatus)
-                            .FirstAsync();
+                            .Include(pass)
+                            .First();
 
             return order;
         }
@@ -115,45 +72,6 @@ namespace BOBS_Backend.Repository.Implementations.OrderImplementations
             return viewModel;
         }
 
-        private IQueryable<Order> GetBaseOrderQuery()
-        {
-            var query = _context.Order
-                            .Include(order => order.Customer)
-                            .Include(order => order.Address)
-                            .Include(order => order.OrderStatus);
- 
-            return query;
-        }
-
-        private int GetTotalPages(IQueryable<Order> orderQuery)
-        {
-            if((orderQuery.Count() % _ordersPerPage) == 0)
-            {
-                return (orderQuery.Count() / _ordersPerPage);
-            }
-            else return (orderQuery.Count() / _ordersPerPage) + 1;
-        }
-
-        private int[] GetModifiedPagesArr(int pageNum, int totalPages)
-        {
-            int[] pages = null;
-
-            var start = pageNum / 10;
-
-            bool Noreminder = pageNum % 10 == 0;
-
-          
-            if (start  < (totalPages / 10) || Noreminder == true)
-            {
-                pages = Enumerable.Range((Noreminder) ? ((start-1) * 10 + 1) : (start * 10 + 1), 10 ).ToArray();
-            }
-            else
-            {
-                pages = Enumerable.Range((Noreminder) ? ((start-1) * 10) : (start * 10 + 1), totalPages - (start * 10)).ToArray();
-            }
-
-            return pages;
-        }
 
         // Find All the Orders in the Table
         public async Task<ManageOrderViewModel> GetAllOrders(int pageNum)
@@ -161,18 +79,20 @@ namespace BOBS_Backend.Repository.Implementations.OrderImplementations
 
             ManageOrderViewModel viewModel = new ManageOrderViewModel();
 
-            var totalPages = GetTotalPages(_context.Order);
+            var query = (IQueryable<Order>)_searchRepo.GetBaseQuery("BOBS_Backend.Models.Order.Order");
 
-            var orders = await _context.Order
-                            .Include(order => order.Customer)
-                            .Include(order => order.Address)
-                            .Include(order => order.OrderStatus)
-                            .OrderByDescending(order => order.Order_Id)
+            query = query.Include(OrderIncludes);
+
+            var totalPages = _searchRepo.GetTotalPages(query.Count(),_ordersPerPage);
+
+            var orders = query
+                            .OrderBy(order => order.OrderStatus.OrderStatus_Id)
+                            .ThenBy(order => order.DeliveryDate)
                             .Skip((pageNum - 1) * _ordersPerPage)
                             .Take(_ordersPerPage)
-                            .ToListAsync();
+                            .ToList();
 
-            int[] pages = GetModifiedPagesArr(pageNum, totalPages);
+            int[] pages = _searchRepo.GetModifiedPagesArr(pageNum, totalPages);
             
 
 
@@ -186,13 +106,14 @@ namespace BOBS_Backend.Repository.Implementations.OrderImplementations
         {
             ManageOrderViewModel viewModel = new ManageOrderViewModel();
 
-            var orders = await filterQuery
-                            .OrderByDescending(order => order.OrderStatus.Status == "Pending")
+            var orders = filterQuery
+                            .OrderBy(order => order.OrderStatus.OrderStatus_Id)
+                            .ThenBy(order => order.DeliveryDate)
                             .Skip((pageNum - 1) * _ordersPerPage)
                             .Take(_ordersPerPage)
-                            .ToListAsync();
+                            .ToList();
 
-            int[] pages = GetModifiedPagesArr(pageNum, totalPages);
+            int[] pages = _searchRepo.GetModifiedPagesArr(pageNum, totalPages);
 
             viewModel = RetrieveViewModel(filterValue, searchString, pageNum, totalPages, pages, orders);
 
@@ -200,233 +121,18 @@ namespace BOBS_Backend.Repository.Implementations.OrderImplementations
         }
 
 
-        private MethodCallExpression GenerateExpressionOrder(string type, string subSearch, MethodInfo method, MemberExpression property,bool isEntire)
-        {
-            try
-            {
-                ConstantExpression constant = null;
-                if (type == "System.Int64")
-                {
-                    long value = 0;
-
-                    bool res = long.TryParse(subSearch, out value);
-
-                    constant = Expression.Constant(value);
-                    method = typeof(long).GetMethod("Equals", new Type[] { typeof(int) });
-                }
-                else
-                {
-                    constant = Expression.Constant(subSearch);
-                    method = typeof(string).GetMethod("Contains", new Type[] { typeof(string) });
-                }
-
-                var expression = (isEntire == true) ? Expression.Call(constant, method, property) : Expression.Call(property, method, constant);
-                return expression;
-            }
-            catch
-            {
-                return null;
-            }
-
-        }
-
-
-        private BinaryExpression GenerateDynamicLambdaFunctionOrderProperty(string splitFilter, ParameterExpression parameterExpression, string searchString)
-        {
-            var property = Expression.Property(parameterExpression, splitFilter);
-
-            BinaryExpression lambda = null;
-            MethodInfo method = null;
-            bool isFirst = true;
-            searchString = searchString.Trim();
-
-            var table = (IQueryable)_context.GetType().GetProperty("Order").GetValue(_context, null);
-
-            var row = Expression.Parameter(table.ElementType, "row");
-
-            var col = Expression.Property(row, splitFilter);
-
-            var type = col.Type.FullName;
-
-            foreach (var subSearch in searchString.Split(' '))
-            {
-                try
-                {
-
-                    var expression = GenerateExpressionOrder(type, subSearch, method, property, false);
-
-
-                    if (isFirst)
-                    {
-                        lambda = Expression.Or(expression, expression);
-                        isFirst = false;
-
-
-                    }
-                    else
-                    {
-                        lambda = Expression.Or(lambda, expression);
-                        isFirst = false;
-                    }
-
-
-                }
-                catch
-                {
-                }
-            }
-
-            //var exp2 = GenerateExpressionOrder(type, searchString, method, property, true);
-
-            //lambda = (isFirst == true) ? Expression.Or(exp2, exp2) : Expression.Or(lambda, exp2);
-
-            return lambda;
-
-        }
-
-
-        private MethodCallExpression GenerateExpressionSubOrder(string type,string subSearch, MethodInfo method,string[] splitFilter, ParameterExpression parameterExpression, bool isEntire)
-        {
-            try
-            {
-                ConstantExpression constant = null;
-                if (type == "System.Int64")
-                {
-                    long value = 0;
-
-                    bool res = long.TryParse(subSearch, out value);
-
-                    constant = Expression.Constant(value);
-
-                    method = typeof(long).GetMethod("Equals", new Type[] { typeof(int) });
-                }
-                else
-                {
-                    constant = Expression.Constant(subSearch);
-                    method = typeof(string).GetMethod("Contains", new Type[] { typeof(string) });
-                }
-
-                Expression property2 = parameterExpression;
-
-                foreach (var member in splitFilter)
-                {
-                    property2 = Expression.PropertyOrField(property2, member);
-                }
-
-                var expression = (isEntire == true) ? Expression.Call(constant,method,property2) :Expression.Call(property2, method, constant);
-
-                return expression;
-            }
-            catch
-            {
-                return null;
-            }
-            
-        }
-
-
-        private BinaryExpression GenerateDynamicLambdaFunctionSubOrderProperty(string[] splitFilter, ParameterExpression parameterExpression, string searchString)
-        {
-            BinaryExpression lambda = null;
-            MethodInfo method = null;
-            bool isFirst = true;
-            searchString = searchString.Trim();
-
-            var table = (IQueryable)_context.GetType().GetProperty(splitFilter[0]).GetValue(_context, null);
-
-            var row = Expression.Parameter(table.ElementType, "row");
-
-            var col = Expression.Property(row, splitFilter[1]);
-
-            var type = col.Type.FullName;
-            foreach (var subSearch in searchString.Split(' '))
-            {
-                try
-                {
-
-
-                    var expression = GenerateExpressionSubOrder(type, subSearch, method, splitFilter, parameterExpression, false);
-
-                    if (isFirst)
-                    {
-                        lambda = Expression.Or(expression, expression);
-                        isFirst = false;
-
-
-                    }
-                    else
-                    {
-                        lambda = Expression.Or(lambda, expression);
-                        isFirst = false;
-                    }
-
-                }
-                catch
-                {
-                }
-            }
-
-            //var exp2 = GenerateExpressionSubOrder(type, searchString, method, splitFilter, parameterExpression, true);
-
-            //lambda = (isFirst == true) ? Expression.Or(exp2, exp2) : Expression.Or(lambda, exp2); 
-            return lambda;
-
-        }
-
-
-
+   
         public async Task<ManageOrderViewModel> FilterList(string filterValue, string searchString, int pageNum)
         {
+
             ManageOrderViewModel viewModel = new ManageOrderViewModel();
             var parameterExpression = Expression.Parameter(Type.GetType("BOBS_Backend.Models.Order.Order"), "order");
 
 
-            string[] listOfFilters = filterValue.Split(' ');
-            bool isFirst = true;
-            BinaryExpression expression = null;
-
-
-            for (int i = 1; i < listOfFilters.Length; i++)
-            {
-
-                BinaryExpression exp2 = null;
-
-                if (!listOfFilters[i].Contains("."))
-                {
-                    exp2 = GenerateDynamicLambdaFunctionOrderProperty(listOfFilters[i], parameterExpression, searchString);
-                }
-                else
-                {
-                   
-                    exp2 = GenerateDynamicLambdaFunctionSubOrderProperty(listOfFilters[i].Split("."), parameterExpression, searchString);
-
-
-
-                }
-
-                if(exp2 == null)
-                {
-                    continue;
-                }
-                if (isFirst )
-                {
-                    expression = Expression.And(exp2, exp2);
-                    isFirst = false;
-
-
-                }
-                else
-                {
-                    expression = Expression.And(expression, exp2);
-                    isFirst = false;
-                }
-
-                
-
-            }
+            var expression = _searchRepo.ReturnExpression(parameterExpression, filterValue, searchString);
 
             Expression<Func<Order,bool>> lambda = Expression.Lambda<Func<Order,bool>>(expression,parameterExpression);
-
+         
             if (lambda == null)
             {
                 int[] pages = Enumerable.Range(1, 1).ToArray();
@@ -435,15 +141,37 @@ namespace BOBS_Backend.Repository.Implementations.OrderImplementations
                 viewModel = RetrieveViewModel("", "", 1, 1, pages, null);
                 return viewModel;
             }
-            
-            var query = GetBaseOrderQuery();
+
+            var query = (IQueryable<Order>) _searchRepo.GetBaseQuery("BOBS_Backend.Models.Order.Order");
+
+            query = query.Include(OrderIncludes);
+
             var filterQuery = query.Where(lambda);
 
-            int totalPages = GetTotalPages(filterQuery);
+            int totalPages = _searchRepo.GetTotalPages(filterQuery.Count(), _ordersPerPage);
 
             viewModel = await RetrieveFilterViewModel(filterQuery, totalPages, pageNum, filterValue, searchString);
             return viewModel;
 
+        }
+
+
+        public IQueryable<Order> FilterOrder(string filterValue, string searchString)
+        {
+
+            var parameterExpression = Expression.Parameter(Type.GetType("BOBS_Backend.Models.Order.Order"), "order");
+
+            var expression = _searchRepo.ReturnExpression(parameterExpression, filterValue, searchString);
+
+            Expression<Func<Order, bool>> lambda = Expression.Lambda<Func<Order, bool>>(expression, parameterExpression);
+
+            var query = (IQueryable<Order>)_searchRepo.GetBaseQuery("BOBS_Backend.Models.Order.Order");
+
+            query = query.Include(OrderIncludes);
+
+            var filterQuery = query.Where(lambda);
+
+            return filterQuery;
         }
 
     }

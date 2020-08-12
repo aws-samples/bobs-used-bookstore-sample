@@ -5,12 +5,7 @@ VisualStudioVersion = 16.0.30128.74
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BOBS-Backend", "BOBS-Backend\BOBS-Backend.csproj", "{088AE1C3-067F-4D59-B854-9B8C37D9196C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bobs-Backend.Test", "Bobs-Backend.Test\Bobs-Backend.Test.csproj", "{ACBD9C56-83A3-4DA2-89E0-7D127DD938CC}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{7272C351-57E1-41B9-8AC1-7E968A49B5DA}"
-	ProjectSection(SolutionItems) = preProject
-		.editorconfig = .editorconfig
-	EndProjectSection
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bobs-Backend.Test", "Bobs-Backend.Test\Bobs-Backend.Test.csproj", "{ACBD9C56-83A3-4DA2-89E0-7D127DD938CC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

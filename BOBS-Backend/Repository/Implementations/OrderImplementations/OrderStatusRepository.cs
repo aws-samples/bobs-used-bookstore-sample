@@ -57,8 +57,6 @@ namespace BOBS_Backend.Repository.Implementations.OrderImplementations
             {
                 OrderStatus newStatus = await FindOrderStatusById(Status_Id);
 
-                IOrderRepository orderRepo = new OrderRepository(_context);
-
                 using (var transaction = _context.Database.BeginTransaction())
                 {
                     order.OrderStatus = newStatus;

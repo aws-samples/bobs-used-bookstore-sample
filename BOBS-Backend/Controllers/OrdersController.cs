@@ -14,6 +14,7 @@ using BOBS_Backend.ViewModel.ProcessOrders;
 using System.Runtime.InteropServices;
 using BOBS_Backend.Notifications.NotificationsInterface;
 using System.Text.RegularExpressions;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace BOBS_Backend.Controllers
 {
@@ -25,6 +26,10 @@ namespace BOBS_Backend.Controllers
         private IOrderStatusRepository _orderStatus;
         private INotifications _emailSender;
    
+
+        public OrdersController() { }
+
+        [ActivatorUtilitiesConstructor]
         public OrdersController(IOrderDetailRepository orderDetail, IOrderRepository order, IOrderStatusRepository orderStatus, INotifications emailSender)
         {
             _orderDetail = orderDetail;
@@ -145,7 +150,7 @@ namespace BOBS_Backend.Controllers
            
             if(status == cancelled.OrderStatus_Id)
             {
-                order = await _order.CancelOrder(orderId);
+                order = await _orderDetail.CancelOrder(orderId);
             }
             else
             {

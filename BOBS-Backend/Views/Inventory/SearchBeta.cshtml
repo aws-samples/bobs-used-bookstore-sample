@@ -1,4 +1,4 @@
-﻿@model BOBS_Backend.ViewModel.ManageInventory.PagedSearchViewModel;
+﻿@model BOBS_Backend.ViewModel.SearchBooks.SearchBookViewModel;
 @{
     ViewData["Title"] = "Checkout";
     var types = (List<BOBS_Backend.Models.Book.Type>)ViewData["Types"];
@@ -7,6 +7,7 @@
     var conditions = (List<BOBS_Backend.Models.Book.Condition>)ViewData["Conditions"];
     var count = @Model.Books.Count();
     var viewstyle = Model.ViewStyle;
+
 
 }
 <style>
@@ -133,53 +134,43 @@
                         {
                             var param = new Dictionary<string, string>
                             { 
-                                {"BookId",book.BookId + ""}
+                                {"BookId",book.Price.Book.Book_Id + ""}
                              };
 
                             <div class="col-12 col-md-6 col-lg-4">
                                 <div class="card">
-                                        @if(!String.IsNullOrEmpty(@book.front_url))
+                                        @if(!String.IsNullOrEmpty(@book.Price.Book.Front_Url))
                                         {
-                                            <img class="img-thumbnail" src="@book.front_url" alt="Card image cap"> 
+                                            <img class="card-img-top" src="@book.Price.Book.Front_Url" alt="Card image cap"> 
                                         }
 
-                                        else if (!String.IsNullOrEmpty(@book.back_url))
+                                        else if (!String.IsNullOrEmpty(@book.Price.Book.Back_Url))
                                         {
-                                            <img class="img-thumbnail" src="@book.back_url" alt="Card image cap">
+                                            <img class="card-img-top" src="@book.Price.Book.Back_Url" alt="Card image cap">
                                         }
 
-                                        else if (!String.IsNullOrEmpty(@book.left_url))
+                                        else if (!String.IsNullOrEmpty(@book.Price.Book.Left_Url))
                                         {
-                                            <img class="img-thumbnail" src="@book.left_url" alt="Card image cap">
+                                            <img class="card-img-top" src="@book.Price.Book.Left_Url" alt="Card image cap">
                                         }
 
-                                        else if (!String.IsNullOrEmpty(@book.right_url))
+                                        else if (!String.IsNullOrEmpty(@book.Price.Book.Right_Url))
                                         {
-                                            <img class="img-thumbnail" src="@book.right_url" alt="Card image cap">
+                                            <img class="card-img-top" src="@book.Price.Book.Right_Url" alt="Card image cap">
                                         }
 
                                         else
                                         {
-                                            <img class="img-thumbnail" style="width:100%;height:100%" img-fluid" src="https://dtdt6j0vhq1rq.cloudfront.net/default0Kind of New.jpg" alt="Ft slide">
+                                            <img style="width:100%;height:100%" img-fluid" src="https://dtdt6j0vhq1rq.cloudfront.net/default0Kind of New.jpg" alt="Ft slide">
                                         }
                                         <div class="main-text card-body">
                                             <h4 class="card-title text-center">
-                                                <a asp-controller="Inventory" asp-action="BookDetails" asp-all-route-data="param" style="text-emphasis-color: #FC4A1A">@book.BookName</a>
+                                                <a asp-controller="Inventory" asp-action="BookDetails" asp-all-route-data="param" style="text-emphasis-color: #FC4A1A">@book.Price.Book.Name</a>
                                             </h4>
-                                            <p class="main-text card-text  text-center" style="  font-style:'arovo', serif">@book.Author</p>
-                                            <div class="row">
-                                                <div class="col">
-                                                    @{
-                                                        var price = (int)book.Price;
-                                                    }
-                                                    <p class="main-text btn text-white btn-block" style="   background-color: #7D53DE">@price $</p>
-                                                </div>
-                                                <div class="col">
-                                                    <a href="#" class="main-text btn text-white btn-block" style="    background-color: #7D53DE">@book.Quantity units</a>
-                                                </div>
-                                            </div>
+                                            <p class="main-text card-text  text-center" style="  font-style:'arovo', serif">@book.Price.Book.Author</p>
+                                        
                                         </div>
-                                    </div>
+                                 </div>
                             </div>
                         }
                     }
@@ -187,21 +178,28 @@
                     else
                     {
 
-  //table-striped                    
+                        //table-striped                    
+                     
+                            var ascdesc = "";
+                            if (!string.IsNullOrEmpty(Model.Ascdesc)) ascdesc = (Model.Ascdesc.Contains("asc")) ? "desc" : "asc";
+                            else ascdesc = "asc";
+                       
                         <table id="mytable" class="table table-hover "> 
                             <thead>
                             <th>               
                                 @{
+                                    
+
                                     var SortBy = new Dictionary<string, string>
                                                                         {
                                         {"searchfilter",Model.searchfilter},
                                         {"searchby",Model.searchby},
-                                        {"SortBy","Sort Book.Name"},
+                                        {"SortBy","Price.Book.Name"},
                                         {"pageNum",Model.CurrentPage+""},
                                         {"style",Model.ViewStyle},
-                                        {"ascdesc",Model.Ascdesc}
+                                        {"ascdesc",ascdesc}
                                         };
-                                   <a class = "main-text text font-weight-light" asp-controller="Inventory" asp-action="SearchBeta" asp-all-route-data="SortBy">BookName ▲</a>
+                                                                <a class="main-text text font-weight-light" asp-controller="Inventory" asp-action="SearchBeta" asp-all-route-data="SortBy">BookName @((ascdesc.Contains("asc")) ? "▼": "▲")</a>
                                 }
                             </th>
                             <th>                                
@@ -210,14 +208,14 @@
                                                                             {
                                         {"searchfilter",Model.searchfilter},
                                         {"searchby",Model.searchby},
-                                        {"SortBy","Sort Book.Author"},
+                                        {"SortBy","Price.Book.Author"},
                                         {"pageNum",Model.CurrentPage+""},
                                         {"style",Model.ViewStyle},
-                                        {"ascdesc",Model.Ascdesc}
+                                        {"ascdesc",ascdesc}
 
                                         };
 
-                                       <a class = "main-text text font-weight-light" asp-controller="Inventory" asp-action="SearchBeta" asp-all-route-data="Sort">Author  ▲ </a>
+                                                                <a class="main-text text font-weight-light" asp-controller="Inventory" asp-action="SearchBeta" asp-all-route-data="Sort">Author @((ascdesc.Contains("asc")) ? "▼": "▲")</a>
                                 }
                             </th>
                             <th>
@@ -226,13 +224,13 @@
                                                                             {
                                         {"searchfilter",Model.searchfilter},
                                         {"searchby",Model.searchby},
-                                        {"SortBy","Sort ItemPrice"},
+                                        {"SortBy","LowestPrice"},
                                         {"pageNum",Model.CurrentPage+""},
                                         {"style",Model.ViewStyle},
-                                        {"ascdesc",Model.Ascdesc}
+                                        {"ascdesc",ascdesc}
                                         };
 
-                                      <a class = "main-text text font-weight-light" asp-controller="Inventory" asp-action="SearchBeta" asp-all-route-data="sort"> Price ▲ </a>
+                                                                <a class="main-text text font-weight-light" asp-controller="Inventory" asp-action="SearchBeta" asp-all-route-data="sort"> Price @((ascdesc.Contains("asc")) ? "▼": "▲")</a>
                                 }
                             </th>
                             <th>                               
@@ -241,13 +239,13 @@
                                                                             {
                                         {"searchfilter",Model.searchfilter},
                                         {"searchby",Model.searchby},
-                                        {"SortBy","Sort Quantity"},
+                                        {"SortBy","TotalQuantity"},
                                         {"pageNum",Model.CurrentPage+""},
                                         {"style",Model.ViewStyle},
-                                        {"ascdesc",Model.Ascdesc}
+                                        {"ascdesc",ascdesc}
                                         };
 
-                                      <a class = "main-text text font-weight-light" asp-controller="Inventory" asp-action="SearchBeta" asp-all-route-data="sortby"> Quantity ▲</a>
+                                                                <a class="main-text text font-weight-light" asp-controller="Inventory" asp-action="SearchBeta" asp-all-route-data="sortby"> Quantity @((ascdesc.Contains("asc")) ? "▼": "▲")</a>
                                 }
                             </th>
                             </thead>
@@ -256,16 +254,16 @@
                                 {
                                     var param = new Dictionary<string, string>
                                                                                                                                           {
-                                                {"BookId",book.BookId + ""}
+                                                {"BookId",book.Price.Book.Book_Id + ""}
                                                               };
                                     <tr>
                                         @{ 
-                                            var price = (int)book.Price;
+                                            var price = (int)book.LowestPrice;
                                         }
-                                        <td class="main-text">@book.BookName</td>
-                                        <td class="main-text">@book.Author</td>
+                                        <td class="main-text">@book.Price.Book.Name</td>
+                                        <td class="main-text">@book.Price.Book.Author</td>
                                         <td class="main-text">$@price</td>
-                                        <td class="main-text">@book.Quantity</td>
+                                        <td class="main-text">@book.TotalQuantity</td>
                                         <td>
                                             <a class="main-text" asp-controller="Inventory" asp-action="BookDetails" asp-all-route-data="param">View</a>
                                         </td>

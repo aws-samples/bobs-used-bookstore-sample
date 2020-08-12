@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -12,6 +13,7 @@ using BOBS_Backend.Models.Order;
 using Amazon.Runtime.Internal.Util;
 using Amazon.S3.Model;
 using Microsoft.Data.SqlClient;
+using System.Data.Common;
 
 namespace BOBS_Backend.Repository.Implementations.WelcomePageImplementation
 {
@@ -50,9 +52,9 @@ namespace BOBS_Backend.Repository.Implementations.WelcomePageImplementation
 
                 return books;
             }
-            catch(SqlException e)
+            catch(DbException e)
             {
-                throw new Exception("Cannot connect to database", e);
+                throw e;
                 
             }
         }
@@ -65,6 +67,7 @@ namespace BOBS_Backend.Repository.Implementations.WelcomePageImplementation
             */
             try
             {
+                
                 if (adminUsername == null)
                 {
                     throw new ArgumentNullException("Admin User name cannot be null", "adminUsername");
@@ -82,9 +85,9 @@ namespace BOBS_Backend.Repository.Implementations.WelcomePageImplementation
                                 .OrderByDescending(p => p.UpdatedOn.Date)
                                 .Take(Constants.TOTAL_RESULTS).ToListAsync();
                 return books;
-            }catch(SqlException e)
+            }catch(DbException e)
             {
-                throw new Exception("Cannot connect to database", e);
+                throw e;
             }
         }
 
@@ -116,11 +119,10 @@ namespace BOBS_Backend.Repository.Implementations.WelcomePageImplementation
                 throw new System.ArgumentNullException("Order object or timeDiff cannot be null", e);
             }
         }
-        private List<FilterOrders> FilterOrders(List<Order> allOrders)
+        private List<FilterOrders> FilterOrders(List<Order> allOrders, int orderDayRangeMax, int orderDayRangeMin)
         {
             //filters the orders based on priority
             try {
-                
                 // list of filtered orders to be returned 
                 List<FilterOrders> filtered_order = new List<FilterOrders>();
                 // Date at the time 
@@ -136,7 +138,7 @@ namespace BOBS_Backend.Repository.Implementations.WelcomePageImplementation
                         // check pending orders which are due within 5 days
                        
                         double diff = (time - todayDate).TotalDays;
-                        if ( diff <= 5)
+                        if ( diff <= orderDayRangeMax)
                         {
                             int severity = GetOrderSeverity(order, diff);
                             FilterOrders new_order = new FilterOrders();
@@ -150,7 +152,7 @@ namespace BOBS_Backend.Repository.Implementations.WelcomePageImplementation
                     else if (order.OrderStatus.Status == "En Route")
                     {
                         double diff = (todayDate - time).TotalDays;
-                        if (diff > 0 && diff < 5)
+                        if (diff > orderDayRangeMin && diff < orderDayRangeMax)
                         {
                             int severity = GetOrderSeverity(order, diff);
                             FilterOrders new_order = new FilterOrders();
@@ -168,7 +170,7 @@ namespace BOBS_Backend.Repository.Implementations.WelcomePageImplementation
                 throw new ArgumentNullException("allOrders cannot be null", e);
             }
         }
-        public async Task<List<FilterOrders>> GetImportantOrders()
+        public async Task<List<FilterOrders>> GetImportantOrders(int dateMaxRange, int dateMinRange)
         {
             try
             {
@@ -178,12 +180,12 @@ namespace BOBS_Backend.Repository.Implementations.WelcomePageImplementation
                                 .Include(o => o.Customer)
                                 .Include(o => o.OrderStatus)
                                   .ToListAsync();
-                var filteredOrders = FilterOrders(order);
+                var filteredOrders = FilterOrders(order, dateMaxRange, dateMinRange);
                 return filteredOrders;
             }
-            catch (SqlException e)
+            catch (DbException e)
             {
-                throw new Exception("Cannot connect to database", e);
+                throw e;
             }
 
         }

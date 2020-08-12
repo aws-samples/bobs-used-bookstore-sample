@@ -100,7 +100,7 @@
     </div>
 
     <div class="row" style="margin-top:35px">
-        <div class="col-6">
+        <div class="col-4">
             <h4 class="website-text col-12">Expected Delivery Date: </h4>
 
             <h4 style="margin-top:10px;" class="website-text text-center col-12">@( (fullOrder.Order.DeliveryDate == null) ? "Pending Confirmation": DateTime.Parse(fullOrder.Order.DeliveryDate).ToString("MM/dd/yyyy") )</h4>
@@ -119,7 +119,7 @@
             }
 
         </div>
-        <div class="col-6">
+        <div class="col-8">
             <partial name="./Partials/_BookList" model="fullOrder" />
         </div>
     </div>
