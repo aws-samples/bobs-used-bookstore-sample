@@ -16,7 +16,7 @@ using Bobs_Backend.Test.Repository;
 using BOBS_Backend;
 using BOBS_Backend.Repository.Implementations;
 using Amazon.Runtime.Internal.Util;
-//using BOBS_Backend.Repository.SearchImplementations;
+using BOBS_Backend.Repository.SearchImplementations;
 using Microsoft.Extensions.Logging;
 
 namespace Bobs_Backend.Test
@@ -28,23 +28,21 @@ namespace Bobs_Backend.Test
         private readonly Mock<IInventory> _mockInventoryRepo = new Mock<IInventory>();
         private readonly Mock<IRekognitionNPollyRepository> _mockRekognitionRepo = new Mock<IRekognitionNPollyRepository>();
         private readonly Mock<Microsoft.Extensions.Logging.ILogger<Inventory>> _mockLogger = new Mock<Microsoft.Extensions.Logging.ILogger<Inventory>>();
-       // private readonly Mock<ISearchRepository> _mockSearch = new Mock<ISearchRepository>();
+        private readonly Mock<ISearchRepository> _mockSearch = new Mock<ISearchRepository>();
 
 
         [Fact]
         public void AutoSugggestions()
         {
-            
             MockDatabaseRepo connect = new MockDatabaseRepo();
             var context = connect.CreateInMemoryContext();
             var Input = "ha";
-            var condtions = context.Condition.Count();
 
-            //Inventory _sut = new Inventory(context, _mockSearch.Object, _mockRekognitionRepo.Object, _mockLogger.Object);
+
+            Inventory _sut = new Inventory(context, _mockSearch.Object, _mockRekognitionRepo.Object, _mockLogger.Object);
             var Suggestions = _sut.autosuggest(Input);
             Assert.NotNull(Suggestions);
             context.Dispose();
-            
         }
 
     }

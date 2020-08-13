@@ -15,8 +15,9 @@ namespace Bobs_Backend.Test.Repository
         private bool disposedValue = false;
         public DatabaseContext CreateInMemoryContext()
         {
+            string newDatabaseName = "BobsBookstoreDatabase_" + DateTime.Now.ToFileTimeUtc();  
             var options = new DbContextOptionsBuilder<DatabaseContext>()
-            .UseInMemoryDatabase(databaseName: "BobsBookstoreDatabase")
+            .UseInMemoryDatabase(databaseName: newDatabaseName)
             .Options;
             var context = new DatabaseContext(options);
             if (context != null)

@@ -29,32 +29,32 @@ namespace Bobs_Backend.Test
 
             //Arrange
             MockDatabaseRepo connect = new MockDatabaseRepo();
-            var context = connect.CreateInMemoryContext();
+            var context1 = connect.CreateInMemoryContext();
             string adminUsername = "admin";
-            context.Price.Add(
+            context1.Price.Add(
                     new Price
                     {
                         Price_Id = 29, Book = new Book(), Condition = new Condition(), ItemPrice = 154, Quantity = 30, UpdatedBy = "admin",
                         UpdatedOn = DateTime.ParseExact("2020-07-31", "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture), Active = false, RowVersion = new byte[] { 0x20, 0x20 }
                     }
                 );
-            context.Price.Add(
+            context1.Price.Add(
                     new Price
                     {
                         Price_Id = 30, Book = new Book(), Condition = new Condition(), ItemPrice = 120, Quantity = 13, UpdatedBy = "admin",
                         UpdatedOn = DateTime.ParseExact("2020-08-01", "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture), Active = false, RowVersion = new byte[] { 0x20, 0x20 }
                     }
                 );
-            context.Price.Add(
+            context1.Price.Add(
                    new Price
                    {
                        Price_Id = 31, Book = new Book(), Condition = new Condition(), ItemPrice = 140, Quantity = 13, UpdatedBy = "admin2",
                        UpdatedOn = DateTime.ParseExact("2020-08-01", "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture), Active = false, RowVersion = new byte[] { 0x20, 0x20 }
                    }
                );
-            context.SaveChanges();
+            context1.SaveChanges();
             //Act
-            CustomAdmin _sut = new CustomAdmin(context);
+            CustomAdmin _sut = new CustomAdmin(context1);
             var UserBooks = _sut.GetUserUpdatedBooks(adminUsername);
 
             //Assert
@@ -64,7 +64,7 @@ namespace Bobs_Backend.Test
                 Assert.Equal(adminUsername, bookinstance.UpdatedBy);
             }
 
-            context.Dispose();
+            context1.Dispose();
         }
   
         [Fact]
