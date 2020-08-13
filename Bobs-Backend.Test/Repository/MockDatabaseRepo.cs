@@ -4,6 +4,7 @@ using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Text;
 
 namespace Bobs_Backend.Test.Repository
@@ -12,7 +13,6 @@ namespace Bobs_Backend.Test.Repository
     {
         // to avoid redundant calls;
         private bool disposedValue = false;
-
         public DatabaseContext CreateInMemoryContext()
         {
             var options = new DbContextOptionsBuilder<DatabaseContext>()
@@ -22,6 +22,7 @@ namespace Bobs_Backend.Test.Repository
             if (context != null)
             {
                 context.Database.EnsureDeleted();
+                
                 context.Database.EnsureCreated();
             }
 
@@ -54,6 +55,7 @@ namespace Bobs_Backend.Test.Repository
             {
                 if (disposing)
                 {
+                    this.Dispose();
                 }
 
                 disposedValue = true;

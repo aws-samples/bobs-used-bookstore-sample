@@ -23,7 +23,8 @@ namespace Bobs_Backend.Test
 
 
         [Fact]
-        public async Task GetUserUpdateBooks_ShouldReturnUserUpdatedBooks_WhenUserExists()
+        
+        public  void GetUserUpdateBooks_ShouldReturnUserUpdatedBooks_WhenUserExists()
         {
 
             //Arrange
@@ -65,11 +66,33 @@ namespace Bobs_Backend.Test
 
             context.Dispose();
         }
-
+  
         [Fact]
-        public async Task GetUserUpdateBooks_ShouldReturnNull_WhenUserHasNoUpdates()
+        public void  GetUserUpdateBooks_ShouldReturnZeroValues_WhenUserHasNoUpdates()
         {
-
+            MockDatabaseRepo connect = new MockDatabaseRepo();
+            var context = connect.CreateInMemoryContext();
+            string adminUsername = "admin2";
+             context.Price.Add(
+                    new Price
+                    {
+                        Price_Id = 29, Book = new Book(), Condition = new Condition(), ItemPrice = 154, Quantity = 30, UpdatedBy = "admin",
+                        UpdatedOn = DateTime.ParseExact("2020-07-31", "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture), Active = false, RowVersion = new byte[] { 0x20, 0x20 }
+                    }
+                );
+            context.Price.Add(
+                    new Price
+                    {
+                        Price_Id = 30, Book = new Book(), Condition = new Condition(), ItemPrice = 120, Quantity = 13, UpdatedBy = "admin",
+                        UpdatedOn = DateTime.ParseExact("2020-08-01", "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture), Active = false, RowVersion = new byte[] { 0x20, 0x20 }
+                    }
+                );
+            CustomAdmin _sut = new CustomAdmin(context);
+            //Act
+            var result = _sut.GetUserUpdatedBooks(adminUsername);
+            
+            Assert.True(result.Result.Count == 0);
+            context.Dispose();
         }
 
 
