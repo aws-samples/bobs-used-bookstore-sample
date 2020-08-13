@@ -87,8 +87,9 @@ namespace BOBS_Backend.Repository.Implementations.SearchImplementation
                     constant = Expression.Constant(subSearch);
                     var method = typeof(string).GetMethod("Contains", new Type[] { typeof(string) });
 
-                    var expression = Expression.Call(constant, method, property);
+                    var expression = Expression.Call(property, method, constant);
 
+  
                     return Expression.Or(expression, expression);
                 }
 
@@ -295,6 +296,7 @@ namespace BOBS_Backend.Repository.Implementations.SearchImplementation
 
 
             }
+            var test = expression.ToString();
 
             return expression;
         }
