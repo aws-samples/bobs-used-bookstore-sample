@@ -3,6 +3,7 @@ using BOBS_Backend.Models.Order;
 using BOBS_Backend.Repository.OrdersInterface;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -57,19 +58,13 @@ namespace BOBS_Backend.Repository.Implementations.OrderImplementations
             {
                 OrderStatus newStatus = await FindOrderStatusById(Status_Id);
 
-                using (var transaction = _context.Database.BeginTransaction())
-                {
-                    order.OrderStatus = newStatus;
+                order.OrderStatus = newStatus;
 
-                    if (order.OrderStatus.Status != "Just Placed" && order.DeliveryDate == null) order.DeliveryDate = DateTime.Now.AddDays(14).ToString();
+                if (order.OrderStatus.Status != "Just Placed" && order.DeliveryDate == null) order.DeliveryDate = DateTime.Now.AddDays(14).ToString();
 
-                    
-                    await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
 
-                    await transaction.CommitAsync();
-
-                    return order;
-                }
+                return order;
                     
             }
             catch (DbUpdateConcurrencyException ex)

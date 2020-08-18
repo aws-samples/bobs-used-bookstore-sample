@@ -15,6 +15,7 @@ using Amazon.S3.Model;
 using BOBS_Backend.DataModel;
 using BOBS_Backend.ViewModel.ManageInventory;
 using Microsoft.EntityFrameworkCore;
+using System.Text.RegularExpressions;
 
 namespace BOBS_Backend.Controllers
 {
@@ -371,7 +372,7 @@ namespace BOBS_Backend.Controllers
                 if ( (String.IsNullOrEmpty(searchby) || String.IsNullOrEmpty(searchfilter)) )
                 {
 
-
+                    searchfilter = Regex.Replace(searchfilter, @"\s+", " ");
                     var books = _Inventory.GetAllBooks(pageNum, ViewStyle, SortBy , ascdesc);
 
                     books.SortBy = SortBy;
@@ -381,7 +382,7 @@ namespace BOBS_Backend.Controllers
                 else
                 {
                     //var books = _Inventory.SearchBeta(searchby, searchfilter, ViewStyle, SortBy, pageNum , ascdesc , pagination);
-
+                    searchfilter = Regex.Replace(searchfilter, @"\s+", " ");
                     var books = _Inventory.SearchBooks(searchby, searchfilter, ViewStyle, SortBy, pageNum, ascdesc);
                     books.SortBy = SortBy;
                     return View(books);

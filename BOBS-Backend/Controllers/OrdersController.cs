@@ -15,6 +15,9 @@ using System.Runtime.InteropServices;
 using BOBS_Backend.Notifications.NotificationsInterface;
 using System.Text.RegularExpressions;
 using Microsoft.Extensions.DependencyInjection;
+using BOBS_Backend.Repository.Implementations.SearchImplementation;
+using BOBS_Backend.Repository.SearchImplementations;
+using System.Linq.Expressions;
 
 namespace BOBS_Backend.Controllers
 {
@@ -25,9 +28,6 @@ namespace BOBS_Backend.Controllers
         private IOrderRepository _order;
         private IOrderStatusRepository _orderStatus;
         private INotifications _emailSender;
-   
-
-        public OrdersController() { }
 
         [ActivatorUtilitiesConstructor]
         public OrdersController(IOrderDetailRepository orderDetail, IOrderRepository order, IOrderStatusRepository orderStatus, INotifications emailSender)
@@ -88,6 +88,13 @@ namespace BOBS_Backend.Controllers
         }
         public async Task<IActionResult> Index(string filterValue, string filterValueText, string searchString, int pageNum)
         {
+            string filterValueTest = "Order_Id";
+            string searchStringTest = "588";
+            string inBetweenTest = "";
+            string operandTest = "==";
+            string negateTest = "false";
+
+            var test = _order.FilterOrder(filterValueTest, searchStringTest, inBetweenTest, operandTest, negateTest);
             if (pageNum == 0) pageNum++;
        
             if ( (String.IsNullOrEmpty(searchString)  && String.IsNullOrEmpty(filterValue)) )

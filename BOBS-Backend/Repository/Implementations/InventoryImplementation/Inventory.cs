@@ -441,7 +441,7 @@ namespace BOBS_Backend
 
             int[] pages = _searchRepo.GetModifiedPagesArr(pageNum, totalPages);
 
-            viewModel = RetrieveViewModel(ascdesc, style, filterValue, searchString, pageNum, totalPages, pages, filterQuery);
+            viewModel = RetrieveViewModel(ascdesc, style, filterValue, searchString, pageNum, totalPages, pages, books);
 
             return viewModel;
 

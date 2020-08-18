@@ -2,6 +2,7 @@
 using BOBS_Backend.Repository.SearchImplementations;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -71,6 +72,10 @@ namespace BOBS_Backend.Repository.Implementations.SearchImplementation
         {
             try
             {
+
+                var converter = TypeDescriptor.GetConverter(Type.GetType(type));
+
+                var test = converter.ConvertFrom(subSearch);
                 ConstantExpression constant = null;
                 if (type == "System.Int64")
                 {
@@ -78,7 +83,7 @@ namespace BOBS_Backend.Repository.Implementations.SearchImplementation
 
                     bool res = long.TryParse(subSearch, out value);
 
-                    constant = Expression.Constant(value);
+                    constant = Expression.Constant(test);
 
                     return PerformArtithmeticExpresion("==",(Expression) property, constant);
                 }
@@ -87,8 +92,9 @@ namespace BOBS_Backend.Repository.Implementations.SearchImplementation
                     constant = Expression.Constant(subSearch);
                     var method = typeof(string).GetMethod("Contains", new Type[] { typeof(string) });
 
-                    var expression = Expression.Call(constant, method, property);
+                    var expression = Expression.Call(property, method, constant);
 
+  
                     return Expression.Or(expression, expression);
                 }
 
@@ -250,6 +256,7 @@ namespace BOBS_Backend.Repository.Implementations.SearchImplementation
 
         }
 
+
         public BinaryExpression ReturnExpression(ParameterExpression parameterExpression, string filterValue, string searchString)
         {
             string[] listOfFilters = filterValue.Split(' ');
@@ -280,7 +287,7 @@ namespace BOBS_Backend.Repository.Implementations.SearchImplementation
                 }
                 if (isFirst)
                 {
-                    expression = Expression.And(exp2, exp2);
+                    expression = exp2;
                     isFirst = false;
 
 
@@ -294,6 +301,7 @@ namespace BOBS_Backend.Repository.Implementations.SearchImplementation
 
 
             }
+            var test = expression.ToString();
 
             return expression;
         }
