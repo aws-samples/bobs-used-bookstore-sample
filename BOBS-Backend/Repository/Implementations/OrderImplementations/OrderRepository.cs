@@ -33,12 +33,16 @@ namespace BOBS_Backend.Repository.Implementations.OrderImplementations
         private readonly int _ordersPerPage = 20;
         private readonly string[] OrderIncludes = { "Customer", "Address", "OrderStatus" };
         private ISearchRepository _searchRepo;
+        private IOrderDatabaseCalls _orderDbCalls;
+        private IExpressionFunction _expFunc;
 
         // Set up connection to Database 
-        public OrderRepository(DatabaseContext context, ISearchRepository searchRepo)
+        public OrderRepository(DatabaseContext context, ISearchRepository searchRepo, IOrderDatabaseCalls orderDbCalls, IExpressionFunction expFunc)
         {
             _context = context;
             _searchRepo = searchRepo;
+            _orderDbCalls = orderDbCalls;
+            _expFunc = expFunc;
         }
 
 
@@ -155,20 +159,28 @@ namespace BOBS_Backend.Repository.Implementations.OrderImplementations
         }
 
 
-        public IQueryable<Order> FilterOrder(string filterValue, string searchString)
+        public IQueryable<Order> FilterOrder(string filterValue, string searchString, string inBetween, string operand, string negate)
         {
+            //string filterValueTest = "Order_Id Customer.Customer_Id";
+            //string tableNameTest = "Order";
+            //var parameterExpressionTest = Expression.Parameter(typeof(Order), "order");
+            //var searchStringTest = "47&&2";
+            //var inBetweenTest = "And";
+            //var operandTest = "== ==";
+            //var negateTest = "false true";
 
-            var parameterExpression = Expression.Parameter(Type.GetType("BOBS_Backend.Models.Order.Order"), "order");
+            string tableName = "Order";
+            var parameterExpression = Expression.Parameter(typeof(Order), "order");
 
-            var expression = _searchRepo.ReturnExpression(parameterExpression, filterValue, searchString);
+            var expression = _expFunc.ReturnExpression(filterValue, tableName, parameterExpression, searchString, inBetween, operand, negate);
 
             Expression<Func<Order, bool>> lambda = Expression.Lambda<Func<Order, bool>>(expression, parameterExpression);
 
-            var query = (IQueryable<Order>)_searchRepo.GetBaseQuery("BOBS_Backend.Models.Order.Order");
+            var orderBase = _orderDbCalls.GetBaseQuery("BOBS_Backend.Models.Order.Order");
 
-            query = query.Include(OrderIncludes);
+            var query = _orderDbCalls.ReturnBaseOrderQuery(orderBase, OrderIncludes);
 
-            var filterQuery = query.Where(lambda);
+            var filterQuery = _orderDbCalls.ReturnFilterOrderQuery(query, lambda);
 
             return filterQuery;
         }

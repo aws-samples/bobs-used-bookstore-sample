@@ -28,12 +28,10 @@ namespace BOBS_Backend.Controllers
         private IOrderRepository _order;
         private IOrderStatusRepository _orderStatus;
         private INotifications _emailSender;
-        private IExpressionFunction _expFunc;
 
         [ActivatorUtilitiesConstructor]
-        public OrdersController(IExpressionFunction expFunc,IOrderDetailRepository orderDetail, IOrderRepository order, IOrderStatusRepository orderStatus, INotifications emailSender)
+        public OrdersController(IOrderDetailRepository orderDetail, IOrderRepository order, IOrderStatusRepository orderStatus, INotifications emailSender)
         {
-            _expFunc = expFunc;
             _orderDetail = orderDetail;
             _order = order;
             _orderStatus = orderStatus;
@@ -90,15 +88,13 @@ namespace BOBS_Backend.Controllers
         }
         public async Task<IActionResult> Index(string filterValue, string filterValueText, string searchString, int pageNum)
         {
-            string filterValueTest = "Order_Id Customer.Customer_Id";
-            string tableNameTest = "Order";
-            var parameterExpressionTest = Expression.Parameter(typeof(Order), "order");
-            var searchStringTest = "47&&2";
-            var inBetweenTest = "And";
-            var operandTest = "== ==";
-            var negateTest = "false true";
+            string filterValueTest = "Order_Id";
+            string searchStringTest = "588";
+            string inBetweenTest = "";
+            string operandTest = "==";
+            string negateTest = "false";
 
-            var test = _expFunc.ReturnExpression(filterValueTest,tableNameTest,parameterExpressionTest,searchStringTest,inBetweenTest,operandTest,negateTest);
+            var test = _order.FilterOrder(filterValueTest, searchStringTest, inBetweenTest, operandTest, negateTest);
             if (pageNum == 0) pageNum++;
        
             if ( (String.IsNullOrEmpty(searchString)  && String.IsNullOrEmpty(filterValue)) )

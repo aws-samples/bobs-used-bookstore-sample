@@ -52,6 +52,8 @@ namespace BOBS_Backend
 
             services.AddControllersWithViews();
             services.AddDbContext<Database.DatabaseContext>(option => option.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddTransient<IExpressionFunction, ExpressionFunction>();
+            services.AddTransient<IOrderDatabaseCalls, OrderDatabaseCalls>();
 
             services.AddTransient<IInventory, Inventory>();
             services.AddTransient<IRekognitionNPollyRepository, RekognitionNPollyRepository>();
@@ -60,7 +62,7 @@ namespace BOBS_Backend
             services.AddTransient<IOrderRepository, OrderRepository>();
             services.AddTransient<IOrderDetailRepository, OrderDetailRepository>();
             services.AddTransient<IOrderStatusRepository, OrderStatusRepository>();
-            services.AddTransient<IExpressionFunction,ExpressionFunction>();
+            
 
             services.AddTransient<INotifications, Notifications.Implementations.Notifications>();
             services.AddTransient<ICustomAdminPage, CustomAdmin>();
