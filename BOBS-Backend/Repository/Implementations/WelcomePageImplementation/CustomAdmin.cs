@@ -27,7 +27,7 @@ namespace BOBS_Backend.Repository.Implementations.WelcomePageImplementation
 
         }
 
-        public async Task<List<Price>> GetUserUpdatedBooks(string adminUsername)
+        public Task<List<Price>> GetUserUpdatedBooks(string adminUsername)
         {
             // the query returns the collection of updated book models
             // Return the books updated by the current User. Returns only latest 5
@@ -35,7 +35,7 @@ namespace BOBS_Backend.Repository.Implementations.WelcomePageImplementation
             {
                 if (adminUsername == null)
                     throw new ArgumentNullException("Admin username cannot be null", "adminUsername");
-                var books = await _context.Price
+                var books =  _context.Price
                             .Where(p => p.UpdatedBy == adminUsername)
                             .Include(p => p.Book)
                             .Include(p => p.Book)
@@ -84,6 +84,7 @@ namespace BOBS_Backend.Repository.Implementations.WelcomePageImplementation
                                     .ThenInclude(b=>b.Publisher)
                                 .OrderByDescending(p => p.UpdatedOn.Date)
                                 .Take(Constants.TOTAL_RESULTS).ToListAsync();
+                
                 return books;
             }catch(DbException e)
             {
@@ -91,7 +92,7 @@ namespace BOBS_Backend.Repository.Implementations.WelcomePageImplementation
             }
         }
 
-        private int GetOrderSeverity(Order order, double timeDiff )
+        public int GetOrderSeverity(Order order, double timeDiff )
         {
             try
             {
@@ -117,6 +118,11 @@ namespace BOBS_Backend.Repository.Implementations.WelcomePageImplementation
             catch(System.ArgumentNullException e)
             {
                 throw new System.ArgumentNullException("Order object or timeDiff cannot be null", e);
+            }
+            catch(NullReferenceException e)
+            {
+                
+                throw e;
             }
         }
         private List<FilterOrders> FilterOrders(List<Order> allOrders, int orderDayRangeMax, int orderDayRangeMin)
@@ -172,6 +178,9 @@ namespace BOBS_Backend.Repository.Implementations.WelcomePageImplementation
         }
         public async Task<List<FilterOrders>> GetImportantOrders(int dateMaxRange, int dateMinRange)
         {
+            /*
+             Returns a filtered list of pending and EnRoute orders
+             */
             try
             {
                 

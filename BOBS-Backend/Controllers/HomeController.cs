@@ -39,7 +39,7 @@ namespace BOBS_Backend.Controllers
         public IActionResult WelcomePage(string sortByValue)
         {
 
-            adminUsername = User.Claims.FirstOrDefault(c => c.Type.Equals("cognito:username"))?.Value;
+            //adminUsername = User.Claims.FirstOrDefault(c => c.Type.Equals("cognito:username"))?.Value;
             LatestUpdates bookUpdates = new LatestUpdates();
             // the sortByValue input for different sorting parameters. 
             List<string> orderByMethods = new List<string>{"price", "price_desc", "date", "date_desc"};
@@ -55,7 +55,8 @@ namespace BOBS_Backend.Controllers
             int dateMaxRange = 5;
 
             //Get books updated by current user
-            bookUpdates.UserBooks = _customeAdmin.GetUserUpdatedBooks(adminUsername).Result;
+            var UserBooks = _customeAdmin.GetUserUpdatedBooks(adminUsername);
+            bookUpdates.UserBooks = UserBooks.Result;
             // get recent books updated globally
             bookUpdates.NotUserBooks = _customeAdmin.OtherUpdatedBooks(adminUsername).Result;
             // get important orders

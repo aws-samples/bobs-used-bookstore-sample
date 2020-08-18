@@ -31,21 +31,7 @@ namespace Bobs_Backend.Test.Repository
         }
         
 
-        public DatabaseContext CreateSQlDatabaseContext()
-        {
-            var connection = new SqliteConnection("DataSource=:memory:");
-            connection.Open();
-            var options = new  DbContextOptionsBuilder<DatabaseContext>().UseSqlite(connection).Options;
-            var context = new DatabaseContext(options);
-            if (context != null)
-            {
-                context.Database.EnsureDeleted();
-                context.Database.EnsureCreated();
-            }
-
-            return context;
-        }
-
+       
         
 
         
