@@ -65,5 +65,6 @@ namespace BOBS_Backend.Repository.Implementations.OrderImplementations
         {
             return query.Where(lambda);
         }
+
     }
 }

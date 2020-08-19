@@ -29,7 +29,7 @@ namespace BOBS_Backend.Repository.Implementations.SearchImplementation
         }
 
 
-        private UnaryExpression GenerateExpressionSubObject(ParameterExpression parameterExpression,string[] splitFilter, string type, string subSearch, string operand, string negate)
+        private BinaryExpression GenerateExpressionSubObject(ParameterExpression parameterExpression,string[] splitFilter, string type, string subSearch, string operand, string negate)
         {
             var converter = TypeDescriptor.GetConverter(Type.GetType(type));
 
@@ -47,12 +47,10 @@ namespace BOBS_Backend.Repository.Implementations.SearchImplementation
 
             var exp = PerformArtithmeticExpresion(operand, property2, constant);
 
-            UnaryExpression result = (negate == "true") ? Expression.Not(exp) : Expression.Not(Expression.Not(exp));
-
-            return result;
+            return exp;
         }
             
-        private UnaryExpression GenerateDynamicLambdaFunctionSubObjectProperty(ParameterExpression parameterExpression, string[] splitFilter, string searchString, string operand, string negate)
+        private BinaryExpression GenerateDynamicLambdaFunctionSubObjectProperty(ParameterExpression parameterExpression, string[] splitFilter, string searchString, string operand, string negate)
         {
             var table = (IQueryable)_context.GetType().GetProperty(splitFilter[0]).GetValue(_context, null);
 
@@ -68,7 +66,7 @@ namespace BOBS_Backend.Repository.Implementations.SearchImplementation
         }
 
         
-        private UnaryExpression GenerateExpressionObject(MemberExpression property, string type, string subSearch, string operand, string negate)
+        private BinaryExpression GenerateExpressionObject(MemberExpression property, string type, string subSearch, string operand, string negate)
         {
             var converter = TypeDescriptor.GetConverter(Type.GetType(type));
 
@@ -79,11 +77,9 @@ namespace BOBS_Backend.Repository.Implementations.SearchImplementation
 
             var exp = PerformArtithmeticExpresion(operand, property, constant);
 
-            UnaryExpression result = (negate == "true") ? Expression.Not(exp) : Expression.Not(Expression.Not(exp));
-
-            return result;
+            return exp;
         }
-        private UnaryExpression GenerateDynamicLambdaFunctionObjectProperty(ParameterExpression parameterExpression,string tableName,string filterCat,string searchString, string operand, string negate)
+        private BinaryExpression GenerateDynamicLambdaFunctionObjectProperty(ParameterExpression parameterExpression,string tableName,string filterCat,string searchString, string operand, string negate)
         {
             var property = Expression.Property(parameterExpression, filterCat);
 
@@ -115,6 +111,9 @@ namespace BOBS_Backend.Repository.Implementations.SearchImplementation
 
             string[] listOfFilters = filterValue.Split(' ');
             bool isFirst = true;
+
+
+            
             BinaryExpression expression = null;
             int inBetweenCount = 0;
             string[] splitInBetweenVal = inBetween.Split(' ');
@@ -126,7 +125,7 @@ namespace BOBS_Backend.Repository.Implementations.SearchImplementation
             for (int i = 0; i < listOfFilters.Length; i++)
             {
 
-                UnaryExpression exp2 = null;
+                BinaryExpression exp2 = null;
 
                 if (!listOfFilters[i].Contains("."))
                 {
@@ -147,14 +146,17 @@ namespace BOBS_Backend.Repository.Implementations.SearchImplementation
                 }
                 if (isFirst)
                 {
-                    expression = Expression.Or(exp2,exp2);
+                    if (splitNegate[i] == "false") expression = exp2;
+                    else expression = Expression.Or(Expression.Not(exp2), Expression.Not(exp2));
                     isFirst = false;
 
 
                 }
                 else
                 {
-                    expression = (splitInBetweenVal[inBetweenCount] == "And") ? Expression.And(expression, exp2) : Expression.Or(expression, exp2);
+                    if(splitNegate[i] == "false") expression = (splitInBetweenVal[inBetweenCount] == "And") ? Expression.And(expression, exp2) : Expression.Or(expression, exp2);
+                    else expression = (splitInBetweenVal[inBetweenCount] == "And") ? Expression.And(expression, Expression.Not(exp2)) : Expression.Or(expression, Expression.Not(exp2));
+
                     inBetweenCount += 1;
                     isFirst = false;
                 }

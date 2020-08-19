@@ -17,73 +17,73 @@ namespace Bobs_Backend.Test.Repository.Implementation.OrderImplementation
         private OrderRepository _orderRepo;
         private Mock<ISearchRepository> _searchMockRepo;
 
-        [Fact]
-        public async Task FindOrderById()
-        {
-            _searchMockRepo = new Mock<ISearchRepository>();
+        //[Fact]
+        //public async Task FindOrderById()
+        //{
+        //    _searchMockRepo = new Mock<ISearchRepository>();
 
-            MockDatabaseRepo connect = new MockDatabaseRepo();
-            var context = connect.CreateInMemoryContext();
+        //    MockDatabaseRepo connect = new MockDatabaseRepo();
+        //    var context = connect.CreateInMemoryContext();
 
-            _orderRepo = new OrderRepository(context, _searchMockRepo.Object);
+        //    _orderRepo = new OrderRepository(context, _searchMockRepo.Object);
 
-            var testOrder = new Order();
-            testOrder.Order_Id = 23;
+        //    var testOrder = new Order();
+        //    testOrder.Order_Id = 23;
             
-            context.Order.Add(testOrder);
+        //    context.Order.Add(testOrder);
 
-            await context.SaveChangesAsync();
+        //    await context.SaveChangesAsync();
 
-            var orderResult = await _orderRepo.FindOrderById((long)23);
+        //    var orderResult = await _orderRepo.FindOrderById((long)23);
 
-            Assert.NotNull(orderResult);
+        //    Assert.NotNull(orderResult);
 
-            Assert.Equal("23", orderResult.Order_Id + "");
+        //    Assert.Equal("23", orderResult.Order_Id + "");
 
-            await context.DisposeAsync();
-        }
+        //    await context.DisposeAsync();
+        //}
 
 
-        [Fact]
-        public async Task GetAllOrders()
-        {
-            _searchMockRepo = new Mock<ISearchRepository>();
+        //[Fact]
+        //public async Task GetAllOrders()
+        //{
+        //    _searchMockRepo = new Mock<ISearchRepository>();
 
-            MockDatabaseRepo connect = new MockDatabaseRepo();
-            var context = connect.CreateInMemoryContext();
+        //    MockDatabaseRepo connect = new MockDatabaseRepo();
+        //    var context = connect.CreateInMemoryContext();
 
-            _orderRepo = new OrderRepository(context, _searchMockRepo.Object);
+        //    _orderRepo = new OrderRepository(context, _searchMockRepo.Object);
 
-            var testOrder = new Order();
-            testOrder.Order_Id = 23;
+        //    var testOrder = new Order();
+        //    testOrder.Order_Id = 23;
 
-            var testOrder1 = new Order();
-            testOrder1.Order_Id = 24;
+        //    var testOrder1 = new Order();
+        //    testOrder1.Order_Id = 24;
 
-            context.Order.Add(testOrder);
+        //    context.Order.Add(testOrder);
 
-            context.Order.Add(testOrder1);
+        //    context.Order.Add(testOrder1);
 
-            var orderQuery = (IQueryable<Order>)context.Order;
+        //    var orderQuery = (IQueryable<Order>)context.Order;
 
-            var totalPages = 1;
-            var pages = new int[1] { 1 };
+        //    var totalPages = 1;
+        //    var pages = new int[1] { 1 };
 
-            _searchMockRepo.Setup(r => r.GetBaseQuery("BOBS_Backend.Models.Order.Order")).Returns(orderQuery);
-            _searchMockRepo.Setup(r => r.GetTotalPages(2, 15)).Returns(totalPages);
-            _searchMockRepo.Setup(r => r.GetModifiedPagesArr(1, 1)).Returns(pages);
+        //    _searchMockRepo.Setup(r => r.GetBaseQuery("BOBS_Backend.Models.Order.Order")).Returns(orderQuery);
+        //    _searchMockRepo.Setup(r => r.GetTotalPages(2, 15)).Returns(totalPages);
+        //    _searchMockRepo.Setup(r => r.GetModifiedPagesArr(1, 1)).Returns(pages);
 
-            await context.SaveChangesAsync();
+        //    await context.SaveChangesAsync();
 
-            var orderResult = await _orderRepo.GetAllOrders(1);
+        //    var orderResult = await _orderRepo.GetAllOrders(1);
 
-            Assert.NotNull(orderResult);
+        //    Assert.NotNull(orderResult);
 
-            Assert.Equal("2",orderResult.Orders.Count()+"");
-            Assert.Equal("False", orderResult.HasNextPages + "");
+        //    Assert.Equal("2",orderResult.Orders.Count()+"");
+        //    Assert.Equal("False", orderResult.HasNextPages + "");
 
-            await context.DisposeAsync();
-        }
+        //    await context.DisposeAsync();
+        //}
 
         //Still Work in Progress
         //[Fact]

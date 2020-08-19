@@ -475,7 +475,7 @@ namespace BOBS_Backend
             searchby = " " + searchby;
 
             SearchBookViewModel viewModel = new SearchBookViewModel();
-            var parameterExpression = Expression.Parameter(Type.GetType("BOBS_Backend.Models.Book.Price"), "price");
+            var parameterExpression = Expression.Parameter(Type.GetType("BOBS_Backend.Models.Book.Price"), "order");
 
 
             var expression = _searchRepo.ReturnExpression(parameterExpression, searchby, searchfilter);
