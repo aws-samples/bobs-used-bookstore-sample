@@ -9,7 +9,6 @@ namespace BOBS_Backend.Repository.SearchImplementations
     public interface ISearchRepository
     {
 
-        IQueryable GetBaseQuery(string objPath);
 
         BinaryExpression ReturnExpression(ParameterExpression parameterExpression, string filterValue, string searchString);
 

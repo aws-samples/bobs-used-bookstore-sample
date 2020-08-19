@@ -27,6 +27,8 @@ using Amazon.Polly;
 using BOBS_Backend.Models;
 using BOBS_Backend.Repository.SearchImplementations;
 using BOBS_Backend.Repository.Implementations.SearchImplementation;
+using Autofac.Core;
+using BOBS_Backend.Database;
 
 namespace BOBS_Backend
 {
@@ -52,6 +54,7 @@ namespace BOBS_Backend
 
             services.AddControllersWithViews();
             services.AddDbContext<Database.DatabaseContext>(option => option.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddTransient<ISearchDatabaseCalls, SearchDatabaseCalls>();
             services.AddTransient<IExpressionFunction, ExpressionFunction>();
             services.AddTransient<IOrderDatabaseCalls, OrderDatabaseCalls>();
 

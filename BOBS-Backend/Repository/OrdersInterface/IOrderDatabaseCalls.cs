@@ -1,4 +1,6 @@
-﻿using BOBS_Backend.Models.Order;
+﻿using BOBS_Backend.Database;
+using BOBS_Backend.Models.Order;
+using Microsoft.EntityFrameworkCore.Storage;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,22 +14,15 @@ namespace BOBS_Backend.Repository.OrdersInterface
 
         IQueryable GetBaseQuery(string objPath);
 
-        IQueryable<Order> ReturnBaseOrderQuery(IQueryable query, string[] includes);
+        IDbContextTransaction BeginTransaction();
 
+        Task TransactionCommitChanges(IDbContextTransaction transaction);
 
-        IQueryable<Order> ReturnFilterOrderQuery(IQueryable<Order> query, Expression<Func<Order, bool>> lambda);
+        Task ContextSaveChanges();
 
+        IQueryable<T> ReturnBaseQuery<T>(IQueryable query, string[] includes) where T : class;
 
-        IQueryable<OrderStatus> ReturnBaseOrderStatusQuery(IQueryable query, string[] includes);
-
-
-        IQueryable<OrderStatus> ReturnFilterOrderStatusQuery(IQueryable<OrderStatus> query, Expression<Func<OrderStatus, bool>> lambda);
-
-
-        IQueryable<OrderDetail> ReturnBaseOrderDetailQuery(IQueryable query, string[] includes);
-
-
-        IQueryable<OrderDetail> ReturnFilterOrderDetailQuery(IQueryable<OrderDetail> query, Expression<Func<OrderDetail, bool>> lambda);
+        IQueryable<T> ReturnFilterQuery<T>(IQueryable<T> query, Expression<Func<T, bool>> lambda);
 
     }
 }

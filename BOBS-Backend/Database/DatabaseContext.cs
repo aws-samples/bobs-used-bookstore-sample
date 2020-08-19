@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace BOBS_Backend.Database
 {
     public class DatabaseContext : DbContext
-    {
+    { 
         /*
          * This file contains all the tables (i.e. structure and name) used in the SQL Server
          */
@@ -30,9 +30,10 @@ namespace BOBS_Backend.Database
         public DbSet<Customer> Customer { get; set; }
 
 
-        public DbSet<Order> Order { get; set; }
-        public DbSet<OrderDetail> OrderDetail { get; set; }
-        public DbSet<OrderStatus> OrderStatus { get; set; }
+        public virtual DbSet<Order> Order { get; set; }
+        public virtual DbSet<OrderDetail> OrderDetail { get; set; }
+        public virtual DbSet<OrderStatus> OrderStatus { get; set; }
+
 
         public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options) { }
 

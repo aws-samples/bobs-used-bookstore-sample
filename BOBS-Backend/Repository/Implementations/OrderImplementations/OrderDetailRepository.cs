@@ -9,6 +9,8 @@ using BOBS_Backend.Repository.OrdersInterface;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using Microsoft.AspNetCore.Mvc;
 using BOBS_Backend.Notifications.NotificationsInterface;
+using BOBS_Backend.Repository.SearchImplementations;
+using System.Linq.Expressions;
 
 namespace BOBS_Backend.Repository.Implementations.OrderImplementations
 {
@@ -20,24 +22,36 @@ namespace BOBS_Backend.Repository.Implementations.OrderImplementations
          * 
          */
 
-        private DatabaseContext _context;
+        private readonly string[] OrderDetailIncludes = { "Book", "Book.Genre", "Book.Publisher","Book.Type","Price","Price.Condition" };
         private readonly IOrderRepository _orderRepo;
         private readonly IOrderStatusRepository _orderStatusRepo;
+        private IOrderDatabaseCalls _orderDbCalls;
+        private IExpressionFunction _expFunc;
 
         // Set up conncection to Database
-        public OrderDetailRepository(DatabaseContext context, IOrderRepository ordeRepo, IOrderStatusRepository orderStatusRepo)
+        public OrderDetailRepository(IOrderRepository ordeRepo, IOrderStatusRepository orderStatusRepo,IOrderDatabaseCalls orderDbCalls, IExpressionFunction expFunc)
         {
-            _context = context;
             _orderRepo = ordeRepo;
             _orderStatusRepo = orderStatusRepo;
+            _orderDbCalls = orderDbCalls;
+            _expFunc = expFunc;
         }
 
 
         public async Task<int> FindOrderDetailsRemovedCountAsync(long id)
         {
-            var num = await _context.OrderDetail.Where(ord => ord.Order.Order_Id == id && ord.IsRemoved == true).CountAsync();
+            string filterValue = "Order.Order_Id IsRemoved";
+            string searchString = "" + id + "&&true";
+            string inBetween = "And";
+            string operand = "== ==";
+            string negate = "false false";
+
+            var query = FilterOrderDetail(filterValue, searchString, inBetween, operand, negate);
+
+            var num = query.Count();
 
             return num;
+
         }
 
         public async Task<Order> CancelOrder(long id)
@@ -50,7 +64,7 @@ namespace BOBS_Backend.Repository.Implementations.OrderImplementations
                 var orderDetails = await FindOrderDetailByOrderId(id);
                 var order = await _orderRepo.FindOrderById(id);
 
-                using (var transaction = _context.Database.BeginTransaction())
+                using (var transaction = _orderDbCalls.BeginTransaction())
                 {
                     foreach (var detail in orderDetails)
                     {
@@ -59,21 +73,21 @@ namespace BOBS_Backend.Repository.Implementations.OrderImplementations
                             order.Subtotal -= (detail.quantity * detail.price);
                             order.Tax -= (detail.quantity * detail.price * .1);
 
-                            await _context.SaveChangesAsync();
+                            await _orderDbCalls.ContextSaveChanges();
 
                             detail.Price.Quantity += detail.quantity;
                             detail.IsRemoved = true;
 
-                            await _context.SaveChangesAsync();
+                            await _orderDbCalls.ContextSaveChanges();
 
                         }
                     }
 
                     order.OrderStatus = orderStatus;
 
-                    await _context.SaveChangesAsync();
+                    await _orderDbCalls.ContextSaveChanges();
 
-                    await transaction.CommitAsync();
+                    await _orderDbCalls.TransactionCommitChanges(transaction);
 
                     return order;
                 }
@@ -104,23 +118,23 @@ namespace BOBS_Backend.Repository.Implementations.OrderImplementations
 
                 if (origOrderDetail.IsRemoved == true || origOrder.OrderStatus.position > pending.position) return null;
 
-                using(var transaction = _context.Database.BeginTransaction())
+                using(var transaction = _orderDbCalls.BeginTransaction())
                 {
 
                     origOrder.Subtotal -= (moneyOwe);
 
                     origOrder.Tax -= (moneyOwe * .10);
 
-                    await _context.SaveChangesAsync();
+                    await _orderDbCalls.ContextSaveChanges();
 
                     origOrderDetail.IsRemoved = true;
 
                     origOrderDetail.Price.Quantity += quantity;
 
 
-                    await _context.SaveChangesAsync();
+                    await _orderDbCalls.ContextSaveChanges();
 
-                    await transaction.CommitAsync();
+                    await _orderDbCalls.TransactionCommitChanges(transaction);
                     Dictionary<string, string> emailInfo = new Dictionary<string, string>
                 {
                     { "bookName",origOrderDetail.Book.Name },
@@ -148,38 +162,53 @@ namespace BOBS_Backend.Repository.Implementations.OrderImplementations
         // Finds One instance of Order Detail Model by Order Detail Id
         public async Task<OrderDetail> FindOrderDetailById(long id)
         {
-            var orderDetail = await _context.OrderDetail
-                                    .Where(x => x.OrderDetail_Id == id)
-                                    .Include(o => o.Book)
-                                        .ThenInclude(b => b.Genre)
-                                    .Include(o => o.Book)
-                                        .ThenInclude(b => b.Publisher)
-                                    .Include(o => o.Book)
-                                        .ThenInclude(b => b.Type)
-                                    .Include(o => o.Price)
-                                        .ThenInclude(p => p.Condition)
-                                    .FirstAsync();
+            string filterValue = "OrderDetail_Id";
+            string searchString = "" + id;
+            string inBetween = "";
+            string operand = "==";
+            string negate = "false";
+
+            var query = FilterOrderDetail(filterValue, searchString, inBetween, operand, negate);
+
+            var orderDetail = query.First();
 
             return orderDetail;
+
         }
 
         // Finds a List of Order Details by the assoicated Order Id
         public async Task<List<OrderDetail>> FindOrderDetailByOrderId(long orderId)
         {
 
-            var orderDetails = await _context.OrderDetail
-                                    .Where(x => x.Order.Order_Id == orderId)
-                                    .Include(o => o.Book)
-                                        .ThenInclude(b => b.Genre)
-                                    .Include(o => o.Book)
-                                        .ThenInclude(b => b.Publisher)
-                                    .Include(o => o.Book)
-                                        .ThenInclude(b => b.Type)
-                                    .Include(o => o.Price)
-                                        .ThenInclude(p => p.Condition)
-                                    .ToListAsync();
+            string filterValue = "Order.Order_Id";
+            string searchString = "" + orderId;
+            string inBetween = "";
+            string operand = "==";
+            string negate = "false";
 
-            return orderDetails;
+            var query = FilterOrderDetail(filterValue, searchString, inBetween, operand, negate);
+
+            var orderDetail = query.ToList();
+
+            return orderDetail;
+
+        }
+
+        public IQueryable<OrderDetail> FilterOrderDetail(string filterValue, string searchString, string inBetween, string operand, string negate)
+        {
+
+
+            string tableName = "OrderDetail";
+
+            Expression<Func<OrderDetail, bool>> lambda = _expFunc.ReturnLambdaExpression<OrderDetail>(tableName, filterValue, searchString, inBetween, operand, negate);
+
+            var orderDetailBase = _orderDbCalls.GetBaseQuery("BOBS_Backend.Models.Order.OrderDetail");
+
+            var query = _orderDbCalls.ReturnBaseQuery<OrderDetail>(orderDetailBase, OrderDetailIncludes);
+
+            var filterQuery = _orderDbCalls.ReturnFilterQuery(query, lambda);
+
+            return filterQuery;
         }
     }
 }

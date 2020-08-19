@@ -19,5 +19,7 @@ namespace BOBS_Backend.Repository
         Task<OrderStatus> FindOrderStatusById(long id);
 
         Task<Order> UpdateOrderStatus(Order order, long Status_Id);
+
+        IQueryable<OrderStatus> FilterOrderStatus(string filterValue, string searchString, string inBetween, string operand, string negate);
     }
 }
