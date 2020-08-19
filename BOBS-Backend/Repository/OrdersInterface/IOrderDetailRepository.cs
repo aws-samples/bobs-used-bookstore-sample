@@ -21,7 +21,5 @@ namespace BOBS_Backend.Repository.OrdersInterface
         Task<OrderDetail> FindOrderDetailById(long id);
 
         Task<List<OrderDetail>> FindOrderDetailByOrderId(long orderId);
-
-        IQueryable<OrderDetail> FilterOrderDetail(string filterValue, string searchString, string inBetween, string operand, string negate);
     }
 }

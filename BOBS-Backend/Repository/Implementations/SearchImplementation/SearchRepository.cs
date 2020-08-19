@@ -1,5 +1,4 @@
 ﻿using BOBS_Backend.Database;
-using BOBS_Backend.Repository.OrdersInterface;
 using BOBS_Backend.Repository.SearchImplementations;
 using System;
 using System.Collections.Generic;
@@ -16,11 +15,11 @@ namespace BOBS_Backend.Repository.Implementations.SearchImplementation
     public class SearchRepository : ISearchRepository
     {
 
-        private ISearchDatabaseCalls _searchDbCalls;
+        private DatabaseContext _context;
 
-        public SearchRepository(ISearchDatabaseCalls searchDatabaseCalls)
+        public SearchRepository(DatabaseContext context)
         {
-            _searchDbCalls = searchDatabaseCalls;
+            _context = context;
         }
 
         public int[] GetModifiedPagesArr(int pageNum, int totalPages)
@@ -51,6 +50,13 @@ namespace BOBS_Backend.Repository.Implementations.SearchImplementation
                 return (totalCount / valsPerPage);
             }
             else return (totalCount / valsPerPage) + 1;
+        }
+
+        public IQueryable GetBaseQuery(string objPath)
+        {
+            var query = _context.Query(objPath);
+
+            return query;
         }
 
         private BinaryExpression PerformArtithmeticExpresion(string operand, Expression property, ConstantExpression constant)
@@ -108,7 +114,7 @@ namespace BOBS_Backend.Repository.Implementations.SearchImplementation
             bool isFirst = true;
             searchString = searchString.Trim();
 
-            var table = _searchDbCalls.GetTable("Order");
+            var table = (IQueryable)_context.GetType().GetProperty("Order").GetValue(_context, null);
 
             var row = Expression.Parameter(table.ElementType, "row");
 
@@ -208,7 +214,7 @@ namespace BOBS_Backend.Repository.Implementations.SearchImplementation
             bool isFirst = true;
             searchString = searchString.Trim();
 
-            var table = _searchDbCalls.GetTable(splitFilter[0]);
+            var table = (IQueryable)_context.GetType().GetProperty(splitFilter[0]).GetValue(_context, null);
 
             var row = Expression.Parameter(table.ElementType, "row");
 

@@ -9,9 +9,5 @@ namespace BOBS_Backend.Repository.SearchImplementations
     public interface IExpressionFunction
     {
         BinaryExpression ReturnExpression(string filterValue, string tableName, ParameterExpression parameterExpression, string searchString, string inBetween, string operand, string negate);
-
-        ParameterExpression ReturnParameterExpression(Type objType, string name);
-
-        Expression<Func<T, bool>> ReturnLambdaExpression<T>(string tableName, string filterValue, string searchString, string inBetween, string operand, string negate);
     }
 }

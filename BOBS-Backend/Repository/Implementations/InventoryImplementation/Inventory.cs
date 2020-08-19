@@ -450,7 +450,7 @@ namespace BOBS_Backend
         public SearchBookViewModel GetAllBooks(int pagenum, string style, string SortBy, string ascdesc)
         {
 
-            var query = (IQueryable<Price>)_context.Price;
+            var query = (IQueryable<Price>) _searchRepo.GetBaseQuery("BOBS_Backend.Models.Book.Price");
 
             query = query.Include(PriceIncludes);
 
@@ -491,7 +491,7 @@ namespace BOBS_Backend
                 return viewModel;
             }
 
-            var query = (IQueryable<Price>)_context.Price;
+            var query = (IQueryable<Price>)_searchRepo.GetBaseQuery("BOBS_Backend.Models.Book.Price");
 
             query = query.Include(PriceIncludes);
 

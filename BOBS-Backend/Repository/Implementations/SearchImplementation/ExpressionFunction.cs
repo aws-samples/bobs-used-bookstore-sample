@@ -1,6 +1,5 @@
 ﻿using BOBS_Backend.Database;
 using BOBS_Backend.Models.Order;
-using BOBS_Backend.Repository.OrdersInterface;
 using BOBS_Backend.Repository.SearchImplementations;
 using System;
 using System.Collections.Generic;
@@ -13,18 +12,10 @@ namespace BOBS_Backend.Repository.Implementations.SearchImplementation
 {
     public class ExpressionFunction : IExpressionFunction
     {
-        private ISearchDatabaseCalls _searchDbCalls;
-
-        public ExpressionFunction(ISearchDatabaseCalls searchDatabaseCalls)
+        private DatabaseContext _context;
+        public ExpressionFunction(DatabaseContext context)
         {
-            _searchDbCalls = searchDatabaseCalls;
-        }
-
-        public ParameterExpression ReturnParameterExpression(Type objType, string name)
-        {
-            var parameterExpression = Expression.Parameter(objType, name);
-
-            return parameterExpression;
+            _context = context;
         }
 
         private BinaryExpression PerformArtithmeticExpresion(string operand, Expression property, ConstantExpression constant)
@@ -61,7 +52,7 @@ namespace BOBS_Backend.Repository.Implementations.SearchImplementation
             
         private BinaryExpression GenerateDynamicLambdaFunctionSubObjectProperty(ParameterExpression parameterExpression, string[] splitFilter, string searchString, string operand, string negate)
         {
-            var table = _searchDbCalls.GetTable(splitFilter[0]);
+            var table = (IQueryable)_context.GetType().GetProperty(splitFilter[0]).GetValue(_context, null);
 
             var row = Expression.Parameter(table.ElementType, "row");
 
@@ -95,7 +86,7 @@ namespace BOBS_Backend.Repository.Implementations.SearchImplementation
 
             searchString = searchString.Trim();
 
-            var table = _searchDbCalls.GetTable(tableName);
+            var table = (IQueryable)_context.GetType().GetProperty(tableName).GetValue(_context, null);
 
             var row = Expression.Parameter(table.ElementType, "row");
 
@@ -176,14 +167,6 @@ namespace BOBS_Backend.Repository.Implementations.SearchImplementation
 
 
             return expression;
-        }
-
-        public Expression<Func<T, bool>> ReturnLambdaExpression<T>(string tableName,string filterValue, string searchString, string inBetween, string operand, string negate)
-        {
-            var parameterExpression = ReturnParameterExpression(typeof(T), tableName);
-            var expression = ReturnExpression(filterValue, tableName, parameterExpression, searchString, inBetween, operand, negate);
-
-            return Expression.Lambda<Func<T, bool>>(expression, parameterExpression);
         }
     }
 }
