@@ -371,8 +371,9 @@ namespace BOBS_Backend.Controllers
 
                 if ( (String.IsNullOrEmpty(searchby) || String.IsNullOrEmpty(searchfilter)) )
                 {
-                    
-                    var books = _Inventory.GetAllBooks(1, "", "" , "");
+
+                    searchfilter = Regex.Replace(searchfilter, @"\s+", " ");
+                    var books = _Inventory.GetAllBooks(pageNum, ViewStyle, SortBy , ascdesc);
 
                     books.SortBy = SortBy;
                     return View(books);
