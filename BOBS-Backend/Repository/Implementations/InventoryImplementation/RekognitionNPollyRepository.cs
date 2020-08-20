@@ -26,7 +26,6 @@ namespace BOBS_Backend.Repository.Implementations.InventoryImplementation
     {
         IAmazonS3 _s3Client { get; set; }
         IAmazonRekognition _rekognitionClient { get; set; }
-
         IAmazonPolly _pollyClient { get; set; }
 
         private readonly ILogger<RekognitionNPollyRepository> _logger;
@@ -62,10 +61,10 @@ namespace BOBS_Backend.Repository.Implementations.InventoryImplementation
 
             var fileExt = Path.GetExtension(file.FileName).TrimStart('.');
 
-            var resizeStream = await ResizeImage(file, fileExt);
-
             if (_validImageExtensions.Contains(fileExt))
             {
+                var resizeStream = await ResizeImage(file, fileExt);
+
                 using (var fileStream = new FileStream(Path.Combine(dir, filename), FileMode.Create, FileAccess.Write))
                 {
                     resizeStream.CopyTo(fileStream);
@@ -267,7 +266,8 @@ namespace BOBS_Backend.Repository.Implementations.InventoryImplementation
                 request.VoiceId = voice;
                 var response = _pollyClient.SynthesizeSpeechAsync(request).GetAwaiter().GetResult();
 
-                string outputFileName = $".\\-{targetLanguageCode}.mp3";
+                string outputFileName = $".\\{BookName}-{targetLanguageCode}.mp3";
+
                 FileStream output = File.Open(outputFileName, FileMode.Create);
                 response.AudioStream.CopyTo(output);
                 output.Close();
