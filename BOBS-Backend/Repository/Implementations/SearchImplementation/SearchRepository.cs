@@ -1,7 +1,9 @@
 ﻿using BOBS_Backend.Database;
+using BOBS_Backend.Repository.OrdersInterface;
 using BOBS_Backend.Repository.SearchImplementations;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -14,11 +16,11 @@ namespace BOBS_Backend.Repository.Implementations.SearchImplementation
     public class SearchRepository : ISearchRepository
     {
 
-        private DatabaseContext _context;
+        private ISearchDatabaseCalls _searchDbCalls;
 
-        public SearchRepository(DatabaseContext context)
+        public SearchRepository(ISearchDatabaseCalls searchDatabaseCalls)
         {
-            _context = context;
+            _searchDbCalls = searchDatabaseCalls;
         }
 
         public int[] GetModifiedPagesArr(int pageNum, int totalPages)
@@ -51,17 +53,23 @@ namespace BOBS_Backend.Repository.Implementations.SearchImplementation
             else return (totalCount / valsPerPage) + 1;
         }
 
-        public IQueryable GetBaseQuery(string objPath)
+        private BinaryExpression PerformArtithmeticExpresion(string operand, Expression property, ConstantExpression constant)
         {
-            var query = _context.Query(objPath);
+            if (operand.Equals(">")) return Expression.GreaterThan(property, constant);
+            if (operand.Equals("==")) return Expression.Equal(property, constant);
+            if (operand.Equals("<")) return Expression.LessThan(property, constant);
 
-            return query;
+            return Expression.Equal(property, constant);
         }
 
-        private MethodCallExpression GenerateExpressionObject(string type, string subSearch, MethodInfo method, MemberExpression property, bool isEntire)
+        private BinaryExpression GenerateExpressionObject(string type, string subSearch, MemberExpression property, bool isEntire)
         {
             try
             {
+
+                var converter = TypeDescriptor.GetConverter(Type.GetType(type));
+
+                var test = converter.ConvertFrom(subSearch);
                 ConstantExpression constant = null;
                 if (type == "System.Int64")
                 {
@@ -69,17 +77,21 @@ namespace BOBS_Backend.Repository.Implementations.SearchImplementation
 
                     bool res = long.TryParse(subSearch, out value);
 
-                    constant = Expression.Constant(value);
-                    method = typeof(long).GetMethod("Equals", new Type[] { typeof(int) });
+                    constant = Expression.Constant(test);
+
+                    return PerformArtithmeticExpresion("==",(Expression) property, constant);
                 }
                 else
                 {
                     constant = Expression.Constant(subSearch);
-                    method = typeof(string).GetMethod("Contains", new Type[] { typeof(string) });
+                    var method = typeof(string).GetMethod("Contains", new Type[] { typeof(string) });
+
+                    var expression = Expression.Call(property, method, constant);
+
+  
+                    return Expression.Or(expression, expression);
                 }
 
-                var expression = (isEntire == true) ? Expression.Call(constant, method, property) : Expression.Call(property, method, constant);
-                return expression;
             }
             catch
             {
@@ -93,11 +105,10 @@ namespace BOBS_Backend.Repository.Implementations.SearchImplementation
             var property = Expression.Property(parameterExpression, splitFilter);
 
             BinaryExpression lambda = null;
-            MethodInfo method = null;
             bool isFirst = true;
             searchString = searchString.Trim();
 
-            var table = (IQueryable)_context.GetType().GetProperty("Order").GetValue(_context, null);
+            var table = _searchDbCalls.GetTable("Order");
 
             var row = Expression.Parameter(table.ElementType, "row");
 
@@ -110,12 +121,12 @@ namespace BOBS_Backend.Repository.Implementations.SearchImplementation
                 try
                 {
 
-                    var expression = GenerateExpressionObject(type, subSearch, method, property, false);
+                    var expression = GenerateExpressionObject(type, subSearch, property, false);
 
 
                     if (isFirst)
                     {
-                        lambda = Expression.Or(expression, expression);
+                        lambda = expression;
                         isFirst = false;
 
 
@@ -141,7 +152,7 @@ namespace BOBS_Backend.Repository.Implementations.SearchImplementation
 
         }
 
-        private MethodCallExpression GenerateExpressionSubObject(string type, string subSearch, MethodInfo method, string[] splitFilter, ParameterExpression parameterExpression, bool isEntire)
+        private BinaryExpression GenerateExpressionSubObject(string type, string subSearch, string[] splitFilter, ParameterExpression parameterExpression, bool isEntire)
         {
             try
             {
@@ -154,24 +165,34 @@ namespace BOBS_Backend.Repository.Implementations.SearchImplementation
 
                     constant = Expression.Constant(value);
 
-                    method = typeof(long).GetMethod("Equals", new Type[] { typeof(int) });
+                    Expression property2 = parameterExpression;
+
+                    foreach (var member in splitFilter)
+                    {
+                        property2 = Expression.PropertyOrField(property2, member);
+                    }
+
+                    var expression = PerformArtithmeticExpresion("==", property2, constant);
+                    return expression;
                 }
                 else
                 {
                     constant = Expression.Constant(subSearch);
-                    method = typeof(string).GetMethod("Contains", new Type[] { typeof(string) });
+                    var method = typeof(string).GetMethod("Contains", new Type[] { typeof(string) });
+
+                    Expression property2 = parameterExpression;
+
+                    foreach (var member in splitFilter)
+                    {
+                        property2 = Expression.PropertyOrField(property2, member);
+                    }
+
+                    var expression = (isEntire == true) ? Expression.Call(constant, method, property2) : Expression.Call(property2, method, constant);
+
+                    return Expression.Or(expression,expression);
                 }
 
-                Expression property2 = parameterExpression;
-
-                foreach (var member in splitFilter)
-                {
-                    property2 = Expression.PropertyOrField(property2, member);
-                }
-
-                var expression = (isEntire == true) ? Expression.Call(constant, method, property2) : Expression.Call(property2, method, constant);
-
-                return expression;
+                
             }
             catch
             {
@@ -183,11 +204,11 @@ namespace BOBS_Backend.Repository.Implementations.SearchImplementation
         private BinaryExpression GenerateDynamicLambdaFunctionSubObjectProperty(string[] splitFilter, ParameterExpression parameterExpression, string searchString)
         {
             BinaryExpression lambda = null;
-            MethodInfo method = null;
+
             bool isFirst = true;
             searchString = searchString.Trim();
 
-            var table = (IQueryable)_context.GetType().GetProperty(splitFilter[0]).GetValue(_context, null);
+            var table = _searchDbCalls.GetTable(splitFilter[0]);
 
             var row = Expression.Parameter(table.ElementType, "row");
 
@@ -200,11 +221,12 @@ namespace BOBS_Backend.Repository.Implementations.SearchImplementation
                 {
 
 
-                    var expression = GenerateExpressionSubObject(type, subSearch, method, splitFilter, parameterExpression, false);
+                    var expression = GenerateExpressionSubObject(type, subSearch,splitFilter, parameterExpression, false);
 
                     if (isFirst)
                     {
-                        lambda = Expression.Or(expression, expression);
+
+                        lambda = expression;
                         isFirst = false;
 
 
@@ -228,8 +250,10 @@ namespace BOBS_Backend.Repository.Implementations.SearchImplementation
 
         }
 
+
         public BinaryExpression ReturnExpression(ParameterExpression parameterExpression, string filterValue, string searchString)
         {
+       
             string[] listOfFilters = filterValue.Split(' ');
             bool isFirst = true;
             BinaryExpression expression = null;
@@ -258,7 +282,7 @@ namespace BOBS_Backend.Repository.Implementations.SearchImplementation
                 }
                 if (isFirst)
                 {
-                    expression = Expression.And(exp2, exp2);
+                    expression = exp2;
                     isFirst = false;
 
 
@@ -272,6 +296,7 @@ namespace BOBS_Backend.Repository.Implementations.SearchImplementation
 
 
             }
+            var test = expression.ToString();
 
             return expression;
         }

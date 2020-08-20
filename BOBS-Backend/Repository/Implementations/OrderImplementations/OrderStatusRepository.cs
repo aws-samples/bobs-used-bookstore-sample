@@ -1,11 +1,14 @@
 ﻿using BOBS_Backend.Database;
 using BOBS_Backend.Models.Order;
 using BOBS_Backend.Repository.OrdersInterface;
+using BOBS_Backend.Repository.SearchImplementations;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace BOBS_Backend.Repository.Implementations.OrderImplementations
@@ -16,37 +19,61 @@ namespace BOBS_Backend.Repository.Implementations.OrderImplementations
          * Order Status Repository contains all functions associated with OrderStatus Model
          */
 
-        private DatabaseContext _context;
-        
+        private IOrderDatabaseCalls _orderDbCalls;
+        private IExpressionFunction _expFunc;
+
+
         // Set up Database Connection
-        public OrderStatusRepository(DatabaseContext context)
+        public OrderStatusRepository(IOrderDatabaseCalls orderDbCalls, IExpressionFunction expFunc)
         {
-            _context = context;
+
+            _orderDbCalls = orderDbCalls;
+            _expFunc = expFunc;
         }
 
         // Return a Singel Order Status Instance by Order Status Id
         public async Task<OrderStatus> FindOrderStatusById(long id)
         {
-            var orderStatus = await _context.OrderStatus
-                                       .Where(os => os.OrderStatus_Id == id)
-                                       .FirstAsync();
+           
+            string filterValue = "OrderStatus_Id";
+            string searchString = "" + id;
+            string inBetween = "";
+            string operand = "==";
+            string negate = "false";
+
+            var query = FilterOrderStatus(filterValue, searchString, inBetween, operand, negate);
+
+            var orderStatus = query.First();
+
             return orderStatus;
         }
 
         public async Task<OrderStatus> FindOrderStatusByName(string status)
         {
-            var orderStatus = await _context.OrderStatus
-                                       .Where(os => os.Status == status)
-                                       .FirstAsync();
+            string filterValue = "Status";
+            string searchString = status;
+            string inBetween = "";
+            string operand = "==";
+            string negate = "false";
+
+            var query = FilterOrderStatus(filterValue, searchString, inBetween, operand, negate);
+
+            var orderStatus = query.First();
+
             return orderStatus;
         }
 
         // Returns all Order Statuses in a Table
         public async Task<List<OrderStatus>> GetOrderStatuses()
         {
-            var orderStatus = await _context.OrderStatus
-                                        .OrderBy(os => os.position)    
-                                        .ToListAsync();
+            var orderBase = _orderDbCalls.GetBaseQuery("BOBS_Backend.Models.Order.OrderStatus");
+
+            var query = (IQueryable<OrderStatus>)orderBase;
+
+            var orderStatus = query
+                 .OrderBy(os => os.position)
+                 .ToList();
+
             return orderStatus;
         }
 
@@ -57,19 +84,13 @@ namespace BOBS_Backend.Repository.Implementations.OrderImplementations
             {
                 OrderStatus newStatus = await FindOrderStatusById(Status_Id);
 
-                using (var transaction = _context.Database.BeginTransaction())
-                {
-                    order.OrderStatus = newStatus;
+                order.OrderStatus = newStatus;
 
-                    if (order.OrderStatus.Status != "Just Placed" && order.DeliveryDate == null) order.DeliveryDate = DateTime.Now.AddDays(14).ToString();
+                if (order.OrderStatus.Status != "Just Placed" && order.DeliveryDate == null) order.DeliveryDate = DateTime.Now.AddDays(14).ToString();
 
-                    
-                    await _context.SaveChangesAsync();
+                await _orderDbCalls.ContextSaveChanges();
 
-                    await transaction.CommitAsync();
-
-                    return order;
-                }
+                return order;
                     
             }
             catch (DbUpdateConcurrencyException ex)
@@ -83,6 +104,23 @@ namespace BOBS_Backend.Repository.Implementations.OrderImplementations
             }
 
  
+        }
+
+
+        public IQueryable<OrderStatus> FilterOrderStatus(string filterValue, string searchString, string inBetween, string operand, string negate)
+        {
+
+            string tableName = "OrderStatus";
+
+            Expression<Func<OrderStatus, bool>> lambda = _expFunc.ReturnLambdaExpression<OrderStatus>(tableName, filterValue, searchString, inBetween, operand, negate);
+
+            var orderStatusBase = _orderDbCalls.GetBaseQuery("BOBS_Backend.Models.Order.OrderStatus");
+
+            var query = (IQueryable<OrderStatus>) orderStatusBase;
+
+            var filterQuery = _orderDbCalls.ReturnFilterQuery(query,lambda);
+
+            return filterQuery;
         }
     }
 }
