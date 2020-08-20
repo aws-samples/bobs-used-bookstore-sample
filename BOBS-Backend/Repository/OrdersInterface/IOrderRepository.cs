@@ -21,7 +21,7 @@ namespace BOBS_Backend.Repository.OrdersInterface
         Task<ManageOrderViewModel> FilterList(string filterValue, string searchString, int pageNum);
 
 
-        IQueryable<Order> FilterOrder(string filterValue, string searchString, string inBetween, string operand, string negate);
+        IQueryable<Order> FilterOrder(string filterValue, string searchString);
 
      }
 }
