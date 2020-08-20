@@ -14,28 +14,35 @@ using Amazon.Runtime.Internal.Util;
 using Amazon.S3.Model;
 using Microsoft.Data.SqlClient;
 using System.Data.Common;
+using Castle.DynamicProxy.Generators.Emitters.SimpleAST;
+using System.Linq.Expressions;
+using BOBS_Backend.Repository.SearchImplementations;
+using BOBS_Backend.Repository.OrdersInterface;
 
 namespace BOBS_Backend.Repository.Implementations.WelcomePageImplementation
 {
     public class CustomAdmin: ICustomAdminPage
     {
         private DatabaseContext _context;
+        private IExpressionFunction _expFunc;
+        private IOrderDatabaseCalls _orderDbCalls;
         public CustomAdmin(DatabaseContext context)
         {
             _context = context;
-            
+           
 
         }
 
-        public async Task<List<Price>> GetUserUpdatedBooks(string adminUsername)
+        public Task<List<Price>> GetUserUpdatedBooks(string adminUsername)
         {
             // the query returns the collection of updated book models
             // Return the books updated by the current User. Returns only latest 5
             try
             {
+                
                 if (adminUsername == null)
                     throw new ArgumentNullException("Admin username cannot be null", "adminUsername");
-                var books = await _context.Price
+                var books =  _context.Price
                             .Where(p => p.UpdatedBy == adminUsername)
                             .Include(p => p.Book)
                             .Include(p => p.Book)
@@ -84,6 +91,7 @@ namespace BOBS_Backend.Repository.Implementations.WelcomePageImplementation
                                     .ThenInclude(b=>b.Publisher)
                                 .OrderByDescending(p => p.UpdatedOn.Date)
                                 .Take(Constants.TOTAL_RESULTS).ToListAsync();
+                
                 return books;
             }catch(DbException e)
             {
@@ -91,7 +99,7 @@ namespace BOBS_Backend.Repository.Implementations.WelcomePageImplementation
             }
         }
 
-        private int GetOrderSeverity(Order order, double timeDiff )
+        public int GetOrderSeverity(Order order, double timeDiff )
         {
             try
             {
@@ -117,6 +125,11 @@ namespace BOBS_Backend.Repository.Implementations.WelcomePageImplementation
             catch(System.ArgumentNullException e)
             {
                 throw new System.ArgumentNullException("Order object or timeDiff cannot be null", e);
+            }
+            catch(NullReferenceException e)
+            {
+                
+                throw e;
             }
         }
         private List<FilterOrders> FilterOrders(List<Order> allOrders, int orderDayRangeMax, int orderDayRangeMin)
@@ -172,14 +185,18 @@ namespace BOBS_Backend.Repository.Implementations.WelcomePageImplementation
         }
         public async Task<List<FilterOrders>> GetImportantOrders(int dateMaxRange, int dateMinRange)
         {
+            /*
+             Returns a filtered list of pending and EnRoute orders
+             */
             try
             {
                 
-                var order = await _context.Order
-                                .Where(o=> o.OrderStatus.OrderStatus_Id == 2 || o.OrderStatus.OrderStatus_Id == 3)
-                                .Include(o => o.Customer)
-                                .Include(o => o.OrderStatus)
-                                  .ToListAsync();
+                  var order = await _context.Order
+                                  .Where(o=> o.OrderStatus.OrderStatus_Id == 2 || o.OrderStatus.OrderStatus_Id == 3)
+                                  .Include(o => o.Customer)
+                                  .Include(o => o.OrderStatus)
+                                    .ToListAsync();
+               
                 var filteredOrders = FilterOrders(order, dateMaxRange, dateMinRange);
                 return filteredOrders;
             }
