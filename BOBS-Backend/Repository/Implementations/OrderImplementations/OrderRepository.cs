@@ -29,6 +29,7 @@ namespace BOBS_Backend.Repository.Implementations.OrderImplementations
          * Order Repository contains all functions associated with Order Model
          */
 
+        private DatabaseContext _context;
         private readonly int _ordersPerPage = 20;
         private readonly string[] OrderIncludes = { "Customer", "Address", "OrderStatus" };
         private ISearchRepository _searchRepo;
@@ -36,8 +37,9 @@ namespace BOBS_Backend.Repository.Implementations.OrderImplementations
         private IExpressionFunction _expFunc;
 
         // Set up connection to Database 
-        public OrderRepository(ISearchRepository searchRepo, IOrderDatabaseCalls orderDbCalls, IExpressionFunction expFunc)
+        public OrderRepository(DatabaseContext context, ISearchRepository searchRepo, IOrderDatabaseCalls orderDbCalls, IExpressionFunction expFunc)
         {
+            _context = context;
             _searchRepo = searchRepo;
             _orderDbCalls = orderDbCalls;
             _expFunc = expFunc;
@@ -85,7 +87,7 @@ namespace BOBS_Backend.Repository.Implementations.OrderImplementations
 
             var orderBase = _orderDbCalls.GetBaseQuery("BOBS_Backend.Models.Order.Order");
 
-            var query = _orderDbCalls.ReturnBaseQuery<Order>(orderBase, OrderIncludes);
+            var query = _orderDbCalls.ReturnBaseOrderQuery(orderBase, OrderIncludes);
 
             var totalPages = _searchRepo.GetTotalPages(query.Count(),_ordersPerPage);
 
@@ -130,7 +132,7 @@ namespace BOBS_Backend.Repository.Implementations.OrderImplementations
         {
 
             ManageOrderViewModel viewModel = new ManageOrderViewModel();
-            var parameterExpression = _expFunc.ReturnParameterExpression(typeof(Order), "order");
+            var parameterExpression = Expression.Parameter(Type.GetType("BOBS_Backend.Models.Order.Order"), "order");
 
 
             var expression = _searchRepo.ReturnExpression(parameterExpression, filterValue, searchString);
@@ -147,9 +149,9 @@ namespace BOBS_Backend.Repository.Implementations.OrderImplementations
             }
             var orderBase = _orderDbCalls.GetBaseQuery("BOBS_Backend.Models.Order.Order");
 
-            var query = _orderDbCalls.ReturnBaseQuery<Order>(orderBase, OrderIncludes);
+            var query = _orderDbCalls.ReturnBaseOrderQuery(orderBase, OrderIncludes);
 
-            var filterQuery = _orderDbCalls.ReturnFilterQuery<Order>(query, lambda);
+            var filterQuery = _orderDbCalls.ReturnFilterOrderQuery(query, lambda);
 
             int totalPages = _searchRepo.GetTotalPages(filterQuery.Count(), _ordersPerPage);
 
@@ -170,14 +172,17 @@ namespace BOBS_Backend.Repository.Implementations.OrderImplementations
             //var negateTest = "false true";
 
             string tableName = "Order";
+            var parameterExpression = Expression.Parameter(typeof(Order), "order");
 
-            Expression<Func<Order, bool>> lambda = _expFunc.ReturnLambdaExpression<Order>(tableName, filterValue, searchString, inBetween, operand, negate);
+            var expression = _expFunc.ReturnExpression(filterValue, tableName,parameterExpression, searchString, inBetween, operand, negate);
+
+            Expression<Func<Order, bool>> lambda = Expression.Lambda<Func<Order, bool>>(expression, parameterExpression);
 
             var orderBase = _orderDbCalls.GetBaseQuery("BOBS_Backend.Models.Order.Order");
 
-            var query = _orderDbCalls.ReturnBaseQuery<Order>(orderBase, OrderIncludes);
+            var query = _orderDbCalls.ReturnBaseOrderQuery(orderBase, OrderIncludes);
 
-            var filterQuery = _orderDbCalls.ReturnFilterQuery(query, lambda);
+            var filterQuery = _orderDbCalls.ReturnFilterOrderQuery(query, lambda);
 
             return filterQuery;
         }
