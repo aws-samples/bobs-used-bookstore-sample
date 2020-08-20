@@ -39,6 +39,30 @@ namespace Bobs_Backend.Test
         private  Mock<IExpressionFunction> _mockExFunc = new Mock<IExpressionFunction>();
 
         
+        private List<Price> GetSampleTestData()
+        {
+            var sampleData = new List<Price>
+            {
+                new Price
+                    {
+                        Price_Id = 29, Book = new Book(), Condition = new Condition(), ItemPrice = 154, Quantity = 30, UpdatedBy = "admin",
+                        UpdatedOn = DateTime.ParseExact("2020-07-31", "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture), Active = false, RowVersion = new byte[] { 0x20, 0x20 }
+                    },
+                new Price
+                    {
+                        Price_Id = 30, Book = new Book(), Condition = new Condition(), ItemPrice = 154, Quantity = 3, UpdatedBy = "admin",
+                        UpdatedOn = DateTime.ParseExact("2020-07-31", "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture), Active = false, RowVersion = new byte[] { 0x20, 0x20 }
+                    },
+                new Price
+                   {
+                       Price_Id = 31, Book = new Book(), Condition = new Condition(), ItemPrice = 140, Quantity = 13, UpdatedBy = "admin",
+                       UpdatedOn = DateTime.ParseExact("2020-08-01", "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture), Active = false, RowVersion = new byte[] { 0x20, 0x20 }
+                   }
+            };
+
+            return sampleData;
+        }
+
         [Fact]
         
         public  void GetUserUpdateBooks_ShouldReturnUserUpdatedBooks_WhenUserExists()
@@ -52,27 +76,11 @@ namespace Bobs_Backend.Test
             var context1 = connect.CreateInMemoryContext();
             
             string adminUsername = "admin";
-            context1.Price.Add(
-                    new Price
-                    {
-                        Price_Id = 29, Book = new Book(), Condition = new Condition(), ItemPrice = 154, Quantity = 30, UpdatedBy = "admin",
-                        UpdatedOn = DateTime.ParseExact("2020-07-31", "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture), Active = false, RowVersion = new byte[] { 0x20, 0x20 }
-                    }
-                );
-            context1.Price.Add(
-                    new Price
-                    {
-                        Price_Id = 30, Book = new Book(), Condition = new Condition(), ItemPrice = 120, Quantity = 13, UpdatedBy = "admin",
-                        UpdatedOn = DateTime.ParseExact("2020-08-01", "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture), Active = false, RowVersion = new byte[] { 0x20, 0x20 }
-                    }
-                );
-            context1.Price.Add(
-                   new Price
-                   {
-                       Price_Id = 31, Book = new Book(), Condition = new Condition(), ItemPrice = 140, Quantity = 13, UpdatedBy = "admin2",
-                       UpdatedOn = DateTime.ParseExact("2020-08-01", "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture), Active = false, RowVersion = new byte[] { 0x20, 0x20 }
-                   }
-               );
+            var sampleData = GetSampleTestData();
+            foreach(var data in sampleData)
+            {
+                context1.Price.Add(data);
+            }
             context1.SaveChanges();
             //Act
             CustomAdmin _sut = new CustomAdmin(context1);
@@ -94,20 +102,11 @@ namespace Bobs_Backend.Test
             MockDatabaseRepo connect = new MockDatabaseRepo();
             var context = connect.CreateInMemoryContext();
             string adminUsername = "admin2";
-             context.Price.Add(
-                    new Price
-                    {
-                        Price_Id = 29, Book = new Book(), Condition = new Condition(), ItemPrice = 154, Quantity = 30, UpdatedBy = "admin",
-                        UpdatedOn = DateTime.ParseExact("2020-07-31", "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture), Active = false, RowVersion = new byte[] { 0x20, 0x20 }
-                    }
-                );
-            context.Price.Add(
-                    new Price
-                    {
-                        Price_Id = 30, Book = new Book(), Condition = new Condition(), ItemPrice = 120, Quantity = 13, UpdatedBy = "admin",
-                        UpdatedOn = DateTime.ParseExact("2020-08-01", "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture), Active = false, RowVersion = new byte[] { 0x20, 0x20 }
-                    }
-                );
+            var sampleData = GetSampleTestData();
+            foreach(var data in sampleData)
+            {
+                context.Price.Add(data);
+            }
             CustomAdmin _sut = new CustomAdmin(context);
             //Act
             var result = _sut.GetUserUpdatedBooks(adminUsername);
@@ -119,42 +118,21 @@ namespace Bobs_Backend.Test
         [Fact]
         public async Task GetUserUpdateBooks_ShouldReturnException_WhenAdminUserisNull()
         {
-            
+            //Arrange
             MockDatabaseRepo connect = new MockDatabaseRepo();
             var context = connect.CreateInMemoryContext();
             string adminUsername = null ;
-            context.Price.Add(
-                   new Price
-                   {
-                       Price_Id = 29,
-                       Book = new Book(),
-                       Condition = new Condition(),
-                       ItemPrice = 154,
-                       Quantity = 30,
-                       UpdatedBy = "admin",
-                       UpdatedOn = DateTime.ParseExact("2020-07-31", "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture),
-                       Active = false,
-                       RowVersion = new byte[] { 0x20, 0x20 }
-                   }
-               );
-            context.Price.Add(
-                    new Price
-                    {
-                        Price_Id = 30,
-                        Book = new Book(),
-                        Condition = new Condition(),
-                        ItemPrice = 120,
-                        Quantity = 13,
-                        UpdatedBy = "admin",
-                        UpdatedOn = DateTime.ParseExact("2020-08-01", "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture),
-                        Active = false,
-                        RowVersion = new byte[] { 0x20, 0x20 }
-                    }
-                );
+            var sampleData = GetSampleTestData();
+            foreach(var data in sampleData)
+            {
+                context.Price.Add(data);
+            }
 
-            
+            //Act
             CustomAdmin _sut = new CustomAdmin(context);
+            //Assert
             await Assert.ThrowsAsync<ArgumentNullException>(() => _sut.GetUserUpdatedBooks(adminUsername));
+            context.Dispose();
         }
 
 
@@ -168,23 +146,10 @@ namespace Bobs_Backend.Test
             context1.Price.Add(
                     new Price
                     {
-                        Price_Id = 29, Book = new Book(), Condition = new Condition(), ItemPrice = 154, Quantity = 30, UpdatedBy = "admin",
+                        Price_Id = 29, Book = new Book(), Condition = new Condition(), ItemPrice = 154, Quantity = 30, UpdatedBy = "admin2",
                         UpdatedOn = DateTime.ParseExact("2020-07-31", "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture), Active = false, RowVersion = new byte[] { 0x20, 0x20 }
                     }
-                );
-            context1.Price.Add(
-                    new Price
-                    {
-                        Price_Id = 30, Book = new Book(), Condition = new Condition(), ItemPrice = 120, Quantity = 13, UpdatedBy = "admin",
-                        UpdatedOn = DateTime.ParseExact("2020-08-01", "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture), Active = false, RowVersion = new byte[] { 0x20, 0x20 }
-                    }
-                );
-            context1.Price.Add(
-                   new Price
-                   {
-                       Price_Id = 31, Book = new Book(), Condition = new Condition(), ItemPrice = 140, Quantity = 13, UpdatedBy = "admin2",
-                       UpdatedOn = DateTime.ParseExact("2020-08-01", "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture), Active = false, RowVersion = new byte[] { 0x20, 0x20 }
-                   }
+               
                );
             context1.SaveChanges();
             //Act
