@@ -19,13 +19,24 @@ using BOBS_Backend.Models.Order;
 using BOBS_Backend.Models.Customer;
 using System.Data.Entity.Core.Metadata.Edm;
 using BOBS_Backend.ViewModel.UpdateBooks;
+using BOBS_Backend.Repository.OrdersInterface;
+using Amazon.SimpleEmail.Model;
+using Castle.DynamicProxy.Generators.Emitters.SimpleAST;
+using System.Linq.Expressions;
+using BOBS_Backend.Repository.Implementations.SearchImplementation;
+using BOBS_Backend.Repository.SearchImplementations;
+using Autofac.Core;
+using AutoMoq;
 
 namespace Bobs_Backend.Test
 {
     public class CustomAdminTests
     {
         private readonly CustomAdmin _sut;
-        private readonly Mock<DatabaseContext> _mockDatabaseContext = new Mock<DatabaseContext>();
+        private  Mock<DatabaseContext> _mockDatabaseContext = new Mock<DatabaseContext>();
+        private  Mock<IOrderDatabaseCalls> _mockorderDbCalls;
+
+        private  Mock<IExpressionFunction> _mockExFunc = new Mock<IExpressionFunction>();
 
         
         [Fact]
@@ -310,7 +321,7 @@ namespace Bobs_Backend.Test
                     Order_Id = 22,
                     Subtotal = 222,
                     Tax = 21,
-                    DeliveryDate = "2020-08-15",
+                    DeliveryDate = DateTime.Today.AddDays(-1).ToShortDateString(),
                     OrderStatus = new OrderStatus { OrderStatus_Id = 3, Status = "En Route", position = 3 },
                     Customer = new Customer{Customer_Id ="123" ,FirstName="AB", LastName="CD", DateOfBirth=DateTime.Parse("1996-08-01"), Username="ABCD", Email="abcd@gmail.com", Phone="12345678" },
                     Address = new Address(),
@@ -322,7 +333,7 @@ namespace Bobs_Backend.Test
                      Order_Id = 23,
                      Subtotal = 2,
                      Tax = 1,
-                     DeliveryDate = "2020-08-18",
+                     DeliveryDate = DateTime.Today.AddDays(1).ToShortDateString(),
                      OrderStatus = new OrderStatus { OrderStatus_Id = 2, Status = "Pending", position = 2 },
                      Customer = new Customer{Customer_Id ="1234" ,FirstName="AB", LastName="CD", DateOfBirth=DateTime.Parse("1996-08-01"), Username="ABCD", Email="abcd@gmail.com", Phone="12345678" },
                      Address = new Address(),
@@ -522,5 +533,7 @@ namespace Bobs_Backend.Test
             Assert.Equal(1, string.Compare(result[0].Order.OrderStatus.Status, result[1].Order.OrderStatus.Status));
 
         }
+        
+        
     }
 }

@@ -14,16 +14,22 @@ using Amazon.Runtime.Internal.Util;
 using Amazon.S3.Model;
 using Microsoft.Data.SqlClient;
 using System.Data.Common;
+using Castle.DynamicProxy.Generators.Emitters.SimpleAST;
+using System.Linq.Expressions;
+using BOBS_Backend.Repository.SearchImplementations;
+using BOBS_Backend.Repository.OrdersInterface;
 
 namespace BOBS_Backend.Repository.Implementations.WelcomePageImplementation
 {
     public class CustomAdmin: ICustomAdminPage
     {
         private DatabaseContext _context;
+        private IExpressionFunction _expFunc;
+        private IOrderDatabaseCalls _orderDbCalls;
         public CustomAdmin(DatabaseContext context)
         {
             _context = context;
-            
+           
 
         }
 
@@ -33,6 +39,7 @@ namespace BOBS_Backend.Repository.Implementations.WelcomePageImplementation
             // Return the books updated by the current User. Returns only latest 5
             try
             {
+                
                 if (adminUsername == null)
                     throw new ArgumentNullException("Admin username cannot be null", "adminUsername");
                 var books =  _context.Price
@@ -184,11 +191,12 @@ namespace BOBS_Backend.Repository.Implementations.WelcomePageImplementation
             try
             {
                 
-                var order = await _context.Order
-                                .Where(o=> o.OrderStatus.OrderStatus_Id == 2 || o.OrderStatus.OrderStatus_Id == 3)
-                                .Include(o => o.Customer)
-                                .Include(o => o.OrderStatus)
-                                  .ToListAsync();
+                  var order = await _context.Order
+                                  .Where(o=> o.OrderStatus.OrderStatus_Id == 2 || o.OrderStatus.OrderStatus_Id == 3)
+                                  .Include(o => o.Customer)
+                                  .Include(o => o.OrderStatus)
+                                    .ToListAsync();
+               
                 var filteredOrders = FilterOrders(order, dateMaxRange, dateMinRange);
                 return filteredOrders;
             }

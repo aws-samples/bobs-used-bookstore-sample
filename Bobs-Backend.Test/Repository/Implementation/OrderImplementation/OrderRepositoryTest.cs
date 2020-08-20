@@ -1,5 +1,6 @@
 ﻿using BOBS_Backend.Models.Order;
 using BOBS_Backend.Repository.Implementations.OrderImplementations;
+using BOBS_Backend.Repository.OrdersInterface;
 using BOBS_Backend.Repository.SearchImplementations;
 using Moq;
 using System;
@@ -16,6 +17,9 @@ namespace Bobs_Backend.Test.Repository.Implementation.OrderImplementation
     {
         private OrderRepository _orderRepo;
         private Mock<ISearchRepository> _searchMockRepo;
+        private readonly Mock<IOrderDatabaseCalls> _mockorderDbCalls;
+
+        private readonly Mock<IExpressionFunction> _mockExFunc;
 
         [Fact]
         public async Task FindOrderById()
@@ -25,7 +29,7 @@ namespace Bobs_Backend.Test.Repository.Implementation.OrderImplementation
             MockDatabaseRepo connect = new MockDatabaseRepo();
             var context = connect.CreateInMemoryContext();
 
-            _orderRepo = new OrderRepository(context, _searchMockRepo.Object);
+            _orderRepo = new OrderRepository(context, _searchMockRepo.Object,_mockorderDbCalls.Object,_mockExFunc.Object);
 
             var testOrder = new Order();
             testOrder.Order_Id = 23;
@@ -52,7 +56,7 @@ namespace Bobs_Backend.Test.Repository.Implementation.OrderImplementation
             MockDatabaseRepo connect = new MockDatabaseRepo();
             var context = connect.CreateInMemoryContext();
 
-            _orderRepo = new OrderRepository(context, _searchMockRepo.Object);
+            _orderRepo = new OrderRepository(context, _searchMockRepo.Object, _mockorderDbCalls.Object, _mockExFunc.Object);
 
             var testOrder = new Order();
             testOrder.Order_Id = 23;

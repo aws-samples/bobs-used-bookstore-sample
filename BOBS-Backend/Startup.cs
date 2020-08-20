@@ -27,6 +27,7 @@ using Amazon.Polly;
 using BOBS_Backend.Models;
 using BOBS_Backend.Repository.SearchImplementations;
 using BOBS_Backend.Repository.Implementations.SearchImplementation;
+using BOBS_Backend.Repository.InventoryInterface;
 
 namespace BOBS_Backend
 {
@@ -54,6 +55,7 @@ namespace BOBS_Backend
             services.AddDbContext<Database.DatabaseContext>(option => option.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddTransient<IExpressionFunction, ExpressionFunction>();
             services.AddTransient<IOrderDatabaseCalls, OrderDatabaseCalls>();
+            services.AddTransient<IBookDatabaseCalls, BookDatabaseCalls>();
 
             services.AddTransient<IInventory, Inventory>();
             services.AddTransient<IRekognitionNPollyRepository, RekognitionNPollyRepository>();
