@@ -508,8 +508,8 @@ namespace BOBS_Backend
         {
             SearchBookViewModel viewModel = new SearchBookViewModel();
 
-            viewModel.searchby = searchString;
-            viewModel.searchfilter = filterValue;
+            viewModel.searchby = filterValue;
+            viewModel.searchfilter = searchString;
             viewModel.Books = books;
             viewModel.Pages = pages;
             viewModel.HasPreviousPages = (pageNum > 1);
@@ -532,7 +532,7 @@ namespace BOBS_Backend
 
             int[] pages = _searchRepo.GetModifiedPagesArr(pageNum, totalPages);
 
-            viewModel = RetrieveViewModel(ascdesc, style, filterValue, searchString, pageNum, totalPages, pages, filterQuery);
+            viewModel = RetrieveViewModel(ascdesc, style, filterValue, searchString, pageNum, totalPages, pages, books);
 
             return viewModel;
 
@@ -541,7 +541,7 @@ namespace BOBS_Backend
         public SearchBookViewModel GetAllBooks(int pagenum, string style, string SortBy, string ascdesc)
         {
 
-            var query = (IQueryable<Price>)_searchRepo.GetBaseQuery("BOBS_Backend.Models.Book.Price");
+            var query = (IQueryable<Price>)_context.Price;
 
             query = query.Include(PriceIncludes);
 
@@ -566,11 +566,12 @@ namespace BOBS_Backend
             searchby = " " + searchby;
 
             SearchBookViewModel viewModel = new SearchBookViewModel();
-            var parameterExpression = Expression.Parameter(Type.GetType("BOBS_Backend.Models.Book.Price"), "price");
+            var parameterExpression = Expression.Parameter(Type.GetType("BOBS_Backend.Models.Book.Price"), "order");
 
 
             var expression = _searchRepo.ReturnExpression(parameterExpression, searchby, searchfilter);
 
+            searchby = searchby.Trim();
             Expression<Func<Price, bool>> lambda = Expression.Lambda<Func<Price, bool>>(expression, parameterExpression);
 
             if (lambda == null)
@@ -581,7 +582,7 @@ namespace BOBS_Backend
                 return viewModel;
             }
 
-            var query = (IQueryable<Price>)_searchRepo.GetBaseQuery("BOBS_Backend.Models.Book.Price");
+            var query = (IQueryable<Price>)_context.Price;
 
             query = query.Include(PriceIncludes);
 
