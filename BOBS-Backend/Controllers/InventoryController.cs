@@ -373,7 +373,7 @@ namespace BOBS_Backend.Controllers
                 {
 
                     var books = _Inventory.GetAllBooks(1, "", "", "");
-
+                    books.ViewStyle = (String.IsNullOrEmpty(ViewStyle)) ? "Tabular" : ViewStyle; 
                     books.SortBy = SortBy;
                     return View(books);
                 }
