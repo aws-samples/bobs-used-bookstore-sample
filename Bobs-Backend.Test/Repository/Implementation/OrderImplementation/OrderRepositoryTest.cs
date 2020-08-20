@@ -1,6 +1,5 @@
 ﻿using BOBS_Backend.Models.Order;
 using BOBS_Backend.Repository.Implementations.OrderImplementations;
-using BOBS_Backend.Repository.OrdersInterface;
 using BOBS_Backend.Repository.SearchImplementations;
 using Moq;
 using System;
@@ -15,255 +14,129 @@ namespace Bobs_Backend.Test.Repository.Implementation.OrderImplementation
 {
     public class OrderRepositoryTest
     {
-
         private OrderRepository _orderRepo;
-        private readonly string[] OrderIncludes = { "Customer", "Address", "OrderStatus" };
+        private Mock<ISearchRepository> _searchMockRepo;
 
-        [Fact]
-        public async Task FindOrderById()
-        {
-            var orderDbCallsMock = new Mock<IOrderDatabaseCalls>();
-            var expFuncMock = new Mock<IExpressionFunction>();
-            var searchRepoMock = new Mock<ISearchRepository>();
+        //[Fact]
+        //public async Task FindOrderById()
+        //{
+        //    _searchMockRepo = new Mock<ISearchRepository>();
 
-            _orderRepo = new OrderRepository(searchRepoMock.Object, orderDbCallsMock.Object, expFuncMock.Object);
+        //    MockDatabaseRepo connect = new MockDatabaseRepo();
+        //    var context = connect.CreateInMemoryContext();
 
-            var testOrder = new Order();
-            testOrder.Order_Id = 23;
+        //    _orderRepo = new OrderRepository(context, _searchMockRepo.Object);
 
-            var testOrder1 = new Order();
-            testOrder1.Order_Id = 24;
+        //    var testOrder = new Order();
+        //    testOrder.Order_Id = 23;
+            
+        //    context.Order.Add(testOrder);
 
-            List<Order> data = new List<Order>();
-            data.Add(testOrder);
-            data.Add(testOrder1);
+        //    await context.SaveChangesAsync();
 
-            List<Order> filterData = new List<Order>();
-            filterData.Add(testOrder);
+        //    var orderResult = await _orderRepo.FindOrderById((long)23);
 
-            var parameterExpression = Expression.Parameter(typeof(Order), "Order");
-            string filterValue = "Order_Id";
-            string searchString = "" + 23;
-            string inBetween = "";
-            string operand = "==";
-            string negate = "false";
-            string tableName = "Order";
-            IQueryable<Order> orderQuery = data.AsQueryable();
-            var property = Expression.Property(parameterExpression, "Order_Id");
-            var constant = Expression.Constant((long)23);
-            var expression = Expression.Equal(property, constant);
+        //    Assert.NotNull(orderResult);
 
-            Expression<Func<Order, bool>> lambda = Expression.Lambda<Func<Order, bool>>(expression, parameterExpression);
+        //    Assert.Equal("23", orderResult.Order_Id + "");
 
-            expFuncMock.Setup(exp => exp.ReturnLambdaExpression<Order>(tableName, filterValue, searchString, inBetween, operand, negate)).Returns(lambda);
+        //    await context.DisposeAsync();
+        //}
 
-            orderDbCallsMock.Setup(db => db.GetBaseQuery("BOBS_Backend.Models.Order.Order")).Returns(orderQuery);
-            orderDbCallsMock.Setup(db => db.ReturnBaseQuery<Order>(orderQuery, OrderIncludes)).Returns(orderQuery);
-            orderDbCallsMock.Setup(db => db.ReturnFilterQuery(orderQuery, lambda)).Returns(filterData.AsQueryable());
 
-            var orderResult = await _orderRepo.FindOrderById((long)23);
+        //[Fact]
+        //public async Task GetAllOrders()
+        //{
+        //    _searchMockRepo = new Mock<ISearchRepository>();
 
-            Assert.NotNull(orderResult);
+        //    MockDatabaseRepo connect = new MockDatabaseRepo();
+        //    var context = connect.CreateInMemoryContext();
 
-            Assert.Equal("23", orderResult.Order_Id + "");
+        //    _orderRepo = new OrderRepository(context, _searchMockRepo.Object);
 
+        //    var testOrder = new Order();
+        //    testOrder.Order_Id = 23;
 
-        }
+        //    var testOrder1 = new Order();
+        //    testOrder1.Order_Id = 24;
 
+        //    context.Order.Add(testOrder);
 
-        [Fact]
-        public async Task GetAllOrders()
-        {
-            var orderDbCallsMock = new Mock<IOrderDatabaseCalls>();
-            var expFuncMock = new Mock<IExpressionFunction>();
-            var searchRepoMock = new Mock<ISearchRepository>();
+        //    context.Order.Add(testOrder1);
 
-            _orderRepo = new OrderRepository(searchRepoMock.Object, orderDbCallsMock.Object, expFuncMock.Object);
+        //    var orderQuery = (IQueryable<Order>)context.Order;
 
-            var testOrder = new Order();
-            testOrder.Order_Id = 23;
-            testOrder.OrderStatus = new OrderStatus
-            {
-                OrderStatus_Id = 1,
-                Status = "Just Placed",
-                position = 1
-            };
+        //    var totalPages = 1;
+        //    var pages = new int[1] { 1 };
 
-            var testOrder1 = new Order();
-            testOrder1.Order_Id = 24;
-            testOrder1.OrderStatus = new OrderStatus
-            {
-                OrderStatus_Id = 2,
-                Status = "Pending",
-                position = 2
-            };
+        //    _searchMockRepo.Setup(r => r.GetBaseQuery("BOBS_Backend.Models.Order.Order")).Returns(orderQuery);
+        //    _searchMockRepo.Setup(r => r.GetTotalPages(2, 15)).Returns(totalPages);
+        //    _searchMockRepo.Setup(r => r.GetModifiedPagesArr(1, 1)).Returns(pages);
 
-            List<Order> data = new List<Order>();
-            data.Add(testOrder1);
-            data.Add(testOrder);
+        //    await context.SaveChangesAsync();
 
+        //    var orderResult = await _orderRepo.GetAllOrders(1);
 
-            var totalPages = 1;
-            var pages = new int[1] { 1 };
+        //    Assert.NotNull(orderResult);
 
-            var orderQuery = data.AsQueryable();
+        //    Assert.Equal("2",orderResult.Orders.Count()+"");
+        //    Assert.Equal("False", orderResult.HasNextPages + "");
 
-            orderDbCallsMock.Setup(db => db.GetBaseQuery("BOBS_Backend.Models.Order.Order")).Returns(orderQuery);
-            orderDbCallsMock.Setup(db => db.ReturnBaseQuery<Order>(orderQuery, OrderIncludes)).Returns(orderQuery);
+        //    await context.DisposeAsync();
+        //}
 
+        //Still Work in Progress
+        //[Fact]
+        //public async Task FilterList_WhenLambdaNotNull()
+        //{
+        //    _searchMockRepo = new Mock<ISearchRepository>();
 
-            searchRepoMock.Setup(r => r.GetTotalPages(2, 20)).Returns(totalPages);
-            searchRepoMock.Setup(r => r.GetModifiedPagesArr(1, 1)).Returns(pages);
+        //    MockDatabaseRepo connect = new MockDatabaseRepo();
+        //    var context = connect.CreateInMemoryContext();
 
+        //    _orderRepo = new OrderRepository(context, _searchMockRepo.Object);
 
-            var orderResult = await _orderRepo.GetAllOrders(1);
+        //    var testOrder = new Order();
+        //    testOrder.Order_Id = 23;
 
-            Assert.NotNull(orderResult);
+        //    var testOrder1 = new Order();
+        //    testOrder1.Order_Id = 24;
 
-            Assert.Equal("2", orderResult.Orders.Count() + "");
-            Assert.Equal("1", orderResult.Orders[0].OrderStatus.position + "");
-            Assert.Equal("False", orderResult.HasNextPages + "");
+        //    context.Order.Add(testOrder);
 
+        //    context.Order.Add(testOrder1);
 
-        }
+        //    await context.SaveChangesAsync();
 
+        //    var orderQuery = (IQueryable<Order>)context.Order;
 
-        [Fact]
-        public async Task FilterList_WhenLambdaNotNull()
-        {
-            var orderDbCallsMock = new Mock<IOrderDatabaseCalls>();
-            var expFuncMock = new Mock<IExpressionFunction>();
-            var searchRepoMock = new Mock<ISearchRepository>();
+        //    var totalPages = 1;
+        //    var pages = new int[1] { 1 };
+        //    var filterValue = " Order_Id";
+        //    var searchString = "24";
 
-            _orderRepo = new OrderRepository(searchRepoMock.Object, orderDbCallsMock.Object, expFuncMock.Object);
+        //    var parameterExpression = Expression.Parameter(typeof(BOBS_Backend.Models.Order.Order), "order");
+      
 
-            var testOrder = new Order();
-            testOrder.Order_Id = 23;
-            testOrder.OrderStatus = new OrderStatus
-            {
-                OrderStatus_Id = 1,
-                Status = "Just Placed",
-                position = 1
-            };
+        //    var property = Expression.Property(parameterExpression, "Order_Id");
+        //    var constant = Expression.Constant((long)24);
 
-            var testOrder1 = new Order();
-            testOrder1.Order_Id = 24;
-            testOrder1.OrderStatus = new OrderStatus
-            {
-                OrderStatus_Id = 2,
-                Status = "Pending",
-                position = 2
-            };
+        //    var expResult = Expression.Equal(property, constant);
+  
 
-            List<Order> data = new List<Order>();
-            data.Add(testOrder1);
-            data.Add(testOrder);
+        //    _searchMockRepo.Setup(r => r.GetBaseQuery("BOBS_Backend.Models.Order.Order")).Returns(orderQuery);
+        //    _searchMockRepo.Setup(r => r.GetTotalPages(1, 15)).Returns(totalPages);
+        //    _searchMockRepo.Setup(r => r.GetModifiedPagesArr(1, 1)).Returns(pages);
+        //    _searchMockRepo.Setup(r => r.ReturnExpression(parameterExpression, filterValue, searchString)).Returns(expResult);
 
-            List<Order> filterData = new List<Order>();
-            filterData.Add(testOrder1);
+        //    await context.SaveChangesAsync();
 
-            var orderQuery = data.AsQueryable();
-            var filterOrderQuery = filterData.AsQueryable();
+        //    var filteredOrder = await _orderRepo.FilterList(filterValue, searchString, 1);
 
-            var totalPages = 1;
-            var pages = new int[1] { 1 };
-            var filterValue = " Order_Id";
-            var searchString = "24";
+        //    Assert.NotNull(filteredOrder);
 
-            var parameterExpression = Expression.Parameter(typeof(Order), "Order");
+        //    await context.DisposeAsync();
 
-
-            var property = Expression.Property(parameterExpression, "Order_Id");
-            var constant = Expression.Constant((long)24);
-
-            var expResult = Expression.Equal(property, constant);
-
-            var lambda = Expression.Lambda < Func<Order, bool>>(expResult, parameterExpression);
-
-            orderDbCallsMock.Setup(r => r.GetBaseQuery("BOBS_Backend.Models.Order.Order")).Returns(orderQuery);
-            orderDbCallsMock.Setup(db => db.ReturnBaseQuery<Order>(orderQuery, OrderIncludes)).Returns(orderQuery);
-            orderDbCallsMock.Setup(db => db.ReturnFilterQuery<Order>(orderQuery, lambda)).Returns(filterOrderQuery);
-
-            expFuncMock.Setup(exp => exp.ReturnParameterExpression(typeof(Order), "Order")).Returns(parameterExpression);
-            expFuncMock.Setup(exp => exp.ReturnLambdaExpression<Order>(expResult, parameterExpression)).Returns(lambda);
-
-            searchRepoMock.Setup(r => r.GetTotalPages(1, 20)).Returns(totalPages);
-            searchRepoMock.Setup(r => r.GetModifiedPagesArr(1, 1)).Returns(pages);
-            searchRepoMock.Setup(r => r.ReturnExpression(parameterExpression, filterValue, searchString)).Returns(expResult);
-
-
-            var filteredOrder = await _orderRepo.FilterList(filterValue, searchString, 1);
-
-            Assert.NotNull(filteredOrder);
-
-            Assert.Equal("1", filteredOrder.Orders.Count() + "");
-            Assert.Equal(filterValue, filteredOrder.FilterValue);
-            Assert.Equal(searchString, filteredOrder.SearchString);
-        }
-
-        [Fact]
-        public async Task FilterList_WhenLambdaIsNull()
-        {
-            var orderDbCallsMock = new Mock<IOrderDatabaseCalls>();
-            var expFuncMock = new Mock<IExpressionFunction>();
-            var searchRepoMock = new Mock<ISearchRepository>();
-
-            _orderRepo = new OrderRepository(searchRepoMock.Object, orderDbCallsMock.Object, expFuncMock.Object);
-
-            var testOrder = new Order();
-            testOrder.Order_Id = 23;
-            testOrder.OrderStatus = new OrderStatus
-            {
-                OrderStatus_Id = 1,
-                Status = "Just Placed",
-                position = 1
-            };
-
-            var testOrder1 = new Order();
-            testOrder1.Order_Id = 24;
-            testOrder1.OrderStatus = new OrderStatus
-            {
-                OrderStatus_Id = 2,
-                Status = "Pending",
-                position = 2
-            };
-
-            List<Order> data = new List<Order>();
-            data.Add(testOrder1);
-            data.Add(testOrder);
-
-            List<Order> filterData = new List<Order>();
-            filterData.Add(testOrder1);
-
-            var orderQuery = data.AsQueryable();
-            var filterOrderQuery = filterData.AsQueryable();
-
-            var filterValue = " Order_Id";
-            var searchString = "24";
-
-            var parameterExpression = Expression.Parameter(typeof(Order), "Order");
-
-
-            var property = Expression.Property(parameterExpression, "Order_Id");
-            var constant = Expression.Constant((long)24);
-
-            var expResult = Expression.Equal(property, constant);
-
-            Expression<Func<Order,bool>> lambda = null;
-
-            expFuncMock.Setup(exp => exp.ReturnParameterExpression(typeof(Order), "Order")).Returns(parameterExpression);
-            expFuncMock.Setup(exp => exp.ReturnLambdaExpression<Order>(expResult, parameterExpression)).Returns(lambda);
-
-            searchRepoMock.Setup(r => r.ReturnExpression(parameterExpression, filterValue, searchString)).Returns(expResult);
-
-
-            var filteredOrder = await _orderRepo.FilterList(filterValue, searchString, 1);
-
-            Assert.NotNull(filteredOrder);
-
-            Assert.Null(filteredOrder.Orders);
-            Assert.Equal("", filteredOrder.FilterValue);
-            Assert.Equal("", filteredOrder.SearchString);
-        }
+        //}
     }
 }

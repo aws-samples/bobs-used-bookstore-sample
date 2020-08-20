@@ -88,9 +88,13 @@ namespace BOBS_Backend.Controllers
         }
         public async Task<IActionResult> Index(string filterValue, string filterValueText, string searchString, int pageNum)
         {
+            string filterValueTest = "Order_Id";
+            string searchStringTest = "588";
+            string inBetweenTest = "";
+            string operandTest = "==";
+            string negateTest = "false";
 
-
-            var test = _order.FindOrderById(1000);
+            var test = _order.FilterOrder(filterValueTest, searchStringTest, inBetweenTest, operandTest, negateTest);
             if (pageNum == 0) pageNum++;
        
             if ( (String.IsNullOrEmpty(searchString)  && String.IsNullOrEmpty(filterValue)) )
