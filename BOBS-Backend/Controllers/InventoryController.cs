@@ -371,9 +371,10 @@ namespace BOBS_Backend.Controllers
 
                 if ((String.IsNullOrEmpty(searchby) || String.IsNullOrEmpty(searchfilter)))
                 {
-
-                    var books = _Inventory.GetAllBooks(1, "", "", "");
-                    books.ViewStyle = (String.IsNullOrEmpty(ViewStyle)) ? "Tabular" : ViewStyle; 
+                    ViewStyle = (String.IsNullOrEmpty(ViewStyle)) ? "Tabular" : ViewStyle;
+                    ascdesc = (String.IsNullOrEmpty(ascdesc)) ? "asc" : ascdesc;
+                    var books = _Inventory.GetAllBooks(pageNum, ViewStyle,SortBy, ascdesc);
+                  
                     books.SortBy = SortBy;
                     return View(books);
                 }
