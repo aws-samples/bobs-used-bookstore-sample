@@ -369,11 +369,10 @@ namespace BOBS_Backend.Controllers
             {
                 if (pageNum == 0) pageNum++;
 
-                if ( (String.IsNullOrEmpty(searchby) || String.IsNullOrEmpty(searchfilter)) )
+                if ((String.IsNullOrEmpty(searchby) || String.IsNullOrEmpty(searchfilter)))
                 {
 
-                    searchfilter = Regex.Replace(searchfilter, @"\s+", " ");
-                    var books = _Inventory.GetAllBooks(pageNum, ViewStyle, SortBy , ascdesc);
+                    var books = _Inventory.GetAllBooks(1, "", "", "");
 
                     books.SortBy = SortBy;
                     return View(books);

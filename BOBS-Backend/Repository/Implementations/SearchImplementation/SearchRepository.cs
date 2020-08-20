@@ -1,7 +1,9 @@
 ﻿using BOBS_Backend.Database;
+using BOBS_Backend.Repository.OrdersInterface;
 using BOBS_Backend.Repository.SearchImplementations;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -14,11 +16,11 @@ namespace BOBS_Backend.Repository.Implementations.SearchImplementation
     public class SearchRepository : ISearchRepository
     {
 
-        private DatabaseContext _context;
+        private ISearchDatabaseCalls _searchDbCalls;
 
-        public SearchRepository(DatabaseContext context)
+        public SearchRepository(ISearchDatabaseCalls searchDatabaseCalls)
         {
-            _context = context;
+            _searchDbCalls = searchDatabaseCalls;
         }
 
         public int[] GetModifiedPagesArr(int pageNum, int totalPages)
@@ -51,13 +53,6 @@ namespace BOBS_Backend.Repository.Implementations.SearchImplementation
             else return (totalCount / valsPerPage) + 1;
         }
 
-        public IQueryable GetBaseQuery(string objPath)
-        {
-            var query = _context.Query(objPath);
-
-            return query;
-        }
-
         private BinaryExpression PerformArtithmeticExpresion(string operand, Expression property, ConstantExpression constant)
         {
             if (operand.Equals(">")) return Expression.GreaterThan(property, constant);
@@ -71,6 +66,10 @@ namespace BOBS_Backend.Repository.Implementations.SearchImplementation
         {
             try
             {
+
+                var converter = TypeDescriptor.GetConverter(Type.GetType(type));
+
+                var test = converter.ConvertFrom(subSearch);
                 ConstantExpression constant = null;
                 if (type == "System.Int64")
                 {
@@ -78,7 +77,7 @@ namespace BOBS_Backend.Repository.Implementations.SearchImplementation
 
                     bool res = long.TryParse(subSearch, out value);
 
-                    constant = Expression.Constant(value);
+                    constant = Expression.Constant(test);
 
                     return PerformArtithmeticExpresion("==",(Expression) property, constant);
                 }
@@ -109,7 +108,7 @@ namespace BOBS_Backend.Repository.Implementations.SearchImplementation
             bool isFirst = true;
             searchString = searchString.Trim();
 
-            var table = (IQueryable)_context.GetType().GetProperty("Order").GetValue(_context, null);
+            var table = _searchDbCalls.GetTable("Order");
 
             var row = Expression.Parameter(table.ElementType, "row");
 
@@ -209,7 +208,7 @@ namespace BOBS_Backend.Repository.Implementations.SearchImplementation
             bool isFirst = true;
             searchString = searchString.Trim();
 
-            var table = (IQueryable)_context.GetType().GetProperty(splitFilter[0]).GetValue(_context, null);
+            var table = _searchDbCalls.GetTable(splitFilter[0]);
 
             var row = Expression.Parameter(table.ElementType, "row");
 
@@ -254,6 +253,7 @@ namespace BOBS_Backend.Repository.Implementations.SearchImplementation
 
         public BinaryExpression ReturnExpression(ParameterExpression parameterExpression, string filterValue, string searchString)
         {
+       
             string[] listOfFilters = filterValue.Split(' ');
             bool isFirst = true;
             BinaryExpression expression = null;

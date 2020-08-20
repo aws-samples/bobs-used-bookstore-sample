@@ -450,7 +450,7 @@ namespace BOBS_Backend
         public SearchBookViewModel GetAllBooks(int pagenum, string style, string SortBy, string ascdesc)
         {
 
-            var query = (IQueryable<Price>) _searchRepo.GetBaseQuery("BOBS_Backend.Models.Book.Price");
+            var query = (IQueryable<Price>)_context.Price;
 
             query = query.Include(PriceIncludes);
 
@@ -475,7 +475,7 @@ namespace BOBS_Backend
             searchby = " " + searchby;
 
             SearchBookViewModel viewModel = new SearchBookViewModel();
-            var parameterExpression = Expression.Parameter(Type.GetType("BOBS_Backend.Models.Book.Price"), "price");
+            var parameterExpression = Expression.Parameter(Type.GetType("BOBS_Backend.Models.Book.Price"), "order");
 
 
             var expression = _searchRepo.ReturnExpression(parameterExpression, searchby, searchfilter);
@@ -491,7 +491,7 @@ namespace BOBS_Backend
                 return viewModel;
             }
 
-            var query = (IQueryable<Price>)_searchRepo.GetBaseQuery("BOBS_Backend.Models.Book.Price");
+            var query = (IQueryable<Price>)_context.Price;
 
             query = query.Include(PriceIncludes);
 

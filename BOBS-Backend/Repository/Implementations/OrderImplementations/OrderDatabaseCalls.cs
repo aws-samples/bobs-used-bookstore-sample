@@ -1,7 +1,7 @@
 ﻿using BOBS_Backend.Database;
 using BOBS_Backend.Models.Order;
 using BOBS_Backend.Repository.OrdersInterface;
-using Castle.DynamicProxy.Generators.Emitters.SimpleAST;
+using Microsoft.EntityFrameworkCore.Storage;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,41 +27,34 @@ namespace BOBS_Backend.Repository.Implementations.OrderImplementations
             return query;
         }
 
-        public IQueryable<Order> ReturnBaseOrderQuery(IQueryable query, string[] includes)
+
+        public IDbContextTransaction BeginTransaction()
         {
-            var result = (IQueryable<Order>)query;
+            var transaction = _context.Database.BeginTransaction();
+
+            return transaction;
+        }
+
+        public async Task TransactionCommitChanges(IDbContextTransaction transaction)
+        {
+            await transaction.CommitAsync();
+        }
+
+
+        public async Task ContextSaveChanges()
+        {
+            await _context.SaveChangesAsync();
+        }
+
+        public IQueryable<T> ReturnBaseQuery<T>(IQueryable query, string[] includes) where T : class
+        {
+            var result = (IQueryable<T>)query;
             result = result.Include(includes);
 
             return result;
         }
 
-        public IQueryable<Order> ReturnFilterOrderQuery(IQueryable<Order> query,Expression<Func<Order,bool>> lambda)
-        {
-            return query.Where(lambda);
-        }
-
-        public IQueryable<OrderStatus> ReturnBaseOrderStatusQuery(IQueryable query, string[] includes)
-        {
-            var result = (IQueryable<OrderStatus>)query;
-            result = result.Include(includes);
-
-            return result;
-        }
-
-        public IQueryable<OrderStatus> ReturnFilterOrderStatusQuery(IQueryable<OrderStatus> query, Expression<Func<OrderStatus, bool>> lambda)
-        {
-            return query.Where(lambda);
-        }
-
-        public IQueryable<OrderDetail> ReturnBaseOrderDetailQuery(IQueryable query, string[] includes)
-        {
-            var result = (IQueryable<OrderDetail>)query;
-            result = result.Include(includes);
-
-            return result;
-        }
-
-        public IQueryable<OrderDetail> ReturnFilterOrderDetailQuery(IQueryable<OrderDetail> query, Expression<Func<OrderDetail, bool>> lambda)
+        public IQueryable<T> ReturnFilterQuery<T>(IQueryable<T> query, Expression<Func<T, bool>> lambda)
         {
             return query.Where(lambda);
         }
