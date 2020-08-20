@@ -58,8 +58,7 @@ namespace BOBS_Backend
         private readonly ILogger<Inventory> _logger;
 
 
-
-        public Inventory(DatabaseContext context, ISearchRepository searchRepository,IRekognitionNPollyRepository RekognitionNPollyRepository , ILogger<Inventory> logger)
+        public Inventory(DatabaseContext context, ISearchRepository searchRepository, IRekognitionNPollyRepository RekognitionNPollyRepository, ILogger<Inventory> logger)
         {
             _context = context;
             _searchRepo = searchRepository;
@@ -71,7 +70,13 @@ namespace BOBS_Backend
         {
 
             var book = (from booke in _context.Book join price in _context.Price on booke.Book_Id equals price.Book.Book_Id where booke.Book_Id == BookId select new BookDetails {Summary = booke.Summary, ISBN = booke.ISBN ,Author = booke.Author, BookId = booke.Book_Id, BookName = booke.Name, Price = price.ItemPrice, Publisher = booke.Publisher, Genre = booke.Genre, BookCondition = price.Condition, BookType = booke.Type, Quantity = price.Quantity, front_url = booke.Front_Url, back_url = booke.Back_Url, left_url = booke.Left_Url, right_url = booke.Right_Url }).ToList();
-            return book[0];
+            if (book.Count > 0)
+            {
+                return book[0];
+            }
+
+            return null;
+      
         }
 
         /*
@@ -94,24 +99,6 @@ namespace BOBS_Backend
             _context.SaveChanges();
         }
 
-        /*
-         *  function to add  details to the Publisher table
-         */
-        public void SavePublisherDetails(Publisher publisher)
-        {
-            _logger.LogInformation("Posting details to the Publisher table");
-            var publishers = _context.Publisher.Find(publisher.Name);
-            if (publishers == null)
-            {
-                _context.Publisher.Add(publisher);
-                _context.SaveChanges();
-            }
-        }
-
-        /*
-         *  function to add  process search input and display paged output 
-         */
-       
         /*
          *  function to add  details to the Publisher table
          */
@@ -182,6 +169,105 @@ namespace BOBS_Backend
 
         }
 
+        public void EditPublisher(string Actual , string New)
+        {
+            _logger.LogInformation("Posting details to the Conditions table");
+
+            try
+            {
+                var publishName = _context.Publisher.Where(x => x.Name == Actual).ToList();
+                using (var transaction = _context.Database.BeginTransaction())
+                {
+                    publishName[0].Name = New;
+                    _context.SaveChanges();
+                    transaction.Commit();
+                }
+
+            }
+            catch (DbUpdateConcurrencyException ex)
+            {
+                _logger.LogError(ex, "DBConcurrency Error");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error");
+            }
+
+        }
+
+        public void EditGenre(string Actual, string New)
+        {
+            _logger.LogInformation("Posting details to the Conditions table");
+            try
+            {
+                var GenreName = _context.Genre.Where(x => x.Name == Actual).ToList();
+                using (var transaction = _context.Database.BeginTransaction())
+                {
+                    GenreName[0].Name = New;
+                    _context.SaveChanges();
+                }
+            }
+
+            catch (DbUpdateConcurrencyException ex)
+            {
+                _logger.LogError(ex, "DBConcurrency Error");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error");
+            }
+
+        }
+
+        public void EditCondition(string Actual, string New)
+        {
+            _logger.LogInformation("Posting details to the Conditions table");
+            try
+            {
+                var conditionName = _context.Condition.Where(x => x.ConditionName == Actual).ToList();
+                using (var transaction = _context.Database.BeginTransaction())
+                {
+                    conditionName[0].ConditionName = New;
+                    _context.SaveChanges();
+                }
+            }
+
+            catch (DbUpdateConcurrencyException ex)
+            {
+                _logger.LogError(ex, "DBConcurrency Error");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error");
+            }
+
+        }
+
+        public void EditType(string Actual, string New)
+        {
+            _logger.LogInformation("Posting details to the Conditions table");
+            try
+            {
+                var typeName = _context.Type.Where(x => x.TypeName == Actual).ToList();
+                using (var transaction = _context.Database.BeginTransaction())
+                {
+                    typeName[0].TypeName = New;
+                    _context.SaveChanges();
+                }
+            }
+
+            catch (DbUpdateConcurrencyException ex)
+            {
+                _logger.LogError(ex, "DBConcurrency Error");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error");
+            }
+
+
+        }
+
         /*
          *  function to fetch all publisher details for dynamic display in the drop down list 
          */
@@ -239,93 +325,99 @@ namespace BOBS_Backend
         {
             _logger.LogInformation("Processing and Posting data to tables and cloud ");
 
-            string front_url = "", back_url = "", left_url = "", right_url = "", AudioBookUrl = "";
-            if (bookview.FrontPhoto != null)
+            try
             {
-                front_url = _RekognitionNPollyRepository.UploadtoS3(bookview.FrontPhoto , bookview.BookId , bookview.BookCondition).Result;
-            }
-
-            if (bookview.BackPhoto != null)
-            {
-                back_url = _RekognitionNPollyRepository.UploadtoS3(bookview.BackPhoto, bookview.BookId, bookview.BookCondition).Result;
-            }
-
-            if (bookview.LeftSidePhoto != null)
-            {
-                left_url = _RekognitionNPollyRepository.UploadtoS3(bookview.LeftSidePhoto, bookview.BookId, bookview.BookCondition).Result;
-            }
-
-            if (bookview.RightSidePhoto != null)
-            {
-                right_url = _RekognitionNPollyRepository.UploadtoS3(bookview.RightSidePhoto, bookview.BookId, bookview.BookCondition).Result;
-            }
-
-            if (_RekognitionNPollyRepository.IsContentViolation(front_url) == true || _RekognitionNPollyRepository.IsContentViolation(back_url) == true || _RekognitionNPollyRepository.IsContentViolation(left_url) == true || _RekognitionNPollyRepository.IsContentViolation(right_url) == true)
-            {
-                return 0;
-            }
-
-            if (bookview.Summary != null)
-            {
-                //AudioBookUrl = _RekognitionNPollyRepository.GenerateAudioSummary(bookview.BookName, bookview.Summary, "fr-CA", VoiceId.Emma);           
-            }
-
-            Book book = new Book();
-            Price price = new Price();
-
-            var publisherdata = _context.Publisher.Where(publisher => publisher.Name == bookview.PublisherName).ToList();
-            var genredata = _context.Genre.Where(genre => genre.Name == bookview.genre).ToList();
-            var typedata = _context.Type.Where(type => type.TypeName == bookview.BookType).ToList();
-            var conditiondata = _context.Condition.Where(condition => condition.ConditionName == bookview.BookCondition).ToList();
-
-            book.Name = bookview.BookName;
-            book.Type = typedata[0];
-            book.Genre = genredata[0];
-            book.ISBN = bookview.ISBN;
-            book.Publisher = publisherdata[0];
-            book.Front_Url = front_url;
-            book.Back_Url = back_url;
-            book.Left_Url = left_url;
-            book.Right_Url = right_url;
-            book.Summary = bookview.Summary;
-            book.AudioBook_Url = AudioBookUrl;
-            book.Author = bookview.Author;
-
-            price.Condition = conditiondata[0];
-            price.ItemPrice = bookview.price;
-            price.Book = book;
-            price.Quantity = bookview.quantity;
-            price.UpdatedBy = bookview.UpdatedBy;
-            price.UpdatedOn = bookview.UpdatedOn;
-            price.Active = bookview.Active;
-
-            var books = _context.Book.Where(temp => temp.Name == book.Name && temp.Type == book.Type && temp.Publisher == book.Publisher && temp.Genre == book.Genre).ToList();
-            if (books.Count == 0)
-            {
-                SaveBook(book);
-                SavePrice(price);
-            }
-
-            else
-            {
-                price.Book = books[0];
-                var prices = _context.Price.Where(p => p.Condition == price.Condition && p.Book.Name == book.Name).ToList();
-                if (prices.Count == 0)
+                string front_url = "", back_url = "", left_url = "", right_url = "", AudioBookUrl = "";
+                if (bookview.FrontPhoto != null)
                 {
+                    front_url = _RekognitionNPollyRepository.UploadtoS3(bookview.FrontPhoto, bookview.BookId, bookview.BookCondition).Result;
+                }
 
+                if (bookview.BackPhoto != null)
+                {
+                    back_url = _RekognitionNPollyRepository.UploadtoS3(bookview.BackPhoto, bookview.BookId, bookview.BookCondition).Result;
+                }
+
+                if (bookview.LeftSidePhoto != null)
+                {
+                    left_url = _RekognitionNPollyRepository.UploadtoS3(bookview.LeftSidePhoto, bookview.BookId, bookview.BookCondition).Result;
+                }
+
+                if (bookview.RightSidePhoto != null)
+                {
+                    right_url = _RekognitionNPollyRepository.UploadtoS3(bookview.RightSidePhoto, bookview.BookId, bookview.BookCondition).Result;
+                }
+
+                if (_RekognitionNPollyRepository.IsContentViolation(front_url) == true || _RekognitionNPollyRepository.IsContentViolation(back_url) == true || _RekognitionNPollyRepository.IsContentViolation(left_url) == true || _RekognitionNPollyRepository.IsContentViolation(right_url) == true)
+                {
+                    return 0;
+                }
+
+                if (bookview.Summary != null)
+                {
+                    AudioBookUrl = _RekognitionNPollyRepository.GenerateAudioSummary(bookview.BookName, bookview.Summary, Constants.TEXTTOSPEECHLANGUAGECODE, VoiceId.Emma);
+                }
+
+                Book book = new Book();
+                Price price = new Price();
+
+                var publisherdata = _context.Publisher.Where(publisher => publisher.Name == bookview.PublisherName).ToList();
+                var genredata = _context.Genre.Where(genre => genre.Name == bookview.genre).ToList();
+                var typedata = _context.Type.Where(type => type.TypeName == bookview.BookType).ToList();
+                var conditiondata = _context.Condition.Where(condition => condition.ConditionName == bookview.BookCondition).ToList();
+
+                book.Name = bookview.BookName;
+                book.Type = typedata[0];
+                book.Genre = genredata[0];
+                book.ISBN = bookview.ISBN;
+                book.Publisher = publisherdata[0];
+                book.Front_Url = front_url;
+                book.Back_Url = back_url;
+                book.Left_Url = left_url;
+                book.Right_Url = right_url;
+                book.Summary = bookview.Summary;
+                book.AudioBook_Url = AudioBookUrl;
+                book.Author = bookview.Author;
+
+                price.Condition = conditiondata[0];
+                price.ItemPrice = bookview.price;
+                price.Book = book;
+                price.Quantity = bookview.quantity;
+                price.UpdatedBy = bookview.UpdatedBy;
+                price.UpdatedOn = bookview.UpdatedOn;
+                price.Active = bookview.Active;
+
+                var books = _context.Book.Where(temp => temp.Name == book.Name && temp.Type == book.Type && temp.Publisher == book.Publisher && temp.Genre == book.Genre).ToList();
+                if (books.Count == 0)
+                {
+                    SaveBook(book);
                     SavePrice(price);
                 }
 
                 else
                 {
-                    var output = _context.Price.Where(p => p.Condition == price.Condition && p.Book.Name == book.Name).ToList();
-                    output[0].Quantity = bookview.quantity;
-                    output[0].ItemPrice = bookview.price;
-                    _context.SaveChanges();
+                    price.Book = books[0];
+                    var prices = _context.Price.Where(p => p.Condition == price.Condition && p.Book.Name == book.Name).ToList();
+                    if (prices.Count == 0)
+                    {
+
+                        SavePrice(price);
+                    }
+
+                    else
+                    {
+                        var output = _context.Price.Where(p => p.Condition == price.Condition && p.Book.Name == book.Name).ToList();
+                        output[0].Quantity = bookview.quantity;
+                        output[0].ItemPrice = bookview.price;
+                        _context.SaveChanges();
+                    }
+
                 }
-
             }
-
+            catch(Exception e)
+            {
+                _logger.LogError(e, "Error in AddBooksFunc");
+            }
             return 1;
         }
 
@@ -336,14 +428,13 @@ namespace BOBS_Backend
                            .Include(price => price.Book);
             return query;
         }
-      
+       
 
         public IEnumerable<BookDetails> GetDetails(long BookId)
         {
             var booker = (from booke in _context.Book join price in _context.Price on booke.Book_Id equals price.Book.Book_Id where booke.Book_Id == BookId select new BookDetails { BookId = booke.Book_Id, BookName = booke.Name, Price = price.ItemPrice, Publisher = booke.Publisher, Genre = booke.Genre, BookCondition = price.Condition, BookType = booke.Type, Quantity = price.Quantity, front_url = booke.Front_Url, back_url = booke.Back_Url, left_url = booke.Left_Url, right_url = booke.Right_Url }).ToList();
             return booker;
         }
-
 
         private List<FullBook> RetrieveUniqueBookList(IQueryable<Price> query)
         {
@@ -413,12 +504,12 @@ namespace BOBS_Backend
             }
         }
 
-        private SearchBookViewModel RetrieveViewModel(string ascdesc,string style, string filterValue, string searchString, int pageNum, int totalPages, int[] pages, List<FullBook> books)
+        private SearchBookViewModel RetrieveViewModel(string ascdesc, string style, string filterValue, string searchString, int pageNum, int totalPages, int[] pages, List<FullBook> books)
         {
             SearchBookViewModel viewModel = new SearchBookViewModel();
 
-            viewModel.searchby = filterValue;
-            viewModel.searchfilter = searchString;
+            viewModel.searchby = searchString;
+            viewModel.searchfilter = filterValue;
             viewModel.Books = books;
             viewModel.Pages = pages;
             viewModel.HasPreviousPages = (pageNum > 1);
@@ -441,16 +532,16 @@ namespace BOBS_Backend
 
             int[] pages = _searchRepo.GetModifiedPagesArr(pageNum, totalPages);
 
-            viewModel = RetrieveViewModel(ascdesc, style, filterValue, searchString, pageNum, totalPages, pages, books);
+            viewModel = RetrieveViewModel(ascdesc, style, filterValue, searchString, pageNum, totalPages, pages, filterQuery);
 
             return viewModel;
 
         }
-            
+
         public SearchBookViewModel GetAllBooks(int pagenum, string style, string SortBy, string ascdesc)
         {
 
-            var query = (IQueryable<Price>)_context.Price;
+            var query = (IQueryable<Price>)_searchRepo.GetBaseQuery("BOBS_Backend.Models.Book.Price");
 
             query = query.Include(PriceIncludes);
 
@@ -475,23 +566,22 @@ namespace BOBS_Backend
             searchby = " " + searchby;
 
             SearchBookViewModel viewModel = new SearchBookViewModel();
-            var parameterExpression = Expression.Parameter(Type.GetType("BOBS_Backend.Models.Book.Price"), "order");
+            var parameterExpression = Expression.Parameter(Type.GetType("BOBS_Backend.Models.Book.Price"), "price");
 
 
             var expression = _searchRepo.ReturnExpression(parameterExpression, searchby, searchfilter);
 
-            searchby = searchby.Trim();
             Expression<Func<Price, bool>> lambda = Expression.Lambda<Func<Price, bool>>(expression, parameterExpression);
 
             if (lambda == null)
             {
                 int[] pages = Enumerable.Range(1, 1).ToArray();
 
-                viewModel = RetrieveViewModel(ascdesc, style, "","",1, 1, pages, null);
+                viewModel = RetrieveViewModel(ascdesc, style, "", "", 1, 1, pages, null);
                 return viewModel;
             }
 
-            var query = (IQueryable<Price>)_context.Price;
+            var query = (IQueryable<Price>)_searchRepo.GetBaseQuery("BOBS_Backend.Models.Book.Price");
 
             query = query.Include(PriceIncludes);
 
@@ -503,12 +593,10 @@ namespace BOBS_Backend
 
             int totalPages = _searchRepo.GetTotalPages(finalBooksList.Count(), _booksPerPage);
 
-            viewModel = RetrieveFilterViewModel(finalBooksList, ascdesc, style, totalPages, pagenum,searchby,searchfilter);
+            viewModel = RetrieveFilterViewModel(finalBooksList, ascdesc, style, totalPages, pagenum, searchby, searchfilter);
 
             return viewModel;
         }
-
-
         public List<string> GetFormatsOfTheSelectedBook(string bookname)
         {
             _logger.LogInformation("Fetching all possible formats of the given book");
@@ -728,10 +816,10 @@ namespace BOBS_Backend
 
             Dictionary<string, int> count_stats = new Dictionary<string, int>();
             
-                var delivered = _context.Order.Where(x => x.OrderStatus.Status == "Delivered").ToList().Count();
-                var justplaced = _context.Order.Where(x => x.OrderStatus.Status == "Just Placed").ToList().Count();
-                var enroute = _context.Order.Where(x => x.OrderStatus.Status == "En Route").ToList().Count();
-                var pending = _context.Order.Where(x => x.OrderStatus.Status == "Pending").ToList().Count();
+                var delivered = _context.Order.Where(x => x.OrderStatus.Status == Constants.OrderStatusDelivered).ToList().Count();
+                var justplaced = _context.Order.Where(x => x.OrderStatus.Status == Constants.OrderStatusJustPlaced).ToList().Count();
+                var enroute = _context.Order.Where(x => x.OrderStatus.Status == Constants.OrderStatusEnRoute).ToList().Count();
+                var pending = _context.Order.Where(x => x.OrderStatus.Status == Constants.OrderStatusPending).ToList().Count();
                 var ordersplaced = delivered + justplaced + enroute + pending;
 
                 var orderdetailsList = _context.OrderDetail.ToList();
@@ -743,10 +831,10 @@ namespace BOBS_Backend
 
            
             count_stats["Orders_placed"] = ordersplaced;
-            count_stats["delivered"] = delivered;
-            count_stats["enroute"] = enroute;
-            count_stats["pending"] = pending;
-            count_stats["justplaced"] = justplaced;
+            count_stats[Constants.OrderStatusDelivered] = delivered;
+            count_stats[Constants.OrderStatusEnRoute] = enroute;
+            count_stats[Constants.OrderStatusPending] = pending;
+            count_stats[Constants.OrderStatusJustPlaced] = justplaced;
             count_stats["total_books_sold"] = total_quantity_sold;
             count_stats["total_sales"] = (int)total_sales_value;
 
@@ -794,39 +882,56 @@ namespace BOBS_Backend
         {
             _logger.LogInformation("Pushing edited details to database");
 
-            var output = _context.Price.Where(p => p.Condition.ConditionName == details.BookCondition.ConditionName && p.Book.Book_Id == details.BookId).ToList();
-            if (details.FrontPhoto != null)
+            try
             {
-                details.front_url = _RekognitionNPollyRepository.UploadtoS3(details.FrontPhoto, details.BookId, details.BookCondition.ConditionName).Result;
+                var output = _context.Price.Where(p => p.Condition.ConditionName == details.BookCondition.ConditionName && p.Book.Book_Id == details.BookId).ToList();
+                if (details.FrontPhoto != null)
+                {
+                    details.front_url = _RekognitionNPollyRepository.UploadtoS3(details.FrontPhoto, details.BookId, details.BookCondition.ConditionName).Result;
+                }
+
+                if (details.BackPhoto != null)
+                {
+                    details.back_url = _RekognitionNPollyRepository.UploadtoS3(details.BackPhoto, details.BookId, details.BookCondition.ConditionName).Result;
+                }
+
+
+                if (details.LeftSidePhoto != null)
+                {
+                    details.left_url = _RekognitionNPollyRepository.UploadtoS3(details.LeftSidePhoto, details.BookId, details.BookCondition.ConditionName).Result;
+                }
+
+                if (details.RightSidePhoto != null)
+                {
+                    details.right_url = _RekognitionNPollyRepository.UploadtoS3(details.RightSidePhoto, details.BookId, details.BookCondition.ConditionName).Result;
+                }
+
+                using (var transaction = _context.Database.BeginTransaction())
+                {
+                    var book = _context.Book.Where(p => p.Book_Id == details.BookId).ToList();
+                    book[0].Front_Url = details.front_url;
+                    book[0].Back_Url = details.back_url;
+                    book[0].Left_Url = details.left_url;
+                    book[0].Right_Url = details.right_url;
+                    output[0].Quantity = details.Quantity;
+                    output[0].ItemPrice = details.Price;
+                    output[0].UpdatedBy = details.UpdatedBy;
+                    output[0].UpdatedOn = details.UpdatedOn;
+                    output[0].Active = details.Active;
+                    _context.SaveChanges();
+                    transaction.Commit();
+
+                }
             }
 
-            if (details.BackPhoto != null)
+            catch (DbUpdateConcurrencyException ex)
             {
-                details.back_url = _RekognitionNPollyRepository.UploadtoS3(details.BackPhoto, details.BookId, details.BookCondition.ConditionName).Result;
+                _logger.LogError(ex, "DBConcurrency Error");
             }
-
-
-            if (details.LeftSidePhoto != null)
+            catch (Exception ex)
             {
-                details.left_url = _RekognitionNPollyRepository.UploadtoS3(details.LeftSidePhoto, details.BookId, details.BookCondition.ConditionName).Result;
+                _logger.LogError(ex, "Error");
             }
-
-            if (details.RightSidePhoto != null)
-            {
-                details.right_url = _RekognitionNPollyRepository.UploadtoS3(details.RightSidePhoto, details.BookId, details.BookCondition.ConditionName).Result;
-            }
-
-            var book = _context.Book.Where(p => p.Book_Id == details.BookId).ToList();
-            book[0].Front_Url = details.front_url;
-            book[0].Back_Url = details.back_url;
-            book[0].Left_Url = details.left_url;
-            book[0].Right_Url = details.right_url;
-            output[0].Quantity = details.Quantity;
-            output[0].ItemPrice = details.Price;
-            output[0].UpdatedBy = details.UpdatedBy;
-            output[0].UpdatedOn = details.UpdatedOn;
-            output[0].Active = details.Active;
-            _context.SaveChanges();
         }
 
         /*
@@ -885,6 +990,29 @@ namespace BOBS_Backend
             return names;
         }
 
+
+
+
+        public List<string> ScreenInventory()
+        {
+            List <string> BookList = new List<string>();
+            var query = _context.Price
+                                       .Include(price => price.Condition)
+                                       .Include(price => price.Book)
+                                       .Include(p => p.Book.Publisher)
+                                       .Include(p => p.Book.Genre)
+                                       .Include(p => p.Book.Type).ToList();
+            foreach(var i in query)
+            {
+                if (i.Quantity <= 5)
+                {
+                    var detail = i.Book.Name + "*" + i.Book.Publisher.Name + "*" + i.Book.Type.TypeName + "*" + i.Condition.ConditionName + "*" + i.Quantity;
+                    BookList.Add(detail);
+                }
+            }
+
+            return BookList;
+        }
 
     }
 

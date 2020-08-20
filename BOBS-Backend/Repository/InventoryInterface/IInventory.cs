@@ -29,9 +29,6 @@ namespace BOBS_Backend
         public BookDetails GetBookByID(long Id);
 
         public void SavePrice(Price price);
-
-        public void SavePublisherDetails(Publisher publisher);
-
       
         public int AddPublishers(BOBS_Backend.Models.Book.Publisher publishers);
 
@@ -70,6 +67,16 @@ namespace BOBS_Backend
         public List<string> autosuggest(string input);
 
         public BookDetails UpdateDetails(int Id, string Condition);
+
+        public void EditPublisher(string Actual, string New);
+
+        public void EditGenre(string Actual, string New);
+
+        public void EditCondition(string Actual, string New);
+
+        public void EditType(string Actual, string New);
+
+        public List<string> ScreenInventory();
 
 
 

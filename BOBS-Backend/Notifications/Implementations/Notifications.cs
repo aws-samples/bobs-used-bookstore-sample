@@ -103,5 +103,27 @@ namespace BOBS_Backend.Notifications.Implementations
             GenerateMessagePayload(FROM, TO, subject, body);
         }
 
+        public void SendInventoryLowEmail(List<string> BookList, string customerEmail)
+        {
+            string FROM = Configuration.GetConnectionString("FromEmailAddress");
+
+            string TO = String.IsNullOrEmpty(Configuration.GetConnectionString("ToEmailAddressDefault")) ? customerEmail : Configuration.GetConnectionString("ToEmailAddressDefault");
+
+            string subject = "Inventory Stock Running Low";
+
+            string bookList = "";
+
+            foreach (var i in BookList)
+            {
+                bookList = bookList + i + "\n";
+            }
+
+            string body =
+                "<h3>Hello " + "Bob" + "</h3>" +
+                "<p>This is to inform you that the inventory for the following books is running low.  <p>" + "\n" + bookList;
+            
+            GenerateMessagePayload(FROM, TO, subject, body);
+        }
+
     }
 }

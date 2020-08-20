@@ -32,5 +32,6 @@ namespace BOBS_Backend.Models.Book
 
         [Timestamp]
         public byte[] RowVersion { get; set; }
+
     }
 }

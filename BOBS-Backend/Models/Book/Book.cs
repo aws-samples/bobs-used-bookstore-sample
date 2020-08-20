@@ -35,7 +35,10 @@ namespace BOBS_Backend.Models.Book
 
         public string AudioBook_Url { get; set; }
 
-        public string Summary { get; set; } 
+        public string Summary { get; set; }
+
+        [Timestamp]
+        public byte[] RowVersion { get; set; }
 
     }
 

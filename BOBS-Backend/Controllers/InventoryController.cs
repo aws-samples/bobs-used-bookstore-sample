@@ -1,21 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using BOBS_Backend.Database;
+using BOBS_Backend.DataModel;
+using BOBS_Backend.Models.Book;
+using BOBS_Backend.Notifications.NotificationsInterface;
+using BOBS_Backend.ViewModel;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using BOBS_Backend.Models;
-using BOBS_Backend.ViewModel;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore.Internal;
-using BOBS_Backend.Database;
-using BOBS_Backend.Models.Book;
-using Amazon.S3.Model;
-using BOBS_Backend.DataModel;
-using BOBS_Backend.ViewModel.ManageInventory;
-using Microsoft.EntityFrameworkCore;
-using System.Text.RegularExpressions;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
 
 namespace BOBS_Backend.Controllers
 {
@@ -24,29 +18,31 @@ namespace BOBS_Backend.Controllers
         private readonly IInventory _Inventory;
         public DatabaseContext _context;
         private readonly ILogger<InventoryController> _logger;
+        private INotifications _emailSender;
 
 
-        public InventoryController(IInventory Inventory , DatabaseContext context , ILogger<InventoryController> logger)
+        public InventoryController(IInventory Inventory , DatabaseContext context , ILogger<InventoryController> logger , INotifications emailSender)
         {           
             _Inventory = Inventory;
             _context = context;
             _logger = logger;
+            _emailSender = emailSender;
         }
 
+       
         [HttpGet]
-        public IActionResult EditBookDetails(string BookName , string status)
+        public IActionResult EditBookDetails(string BookName)
         {
             _logger.LogInformation("Loading : Add New Book View");
             try
             {
                 ViewData["user"] = @User.Claims.FirstOrDefault(c => c.Type.Equals("cognito:username"))?.Value;
-                ViewData["Status"] = status;
 
             }
 
             catch( Exception e)
             {
-
+                
                 _logger.LogError(e, "Error in authentication @ Adding a new Book");
             }
                 DateTime time = DateTime.Now;
@@ -78,7 +74,7 @@ namespace BOBS_Backend.Controllers
                 _logger.LogError(e,"Error in loading dropdownlists for Books Action Method");
                }
 
-            ViewData["check"] = "yes";
+            ViewData["check"] = Constants.ErrorStatusYes;
 
             return View();
         }
@@ -105,7 +101,7 @@ namespace BOBS_Backend.Controllers
                 if (status != 1)
                 {
 
-                    ViewData["ErrorStatus"] = "Yes";
+                    ViewData["ErrorStatus"] = Constants.ErrorStatusYes;
 
 
 
@@ -129,9 +125,10 @@ namespace BOBS_Backend.Controllers
         [HttpGet]
         public IActionResult AddPublishers()
         {
-            
-            ViewData["Status"] = "Please Enter the details of the publisher you wish to add to the database";
-            
+
+            ViewData["Status"] = Constants.AddPublisherMessage;
+            ViewData["Publishers"] = _Inventory.GetAllPublishers();
+
 
             return View();
 
@@ -139,7 +136,7 @@ namespace BOBS_Backend.Controllers
         }
 
         [HttpPost]
-        public  IActionResult AddPublishers(Publisher publisher)
+        public  IActionResult AddPublishers(Publisher publisher , string source)
         {
             try
             {
@@ -151,7 +148,7 @@ namespace BOBS_Backend.Controllers
                 }
                 if (status == 1)
                 {
-                    ViewData["Status"] = "A Publisher with the given Name already exists in the database";
+                    ViewData["Status"] = Constants.PublisherExistsStatus;
                 }
             }
 
@@ -162,12 +159,11 @@ namespace BOBS_Backend.Controllers
             return View();
 
         }
-
-        [HttpGet]
+               [HttpGet]
         public IActionResult AddGenres()
         {
 
-
+            ViewData["Status"] = Constants.AddGenreMessage;
             return View();
 
         }
@@ -185,7 +181,7 @@ namespace BOBS_Backend.Controllers
                 }
                 if (status == 1)
                 {
-                    ViewData["Status"] = "A Genre with the given Name already exists in the database";
+                    ViewData["Status"] = Constants.GenreExistsStatus;
                 }
             }
 
@@ -201,7 +197,7 @@ namespace BOBS_Backend.Controllers
         public IActionResult AddBookTypes()
         {
 
-
+            ViewData["Status"] = Constants.AddTypeMessage;
             return View();
 
         }
@@ -219,7 +215,7 @@ namespace BOBS_Backend.Controllers
                 }
                 if (status == 1)
                 {
-                    ViewData["Status"] = "A BookType with the given Name already exists in the database";
+                    ViewData["Status"] = Constants.TypeExistsStatus;
                 }
             }
 
@@ -234,6 +230,8 @@ namespace BOBS_Backend.Controllers
         [HttpGet]
         public IActionResult AddBookConditions()
         {
+
+            ViewData["Status"] = Constants.AddConditionsMessage;
             return View();
 
         }
@@ -251,7 +249,7 @@ namespace BOBS_Backend.Controllers
                 }
                 if (status == 1)
                 {
-                    ViewData["Status"] = "A BookCondition with the given Name already exists in the database";
+                    ViewData["Status"] = Constants.ConditionExistsStatus;
                 }
             }
 
@@ -263,7 +261,110 @@ namespace BOBS_Backend.Controllers
 
         }
 
-       [HttpGet]
+        [HttpGet]
+        public IActionResult EditPublisher()
+        {
+            ViewData["Publishers"] = _Inventory.GetAllPublishers();
+            return View();
+        }
+
+
+        [HttpPost]
+        public IActionResult EditPublisher(string Actual, string Name)
+        {
+            if (Actual == Name)
+            {
+                ViewData["Status"] = "You seem to have not made any change , Please Recheck";
+            }
+
+            else
+            {
+                _Inventory.EditPublisher(Actual, Name);
+                ViewData["Status"] = "Successfully updated the existing records";
+
+            }
+            ViewData["Publishers"] = _Inventory.GetAllPublishers();
+
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult EditGenre()
+        {
+            ViewData["Genres"] = _Inventory.GetGenres();
+            return View();
+        }
+
+        public IActionResult EditGenre(string Actual, string Name)
+        {
+            if (Actual == Name)
+            {
+                ViewData["Status"] = "Successfully updated the existing records";
+            }
+
+            else
+            {
+                _Inventory.EditGenre(Actual, Name);
+                ViewData["Status"] = "Successfully updated the existing records";
+
+            }
+            ViewData["Genres"] = _Inventory.GetGenres();
+
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult EditCondition()
+        {
+            ViewData["Conditions"] = _Inventory.GetConditions();
+            return View();
+        }
+
+        public IActionResult EditCondition(string Actual, string Name)
+        {
+            if (Actual == Name)
+            {
+                ViewData["Status"] = "Successfully updated the existing records";
+            }
+
+            else
+            {
+                _Inventory.EditCondition(Actual, Name);
+                ViewData["Status"] = "Successfully updated the existing records";
+
+            }
+            ViewData["Conditions"] = _Inventory.GetConditions();
+
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult EditType()
+        {
+            ViewData["Types"] = _Inventory.GetTypes();
+            return View();
+        }
+
+        public IActionResult EditType(string Actual, string Name)
+        {
+            if (Actual == Name)
+            {
+                ViewData["Status"] = "Successfully updated the existing records";
+            }
+
+            else
+            {
+                _Inventory.EditType(Actual, Name);
+                ViewData["Status"] = "Successfully updated the existing records";
+
+            }
+            ViewData["Types"] = _Inventory.GetTypes();
+
+            return View();
+        }
+
+
+        [HttpGet]
         public IActionResult BookDetails(long BookId)
         {
             _logger.LogInformation("Loading Book Details on Click in search page");
@@ -287,7 +388,7 @@ namespace BOBS_Backend.Controllers
 
                 ViewData["Types"] = _Inventory.GetFormatsOfTheSelectedBook(bookdetails.BookName);
                 ViewData["Conditions"] = _Inventory.GetConditionsOfTheSelectedBook(bookdetails.BookName);
-                ViewData["status"] = "details";
+                ViewData["status"] = Constants.BookDetailsStatusDetails;
             }
             catch (Exception e)
             {
@@ -326,8 +427,8 @@ namespace BOBS_Backend.Controllers
                     book.genre = variant.Genre.Name;
                     book.Author = variant.Author;
                     book.Summary = variant.Summary;
-                    ViewData["status"] = "details";
-                    ViewData["fetchstatus"] =  "Sorry , We don't currently have any relevant results for the given Combination";
+                    ViewData["status"] = Constants.BookDetailsStatusDetails;
+                    ViewData["fetchstatus"] =  Constants.CombinationErrorStatus;
                     return View(book);
                 }
                 book.BookType = lis[0].BookType.TypeName;
@@ -369,10 +470,11 @@ namespace BOBS_Backend.Controllers
             {
                 if (pageNum == 0) pageNum++;
 
-                if ((String.IsNullOrEmpty(searchby) || String.IsNullOrEmpty(searchfilter)))
+                if ( (String.IsNullOrEmpty(searchby) || String.IsNullOrEmpty(searchfilter)) )
                 {
 
-                    var books = _Inventory.GetAllBooks(1, "", "", "");
+
+                    var books = _Inventory.GetAllBooks(pageNum, ViewStyle, SortBy , ascdesc);
 
                     books.SortBy = SortBy;
                     return View(books);
@@ -381,7 +483,7 @@ namespace BOBS_Backend.Controllers
                 else
                 {
                     //var books = _Inventory.SearchBeta(searchby, searchfilter, ViewStyle, SortBy, pageNum , ascdesc , pagination);
-                    searchfilter = Regex.Replace(searchfilter, @"\s+", " ");
+
                     var books = _Inventory.SearchBooks(searchby, searchfilter, ViewStyle, SortBy, pageNum, ascdesc);
                     books.SortBy = SortBy;
                     return View(books);
@@ -436,6 +538,7 @@ namespace BOBS_Backend.Controllers
         {
             _logger.LogInformation("Dashboard Display");
 
+            _emailSender.SendInventoryLowEmail(_Inventory.ScreenInventory(), Constants.BoBsEmailAddress);
             try
             {
                 var stats = _Inventory.DashBoard();

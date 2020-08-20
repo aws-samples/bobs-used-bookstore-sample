@@ -14,10 +14,16 @@ using System.Threading.Tasks;
         public const string TypeExistsStatus = "Given Format already exists in the database";
         public const string ConditionExistsStatus = "Given Condition already exists in the database";
         public const string PublisherExistsStatus = "Given Publisher already exists in the database";
-        public const string BookDetailsStatusDetails = "details";
+
+        public const string AddPublisherMessage = "Please Enter the details of the publisher you wish to add to the database";
+        public const string AddGenreMessage = "Please Enter the details of the Genre you wish to add to the database";
+        public const string AddConditionsMessage = "Please Enter the details of the Condition you wish to add to the database";
+        public const string AddTypeMessage = "Please Enter the details of the Format you wish to add to the database";
+
+    public const string BookDetailsStatusDetails = "details";
         public const string BookDetailsStatusList = "List";
         public const int BooksPerPage = 15;
-        public const string TextToSpeechLanguageCode = "fr-CA";
+        public const string TEXTTOSPEECHLANGUAGECODE = "fr-CA";
         public const string OrderStatusDelivered = "Delivered";
         public const string OrderStatusJustPlaced = "Just Placed";
         public const string OrderStatusEnRoute = "En Route";
@@ -28,12 +34,14 @@ using System.Threading.Tasks;
         public const string SortByQuantityPhrase = "Quantity";
         public const string SortByAuthorPhrase = "Author";
         public const string LambdaExpressionType = "BOBS_Backend.Models.Book.Price";
-        public const string LambdaExpressionPhrase = "price";
+        public const string LAMBDAEXPRESSIONPHRASE = "price";
         public const string photosBucketName = "bookcoverpictures";
         public const string audioBucketName = "audiosummary";
         public  RegionEndpoint bucketRegion = RegionEndpoint.USEast1;
         public const string CoverPicturesCloudFrontLink = "https://dtdt6j0vhq1rq.cloudfront.net/";
         public const string AudioFilesCloudFrontLink = "https://d3iukz826t8vlr.cloudfront.net/";
         public const int resize_width = 200;
-        public const int resize_height = 200;    
+        public const int resize_height = 200;
+        public const string CombinationErrorStatus = "Sorry , We don't currently have any relevant results for the given Combination";
+        public const string BoBsEmailAddress = "";
     }

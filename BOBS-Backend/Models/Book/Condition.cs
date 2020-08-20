@@ -18,5 +18,8 @@ namespace BOBS_Backend.Models.Book
         public long Condition_Id { get; set; }
 
         public string ConditionName { get; set; }
+
+        [Timestamp]
+        public byte[] RowVersion { get; set; }
     }
 }
