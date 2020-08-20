@@ -26,196 +26,270 @@ namespace Bobs_Backend.Test.Repository.Implementation.OrderImplementation
 
         private OrderStatusRepository _orderStatusRepo;
 
-        //[Fact]
-        //public async Task FindOrderStatusById_WhenOrderStatusExist()
-        //{
+        [Fact]
+        public async Task FindOrderStatusById_WhenOrderStatusExist()
+        {
 
 
-        //    var orderDbCallsMock = new Mock<IOrderDatabaseCalls>();
-        //    var expFuncMock = new Mock<IExpressionFunction>();
+            var orderDbCallsMock = new Mock<IOrderDatabaseCalls>();
+            var expFuncMock = new Mock<IExpressionFunction>();
 
 
-        //    _orderStatusRepo = new OrderStatusRepository(orderDbCallsMock.Object, expFuncMock.Object);
+            _orderStatusRepo = new OrderStatusRepository(orderDbCallsMock.Object, expFuncMock.Object);
 
-        //    long id = 1;
-        //    var testData = new OrderStatus();
-        //    testData.OrderStatus_Id = id;
-        //    var testData1 = new OrderStatus();
-        //    testData1.OrderStatus_Id = 3;
+            long id = 1;
+            var testData = new OrderStatus();
+            testData.OrderStatus_Id = id;
+            var testData1 = new OrderStatus();
+            testData1.OrderStatus_Id = 3;
 
-        //    List<OrderStatus> data = new List<OrderStatus>();
-        //    data.Add(testData);
-        //    data.Add(testData1);
+            List<OrderStatus> data = new List<OrderStatus>();
+            data.Add(testData);
+            data.Add(testData1);
 
-        //    List<OrderStatus> filterData = new List<OrderStatus>();
-        //    data.Add(testData);
+            List<OrderStatus> filterData = new List<OrderStatus>();
+           filterData.Add(testData);
 
-        //    var test = Expression.GetFuncType(typeof(OrderStatus), typeof(bool));
-        //    var parameterExpression = Expression.Parameter(typeof(OrderStatus), "orderStatus");
-        //    string filterValue = "OrderStatus_Id";
-        //    string searchString = "" + id;
-        //    string inBetween = "";
-        //    string operand = "==";
-        //    string negate = "false";
-        //    string tableName = "OrderStatus";
-        //    IQueryable<OrderStatus> orderStatusQuery = data.AsQueryable();
-        //    var property = Expression.Property(parameterExpression, "OrderStatus_Id");
-        //    var constant = Expression.Constant(id);
-        //    var expression = Expression.Equal(property, constant);
+            var parameterExpression = Expression.Parameter(typeof(OrderStatus), "OrderStatus");
+            string filterValue = "OrderStatus_Id";
+            string searchString = "" + id;
+            string inBetween = "";
+            string operand = "==";
+            string negate = "false";
+            string tableName = "OrderStatus";
+            IQueryable<OrderStatus> orderStatusQuery = data.AsQueryable();
+            var property = Expression.Property(parameterExpression, "OrderStatus_Id");
+            var constant = Expression.Constant(id);
+            var expression = Expression.Equal(property, constant);
 
-        //    Expression<Func<OrderStatus, bool>> lambda = Expression.Lambda<Func<OrderStatus, bool>>(expression, parameterExpression);
+            Expression<Func<OrderStatus, bool>> lambda = Expression.Lambda<Func<OrderStatus, bool>>(expression, parameterExpression);
 
-        //    expFuncMock.Setup(exp => exp.ReturnParameterExpression(typeof(OrderStatus), "orderStatus")).Returns(parameterExpression);
-        //    expFuncMock.Setup(exp => exp.ReturnExpression(filterValue, tableName, parameterExpression, searchString, inBetween, operand, negate)).Returns(expression);
-        //    expFuncMock.Setup(exp => exp.ReturnLambdaExpression<OrderStatus>(expression, parameterExpression)).Returns(lambda);
+          
+            expFuncMock.Setup(exp => exp.ReturnLambdaExpression<OrderStatus>(tableName, filterValue, searchString, inBetween, operand, negate)).Returns(lambda);
 
-        //    orderDbCallsMock.Setup(db => db.GetBaseQuery("BOBS_Backend.Models.Order.OrderStatus")).Returns(orderStatusQuery);
-        //    orderDbCallsMock.Setup(db => db.ReturnFilterOrderStatusQuery(orderStatusQuery, lambda)).Returns(filterData.AsQueryable());
+            orderDbCallsMock.Setup(db => db.GetBaseQuery("BOBS_Backend.Models.Order.OrderStatus")).Returns(orderStatusQuery);
+            orderDbCallsMock.Setup(db => db.ReturnFilterQuery(orderStatusQuery, lambda)).Returns(filterData.AsQueryable());
 
-        //    var orderStatus = await _orderStatusRepo.FindOrderStatusById(id);
+            var orderStatus = await _orderStatusRepo.FindOrderStatusById(id);
 
-        //    Assert.NotNull(orderStatus);
-        //    Assert.Equal(id + "", orderStatus.OrderStatus_Id + "");
+            Assert.NotNull(orderStatus);
+            Assert.Equal(id + "", orderStatus.OrderStatus_Id + "");
 
 
-        //}
+        }
 
 
-        //[Fact]
-        //public async Task FindOrderStatusByName_WhenOrderStatusExist()
-        //{
-        //    MockDatabaseRepo connect = new MockDatabaseRepo();
-        //    var context = connect.CreateInMemoryContext();
+        [Fact]
+        public async Task FindOrderStatusByName_WhenOrderStatusExist()
+        {
 
-        //    var testData = new OrderStatus();
-        //    testData.OrderStatus_Id = 1;
-        //    testData.Status = "Just Placed";
+            var orderDbCallsMock = new Mock<IOrderDatabaseCalls>();
+            var expFuncMock = new Mock<IExpressionFunction>();
 
-        //    context.OrderStatus.Add(testData);
-        //    await context.SaveChangesAsync();
 
-        //    _orderStatusRepo = new OrderStatusRepository(context);
+            _orderStatusRepo = new OrderStatusRepository(orderDbCallsMock.Object, expFuncMock.Object);
 
-        //    var orderStatus = await _orderStatusRepo.FindOrderStatusByName("Just Placed");
+            long id = 1;
+            var testData = new OrderStatus();
+            testData.OrderStatus_Id = id;
+            testData.Status = "Just Placed";
+            var testData1 = new OrderStatus();
+            testData1.OrderStatus_Id = 3;
+            testData1.Status = "Pending";
 
-        //    Assert.NotNull(orderStatus);
-        //    Assert.Equal("Just Placed",orderStatus.Status);
+            List<OrderStatus> data = new List<OrderStatus>();
+            data.Add(testData);
+            data.Add(testData1);
 
-        //    await context.DisposeAsync();
-        //}
+            List<OrderStatus> filterData = new List<OrderStatus>();
+            filterData.Add(testData1);
 
-        //[Fact]
-        //public async Task GetOrderStatuses()
-        //{
-        //    MockDatabaseRepo connect = new MockDatabaseRepo();
-        //    var context = connect.CreateInMemoryContext();
+            var test = Expression.GetFuncType(typeof(OrderStatus), typeof(bool));
+            var parameterExpression = Expression.Parameter(typeof(OrderStatus), "OrderStatus");
+            string filterValue = "Status";
+            string searchString = "Pending";
+            string inBetween = "";
+            string operand = "==";
+            string negate = "false";
+            string tableName = "OrderStatus";
+            IQueryable<OrderStatus> orderStatusQuery = data.AsQueryable();
+            var property = Expression.Property(parameterExpression, "Status");
+            var constant = Expression.Constant("Pending");
+            var expression = Expression.Equal(property, constant);
 
-        //    var testData = new OrderStatus();
-        //    testData.OrderStatus_Id = 1;
-        //    testData.Status = "Just Placed";
+            Expression<Func<OrderStatus, bool>> lambda = Expression.Lambda<Func<OrderStatus, bool>>(expression, parameterExpression);
 
-        //    var testData2 = new OrderStatus();
-        //    testData.OrderStatus_Id = 2;
-        //    testData.Status = "Pending";
 
-        //    var testData3 = new OrderStatus();
-        //    testData.OrderStatus_Id = 3;
-        //    testData.Status = "Delivered";
+            expFuncMock.Setup(exp => exp.ReturnLambdaExpression<OrderStatus>(tableName, filterValue, searchString, inBetween, operand, negate)).Returns(lambda);
 
-        //    context.OrderStatus.Add(testData);
-        //    context.OrderStatus.Add(testData2);
-        //    context.OrderStatus.Add(testData3);
+            orderDbCallsMock.Setup(db => db.GetBaseQuery("BOBS_Backend.Models.Order.OrderStatus")).Returns(orderStatusQuery);
+            orderDbCallsMock.Setup(db => db.ReturnFilterQuery(orderStatusQuery, lambda)).Returns(filterData.AsQueryable());
 
-        //    await context.SaveChangesAsync();
+            var orderStatus = await _orderStatusRepo.FindOrderStatusByName("Pending");
 
-        //    _orderStatusRepo = new OrderStatusRepository(context);
+            Assert.NotNull(orderStatus);
+            Assert.Equal("Pending", orderStatus.Status);
 
-        //    var allOrderStatus = await _orderStatusRepo.GetOrderStatuses();
+        }
 
-        //    Assert.NotNull(allOrderStatus);
+        [Fact]
+        public async Task GetOrderStatuses()
+        {
+            var orderDbCallsMock = new Mock<IOrderDatabaseCalls>();
+            var expFuncMock = new Mock<IExpressionFunction>();
 
-        //    Assert.Equal("3", "" + allOrderStatus.Count());
 
-        //    await context.DisposeAsync();
-        //}
+            _orderStatusRepo = new OrderStatusRepository(orderDbCallsMock.Object, expFuncMock.Object);
 
-        //[Fact]
-        //public async Task UpdateOrderStatus_WhenDeliveryDateIsNull()
-        //{
-        //    MockDatabaseRepo connect = new MockDatabaseRepo();
-        //    var context = connect.CreateInMemoryContext();
+            var testData = new OrderStatus();
+            testData.OrderStatus_Id = 1;
+            testData.Status = "Just Placed";
+            testData.position = 1;
 
-        //    var orderStatusTest1 = new OrderStatus();
-        //    orderStatusTest1.OrderStatus_Id = 1;
-        //    orderStatusTest1.Status = "Just Placed";
+            var testData2 = new OrderStatus();
+            testData2.OrderStatus_Id = 2;
+            testData2.Status = "Pending";
+            testData2.position = 2;
 
-        //    var orderStatusTest2 = new OrderStatus();
-        //    orderStatusTest2.OrderStatus_Id = 2;
-        //    orderStatusTest2.Status = "Pending";
+            var testData3 = new OrderStatus();
+            testData3.OrderStatus_Id = 3;
+            testData3.Status = "Delivered";
+            testData3.position = 3;
 
-        //    var order = new Order();
-        //    order.OrderStatus = orderStatusTest1;
-        //    order.DeliveryDate = null;
+            List<OrderStatus> data = new List<OrderStatus>();
+            data.Add(testData2);
+            data.Add(testData);
+            data.Add(testData3);
 
-        //    context.Order.Add(order);
-        //    context.OrderStatus.Add(orderStatusTest1);
-        //    context.OrderStatus.Add(orderStatusTest2);
+            orderDbCallsMock.Setup(db => db.GetBaseQuery("BOBS_Backend.Models.Order.OrderStatus")).Returns(data.AsQueryable());
 
-        //    await context.SaveChangesAsync();
+            var allOrderStatus = await _orderStatusRepo.GetOrderStatuses();
 
+            Assert.NotNull(allOrderStatus);
 
-        //    _orderStatusRepo = new OrderStatusRepository(context);
+            Assert.Equal("3", "" + allOrderStatus.Count());
+            Assert.Equal("1", "" + allOrderStatus[0].position);
 
 
-        //    var updatedOrder = await _orderStatusRepo.UpdateOrderStatus(order, orderStatusTest2.OrderStatus_Id);
+    
+        }
 
-        //    Assert.NotNull(updatedOrder);
-        //    Assert.NotNull(updatedOrder.DeliveryDate);
-        //    Assert.Equal(orderStatusTest2.Status, updatedOrder.OrderStatus.Status);
+        [Fact]
+        public async Task UpdateOrderStatus_WhenDeliveryDateIsNull()
+        {
 
-        //    await context.DisposeAsync();
 
+            var orderStatusTest1 = new OrderStatus();
+            orderStatusTest1.OrderStatus_Id = 1;
+            orderStatusTest1.Status = "Just Placed";
 
+            var orderStatusTest2 = new OrderStatus();
+            orderStatusTest2.OrderStatus_Id = 2;
+            orderStatusTest2.Status = "Pending";
 
-        //}
+            var order = new Order();
+            order.OrderStatus = orderStatusTest1;
+            order.DeliveryDate = null;
 
-        //[Fact]
-        //public async Task UpdateOrderStatus_WhenDeliveryDateIsNotNull()
-        //{
-        //    MockDatabaseRepo connect = new MockDatabaseRepo();
-        //    var context = connect.CreateInMemoryContext();
+            List<OrderStatus> data = new List<OrderStatus>();
+            data.Add(orderStatusTest1);
+            data.Add(orderStatusTest2);
 
-        //    var orderStatusTest1 = new OrderStatus();
-        //    orderStatusTest1.OrderStatus_Id = 1;
-        //    orderStatusTest1.Status = "Just Placed";
+            List<OrderStatus> filterData = new List<OrderStatus>();
+            filterData.Add(orderStatusTest2);
 
-        //    var orderStatusTest2 = new OrderStatus();
-        //    orderStatusTest2.OrderStatus_Id = 2;
-        //    orderStatusTest2.Status = "Pending";
+            var orderDbCallsMock = new Mock<IOrderDatabaseCalls>();
+            var expFuncMock = new Mock<IExpressionFunction>();
 
-        //    var order = new Order();
-        //    order.OrderStatus = orderStatusTest1;
-        //    order.DeliveryDate = "tetsgd";
 
-        //    context.Order.Add(order);
-        //    context.OrderStatus.Add(orderStatusTest1);
-        //    context.OrderStatus.Add(orderStatusTest2);
+            _orderStatusRepo = new OrderStatusRepository(orderDbCallsMock.Object, expFuncMock.Object);
 
-        //    await context.SaveChangesAsync();
+            long id = 2;
+            var parameterExpression = Expression.Parameter(typeof(OrderStatus), "OrderStatus");
+            string filterValue = "OrderStatus_Id";
+            string searchString = "" + id;
+            string inBetween = "";
+            string operand = "==";
+            string negate = "false";
+            string tableName = "OrderStatus";
+            IQueryable<OrderStatus> orderStatusQuery = data.AsQueryable();
+            var property = Expression.Property(parameterExpression, "OrderStatus_Id");
+            var constant = Expression.Constant(id);
+            var expression = Expression.Equal(property, constant);
 
+            Expression<Func<OrderStatus, bool>> lambda = Expression.Lambda<Func<OrderStatus, bool>>(expression, parameterExpression);
 
-        //    _orderStatusRepo = new OrderStatusRepository(context);
 
+            expFuncMock.Setup(exp => exp.ReturnLambdaExpression<OrderStatus>(tableName, filterValue, searchString, inBetween, operand, negate)).Returns(lambda);
 
-        //    var updatedOrder = await _orderStatusRepo.UpdateOrderStatus(order, orderStatusTest2.OrderStatus_Id);
+            orderDbCallsMock.Setup(db => db.GetBaseQuery("BOBS_Backend.Models.Order.OrderStatus")).Returns(orderStatusQuery);
+            orderDbCallsMock.Setup(db => db.ReturnFilterQuery(orderStatusQuery, lambda)).Returns(filterData.AsQueryable());
 
-        //    Assert.NotNull(updatedOrder);
-        //    Assert.Equal(orderStatusTest2.Status, updatedOrder.OrderStatus.Status);
 
-        //    await context.DisposeAsync();
+            var updatedOrder = await _orderStatusRepo.UpdateOrderStatus(order, orderStatusTest2.OrderStatus_Id);
 
+            Assert.NotNull(updatedOrder);
+            Assert.NotNull(updatedOrder.DeliveryDate);
+            Assert.Equal(orderStatusTest2.Status, updatedOrder.OrderStatus.Status);
 
 
-        //}
+        }
+
+        [Fact]
+        public async Task UpdateOrderStatus_WhenDeliveryDateIsNotNull()
+        {
+            var orderStatusTest1 = new OrderStatus();
+            orderStatusTest1.OrderStatus_Id = 1;
+            orderStatusTest1.Status = "Just Placed";
+
+            var orderStatusTest2 = new OrderStatus();
+            orderStatusTest2.OrderStatus_Id = 2;
+            orderStatusTest2.Status = "Pending";
+
+            var order = new Order();
+            order.OrderStatus = orderStatusTest1;
+            order.DeliveryDate = "fdefefef";
+
+            List<OrderStatus> data = new List<OrderStatus>();
+            data.Add(orderStatusTest1);
+            data.Add(orderStatusTest2);
+
+            List<OrderStatus> filterData = new List<OrderStatus>();
+            filterData.Add(orderStatusTest2);
+
+            var orderDbCallsMock = new Mock<IOrderDatabaseCalls>();
+            var expFuncMock = new Mock<IExpressionFunction>();
+
+
+            _orderStatusRepo = new OrderStatusRepository(orderDbCallsMock.Object, expFuncMock.Object);
+
+            long id = 2;
+            var parameterExpression = Expression.Parameter(typeof(OrderStatus), "OrderStatus");
+            string filterValue = "OrderStatus_Id";
+            string searchString = "" + id;
+            string inBetween = "";
+            string operand = "==";
+            string negate = "false";
+            string tableName = "OrderStatus";
+            IQueryable<OrderStatus> orderStatusQuery = data.AsQueryable();
+            var property = Expression.Property(parameterExpression, "OrderStatus_Id");
+            var constant = Expression.Constant(id);
+            var expression = Expression.Equal(property, constant);
+
+            Expression<Func<OrderStatus, bool>> lambda = Expression.Lambda<Func<OrderStatus, bool>>(expression, parameterExpression);
+
+
+            expFuncMock.Setup(exp => exp.ReturnLambdaExpression<OrderStatus>(tableName, filterValue, searchString, inBetween, operand, negate)).Returns(lambda);
+
+            orderDbCallsMock.Setup(db => db.GetBaseQuery("BOBS_Backend.Models.Order.OrderStatus")).Returns(orderStatusQuery);
+            orderDbCallsMock.Setup(db => db.ReturnFilterQuery(orderStatusQuery, lambda)).Returns(filterData.AsQueryable());
+
+            var updatedOrder = await _orderStatusRepo.UpdateOrderStatus(order, orderStatusTest2.OrderStatus_Id);
+
+            Assert.NotNull(updatedOrder);
+            Assert.Equal(orderStatusTest2.Status, updatedOrder.OrderStatus.Status);
+
+
+        }
     }
 }

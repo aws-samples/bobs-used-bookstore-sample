@@ -54,9 +54,19 @@ namespace BOBS_Backend.Repository.Implementations.OrderImplementations
             string operand = "==";
             string negate = "false";
 
-            var query = FilterOrder(filterValue, searchString, inBetween, operand, negate);
+            Order order = null;
+            try
+            {
+                var query = FilterOrder(filterValue, searchString, inBetween, operand, negate);
 
-            var order = query.First();
+                order = query.First();
+            }
+            catch(InvalidOperationException ex)
+            {
+                order = null;
+            }
+
+            
 
             return order;
         }
@@ -89,18 +99,7 @@ namespace BOBS_Backend.Repository.Implementations.OrderImplementations
 
             var totalPages = _searchRepo.GetTotalPages(query.Count(),_ordersPerPage);
 
-            var orders = query
-                            .OrderBy(order => order.OrderStatus.OrderStatus_Id)
-                            .ThenBy(order => order.DeliveryDate)
-                            .Skip((pageNum - 1) * _ordersPerPage)
-                            .Take(_ordersPerPage)
-                            .ToList();
-
-            int[] pages = _searchRepo.GetModifiedPagesArr(pageNum, totalPages);
-            
-
-
-            viewModel = RetrieveViewModel("", "", pageNum, totalPages, pages, orders);
+            viewModel = await RetrieveFilterViewModel(query, totalPages, pageNum, "", "");
 
             return viewModel;
         }
@@ -111,7 +110,7 @@ namespace BOBS_Backend.Repository.Implementations.OrderImplementations
             ManageOrderViewModel viewModel = new ManageOrderViewModel();
 
             var orders = filterQuery
-                            .OrderBy(order => order.OrderStatus.OrderStatus_Id)
+                            .OrderBy(order => order.OrderStatus.position)
                             .ThenBy(order => order.DeliveryDate)
                             .Skip((pageNum - 1) * _ordersPerPage)
                             .Take(_ordersPerPage)
@@ -130,11 +129,11 @@ namespace BOBS_Backend.Repository.Implementations.OrderImplementations
         {
 
             ManageOrderViewModel viewModel = new ManageOrderViewModel();
-            var parameterExpression = _expFunc.ReturnParameterExpression(typeof(Order), "order");
+            var parameterExpression = _expFunc.ReturnParameterExpression(typeof(Order), "Order");
 
             var expression = _searchRepo.ReturnExpression(parameterExpression, filterValue, searchString);
 
-            Expression<Func<Order,bool>> lambda = Expression.Lambda<Func<Order,bool>>(expression,parameterExpression);
+            Expression<Func<Order, bool>> lambda = _expFunc.ReturnLambdaExpression<Order>(expression, parameterExpression);
          
             if (lambda == null)
             {

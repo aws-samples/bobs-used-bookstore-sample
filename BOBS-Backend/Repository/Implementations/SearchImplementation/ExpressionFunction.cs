@@ -185,5 +185,10 @@ namespace BOBS_Backend.Repository.Implementations.SearchImplementation
 
             return Expression.Lambda<Func<T, bool>>(expression, parameterExpression);
         }
+
+        public Expression<Func<T,bool>> ReturnLambdaExpression<T>(BinaryExpression expression,ParameterExpression parameterExpression)
+        {
+            return Expression.Lambda<Func<T, bool>>(expression, parameterExpression);
+        }
     }
 }
