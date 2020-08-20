@@ -132,6 +132,7 @@ namespace BOBS_Backend.Repository.Implementations.OrderImplementations
             ManageOrderViewModel viewModel = new ManageOrderViewModel();
             var parameterExpression = _expFunc.ReturnParameterExpression(typeof(Order), "order");
 
+
             var expression = _searchRepo.ReturnExpression(parameterExpression, filterValue, searchString);
 
             Expression<Func<Order,bool>> lambda = Expression.Lambda<Func<Order,bool>>(expression,parameterExpression);

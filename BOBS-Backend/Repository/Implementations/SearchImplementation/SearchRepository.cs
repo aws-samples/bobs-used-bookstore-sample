@@ -2,7 +2,6 @@
 using BOBS_Backend.Repository.SearchImplementations;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -72,10 +71,6 @@ namespace BOBS_Backend.Repository.Implementations.SearchImplementation
         {
             try
             {
-
-                var converter = TypeDescriptor.GetConverter(Type.GetType(type));
-
-                var test = converter.ConvertFrom(subSearch);
                 ConstantExpression constant = null;
                 if (type == "System.Int64")
                 {
@@ -83,7 +78,7 @@ namespace BOBS_Backend.Repository.Implementations.SearchImplementation
 
                     bool res = long.TryParse(subSearch, out value);
 
-                    constant = Expression.Constant(test);
+                    constant = Expression.Constant(value);
 
                     return PerformArtithmeticExpresion("==",(Expression) property, constant);
                 }
