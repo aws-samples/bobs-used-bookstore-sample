@@ -1,0 +1,66 @@
+﻿@model BobBookstore.Models.ViewModels.OrderViewModel
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+    <head>
+        <meta charset="UTF-8">
+        <title>Bob's Book Store</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="https://dtdt6j0vhq1rq.cloudfront.net/bootstrap.min.css">
+
+        <link href="https://fonts.googleapis.com/css?family=Montserrat:200,300,400,500,600,700,800,900" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="https://dtdt6j0vhq1rq.cloudfront.net/owl.carousel.min.css">
+        <link rel="stylesheet" href="https://dtdt6j0vhq1rq.cloudfront.net/styles.css">
+
+    </head>
+<h1>Order: #@Model.Order_Id</h1>
+
+<div class="container mt-1">
+    <h3>Status: @Model.Status</h3>
+     
+    @if (String.IsNullOrEmpty(Model.DeliveryDate))
+    {
+        <h5>Delivery Date: Unknown</h5>
+    } else
+    {
+    <h5>Delivery Date: @Model.DeliveryDate</h5>
+    }
+    <h5>Total cost: $@(Model.Subtotal + Model.Tax)</h5>
+</div>
+<div class="container mt-5">
+    <h2>Your Order:</h2>
+    <table class="table table-hover mt-5">
+        <thead>
+            <tr>
+                <th cope="col">Cover</thscope="col">
+                <th scope="col">Title</th>
+                <th scope="col">Quantity</th>
+                <th scope="col">Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var book in Model.Books)
+            {
+                <tr>
+                    <td><img src="@book.Url" height="80" width="50" /></td>
+                    <td>
+                        <a asp-controller="Search" asp-action="Detail" asp-route-id="@book.Book_Id">
+                            @book.Bookname
+                        </a>
+                    </td>
+                    <td>@book.quantity</td>
+                    <td>$@book.price</td>
+                </tr>
+            }
+        </tbody>
+
+    </table>
+</div>
+<br />
+<br />
+<br />
+<br />
+<br /><br /><br /><br /><br /><br /><br /><br />

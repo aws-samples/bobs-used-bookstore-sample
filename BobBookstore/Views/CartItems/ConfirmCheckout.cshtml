@@ -1,0 +1,241 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@model IEnumerable<BobBookstore.Models.Customer.Address>
+@*@model Tuple<IEnumerable<BobBookstore.Models.Customer.Address>,IEnumerable<BobBookstore.Models.Order.OrderDetail>>*@
+@*@model Tuple<IEnumerable<BobBookstore.Models.Customer.Address>, IEnumerable<BobBookstore.Models.Customer.Address>>*@
+@{
+    var totalprice = 0.0;
+    foreach (var item in ViewData["order"] as List<BobBookstore.Models.ViewModels.OrderDetailViewModel>)
+    {
+        totalprice += item.price * item.quantity;
+    }
+}
+<head>
+    <meta charset="UTF-8">
+    <title>>Book Store</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#03a6f3">
+    <link rel="stylesheet" href="https://dtdt6j0vhq1rq.cloudfront.net/bootstrap.min.css">
+
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:200,300,400,500,600,700,800,900" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="https://dtdt6j0vhq1rq.cloudfront.net/owl.carousel.min.css">
+    <link rel="stylesheet" href="https://dtdt6j0vhq1rq.cloudfront.net/styles.css">
+    <style>
+
+        .time-horizontal {
+            list-style-type: none;
+            border-top: 4px solid #2282ca;
+            max-width: 600px;
+            padding: 2px;
+            margin: 0px;
+        }
+
+            .time-horizontal li {
+                float: left;
+                position: relative;
+                text-align: center;
+                width: 33%;
+                padding-top: 10px;
+            }
+
+                .time-horizontal li b:before {
+                    content: '';
+                    position: absolute;
+                    top: -10px;
+                    left: 47%;
+                    width: 18px;
+                    height: 18px;
+                    border: 2px solid #2282ca;
+                    border-radius: 8px;
+                    background: #ff0000
+                }
+
+                .time-horizontal li p:before {
+                    content: '';
+                    position: absolute;
+                    top: -10px;
+                    left: 47%;
+                    width: 18px;
+                    height: 18px;
+                    border: 2px solid #2282ca;
+                    border-radius: 8px;
+                    background: #110fe5
+                }
+    </style>
+</head>
+<h1>Finish your order</h1>
+<br />
+<br />
+<div class="container" style="text-align: center">
+
+    <ul class="time-horizontal">
+        <li style="color:red"><b></b>Cart</li>
+        <li style="color:red"><b></b>Choose Address</li>
+        <li><p></p>Finish</li>
+
+    </ul>
+</div>
+<br />
+<br />
+<br />
+<body>
+
+    <div>
+        <h2>Total price :$@totalprice</h2>
+    </div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+
+                </th>
+                <th>
+
+                    addressline1
+                </th>
+                <th>
+                    AddressLine2
+                </th>
+                <th>
+                    City
+                </th>
+                <th>
+                    State
+                </th>
+                <th>
+                    Country
+                </th>
+                <th>
+                    ZipCode
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @using (Html.BeginForm(new { action = "ConfirmOrderAddress" }))
+            {
+                @foreach (var item in Model)
+                {
+                    @if (item.IsPrimary == true)
+                    {
+                        <tr>
+                            <td>
+                                <input type="radio" id="primary" name="addressID" value="@Html.DisplayFor(modelItem => item.Address_Id)" checked />
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.AddressLine1)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.AddressLine2)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.City)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.State)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Country)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ZipCode)
+                            </td>
+                            <td>
+                                <a id="PrimeryAddressEdit" asp-area="Identity" asp-page="/Account/Manage/PrimeryAddressEdit">Edit</a> |
+
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        <tr>
+                            <td>
+                                <input type="radio" id="primary" name="addressID" value="@Html.DisplayFor(modelItem => item.Address_Id)" />
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.AddressLine1)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.AddressLine2)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.City)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.State)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Country)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ZipCode)
+                            </td>
+                            <td>
+                                <a asp-action="EditAddress" asp-route-id="@item.Address_Id">Edit</a>
+
+                            </td>
+                        </tr>
+                    }
+                }
+                <input type="hidden" name="OrderId" value="@ViewData["orderId"]" />
+                <input type="submit" value="Finish your order" style="background-color: #0b71ca ;color: #FFFFFF" />
+            }
+        </tbody>
+
+
+    </table>
+    <div>
+        <p style="text-align: center"><a asp-action="AddAddressAtChechout">add address</a></p>
+    </div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Cover
+                </th>
+                <th>
+                    name
+                </th>
+                <th>
+                    price
+                </th>
+                <th>quantity</th>
+                <th>total</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in ViewData["order"] as List<BobBookstore.Models.ViewModels.OrderDetailViewModel>)
+            {
+                double total = item.price * item.quantity;
+                <tr>
+                    <td>
+                        <img src="@item.Url" height="80" width="50" />
+                    </td>
+                    <td>
+                        @item.Bookname
+                    </td>
+
+                    <td>
+
+                        $@item.price
+
+                    <td>
+
+                        @item.quantity
+                    </td>
+                    <td>$@total</td>
+
+
+                </tr>
+            }
+        </tbody>
+    </table>
+</body>
+
+
+
