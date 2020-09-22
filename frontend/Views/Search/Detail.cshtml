@@ -1,0 +1,104 @@
+﻿@model BobBookstore.Models.ViewModels.BookViewModel
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@if (Model == null)
+{
+    <h3>Book not found.</h3>
+}
+else
+{
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <div class="media">
+                <img class="mr-3" src="@Html.DisplayFor(modelitem => Model.Url)" />
+                <div class="media-body">
+                    <h3 class="mt-0">Title: @Html.DisplayFor(modelitem => Model.BookName)</h3>
+                    <h3>Author: @Html.DisplayFor(modelitem => Model.Author)</h3>
+                    <h5>Publisher: @Html.DisplayFor(modelitem => Model.PublisherName), Genre: @Html.DisplayFor(modelitem => Model.GenreName)</h5>
+                    @if (String.IsNullOrEmpty(Model.Summary))
+                    {
+                        <p>No description found.</p>
+                    }
+                    else
+                    {
+                        <p>@Html.DisplayFor(modelitem => Model.Summary)</p>
+                    }
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container mt-5">
+        @if (Model.Prices.Count == 0)
+        {
+            <p>None in stock</p>
+        }
+        else
+        {
+            <div class="row mb-5">
+                <h3>Available in these conditions:</h3>
+            </div>
+            <div class="row">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            @if (ViewBag.currentSort != "priceAsc")
+                            {
+                                <th scope="col"><a asp-controller="Search" asp-action="Detail" asp-route-id="@ViewBag.id" asp-route-sortBy="priceAsc">Price</a></th>
+                            }
+                            else
+                            {
+                                <th scope="col"><a asp-controller="Search" asp-action="Detail" asp-route-id="@ViewBag.id" asp-route-sortBy="priceDesc">Price</a></th>
+                            }
+                            @if (ViewBag.currentSort != "ConditionAsc")
+                            {
+                                <th scope="col"><a asp-controller="Search" asp-action="Detail" asp-route-id="@ViewBag.id" asp-route-sortBy="conditionAsc">Condition</a></th>
+                            }
+                            else
+                            {
+                                <th scope="col"><a asp-controller="Search" asp-action="Detail" asp-route-id="@ViewBag.id" asp-route-sortBy="conditionDesc">Condition</a></th>
+                            }
+
+                            <th scope="col">Condition</th>
+                            <th scope="col"></th>
+                        </tr>
+                    </thead>
+                    @foreach (var price in Model.Prices)
+                    {
+                        <tr>
+                            <td>$@Html.DisplayFor(modelitem => price.ItemPrice)</td>
+                            <td>@Html.DisplayFor(modelitem => price.Condition.ConditionName)</td>
+                            <td>
+                                <form asp-controller="Search" asp-action="AddtoCartitem" method="get">
+                                    <div class="form-group">
+                                        <input type="hidden" name="bookid" value="@Model.BookId" />
+                                        <input type="hidden" name="priceid" value="@price.Price_Id" />
+                                        <input type="submit" value="Add to cart" />
+                                    </div>
+                                </form>
+                                <form asp-controller="Search" asp-action="AddtoWishList" method="get">
+                                    <div class="form-group">
+                                        <input type="hidden" name="bookid" value="@Model.BookId" />
+                                        <input type="hidden" name="priceid" value="@price.Price_Id" />
+                                        <input type="submit" value="Add to WishList" />
+                                    </div>
+                                </form>
+                            </td>
+                        </tr>
+
+
+                    }
+                </table>
+            </div>
+            
+        }
+</div>
+
+    
+
+
+
+}
