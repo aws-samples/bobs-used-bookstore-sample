@@ -83,9 +83,9 @@ namespace BobsUsedBookstoreSetup
             // details such as host, port, etc.
             dbSecret.Attach(sqlServerInstance);
 
-            // This makes the database publicly accessible, so we can work with from within our
-            // client-side tools (eg Visual Studio, EF Core, et al). Note that for production scenarios
-            // the recommended best practice is to place databases in private subnets and restrict
+            // This makes the database publicly accessible, so we can work with to from within our
+            // client-side tools (eg Visual Studio, EF Core command line, et al). Note that for production
+            // scenarios the recommended best practice is to place databases in private subnets and restrict
             // access.
             sqlServerInstance.Connections.AllowDefaultPortFromAnyIpv4();
 
@@ -105,11 +105,17 @@ namespace BobsUsedBookstoreSetup
                 GenerateSecret = true
             });
 
-            // Build a set of Parameter Store entries relating to the app settings and secrets.
+            // Build a set of Parameter Store entries relating to the app settings and secrets that will
+            // be retrieved dynamically at runtime instead of hard-coding them into the application's
+            // source and configuration files, where they could present security risks (eg by checking
+            // credentials into public source repositories).
             var ssmParameters = new StringParameter[]
             {
                 // Since we already have a Secrets Manager secret with database details, reference it
-                // in such a way that Parameter Store can access it.
+                // in such a way that Parameter Store can access it. The application will read this
+                // parameter (thru Systems Manager) on startup, which in turn will yield the secret value
+                // from within Secrets Manager - the app will then use the username, password, and
+                // host/port data to build the connection string.
                 new StringParameter(this, "BookstoreDbDetails", new StringParameterProps
                 {
                     ParameterName = "/BobsUsedBookstore/DatabaseDetails",
@@ -118,7 +124,10 @@ namespace BobsUsedBookstoreSetup
 
                 // Record the user pool details. We will still however be missing a parameter - the user
                 // pool client secret that we will later need to recover and turn into a secure Parameter
-                // Store entry.
+                // Store entry. Note that the common root of the parameter names allows the
+                // Amazon.Extensions.Configuration.SystemsManager NuGet package we use in the application to
+                // retrieve all these settings at startup and inject them into the ASP.NET Core Configuration
+                // system.
                 new StringParameter(this, "BookstoreUserPoolId", new StringParameterProps
                 {
                     ParameterName = "/BobsUsedBookstore/AWS/UserPoolId",
