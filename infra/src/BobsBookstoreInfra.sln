@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26124.0
 MinimumVisualStudioVersion = 15.0.26124.0
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Setup", "Setup\Setup.csproj", "{98331AAB-ED6B-4105-8D13-C4B1E8D76C3A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BobsBookstoreInfra", "BobsBookstoreInfra\BobsBookstoreInfra.csproj", "{98331AAB-ED6B-4105-8D13-C4B1E8D76C3A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

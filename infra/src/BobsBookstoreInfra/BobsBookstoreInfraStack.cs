@@ -8,11 +8,11 @@ using Amazon.CDK.AWS.SecretsManager;
 using Amazon.CDK.AWS.IAM;
 using Amazon.CDK.AWS.CloudFront;
 
-namespace BobsUsedBookstoreSetup
+namespace BobsBookstoreInfra
 {
-    public class BobsUsedBookstoreStack : Stack
+    public class BobsBookstoreInfraStack : Stack
     {
-        internal BobsUsedBookstoreStack(Construct scope, string id, IStackProps props = null) : base(scope, id, props)
+        internal BobsBookstoreInfraStack(Construct scope, string id, IStackProps props = null) : base(scope, id, props)
         {
             // Start with creating a new VPC to hold the application resources.
             var vpc = new Vpc(this, "BookstoreVpc", new VpcProps

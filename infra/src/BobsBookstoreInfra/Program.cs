@@ -1,6 +1,6 @@
 ﻿using Amazon.CDK;
 
-namespace BobsUsedBookstoreSetup
+namespace BobsBookstoreInfra
 {
     sealed class Program
     {
@@ -8,7 +8,7 @@ namespace BobsUsedBookstoreSetup
         {
             var app = new App();
 
-            var infraStack = new BobsUsedBookstoreStack(app, "BobsUsedBookstoreStack");
+            var infraStack = new BobsBookstoreInfraStack(app, "BobsUsedBookstoreStack");
 
             app.Synth();
         }
