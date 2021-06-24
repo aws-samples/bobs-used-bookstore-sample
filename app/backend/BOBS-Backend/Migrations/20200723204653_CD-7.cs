@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace BOBS_Backend.Migrations
+namespace BookstoreBackend.Migrations
 {
     public partial class CD7 : Migration
     {

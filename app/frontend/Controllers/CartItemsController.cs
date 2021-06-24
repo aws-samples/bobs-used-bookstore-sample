@@ -3,21 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using BobBookstore.Data;
-using BobBookstore.Models.Carts;
-using BobBookstore.Models.Book;
-using BobBookstore.Models.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.CodeAnalysis;
-using BobBookstore.Models.Order;
-using Amazon.Extensions.CognitoAuthentication;
 using Microsoft.AspNetCore.Identity;
+using Amazon.Extensions.CognitoAuthentication;
 using Amazon.AspNetCore.Identity.Cognito;
+using BobBookstore.Models.Order;
+using BobBookstore.Data;
+using BobBookstore.Models.Carts;
+using BobBookstore.Models.ViewModels;
 using BobBookstore.Models.Customer;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Components.Web;
 
 namespace BobBookstore.Controllers
 {

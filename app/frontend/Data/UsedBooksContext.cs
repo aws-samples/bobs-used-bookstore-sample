@@ -1,10 +1,4 @@
-﻿using BobBookstore.Models;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-//using BobBookstore.Models;
+﻿using Microsoft.EntityFrameworkCore;
 using BobBookstore.Models.Customer;
 using BobBookstore.Models.Order;
 using BobBookstore.Models.Book;

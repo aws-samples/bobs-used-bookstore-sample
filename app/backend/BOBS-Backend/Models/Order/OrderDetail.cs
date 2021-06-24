@@ -1,11 +1,8 @@
-﻿using BOBS_Backend.Models.Book;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
+using BookstoreBackend.Models.Book;
 
-namespace BOBS_Backend.Models.Order
+namespace BookstoreBackend.Models.Order
 {
     public class OrderDetail
     {

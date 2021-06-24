@@ -1,14 +1,12 @@
-﻿using BOBS_Backend.Database;
-using BOBS_Backend.Models.Order;
-using BOBS_Backend.Repository.OrdersInterface;
-using Microsoft.EntityFrameworkCore.Storage;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore.Storage;
+using BookstoreBackend.Database;
+using BookstoreBackend.Repository.OrdersInterface;
 
-namespace BOBS_Backend.Repository.Implementations.OrderImplementations
+namespace BookstoreBackend.Repository.Implementations.OrderImplementations
 {
     public class OrderDatabaseCalls : IOrderDatabaseCalls
     {

@@ -1,14 +1,9 @@
-﻿using BOBS_Backend.Models.Book;
-using BOBS_Backend.Models.Customer;
-using BOBS_Backend.Models.Order;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Microsoft.EntityFrameworkCore;
+using BookstoreBackend.Models.Book;
+using BookstoreBackend.Models.Customer;
+using BookstoreBackend.Models.Order;
 
-namespace BOBS_Backend.Database
+namespace BookstoreBackend.Database
 {
     public class DatabaseContext : DbContext
     {

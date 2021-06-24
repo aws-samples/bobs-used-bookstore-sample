@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace BOBS_Backend.Migrations
+namespace BookstoreBackend.Migrations
 {
     public partial class changes : Migration
     {

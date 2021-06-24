@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using BobBookstore.Data;
-using BobBookstore.Models;
-using BobBookstore.Models.Book;
-using Microsoft.EntityFrameworkCore;
+﻿using System.Collections.Generic;
+
 namespace BobBookstore.Models
 {
     public class CartAllmodels
@@ -18,11 +12,7 @@ namespace BobBookstore.Models
 
         public CartAllmodels()
         {
-            //var db = new UsedBooksContext();
             Carts.Cart db1 = new Carts.Cart();
-            
-            
-
         }
     }
 }

@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using BOBS_Backend.Models.AdminUser;
-namespace BOBS_Backend.Repository.Implementations.AdminImplementation
+﻿using System.Collections.Generic;
+using BookstoreBackend.Models.AdminUser;
+
+namespace BookstoreBackend.Repository.Implementations.AdminImplementation
 {
     public class AdminClaims
     {

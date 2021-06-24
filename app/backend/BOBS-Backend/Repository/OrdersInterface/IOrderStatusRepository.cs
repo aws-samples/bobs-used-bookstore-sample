@@ -1,11 +1,11 @@
-﻿using BOBS_Backend.Models.Order;
+﻿using BookstoreBackend.Models.Order;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace BOBS_Backend.Repository
+namespace BookstoreBackend.Repository
 {
     public interface IOrderStatusRepository
     {

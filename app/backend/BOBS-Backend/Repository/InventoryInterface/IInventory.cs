@@ -3,20 +3,20 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using BOBS_Backend.DataModel;
-using BOBS_Backend.Models;
-using BOBS_Backend.Models.Book;
+using BookstoreBackend.DataModel;
+using BookstoreBackend.Models;
+using BookstoreBackend.Models.Book;
 using Microsoft.AspNetCore.Http;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats;
 using SixLabors.ImageSharp.Processing;
 using Amazon.Polly;
 using Amazon.Polly.Model;
-using BOBS_Backend.Models.Order;
-using BOBS_Backend.ViewModel.ManageInventory;
-using BOBS_Backend.ViewModel.SearchBooks;
+using BookstoreBackend.Models.Order;
+using BookstoreBackend.ViewModel.ManageInventory;
+using BookstoreBackend.ViewModel.SearchBooks;
 
-namespace BOBS_Backend
+namespace BookstoreBackend
 {
     public interface IInventory
     {
@@ -30,21 +30,21 @@ namespace BOBS_Backend
 
         public void SavePrice(Price price);
       
-        public int AddPublishers(BOBS_Backend.Models.Book.Publisher publishers);
+        public int AddPublishers(BookstoreBackend.Models.Book.Publisher publishers);
 
-        public int AddGenres(BOBS_Backend.Models.Book.Genre genres);
+        public int AddGenres(BookstoreBackend.Models.Book.Genre genres);
 
-        public int AddBookTypes(BOBS_Backend.Models.Book.Type booktype);
+        public int AddBookTypes(BookstoreBackend.Models.Book.Type booktype);
 
-        public int AddBookConditions(BOBS_Backend.Models.Book.Condition bookcondition);
+        public int AddBookConditions(BookstoreBackend.Models.Book.Condition bookcondition);
 
-        public List<BOBS_Backend.Models.Book.Type> GetTypes();
+        public List<BookstoreBackend.Models.Book.Type> GetTypes();
 
-        public List<BOBS_Backend.Models.Book.Publisher> GetAllPublishers();
+        public List<BookstoreBackend.Models.Book.Publisher> GetAllPublishers();
 
-        public List<BOBS_Backend.Models.Book.Genre> GetGenres();
+        public List<BookstoreBackend.Models.Book.Genre> GetGenres();
 
-        public List<BOBS_Backend.Models.Book.Condition> GetConditions();
+        public List<BookstoreBackend.Models.Book.Condition> GetConditions();
 
         public BookDetails GetBookDetails(long bookid, long priceid);
 

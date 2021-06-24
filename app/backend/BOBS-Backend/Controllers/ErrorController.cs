@@ -1,24 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Diagnostics;
+﻿using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 
-namespace BOBS_Backend.Controllers
-{
+namespace BookstoreBackend.Controllers
+{ 
     public class ErrorController : Controller
     {
         [Route("/Error/Index/{code:int}")]
         public IActionResult Index(int code)
         {
-
-
             var exception = HttpContext.Features.Get<IExceptionHandlerPathFeature>();
             ViewData["Path"] = exception?.Path;
-            
-
             ViewData["StatusCode"] = code;
             return View();
         }

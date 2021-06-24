@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace BOBS_Backend.ViewModel.ManageInventory
+﻿namespace BookstoreBackend.ViewModel.ManageInventory
 {
     public class EditViewModel
     {

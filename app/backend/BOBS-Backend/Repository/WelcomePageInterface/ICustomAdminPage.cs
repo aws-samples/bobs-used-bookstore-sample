@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Amazon.S3.Model;
-using BOBS_Backend.Models.Book;
-using BOBS_Backend.Models.Order;
-using BOBS_Backend.ViewModel.UpdateBooks;
+using BookstoreBackend.Models.Book;
+using BookstoreBackend.Models.Order;
+using BookstoreBackend.ViewModel.UpdateBooks;
 
-namespace BOBS_Backend.Repository.WelcomePageInterface
+namespace BookstoreBackend.Repository.WelcomePageInterface
 {
     public interface ICustomAdminPage
     {

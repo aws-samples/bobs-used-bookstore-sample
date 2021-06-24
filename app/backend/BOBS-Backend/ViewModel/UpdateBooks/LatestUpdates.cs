@@ -1,11 +1,7 @@
-﻿using BOBS_Backend.Models.Book;
-using BOBS_Backend.Models.Order;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using BookstoreBackend.Models.Book;
 
-namespace BOBS_Backend.ViewModel.UpdateBooks
+namespace BookstoreBackend.ViewModel.UpdateBooks
 {
     public class LatestUpdates
     {

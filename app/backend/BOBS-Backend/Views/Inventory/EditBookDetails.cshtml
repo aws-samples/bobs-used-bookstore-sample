@@ -1,10 +1,10 @@
-﻿@model BOBS_Backend.ViewModel.BooksViewModel
+﻿@model BookstoreBackend.ViewModel.BooksViewModel
 @{
     ViewData["Title"] = "Checkout";
-    var types = (List<BOBS_Backend.Models.Book.Type>)ViewData["Types"];
-    var publishers = (List<BOBS_Backend.Models.Book.Publisher>)ViewData["Publishers"];
-    var genres = (List<BOBS_Backend.Models.Book.Genre>)ViewData["Genres"];
-    var conditions = (List<BOBS_Backend.Models.Book.Condition>)ViewData["Conditions"];
+    var types = (List<BookstoreBackend.Models.Book.Type>)ViewData["Types"];
+    var publishers = (List<BookstoreBackend.Models.Book.Publisher>)ViewData["Publishers"];
+    var genres = (List<BookstoreBackend.Models.Book.Genre>)ViewData["Genres"];
+    var conditions = (List<BookstoreBackend.Models.Book.Condition>)ViewData["Conditions"];
     var errorstatus = (string)ViewData["ErrorStatus"];
     var error = (string)ViewData["Error"];
     var adding_varint = (string)ViewData["Book"];

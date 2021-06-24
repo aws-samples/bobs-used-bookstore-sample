@@ -1,18 +1,14 @@
-﻿using BOBS_Backend.Database;
-using BOBS_Backend.Models.Order;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using BOBS_Backend.Repository.OrdersInterface;
-using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
-using Microsoft.AspNetCore.Mvc;
-using BOBS_Backend.Notifications.NotificationsInterface;
-using BOBS_Backend.Repository.SearchImplementations;
 using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore;
+using BookstoreBackend.Repository.OrdersInterface;
+using BookstoreBackend.Repository.SearchImplementations;
+using BookstoreBackend.Models.Order;
 
-namespace BOBS_Backend.Repository.Implementations.OrderImplementations
+namespace BookstoreBackend.Repository.Implementations.OrderImplementations
 {
     public class OrderDetailRepository : IOrderDetailRepository
     {
@@ -202,7 +198,7 @@ namespace BOBS_Backend.Repository.Implementations.OrderImplementations
 
             Expression<Func<OrderDetail, bool>> lambda = _expFunc.ReturnLambdaExpression<OrderDetail>(tableName, filterValue, searchString, inBetween, operand, negate);
 
-            var orderDetailBase = _orderDbCalls.GetBaseQuery("BOBS_Backend.Models.Order.OrderDetail");
+            var orderDetailBase = _orderDbCalls.GetBaseQuery("BookstoreBackend.Models.Order.OrderDetail");
 
             var query = _orderDbCalls.ReturnBaseQuery<OrderDetail>(orderDetailBase, OrderDetailIncludes);
 

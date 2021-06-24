@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
-using BOBS_Backend.Models.Order;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace BOBS_Backend.Models.Customer
+namespace BookstoreBackend.Models.Customer
 {
     public class Address
     {

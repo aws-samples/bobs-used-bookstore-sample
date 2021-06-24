@@ -1,16 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using BOBS_Backend.Models;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.AspNetCore.Http;
-using BOBS_Backend.DataModel;
-using Microsoft.EntityFrameworkCore.Internal;
-using BOBS_Backend.Database;
 
-namespace BOBS_Backend.ViewModel
+namespace BookstoreBackend.ViewModel
 {
     public class BooksViewModel
     {

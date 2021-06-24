@@ -1,14 +1,7 @@
-﻿using Amazon.Auth.AccessControlPolicy;
-using BOBS_Backend.DataModel;
-using BOBS_Backend.Models;
-using BOBS_Backend.Models.Book;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Condition = BOBS_Backend.Models.Book.Condition;
+﻿using System.Collections.Generic;
+using BookstoreBackend.DataModel;
 
-namespace BOBS_Backend.ViewModel
+namespace BookstoreBackend.ViewModel
 {
     public class FetchBooksViewModel
     {

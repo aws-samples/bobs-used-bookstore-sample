@@ -1,36 +1,26 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
-using BOBS_Backend.Repository;
-using BOBS_Backend.Repository.Implementations;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
-using Microsoft.AspNetCore.Http;
-using BOBS_Backend.Repository.OrdersInterface;
-using BOBS_Backend.Repository.Implementations.OrderImplementations;
-using BOBS_Backend.Repository.WelcomePageInterface;
-using BOBS_Backend.Repository.Implementations.WelcomePageImplementation;
-using BOBS_Backend.Notifications.NotificationsInterface;
-using BOBS_Backend.Notifications.Implementations;
-using BOBS_Backend.Repository.Implementations.InventoryImplementation;
 using Amazon.S3;
-using Microsoft.Extensions.Logging;
 using Amazon.Polly;
-using BOBS_Backend.Models;
-using BOBS_Backend.Repository.SearchImplementations;
-using BOBS_Backend.Repository.Implementations.SearchImplementation;
-using Autofac.Core;
-using BOBS_Backend.Database;
+using BookstoreBackend.Repository;
+using BookstoreBackend.Repository.Implementations;
+using BookstoreBackend.Repository.OrdersInterface;
+using BookstoreBackend.Repository.Implementations.OrderImplementations;
+using BookstoreBackend.Repository.WelcomePageInterface;
+using BookstoreBackend.Repository.Implementations.WelcomePageImplementation;
+using BookstoreBackend.Notifications.NotificationsInterface;
+using BookstoreBackend.Repository.Implementations.InventoryImplementation;
+using BookstoreBackend.Repository.SearchImplementations;
+using BookstoreBackend.Repository.Implementations.SearchImplementation;
 
-namespace BOBS_Backend
+namespace BookstoreBackend
 {
     public class Startup
     {

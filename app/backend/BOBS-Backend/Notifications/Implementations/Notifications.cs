@@ -1,19 +1,12 @@
-﻿using Amazon;
+﻿using System;
+using System.Collections.Generic;
+using Microsoft.Extensions.Configuration;
+using Amazon;
 using Amazon.SimpleEmail;
 using Amazon.SimpleEmail.Model;
-using Amazon.SimpleNotificationService;
-using Amazon.SimpleNotificationService.Model;
-using BOBS_Backend.Models.Order;
-using BOBS_Backend.Notifications.NotificationsInterface;
-using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Mail;
-using System.Threading.Tasks;
+using BookstoreBackend.Notifications.NotificationsInterface;
 
-namespace BOBS_Backend.Notifications.Implementations
+namespace BookstoreBackend.Notifications.Implementations
 {
     public class Notifications : INotifications
 

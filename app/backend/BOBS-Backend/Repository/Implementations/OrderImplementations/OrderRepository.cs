@@ -1,26 +1,16 @@
-﻿using BOBS_Backend.Database;
-using BOBS_Backend.Models.Order;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using BOBS_Backend.Repository.OrdersInterface;
-using BOBS_Backend.ViewModel.ManageOrders;
-using System.Reflection.PortableExecutable;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.Threading;
-using Amazon.Rekognition.Model;
-using System.Reflection;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Linq.Dynamic.Core;
-using Microsoft.EntityFrameworkCore;
 using System.Data.Entity;
-using BOBS_Backend.Repository.SearchImplementations;
-using System.Runtime.InteropServices;
+using BookstoreBackend.Models.Order;
+using BookstoreBackend.Repository.OrdersInterface;
+using BookstoreBackend.ViewModel.ManageOrders;
+using BookstoreBackend.Repository.SearchImplementations;
 
-namespace BOBS_Backend.Repository.Implementations.OrderImplementations
+namespace BookstoreBackend.Repository.Implementations.OrderImplementations
 {
 
     public class OrderRepository : IOrderRepository
@@ -93,7 +83,7 @@ namespace BOBS_Backend.Repository.Implementations.OrderImplementations
 
             ManageOrderViewModel viewModel = new ManageOrderViewModel();
 
-            var orderBase = _orderDbCalls.GetBaseQuery("BOBS_Backend.Models.Order.Order");
+            var orderBase = _orderDbCalls.GetBaseQuery("BookstoreBackend.Models.Order.Order");
 
             var query = _orderDbCalls.ReturnBaseQuery<Order>(orderBase, OrderIncludes);
 
@@ -143,7 +133,7 @@ namespace BOBS_Backend.Repository.Implementations.OrderImplementations
                 viewModel = RetrieveViewModel("", "", 1, 1, pages, null);
                 return viewModel;
             }
-            var orderBase = _orderDbCalls.GetBaseQuery("BOBS_Backend.Models.Order.Order");
+            var orderBase = _orderDbCalls.GetBaseQuery("BookstoreBackend.Models.Order.Order");
 
             var query = _orderDbCalls.ReturnBaseQuery<Order>(orderBase, OrderIncludes);
 
@@ -171,7 +161,7 @@ namespace BOBS_Backend.Repository.Implementations.OrderImplementations
 
             Expression<Func<Order, bool>> lambda = _expFunc.ReturnLambdaExpression<Order>(tableName, filterValue, searchString, inBetween, operand, negate);
 
-            var orderBase = _orderDbCalls.GetBaseQuery("BOBS_Backend.Models.Order.Order");
+            var orderBase = _orderDbCalls.GetBaseQuery("BookstoreBackend.Models.Order.Order");
 
             var query = _orderDbCalls.ReturnBaseQuery<Order>(orderBase, OrderIncludes);
 

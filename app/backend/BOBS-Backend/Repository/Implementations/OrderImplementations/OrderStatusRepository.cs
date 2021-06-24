@@ -1,17 +1,14 @@
-﻿using BOBS_Backend.Database;
-using BOBS_Backend.Models.Order;
-using BOBS_Backend.Repository.OrdersInterface;
-using BOBS_Backend.Repository.SearchImplementations;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using BookstoreBackend.Models.Order;
+using BookstoreBackend.Repository.OrdersInterface;
+using BookstoreBackend.Repository.SearchImplementations;
 
-namespace BOBS_Backend.Repository.Implementations.OrderImplementations
+namespace BookstoreBackend.Repository.Implementations.OrderImplementations
 {
     public class OrderStatusRepository : IOrderStatusRepository
     {
@@ -66,7 +63,7 @@ namespace BOBS_Backend.Repository.Implementations.OrderImplementations
         // Returns all Order Statuses in a Table
         public async Task<List<OrderStatus>> GetOrderStatuses()
         {
-            var orderBase = _orderDbCalls.GetBaseQuery("BOBS_Backend.Models.Order.OrderStatus");
+            var orderBase = _orderDbCalls.GetBaseQuery("BookstoreBackend.Models.Order.OrderStatus");
 
             var query = (IQueryable<OrderStatus>)orderBase;
 
@@ -114,7 +111,7 @@ namespace BOBS_Backend.Repository.Implementations.OrderImplementations
 
             Expression<Func<OrderStatus, bool>> lambda = _expFunc.ReturnLambdaExpression<OrderStatus>(tableName, filterValue, searchString, inBetween, operand, negate);
 
-            var orderStatusBase = _orderDbCalls.GetBaseQuery("BOBS_Backend.Models.Order.OrderStatus");
+            var orderStatusBase = _orderDbCalls.GetBaseQuery("BookstoreBackend.Models.Order.OrderStatus");
 
             var query = (IQueryable<OrderStatus>) orderStatusBase;
 

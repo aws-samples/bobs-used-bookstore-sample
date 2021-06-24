@@ -1,15 +1,12 @@
-﻿using Amazon.Runtime;
-using BOBS_Backend.Database;
-using BOBS_Backend.Models.Book;
-using BOBS_Backend.Repository.Implementations.SearchImplementation;
-using BOBS_Backend.Repository.InventoryInterface;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Threading.Tasks;
+using BookstoreBackend.Database;
+using BookstoreBackend.Models.Book;
+using BookstoreBackend.Repository.Implementations.SearchImplementation;
+using BookstoreBackend.Repository.InventoryInterface;
 
-namespace BOBS_Backend.Repository.Implementations.InventoryImplementation
+namespace BookstoreBackend.Repository.Implementations.InventoryImplementation
 {
     public class BookDatabaseCalls : IBookDatabaseCalls
     {

@@ -1,4 +1,4 @@
-﻿@model BOBS_Backend.ViewModel.FetchBooksViewModel
+﻿@model BookstoreBackend.ViewModel.FetchBooksViewModel
 
 @{
     var types = (List<string>)ViewData["Types"];
@@ -6,7 +6,7 @@
     var conditions = (List<string>)ViewData["Conditions"];
 }
 @{
-    var books = (IEnumerable<BOBS_Backend.DataModel.BookDetails>)ViewData["Books"];
+    var books = (IEnumerable<BookstoreBackend.DataModel.BookDetails>)ViewData["Books"];
     var Genre = Model.genre.ToUpper();
     var Author = Model.Author.ToUpper();
     var BookName = Model.BookName.ToUpper();

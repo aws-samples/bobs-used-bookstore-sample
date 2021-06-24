@@ -8,7 +8,7 @@ using BobBookstore.Models.Carts;
 using BobBookstore.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using PagedList;
+using X.PagedList;
 
 namespace BobBookstore.Controllers
 {
@@ -87,12 +87,7 @@ namespace BobBookstore.Controllers
 
                 pricesQuery = pricesQuery.OrderBy(p => p.ItemPrice);
 
-<<<<<<< Updated upstream
-                
-                var books = from b in _context.Book
-=======
                 var booksQuery = from b in _context.Book
->>>>>>> Stashed changes
                             where b.Name.Contains(searchString) ||
                             b.Genre.Name.Contains(searchString) ||
                             b.Type.TypeName.Contains(searchString) ||

@@ -1,12 +1,8 @@
-﻿using BOBS_Backend.Models;
-using BOBS_Backend.Models.Book;
+﻿using System;
 using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using BookstoreBackend.Models.Book;
 
-namespace BOBS_Backend.DataModel
+namespace BookstoreBackend.DataModel
 {
     public class BookDetails
     {

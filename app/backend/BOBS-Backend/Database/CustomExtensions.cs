@@ -1,14 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore.Internal;
-using Microsoft.EntityFrameworkCore.Query;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
-using System.Data.Entity.Core.Objects;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 
-namespace BOBS_Backend.Database
+namespace BookstoreBackend.Database
 {
     public static partial class CustomExtensions
     {

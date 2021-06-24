@@ -1,11 +1,7 @@
-﻿using Amazon.Rekognition.Model;
-using BOBS_Backend.DataModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using BookstoreBackend.DataModel;
 
-namespace BOBS_Backend.ViewModel.ManageInventory
+namespace BookstoreBackend.ViewModel.ManageInventory
 {
     public class PagedSearchViewModel
     {

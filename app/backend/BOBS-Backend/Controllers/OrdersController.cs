@@ -1,22 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using BOBS_Backend.Database;
-using BOBS_Backend.Models.Order;
-using BOBS_Backend.Repository;
-using BOBS_Backend.Repository.OrdersInterface;
-using BOBS_Backend.ViewModel.ManageOrders;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Authorization;
-using BOBS_Backend.ViewModel.ProcessOrders;
-using System.Runtime.InteropServices;
-using BOBS_Backend.Notifications.NotificationsInterface;
 using System.Text.RegularExpressions;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using BookstoreBackend.Repository;
+using BookstoreBackend.Repository.OrdersInterface;
+using BookstoreBackend.ViewModel.ManageOrders;
+using BookstoreBackend.ViewModel.ProcessOrders;
+using BookstoreBackend.Notifications.NotificationsInterface;
 
-namespace BOBS_Backend.Controllers
+namespace BookstoreBackend.Controllers
 {
     [Authorize]
     public class OrdersController : Controller

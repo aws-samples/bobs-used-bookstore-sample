@@ -1,17 +1,16 @@
-﻿using BOBS_Backend.Database;
-using BOBS_Backend.DataModel;
-using BOBS_Backend.Models.Book;
-using BOBS_Backend.Notifications.NotificationsInterface;
-using BOBS_Backend.ViewModel;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using BookstoreBackend.Database;
+using BookstoreBackend.DataModel;
+using BookstoreBackend.Models.Book;
+using BookstoreBackend.Notifications.NotificationsInterface;
+using BookstoreBackend.ViewModel;
 
-
-namespace BOBS_Backend.Controllers
+namespace BookstoreBackend.Controllers
 {
     public class InventoryController : Controller
     {
@@ -20,16 +19,14 @@ namespace BOBS_Backend.Controllers
         private readonly ILogger<InventoryController> _logger;
         private INotifications _emailSender;
 
-
-        public InventoryController(IInventory Inventory , DatabaseContext context , ILogger<InventoryController> logger , INotifications emailSender)
-        {           
+        public InventoryController(IInventory Inventory, DatabaseContext context, ILogger<InventoryController> logger, INotifications emailSender)
+        {
             _Inventory = Inventory;
             _context = context;
             _logger = logger;
             _emailSender = emailSender;
         }
 
-       
         [HttpGet]
         public IActionResult EditBookDetails(string BookName)
         {
@@ -37,15 +34,13 @@ namespace BOBS_Backend.Controllers
             try
             {
                 ViewData["user"] = @User.Claims.FirstOrDefault(c => c.Type.Equals("cognito:username"))?.Value;
-
             }
-
-            catch( Exception e)
+            catch (Exception e)
             {
-                
                 _logger.LogError(e, "Error in authentication @ Adding a new Book");
             }
-                DateTime time = DateTime.Now;
+
+            DateTime time = DateTime.Now;
             try
             {
                 if (!string.IsNullOrEmpty(BookName))
@@ -60,19 +55,16 @@ namespace BOBS_Backend.Controllers
                 if (BookName != null)
                 {
                     ViewData["Book"] = BookName;
-                    
                 }
                 ViewData["Types"] = _Inventory.GetTypes();
                 ViewData["Publishers"] = _Inventory.GetAllPublishers();
                 ViewData["Genres"] = _Inventory.GetGenres();
                 ViewData["Conditions"] = _Inventory.GetConditions();
-
             }
-               catch(Exception e)
-               {
-
-                _logger.LogError(e,"Error in loading dropdownlists for Books Action Method");
-               }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Error in loading dropdownlists for Books Action Method");
+            }
 
             ViewData["check"] = Constants.ErrorStatusYes;
 
@@ -110,17 +102,17 @@ namespace BOBS_Backend.Controllers
                     ViewData["Genres"] = _Inventory.GetGenres();
                     ViewData["Conditions"] = _Inventory.GetConditions();
                     return View(bookview);
-                }                
-                    
+                }
+
                 var temp = _context.Book.Where(b => b.Name == bookview.BookName).ToList()[0];
                 var BookId = temp.Book_Id;
                 return RedirectToAction("BookDetails", new { BookId });
 
             }
 
-            return View (bookview);
+            return View(bookview);
         }
-    
+
 
         [HttpGet]
         public IActionResult AddPublishers()
@@ -136,7 +128,7 @@ namespace BOBS_Backend.Controllers
         }
 
         [HttpPost]
-        public  IActionResult AddPublishers(Publisher publisher , string source)
+        public IActionResult AddPublishers(Publisher publisher, string source)
         {
             try
             {
@@ -152,14 +144,14 @@ namespace BOBS_Backend.Controllers
                 }
             }
 
-            catch(Exception e)
+            catch (Exception e)
             {
                 _logger.LogError(e, "Error in adding a new publisher");
             }
             return View();
 
         }
-               [HttpGet]
+        [HttpGet]
         public IActionResult AddGenres()
         {
 
@@ -185,7 +177,7 @@ namespace BOBS_Backend.Controllers
                 }
             }
 
-            catch(Exception e)
+            catch (Exception e)
             {
                 _logger.LogError(e, "Error in adding a new genre");
             }
@@ -219,7 +211,7 @@ namespace BOBS_Backend.Controllers
                 }
             }
 
-            catch(Exception e)
+            catch (Exception e)
             {
                 _logger.LogError(e, "Error in adding a new type");
             }
@@ -253,7 +245,7 @@ namespace BOBS_Backend.Controllers
                 }
             }
 
-            catch(Exception e)
+            catch (Exception e)
             {
                 _logger.LogError(e, "Error in adding a new condition");
             }
@@ -368,10 +360,10 @@ namespace BOBS_Backend.Controllers
         public IActionResult BookDetails(long BookId)
         {
             _logger.LogInformation("Loading Book Details on Click in search page");
-            
-                FetchBooksViewModel books = new FetchBooksViewModel();
-            try 
-            { 
+
+            FetchBooksViewModel books = new FetchBooksViewModel();
+            try
+            {
                 var bookdetails = _Inventory.GetBookByID(BookId);
                 books.publisher = bookdetails.Publisher.Name;
                 books.genre = bookdetails.Genre.Name;
@@ -392,16 +384,16 @@ namespace BOBS_Backend.Controllers
             }
             catch (Exception e)
             {
-                _logger.LogError(e, "Error in displaying Book Details");               
+                _logger.LogError(e, "Error in displaying Book Details");
             }
             return View(books);
-            
 
-           
+
+
         }
 
         [HttpPost]
-        public IActionResult BookDetails(string type , string condition_chosen , string BookName , FetchBooksViewModel book)
+        public IActionResult BookDetails(string type, string condition_chosen, string BookName, FetchBooksViewModel book)
         {
             /*
                 *  function to add details to the Book table
@@ -420,15 +412,15 @@ namespace BOBS_Backend.Controllers
                 ViewData["status"] = "List";
                 ViewData["Books"] = _Inventory.GetRelevantBooks(BookName, type, condition_chosen);
                 var lis = _Inventory.GetRelevantBooks(BookName, type, condition_chosen);
-                if(lis.Count == 0)
-                {                  
+                if (lis.Count == 0)
+                {
                     var temp = _context.Book.Where(b => b.Name == BookName).ToList()[0];
                     var variant = _Inventory.GetBookByID(temp.Book_Id);
                     book.genre = variant.Genre.Name;
                     book.Author = variant.Author;
                     book.Summary = variant.Summary;
                     ViewData["status"] = Constants.BookDetailsStatusDetails;
-                    ViewData["fetchstatus"] =  Constants.CombinationErrorStatus;
+                    ViewData["fetchstatus"] = Constants.CombinationErrorStatus;
                     return View(book);
                 }
                 book.BookType = lis[0].BookType.TypeName;
@@ -442,14 +434,14 @@ namespace BOBS_Backend.Controllers
                 book.Summary = lis[0].Summary;
             }
 
-            catch(Exception e)
+            catch (Exception e)
             {
                 _logger.LogError(e, "Error in loading table data for book details ");
             }
             return View(book);
         }
-       
-        public IActionResult SearchBeta(string searchfilter, string searchby, int pageNum, string ViewStyle, string SortBy , string ascdesc , string pagination)
+
+        public IActionResult SearchBeta(string searchfilter, string searchby, int pageNum, string ViewStyle, string SortBy, string ascdesc, string pagination)
         {
             _logger.LogInformation("Search Page");
             try
@@ -470,11 +462,11 @@ namespace BOBS_Backend.Controllers
             {
                 if (pageNum == 0) pageNum++;
 
-                if ( (String.IsNullOrEmpty(searchby) || String.IsNullOrEmpty(searchfilter)) )
+                if ((String.IsNullOrEmpty(searchby) || String.IsNullOrEmpty(searchfilter)))
                 {
 
 
-                    var books = _Inventory.GetAllBooks(pageNum, ViewStyle, SortBy , ascdesc);
+                    var books = _Inventory.GetAllBooks(pageNum, ViewStyle, SortBy, ascdesc);
 
                     books.SortBy = SortBy;
                     return View(books);
@@ -498,7 +490,7 @@ namespace BOBS_Backend.Controllers
             return View();
         }
 
-       [HttpPost]
+        [HttpPost]
         public IActionResult UpdateDetails(int BookId, string Condition)
         {
             _logger.LogInformation("Load Edit Book Details page with pre-filled values");
@@ -527,13 +519,13 @@ namespace BOBS_Backend.Controllers
 
             }
 
-            catch(Exception e)
+            catch (Exception e)
             {
                 _logger.LogError(e, "Error in posting Edited Book details to database");
             }
             return RedirectToAction("SearchBeta");
         }
-       
+
         public IActionResult Dashboard(FetchBooksViewModel Book)
         {
             _logger.LogInformation("Dashboard Display");
@@ -574,7 +566,7 @@ namespace BOBS_Backend.Controllers
                 ViewData["Orders"] = OrdersStats;
             }
 
-            catch(Exception e)
+            catch (Exception e)
             {
                 _logger.LogError("Error in displaying dasboard statistics");
                 return RedirectToAction("Error", "Home");
@@ -593,9 +585,9 @@ namespace BOBS_Backend.Controllers
 
                 return Ok(names);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
-                _logger.LogError(e,"Error in loading autosearch results");
+                _logger.LogError(e, "Error in loading autosearch results");
                 return BadRequest();
             }
         }

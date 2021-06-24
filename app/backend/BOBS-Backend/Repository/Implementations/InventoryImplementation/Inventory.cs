@@ -1,47 +1,21 @@
-﻿using Amazon;
-using Amazon.Rekognition;
-using Amazon.Rekognition.Model;
-using Amazon.S3;
-using Amazon.S3.Transfer;
-using BOBS_Backend.Database;
-using BOBS_Backend.DataModel;
-using BOBS_Backend.Models;
-using BOBS_Backend.Models.Book;
-using BOBS_Backend.ViewModel;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore.Internal;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Reflection.Metadata.Ecma335;
-using System.Text;
-using System.Threading.Tasks;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Processing;
-using SixLabors.ImageSharp.Formats;
-using SixLabors.ImageSharp.Formats.Gif;
-using SixLabors.ImageSharp.Formats.Jpeg;
-using SixLabors.ImageSharp.Formats.Png;
-using Amazon.Polly;
-using Amazon.Polly.Model;
-using Amazon.S3.Model.Internal.MarshallTransformations;
-using BOBS_Backend.Models.Order;
-using Amazon.Runtime.Internal.Transform;
-using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
-using Amazon.Translate.Model;
-using BOBS_Backend.Repository.Implementations;
-using BOBS_Backend.ViewModel.ManageInventory;
 using System.Linq.Expressions;
 using Type = System.Type;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using BOBS_Backend.ViewModel.SearchBooks;
-using BOBS_Backend.Repository.SearchImplementations;
+using Microsoft.EntityFrameworkCore;
+using SixLabors.ImageSharp;
+using Amazon.Polly;
+using BookstoreBackend.Repository.Implementations;
+using BookstoreBackend.Database;
+using BookstoreBackend.DataModel;
+using BookstoreBackend.Models.Book;
+using BookstoreBackend.ViewModel;
+using BookstoreBackend.ViewModel.SearchBooks;
+using BookstoreBackend.Repository.SearchImplementations;
 
-namespace BOBS_Backend
+namespace BookstoreBackend
 {
     /*
         * Inventory Repository contains all functions associated with managing and viewing Inventory
@@ -103,7 +77,7 @@ namespace BOBS_Backend
          *  function to add  details to the Publisher table
          */
 
-        public int AddPublishers(BOBS_Backend.Models.Book.Publisher publishers)
+        public int AddPublishers(BookstoreBackend.Models.Book.Publisher publishers)
         {
             _logger.LogInformation("Posting details to the Publisher table");
             var publishName = _context.Publisher.Where(publisher => publisher.Name == publishers.Name).ToList();
@@ -119,7 +93,7 @@ namespace BOBS_Backend
         /*
          *  function to add  details to the Genres table
          */
-        public int AddGenres(BOBS_Backend.Models.Book.Genre genres)
+        public int AddGenres(BookstoreBackend.Models.Book.Genre genres)
         {
             _logger.LogInformation("Posting details to the Genres table");
             var genreName = _context.Genre.Where(genre => genre.Name == genres.Name).ToList();
@@ -135,7 +109,7 @@ namespace BOBS_Backend
         /*
          *  function to add  details to the Types table
          */
-        public int AddBookTypes(BOBS_Backend.Models.Book.Type booktype)
+        public int AddBookTypes(BookstoreBackend.Models.Book.Type booktype)
         {
             _logger.LogInformation("Posting details to the Types table");
             var typeName = _context.Type.Where(type => type.TypeName == booktype.TypeName).ToList();
@@ -153,7 +127,7 @@ namespace BOBS_Backend
         /*
          *  function to add  details to the Conditions table
          */
-        public int AddBookConditions(BOBS_Backend.Models.Book.Condition bookcondition)
+        public int AddBookConditions(BookstoreBackend.Models.Book.Condition bookcondition)
         {
             _logger.LogInformation("Posting details to the Conditions table");
            
@@ -271,7 +245,7 @@ namespace BOBS_Backend
         /*
          *  function to fetch all publisher details for dynamic display in the drop down list 
          */
-        public List<BOBS_Backend.Models.Book.Publisher> GetAllPublishers()
+        public List<BookstoreBackend.Models.Book.Publisher> GetAllPublishers()
         {
             var publishers = _context.Publisher.ToList();
             return publishers;
@@ -281,7 +255,7 @@ namespace BOBS_Backend
         /*
         *  function to fetch all Genres details for dynamic display in the drop down list 
         */
-        public List<BOBS_Backend.Models.Book.Genre> GetGenres()
+        public List<BookstoreBackend.Models.Book.Genre> GetGenres()
         {
 
             var genres = _context.Genre.ToList();
@@ -291,7 +265,7 @@ namespace BOBS_Backend
         /*
         *  function to fetch all Types details for dynamic display in the drop down list 
         */
-        public List<BOBS_Backend.Models.Book.Type> GetTypes()
+        public List<BookstoreBackend.Models.Book.Type> GetTypes()
         {
 
             var typelist = _context.Type.ToList();
@@ -301,7 +275,7 @@ namespace BOBS_Backend
         /*
         *  function to fetch all Conditions for dynamic display in the drop down list 
         */
-        public List<BOBS_Backend.Models.Book.Condition> GetConditions()
+        public List<BookstoreBackend.Models.Book.Condition> GetConditions()
         {
 
             var conditions = _context.Condition.ToList();
@@ -465,7 +439,7 @@ namespace BOBS_Backend
 
         private List<FullBook> RetrieveSortedBookList(List<FullBook> finalBooksList, string SortBy, string ascdesc)
         {
-            var parameterExpression2 = Expression.Parameter(Type.GetType("BOBS_Backend.ViewModel.SearchBooks.FullBook"), "fullbook");
+            var parameterExpression2 = Expression.Parameter(Type.GetType("BookstoreBackend.ViewModel.SearchBooks.FullBook"), "fullbook");
 
             Expression property = null;
 
@@ -566,7 +540,7 @@ namespace BOBS_Backend
             searchby = " " + searchby;
 
             SearchBookViewModel viewModel = new SearchBookViewModel();
-            var parameterExpression = Expression.Parameter(Type.GetType("BOBS_Backend.Models.Book.Price"), "order");
+            var parameterExpression = Expression.Parameter(Type.GetType("BookstoreBackend.Models.Book.Price"), "order");
 
 
             var expression = _searchRepo.ReturnExpression(parameterExpression, searchby, searchfilter);

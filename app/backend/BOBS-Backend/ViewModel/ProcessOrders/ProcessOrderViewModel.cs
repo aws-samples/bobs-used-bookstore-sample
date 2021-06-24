@@ -1,11 +1,8 @@
-﻿using BOBS_Backend.Models.Order;
-using BOBS_Backend.ViewModel.ManageOrders;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using BookstoreBackend.Models.Order;
+using BookstoreBackend.ViewModel.ManageOrders;
 
-namespace BOBS_Backend.ViewModel.ProcessOrders
+namespace BookstoreBackend.ViewModel.ProcessOrders
 {
     public class ProcessOrderViewModel
     {

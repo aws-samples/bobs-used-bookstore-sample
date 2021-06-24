@@ -1,10 +1,10 @@
-﻿using BOBS_Backend.Models.Order;
+﻿using BookstoreBackend.Models.Order;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace BOBS_Backend.Repository.OrdersInterface
+namespace BookstoreBackend.Repository.OrdersInterface
 {
     public interface IOrderDetailRepository
     {

@@ -1,21 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authentication;
-using System.IO;
-using Microsoft.AspNetCore.Mvc.Filters;
 
-
-namespace BOBS_Backend.Controllers
+namespace BookstoreBackend.Controllers
 {
     public class AuthenticationController : Controller
     {
-       
         public async Task SignOut()
-        {            
+        {
             // deletes the cookies from the local machine
             await HttpContext.SignOutAsync("Cookies");
             // the cognito logout URL; should be the same as the signout URL on cognito
@@ -25,11 +18,6 @@ namespace BOBS_Backend.Controllers
             string logout_url = url + redirecturl;
             // redirects to the response from the cognito logout endpoint
             HttpContext.Response.Redirect(logout_url);
-
-
-
-
         }
-        
     }
 }

@@ -1,5 +1,5 @@
-﻿using BOBS_Backend.Database;
-using BOBS_Backend.Models.Order;
+﻿using BookstoreBackend.Database;
+using BookstoreBackend.Models.Order;
 using Microsoft.EntityFrameworkCore.Storage;
 using System;
 using System.Collections.Generic;
@@ -7,7 +7,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
-namespace BOBS_Backend.Repository.OrdersInterface
+namespace BookstoreBackend.Repository.OrdersInterface
 {
     public interface IOrderDatabaseCalls
     {

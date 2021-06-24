@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
-namespace BOBS_Backend.Models.AdminUser
+﻿namespace BookstoreBackend.Models.AdminUser
 {
     public class AdminUser
     {

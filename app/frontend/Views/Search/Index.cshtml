@@ -64,12 +64,6 @@
 }
 else if (Model != null)
 {
-<<<<<<< Updated upstream
-    
-
-
-=======
->>>>>>> Stashed changes
     <body>
         <section class="static about-sec">
             <div class="container">
@@ -88,12 +82,11 @@ else if (Model != null)
                                     <h3>@Html.DisplayFor(modelitem => item.BookName)</h3>
                                     @if (item.Prices.Count != 0)
                                     {
-
                                         <h6><span class="price">$@item.MinPrice </span> </h6>
                                     }
                                     else
                                     {
-                                        <h6> Out Of Stock</h6>
+                                        <h6>Out Of Stock</h6>
                                     }
                                     <div class="hover">
                                         <form asp-controller="Search" asp-action="Detail" method="get">

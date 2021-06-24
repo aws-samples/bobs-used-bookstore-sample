@@ -1,26 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Amazon;
+using System.IO;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Logging;
 using Amazon.Rekognition;
 using Amazon.Rekognition.Model;
 using Amazon.S3;
 using Amazon.S3.Transfer;
-using BOBS_Backend.Database;
-using Microsoft.AspNetCore.Http;
-using System.IO;
+using Amazon.Polly;
 using SixLabors.ImageSharp.Processing;
 using SixLabors.ImageSharp.Formats;
 using SixLabors.ImageSharp.Formats.Gif;
 using SixLabors.ImageSharp.Formats.Jpeg;
 using SixLabors.ImageSharp.Formats.Png;
-using Amazon.Polly;
-using Microsoft.AspNetCore.Hosting;
-using System.Linq;
-using BOBS_Backend.Models.Book;
-using Microsoft.Extensions.Logging;
+using BookstoreBackend.Database;
 
-namespace BOBS_Backend.Repository.Implementations.InventoryImplementation
+namespace BookstoreBackend.Repository.Implementations.InventoryImplementation
 {
     public class RekognitionNPollyRepository : IRekognitionNPollyRepository
     {

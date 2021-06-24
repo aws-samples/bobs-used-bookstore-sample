@@ -1,11 +1,8 @@
-﻿using BOBS_Backend.Database;
-using BOBS_Backend.Repository.SearchImplementations;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Linq;
+using BookstoreBackend.Database;
+using BookstoreBackend.Repository.SearchImplementations;
 
-namespace BOBS_Backend.Repository.Implementations.SearchImplementation
+namespace BookstoreBackend.Repository.Implementations.SearchImplementation
 {
     public class SearchDatabaseCalls: ISearchDatabaseCalls
     {

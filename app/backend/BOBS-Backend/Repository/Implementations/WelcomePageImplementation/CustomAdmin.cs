@@ -1,25 +1,18 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using BOBS_Backend.Repository.WelcomePageInterface;
-using BOBS_Backend.ViewModel.UpdateBooks;
-using Microsoft.EntityFrameworkCore;
-using BOBS_Backend.Database;
-using Microsoft.EntityFrameworkCore.Internal;
-using BOBS_Backend.Models.Book;
-using BOBS_Backend.Models.Order;
-using Amazon.Runtime.Internal.Util;
-using Amazon.S3.Model;
-using Microsoft.Data.SqlClient;
 using System.Data.Common;
-using Castle.DynamicProxy.Generators.Emitters.SimpleAST;
-using System.Linq.Expressions;
-using BOBS_Backend.Repository.SearchImplementations;
-using BOBS_Backend.Repository.OrdersInterface;
+using Microsoft.EntityFrameworkCore;
+using BookstoreBackend.Repository.WelcomePageInterface;
+using BookstoreBackend.ViewModel.UpdateBooks;
+using BookstoreBackend.Database;
+using BookstoreBackend.Models.Book;
+using BookstoreBackend.Models.Order;
+using BookstoreBackend.Repository.SearchImplementations;
+using BookstoreBackend.Repository.OrdersInterface;
 
-namespace BOBS_Backend.Repository.Implementations.WelcomePageImplementation
+namespace BookstoreBackend.Repository.Implementations.WelcomePageImplementation
 {
     public class CustomAdmin: ICustomAdminPage
     {

@@ -1,6 +1,6 @@
 ﻿using Amazon;
 using Amazon.Rekognition.Model.Internal.MarshallTransformations;
-using BOBS_Backend.Repository;
+using BookstoreBackend.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,7 +33,7 @@ using System.Threading.Tasks;
         public const string SortByPricePhrase = "ItemPrice";
         public const string SortByQuantityPhrase = "Quantity";
         public const string SortByAuthorPhrase = "Author";
-        public const string LambdaExpressionType = "BOBS_Backend.Models.Book.Price";
+        public const string LambdaExpressionType = "BookstoreBackend.Models.Book.Price";
         public const string LAMBDAEXPRESSIONPHRASE = "price";
         public const string photosBucketName = "bookcoverpictures";
         public const string audioBucketName = "audiosummary";

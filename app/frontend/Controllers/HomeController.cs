@@ -1,19 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using BobBookstore.Models;
 using Microsoft.AspNetCore.Http;
-using BobBookstore.Data;
-using BobBookstore.Models.Carts;
 using Microsoft.AspNetCore.Identity;
 using Amazon.Extensions.CognitoAuthentication;
 using Amazon.AspNetCore.Identity.Cognito;
-using BobBookstore.Models.Customer;
-using BobBookstore.Models.Book;
+using BobBookstore.Models;
+using BobBookstore.Data;
+using BobBookstore.Models.Carts;
 
 namespace BobBookstore.Controllers
 {

@@ -1,15 +1,10 @@
-﻿using BOBS_Backend.Database;
-using BOBS_Backend.Repository.OrdersInterface;
-using BOBS_Backend.Repository.SearchImplementations;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.ComponentModel;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
-using System.Threading.Tasks;
+using BookstoreBackend.Repository.SearchImplementations;
 
-namespace BOBS_Backend.Repository.Implementations.SearchImplementation
+namespace BookstoreBackend.Repository.Implementations.SearchImplementation
 {
 
 

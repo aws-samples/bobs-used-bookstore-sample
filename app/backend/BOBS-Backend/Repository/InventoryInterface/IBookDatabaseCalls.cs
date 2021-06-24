@@ -1,10 +1,10 @@
-﻿using BOBS_Backend.Models.Book;
+﻿using BookstoreBackend.Models.Book;
 using System;
 using System.Linq;
 using System.Linq.Expressions;
 
 
-namespace BOBS_Backend.Repository.InventoryInterface
+namespace BookstoreBackend.Repository.InventoryInterface
 {
     public interface IBookDatabaseCalls
     {
