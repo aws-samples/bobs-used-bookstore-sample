@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.30204.135
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookstoreFrontend", "app\frontend\BookstoreFrontend.csproj", "{D2EB32C8-015D-4CE0-B2A4-E6D8E9A0AACC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookstoreBackend", "app\backend\BOBS-Backend\BookstoreBackend.csproj", "{088AE1C3-067F-4D59-B854-9B8C37D9196C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookstoreBackend", "app\backend\BookstoreBackend\BookstoreBackend.csproj", "{088AE1C3-067F-4D59-B854-9B8C37D9196C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application", "Application", "{6FE85BC9-9E7E-4EBE-BB1A-AEB4198463F5}"
 EndProject

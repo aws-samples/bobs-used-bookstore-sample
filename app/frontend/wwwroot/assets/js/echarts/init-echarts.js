@@ -1,6 +1,6 @@
 $(document).ready(function() {
 
-    <!--basic line echarts init-->
+    // basic line echarts init
 
     var chartOneDom = document.getElementById("b-line");
     var chartOne = echarts.init(chartOneDom);
@@ -71,7 +71,7 @@ $(document).ready(function() {
     }
 
 
-    <!--basic area echarts init-->
+    // basic area echarts init
 
     var dom = document.getElementById("b-area");
     var myChart = echarts.init(dom);
@@ -132,7 +132,7 @@ $(document).ready(function() {
     }
 
 
-    <!--Rainfall and Evaporation echarts init-->
+    // Rainfall and Evaporation echarts init
 
     var dom = document.getElementById("rainfall");
     var rainChart = echarts.init(dom);
@@ -200,7 +200,7 @@ $(document).ready(function() {
     }
 
 
-    <!--Negative Bar echarts init-->
+    // Negative Bar echarts init
 
     var dom = document.getElementById("nb-chart");
     var nbChart = echarts.init(dom);
@@ -262,7 +262,7 @@ $(document).ready(function() {
     }
 
 
-    <!--Basic Pie echarts init-->
+    // Basic Pie echarts init
 
     var dom = document.getElementById("basic-Pie");
     var bpChart = echarts.init(dom);
@@ -302,7 +302,7 @@ $(document).ready(function() {
         bpChart.setOption(option, false);
     }
 
-    <!--Nested Pie echarts init-->
+    // Nested Pie echarts init
 
     var dom = document.getElementById("np-Pie");
     var npChart = echarts.init(dom);
@@ -380,7 +380,7 @@ $(document).ready(function() {
     }
 
 
-    <!--Doughnut echarts init-->
+    // Doughnut echarts init
 
     var dom = document.getElementById("doughnut");
     var dnutChart = echarts.init(dom);
@@ -420,7 +420,7 @@ $(document).ready(function() {
     }
 
 
-    <!--Basic Scatter echarts init-->
+    // Basic Scatter echarts init
 
     var dom = document.getElementById("bs-chart");
     var bsChart = echarts.init(dom);
@@ -595,7 +595,7 @@ $(document).ready(function() {
         bsChart.setOption(option, false);
     }
 
-    <!--Radar echarts init-->
+    // Radar echarts init
 
     var dom = document.getElementById("radar");
     var rdChart = echarts.init(dom);
@@ -649,7 +649,7 @@ $(document).ready(function() {
     }
 
 
-    <!--Gauge echarts init-->
+    // Gauge echarts init
 
     var dom = document.getElementById("gauge");
     var gaugeChart = echarts.init(dom);
