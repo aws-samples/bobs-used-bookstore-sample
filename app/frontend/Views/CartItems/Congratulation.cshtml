@@ -5,7 +5,7 @@
 }
 @{
     var totalprice = 0.0;
-    foreach (var item in ViewData["order"] as List<BobBookstore.Models.ViewModels.OrderDetailViewModel>)
+    foreach (var item in ViewData["order"] as List<BobsBookstore.Models.ViewModels.OrderDetailViewModel>)
     {
         totalprice += item.price * item.quantity;
     }
@@ -106,7 +106,7 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in ViewData["order"] as List<BobBookstore.Models.ViewModels.OrderDetailViewModel>)
+        @foreach (var item in ViewData["order"] as List<BobsBookstore.Models.ViewModels.OrderDetailViewModel>)
         {
             double total = item.price * item.quantity;
             <tr>

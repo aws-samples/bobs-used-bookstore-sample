@@ -4,22 +4,24 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using BookstoreBackend.Database;
+using BobsBookstore.DataAccess.Data;
+
 using BookstoreBackend.DataModel;
-using BookstoreBackend.Models.Book;
+using BobsBookstore.Models.Books;
 using BookstoreBackend.Notifications.NotificationsInterface;
 using BookstoreBackend.ViewModel;
+using Type = BobsBookstore.Models.Books.Type;
 
 namespace BookstoreBackend.Controllers
 {
     public class InventoryController : Controller
     {
         private readonly IInventory _Inventory;
-        public DatabaseContext _context;
+        public ApplicationDbContext _context;
         private readonly ILogger<InventoryController> _logger;
         private INotifications _emailSender;
 
-        public InventoryController(IInventory Inventory, DatabaseContext context, ILogger<InventoryController> logger, INotifications emailSender)
+        public InventoryController(IInventory Inventory, ApplicationDbContext context, ILogger<InventoryController> logger, INotifications emailSender)
         {
             _Inventory = Inventory;
             _context = context;
@@ -195,7 +197,7 @@ namespace BookstoreBackend.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddBookTypes(Models.Book.Type booktype)
+        public IActionResult AddBookTypes(Type booktype)
         {
             try
             {

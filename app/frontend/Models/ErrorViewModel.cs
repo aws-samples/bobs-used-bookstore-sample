@@ -1,6 +1,6 @@
 using System;
 
-namespace BobBookstore.Models
+namespace BobsBookstore.Models
 {
     public class ErrorViewModel
     {

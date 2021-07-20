@@ -5,14 +5,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using BookstoreBackend.DataModel;
 using BookstoreBackend.Models;
-using BookstoreBackend.Models.Book;
+using BobsBookstore.Models.Books;
 using Microsoft.AspNetCore.Http;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats;
 using SixLabors.ImageSharp.Processing;
 using Amazon.Polly;
 using Amazon.Polly.Model;
-using BookstoreBackend.Models.Order;
+using BobsBookstore.Models.Orders;
 using BookstoreBackend.ViewModel.ManageInventory;
 using BookstoreBackend.ViewModel.SearchBooks;
 
@@ -30,21 +30,21 @@ namespace BookstoreBackend
 
         public void SavePrice(Price price);
       
-        public int AddPublishers(BookstoreBackend.Models.Book.Publisher publishers);
+        public int AddPublishers(BobsBookstore.Models.Books.Publisher publishers);
 
-        public int AddGenres(BookstoreBackend.Models.Book.Genre genres);
+        public int AddGenres(BobsBookstore.Models.Books.Genre genres);
 
-        public int AddBookTypes(BookstoreBackend.Models.Book.Type booktype);
+        public int AddBookTypes(BobsBookstore.Models.Books.Type booktype);
 
-        public int AddBookConditions(BookstoreBackend.Models.Book.Condition bookcondition);
+        public int AddBookConditions(BobsBookstore.Models.Books.Condition bookcondition);
 
-        public List<BookstoreBackend.Models.Book.Type> GetTypes();
+        public List<BobsBookstore.Models.Books.Type> GetTypes();
 
-        public List<BookstoreBackend.Models.Book.Publisher> GetAllPublishers();
+        public List<BobsBookstore.Models.Books.Publisher> GetAllPublishers();
 
-        public List<BookstoreBackend.Models.Book.Genre> GetGenres();
+        public List<BobsBookstore.Models.Books.Genre> GetGenres();
 
-        public List<BookstoreBackend.Models.Book.Condition> GetConditions();
+        public List<BobsBookstore.Models.Books.Condition> GetConditions();
 
         public BookDetails GetBookDetails(long bookid, long priceid);
 

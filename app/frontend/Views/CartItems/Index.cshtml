@@ -1,10 +1,10 @@
-﻿@model IEnumerable<BobBookstore.Models.ViewModels.CartViewModel>
+﻿@model IEnumerable<BobsBookstore.Models.ViewModels.CartViewModel>
 @using Microsoft.AspNetCore.Identity
 @using Amazon.Extensions.CognitoAuthentication
 
 @inject SignInManager<CognitoUser> SignInManager
 @inject UserManager<CognitoUser> UserManager
-@*@model Tuple<IEnumerable<BobBookstore.Models.Carts.CartItem>, BobBookstore.Models.Book.Book>*@
+@*@model Tuple<IEnumerable<BobsBookstore.Models.Carts.CartItem>, BobsBookstore.Models.Books.Book>*@
 
 @{
     ViewData["Title"] = "Index";

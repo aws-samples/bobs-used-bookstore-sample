@@ -1,5 +1,5 @@
 ﻿using System;
-using BobBookstore.Data;
+using BobsBookstore.DataAccess.Data;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI;

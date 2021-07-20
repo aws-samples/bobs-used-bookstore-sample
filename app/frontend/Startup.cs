@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using BobBookstore.Data;
+using BobsBookstore.DataAccess.Data;
 
 namespace BobBookstore
 {
@@ -24,7 +24,7 @@ namespace BobBookstore
             services.AddControllersWithViews();
             services.AddCognitoIdentity();
             services.AddRazorPages();
-            services.AddDbContext<UsedBooksContext>(options =>
+            services.AddDbContext<ApplicationDbContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("BobBookstoreContextConnection")));
             //new part
             services.AddSession();
@@ -34,7 +34,7 @@ namespace BobBookstore
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ApplicationDbContext db)
         {
             if (env.IsDevelopment())
             {
@@ -50,6 +50,7 @@ namespace BobBookstore
             app.UseSession();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+            db.Database.EnsureCreated();
 
             app.UseRouting();
             app.UseAuthentication();

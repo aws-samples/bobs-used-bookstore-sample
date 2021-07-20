@@ -15,7 +15,7 @@ using SixLabors.ImageSharp.Formats;
 using SixLabors.ImageSharp.Formats.Gif;
 using SixLabors.ImageSharp.Formats.Jpeg;
 using SixLabors.ImageSharp.Formats.Png;
-using BookstoreBackend.Database;
+using BobsBookstore.DataAccess.Data;
 
 namespace BookstoreBackend.Repository.Implementations.InventoryImplementation
 {
@@ -26,10 +26,10 @@ namespace BookstoreBackend.Repository.Implementations.InventoryImplementation
         IAmazonPolly _pollyClient { get; set; }
 
         private readonly ILogger<RekognitionNPollyRepository> _logger;
-        public DatabaseContext _context;
+        public ApplicationDbContext _context;
         private IWebHostEnvironment _env;
 
-        public RekognitionNPollyRepository(DatabaseContext context, IWebHostEnvironment env , IAmazonS3 s3Client , IAmazonRekognition rekognitionClient, IAmazonPolly pollyClient , ILogger<RekognitionNPollyRepository> logger)
+        public RekognitionNPollyRepository(ApplicationDbContext context, IWebHostEnvironment env , IAmazonS3 s3Client , IAmazonRekognition rekognitionClient, IAmazonPolly pollyClient , ILogger<RekognitionNPollyRepository> logger)
         {
             _context = context;
             _env = env;

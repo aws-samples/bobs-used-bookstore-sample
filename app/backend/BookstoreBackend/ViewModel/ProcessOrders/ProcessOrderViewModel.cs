@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using BookstoreBackend.Models.Order;
+using BobsBookstore.Models.Orders;
 using BookstoreBackend.ViewModel.ManageOrders;
 
 namespace BookstoreBackend.ViewModel.ProcessOrders

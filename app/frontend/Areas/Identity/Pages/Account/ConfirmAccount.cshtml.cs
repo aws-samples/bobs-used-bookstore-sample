@@ -6,8 +6,8 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Amazon.AspNetCore.Identity.Cognito;
 using Amazon.Extensions.CognitoAuthentication;
-using BobBookstore.Data;
-using BobBookstore.Models.Customer;
+using BobsBookstore.DataAccess.Data;
+using BobsBookstore.Models.Customers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -20,9 +20,9 @@ namespace BobBookstore.Areas.Identity.Pages.Account
     public class ConfirmAccountModel : PageModel
     {
         private readonly CognitoUserManager<CognitoUser> _userManager;
-        private readonly UsedBooksContext _context;
+        private readonly ApplicationDbContext _context;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        public ConfirmAccountModel(UserManager<CognitoUser> userManager, UsedBooksContext context,IHttpContextAccessor httpContextAccessor)
+        public ConfirmAccountModel(UserManager<CognitoUser> userManager, ApplicationDbContext context,IHttpContextAccessor httpContextAccessor)
         {
             _userManager = userManager as CognitoUserManager<CognitoUser>;
             _context = context;

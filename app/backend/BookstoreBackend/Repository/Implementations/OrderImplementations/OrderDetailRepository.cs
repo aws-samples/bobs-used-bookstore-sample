@@ -6,7 +6,7 @@ using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using BookstoreBackend.Repository.OrdersInterface;
 using BookstoreBackend.Repository.SearchImplementations;
-using BookstoreBackend.Models.Order;
+using BobsBookstore.Models.Orders;
 
 namespace BookstoreBackend.Repository.Implementations.OrderImplementations
 {
@@ -200,7 +200,7 @@ namespace BookstoreBackend.Repository.Implementations.OrderImplementations
 
             Expression<Func<OrderDetail, bool>> lambda = _expFunc.ReturnLambdaExpression<OrderDetail>(tableName, filterValue, searchString, inBetween, operand, negate);
 
-            var orderDetailBase = _orderDbCalls.GetBaseQuery("BookstoreBackend.Models.Order.OrderDetail");
+            var orderDetailBase = _orderDbCalls.GetBaseQuery("BobsBookstore.Models.Orders.OrderDetail");
 
             var query = _orderDbCalls.ReturnBaseQuery<OrderDetail>(orderDetailBase, OrderDetailIncludes);
 

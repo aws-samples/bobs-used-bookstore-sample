@@ -10,10 +10,11 @@ using Amazon.Polly;
 using BookstoreBackend.Repository.Implementations;
 using BookstoreBackend.Database;
 using BookstoreBackend.DataModel;
-using BookstoreBackend.Models.Book;
+using BobsBookstore.Models.Books;
 using BookstoreBackend.ViewModel;
 using BookstoreBackend.ViewModel.SearchBooks;
 using BookstoreBackend.Repository.SearchImplementations;
+using BobsBookstore.DataAccess.Data;
 
 namespace BookstoreBackend
 {
@@ -24,7 +25,7 @@ namespace BookstoreBackend
     public class Inventory : IInventory
     {
 
-        public DatabaseContext _context;
+        public ApplicationDbContext _context;
         private readonly int _booksPerPage = 15;
         private readonly string[] PriceIncludes = { "Book", "Condition" };
         private readonly IRekognitionNPollyRepository _RekognitionNPollyRepository;
@@ -32,7 +33,7 @@ namespace BookstoreBackend
         private readonly ILogger<Inventory> _logger;
 
 
-        public Inventory(DatabaseContext context, ISearchRepository searchRepository, IRekognitionNPollyRepository RekognitionNPollyRepository, ILogger<Inventory> logger)
+        public Inventory(ApplicationDbContext context, ISearchRepository searchRepository, IRekognitionNPollyRepository RekognitionNPollyRepository, ILogger<Inventory> logger)
         {
             _context = context;
             _searchRepo = searchRepository;
@@ -77,7 +78,7 @@ namespace BookstoreBackend
          *  function to add  details to the Publisher table
          */
 
-        public int AddPublishers(BookstoreBackend.Models.Book.Publisher publishers)
+        public int AddPublishers(BobsBookstore.Models.Books.Publisher publishers)
         {
             _logger.LogInformation("Posting details to the Publisher table");
             var publishName = _context.Publisher.Where(publisher => publisher.Name == publishers.Name).ToList();
@@ -93,7 +94,7 @@ namespace BookstoreBackend
         /*
          *  function to add  details to the Genres table
          */
-        public int AddGenres(BookstoreBackend.Models.Book.Genre genres)
+        public int AddGenres(BobsBookstore.Models.Books.Genre genres)
         {
             _logger.LogInformation("Posting details to the Genres table");
             var genreName = _context.Genre.Where(genre => genre.Name == genres.Name).ToList();
@@ -109,7 +110,7 @@ namespace BookstoreBackend
         /*
          *  function to add  details to the Types table
          */
-        public int AddBookTypes(BookstoreBackend.Models.Book.Type booktype)
+        public int AddBookTypes(BobsBookstore.Models.Books.Type booktype)
         {
             _logger.LogInformation("Posting details to the Types table");
             var typeName = _context.Type.Where(type => type.TypeName == booktype.TypeName).ToList();
@@ -127,7 +128,7 @@ namespace BookstoreBackend
         /*
          *  function to add  details to the Conditions table
          */
-        public int AddBookConditions(BookstoreBackend.Models.Book.Condition bookcondition)
+        public int AddBookConditions(BobsBookstore.Models.Books.Condition bookcondition)
         {
             _logger.LogInformation("Posting details to the Conditions table");
            
@@ -245,7 +246,7 @@ namespace BookstoreBackend
         /*
          *  function to fetch all publisher details for dynamic display in the drop down list 
          */
-        public List<BookstoreBackend.Models.Book.Publisher> GetAllPublishers()
+        public List<BobsBookstore.Models.Books.Publisher> GetAllPublishers()
         {
             var publishers = _context.Publisher.ToList();
             return publishers;
@@ -255,7 +256,7 @@ namespace BookstoreBackend
         /*
         *  function to fetch all Genres details for dynamic display in the drop down list 
         */
-        public List<BookstoreBackend.Models.Book.Genre> GetGenres()
+        public List<BobsBookstore.Models.Books.Genre> GetGenres()
         {
 
             var genres = _context.Genre.ToList();
@@ -265,7 +266,7 @@ namespace BookstoreBackend
         /*
         *  function to fetch all Types details for dynamic display in the drop down list 
         */
-        public List<BookstoreBackend.Models.Book.Type> GetTypes()
+        public List<BobsBookstore.Models.Books.Type> GetTypes()
         {
 
             var typelist = _context.Type.ToList();
@@ -275,7 +276,7 @@ namespace BookstoreBackend
         /*
         *  function to fetch all Conditions for dynamic display in the drop down list 
         */
-        public List<BookstoreBackend.Models.Book.Condition> GetConditions()
+        public List<BobsBookstore.Models.Books.Condition> GetConditions()
         {
 
             var conditions = _context.Condition.ToList();
@@ -540,7 +541,7 @@ namespace BookstoreBackend
             searchby = " " + searchby;
 
             SearchBookViewModel viewModel = new SearchBookViewModel();
-            var parameterExpression = Expression.Parameter(Type.GetType("BookstoreBackend.Models.Book.Price"), "order");
+            var parameterExpression = Expression.Parameter(Type.GetType("BobsBookstore.Models.Books.Price"), "order");
 
 
             var expression = _searchRepo.ReturnExpression(parameterExpression, searchby, searchfilter);

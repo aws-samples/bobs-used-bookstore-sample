@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using BookstoreBackend.Models.Book;
+using BobsBookstore.Models.Books;
 
 namespace BookstoreBackend.ViewModel.UpdateBooks
 {

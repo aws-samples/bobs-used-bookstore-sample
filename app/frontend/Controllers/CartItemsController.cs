@@ -9,20 +9,20 @@ using Microsoft.CodeAnalysis;
 using Microsoft.AspNetCore.Identity;
 using Amazon.Extensions.CognitoAuthentication;
 using Amazon.AspNetCore.Identity.Cognito;
-using BobBookstore.Models.Order;
-using BobBookstore.Data;
-using BobBookstore.Models.Carts;
-using BobBookstore.Models.ViewModels;
-using BobBookstore.Models.Customer;
+using BobsBookstore.Models.Orders;
+using BobsBookstore.DataAccess.Data;
+using BobsBookstore.Models.Carts;
+using BobsBookstore.Models.ViewModels;
+using BobsBookstore.Models.Customers;
 
 namespace BobBookstore.Controllers
 {
     public class CartItemsController : Controller
     {
-        private readonly UsedBooksContext _context;
+        private readonly ApplicationDbContext _context;
         private readonly SignInManager<CognitoUser> _SignInManager;
         private readonly UserManager<CognitoUser> _userManager;
-        public CartItemsController(UsedBooksContext context, SignInManager<CognitoUser> SignInManager, UserManager<CognitoUser> userManager)
+        public CartItemsController(ApplicationDbContext context, SignInManager<CognitoUser> SignInManager, UserManager<CognitoUser> userManager)
         {
             _context = context;
             _SignInManager = SignInManager;

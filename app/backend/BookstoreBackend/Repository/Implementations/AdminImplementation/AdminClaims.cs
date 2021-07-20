@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using BookstoreBackend.Models.AdminUser;
+using BobsBookstore.Models.AdminUser;
 
 namespace BookstoreBackend.Repository.Implementations.AdminImplementation
 {

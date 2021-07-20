@@ -1,5 +1,5 @@
 ﻿using System.Linq;
-using BookstoreBackend.Database;
+using BobsBookstore.DataAccess.Data;
 using BookstoreBackend.Repository.SearchImplementations;
 
 namespace BookstoreBackend.Repository.Implementations.SearchImplementation
@@ -7,9 +7,9 @@ namespace BookstoreBackend.Repository.Implementations.SearchImplementation
     public class SearchDatabaseCalls: ISearchDatabaseCalls
     {
 
-        private DatabaseContext _context;
+        private ApplicationDbContext _context;
 
-        public SearchDatabaseCalls(DatabaseContext context)
+        public SearchDatabaseCalls(ApplicationDbContext context)
         {
             _context = context;
         }

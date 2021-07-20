@@ -5,8 +5,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Amazon.AspNetCore.Identity.Cognito;
 using Amazon.Extensions.CognitoAuthentication;
-using BobBookstore.Data;
-using BobBookstore.Models.Customer;
+using BobsBookstore.DataAccess.Data;
+using BobsBookstore.Models.Customers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -21,7 +21,7 @@ namespace BobBookstore.Areas.Identity.Pages.Account.Manage
     {
         private readonly CognitoUserManager<CognitoUser> _userManager;
         private readonly SignInManager<CognitoUser> _signInManager;
-        private readonly UsedBooksContext _context;
+        private readonly ApplicationDbContext _context;
 
         [BindProperty]
         public AccountModel Input { get; set; }
@@ -34,7 +34,7 @@ namespace BobBookstore.Areas.Identity.Pages.Account.Manage
         public PrimeryAddressEditModel(
             UserManager<CognitoUser> userManager,
             SignInManager<CognitoUser> signInManager,
-            UsedBooksContext context)
+            ApplicationDbContext context)
         {
             _userManager = userManager as CognitoUserManager<CognitoUser>;
             _signInManager = signInManager;

@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using BobsBookstore.Models.Books;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
-namespace BobBookstore.Models.ViewModels
+namespace BobsBookstore.Models.ViewModels
 {
     public class BookViewModel
     {
@@ -30,7 +31,7 @@ namespace BobBookstore.Models.ViewModels
         [Display(Name = "Type")]
         public string TypeName { get; set; }
 
-        public List<Book.Price> Prices { get; set; }
+        public List<Price> Prices { get; set; }
         public string Url { get; set; }
 
         [Display(Name = "$$")]

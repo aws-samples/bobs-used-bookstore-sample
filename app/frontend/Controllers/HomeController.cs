@@ -8,9 +8,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Amazon.Extensions.CognitoAuthentication;
 using Amazon.AspNetCore.Identity.Cognito;
-using BobBookstore.Models;
-using BobBookstore.Data;
-using BobBookstore.Models.Carts;
+using BobsBookstore.Models;
+using BobsBookstore.DataAccess.Data;
+using BobsBookstore.Models.Carts;
 
 namespace BobBookstore.Controllers
 {
@@ -18,10 +18,10 @@ namespace BobBookstore.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly UsedBooksContext _context;
+        private readonly ApplicationDbContext _context;
         private readonly SignInManager<CognitoUser> _SignInManager;
         private readonly UserManager<CognitoUser> _userManager;
-        public HomeController(ILogger<HomeController> logger, IHttpContextAccessor httpContextAccessor,UsedBooksContext context, SignInManager<CognitoUser> SignInManager, UserManager<CognitoUser> userManager)
+        public HomeController(ILogger<HomeController> logger, IHttpContextAccessor httpContextAccessor,ApplicationDbContext context, SignInManager<CognitoUser> SignInManager, UserManager<CognitoUser> userManager)
         {
             _logger = logger;
             _httpContextAccessor = httpContextAccessor;
@@ -52,7 +52,7 @@ namespace BobBookstore.Controllers
                     currentCart = ca;
                 }
                 //put cartid in cookie
-                if (!HttpContext.Request.Cookies.ContainsKey("CartId"))
+                /*if (!HttpContext.Request.Cookies.ContainsKey("CartId"))
                 {
                     CookieOptions options = new CookieOptions();
 
@@ -63,7 +63,7 @@ namespace BobBookstore.Controllers
                     
                     HttpContext.Response.Cookies.Delete("CartId");
                     HttpContext.Response.Cookies.Append("CartId", Convert.ToString(currentCart.Cart_Id));
-                }
+                }*/
                 //put cart item in user cart
                 var id = Convert.ToString (HttpContext.Request.Cookies["CartId"]);
                 var cartC = _context.Cart.Find(id);
@@ -121,7 +121,7 @@ namespace BobBookstore.Controllers
                     currentCart = ca;
                 }
 
-                if (!HttpContext.Request.Cookies.ContainsKey("CartId"))
+                /*if (!HttpContext.Request.Cookies.ContainsKey("CartId"))
                 {
                     CookieOptions options = new CookieOptions();
                     HttpContext.Response.Cookies.Append("CartId",Convert.ToString(currentCart.Cart_Id));
@@ -131,7 +131,7 @@ namespace BobBookstore.Controllers
                 {
                     HttpContext.Response.Cookies.Delete("CartId");
                     HttpContext.Response.Cookies.Append("CartId", Convert.ToString(currentCart.Cart_Id));
-                }
+                }*/
             }
             return View();
         }

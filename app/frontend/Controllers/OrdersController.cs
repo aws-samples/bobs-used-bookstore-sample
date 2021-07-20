@@ -5,19 +5,19 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Amazon.AspNetCore.Identity.Cognito;
 using Amazon.Extensions.CognitoAuthentication;
-using BobBookstore.Data;
-using BobBookstore.Models.Order;
-using BobBookstore.Models.ViewModels;
+using BobsBookstore.DataAccess.Data;
+using BobsBookstore.Models.Orders;
+using BobsBookstore.Models.ViewModels;
 
 namespace BobBookstore.Controllers
 {
     public class OrdersController : Controller
     {
-        private readonly UsedBooksContext _context;
+        private readonly ApplicationDbContext _context;
         private readonly SignInManager<CognitoUser> _SignInManager;
         private readonly UserManager<CognitoUser> _userManager;
 
-        public OrdersController(UsedBooksContext context, SignInManager<CognitoUser> SignInManager, UserManager<CognitoUser> userManager)
+        public OrdersController(ApplicationDbContext context, SignInManager<CognitoUser> SignInManager, UserManager<CognitoUser> userManager)
         {
             _context = context;
             _SignInManager = SignInManager;

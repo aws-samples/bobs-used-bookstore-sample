@@ -5,18 +5,18 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Amazon.AspNetCore.Identity.Cognito;
 using Amazon.Extensions.CognitoAuthentication;
-using BobBookstore.Data;
-using BobBookstore.Models.Customer;
+using BobsBookstore.DataAccess.Data;
+using BobsBookstore.Models.Customers;
 
 namespace BobBookstore.Controllers
 {
     public class AddressesController : Controller
     {
         
-        private readonly UsedBooksContext _context;
+        private readonly ApplicationDbContext _context;
         private readonly SignInManager<CognitoUser> _SignInManager;
         private readonly UserManager<CognitoUser> _userManager;
-        public AddressesController( UsedBooksContext context, SignInManager<CognitoUser> SignInManager, UserManager<CognitoUser> userManager)
+        public AddressesController(ApplicationDbContext context, SignInManager<CognitoUser> SignInManager, UserManager<CognitoUser> userManager)
         {
            
             _context = context;

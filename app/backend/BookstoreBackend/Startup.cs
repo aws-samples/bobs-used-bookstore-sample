@@ -19,6 +19,7 @@ using BookstoreBackend.Notifications.NotificationsInterface;
 using BookstoreBackend.Repository.Implementations.InventoryImplementation;
 using BookstoreBackend.Repository.SearchImplementations;
 using BookstoreBackend.Repository.Implementations.SearchImplementation;
+using BobsBookstore.DataAccess.Data;
 
 namespace BookstoreBackend
 {
@@ -43,7 +44,7 @@ namespace BookstoreBackend
             services.AddAWSService<Amazon.CloudWatch.IAmazonCloudWatch>();
 
             services.AddControllersWithViews();
-            services.AddDbContext<Database.DatabaseContext>(option => option.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<ApplicationDbContext>(option => option.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddTransient<ISearchDatabaseCalls, SearchDatabaseCalls>();
             services.AddTransient<IExpressionFunction, ExpressionFunction>();
             services.AddTransient<IOrderDatabaseCalls, OrderDatabaseCalls>();

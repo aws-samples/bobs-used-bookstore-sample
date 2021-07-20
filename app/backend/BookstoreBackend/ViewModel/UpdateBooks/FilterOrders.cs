@@ -1,4 +1,4 @@
-﻿using BookstoreBackend.Models.Order;
+﻿using BobsBookstore.Models.Orders;
 
 namespace BookstoreBackend.ViewModel.UpdateBooks
 {

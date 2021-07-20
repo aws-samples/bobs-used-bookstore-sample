@@ -2,21 +2,21 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Data.Common;
 using Microsoft.EntityFrameworkCore;
 using BookstoreBackend.Repository.WelcomePageInterface;
 using BookstoreBackend.ViewModel.UpdateBooks;
 using BookstoreBackend.Database;
-using BookstoreBackend.Models.Book;
-using BookstoreBackend.Models.Order;
+using BobsBookstore.Models.Books;
+using BobsBookstore.Models.Orders;
+using BobsBookstore.DataAccess.Data;
 
 namespace BookstoreBackend.Repository.Implementations.WelcomePageImplementation
 {
     public class CustomAdmin : ICustomAdminPage
     {
-        private DatabaseContext _context;
+        private ApplicationDbContext _context;
 
-        public CustomAdmin(DatabaseContext context)
+        public CustomAdmin(ApplicationDbContext context)
         {
             _context = context;
         }

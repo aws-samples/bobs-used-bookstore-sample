@@ -33,7 +33,7 @@ using System.Threading.Tasks;
         public const string SortByPricePhrase = "ItemPrice";
         public const string SortByQuantityPhrase = "Quantity";
         public const string SortByAuthorPhrase = "Author";
-        public const string LambdaExpressionType = "BookstoreBackend.Models.Book.Price";
+        public const string LambdaExpressionType = "BobsBookstore.Models.Books.Price";
         public const string LAMBDAEXPRESSIONPHRASE = "price";
         public const string photosBucketName = "bookcoverpictures";
         public const string audioBucketName = "audiosummary";

@@ -1,4 +1,4 @@
-﻿using BookstoreBackend.Models.Book;
+﻿using BobsBookstore.Models.Books;
 
 namespace BookstoreBackend.ViewModel.SearchBooks
 {

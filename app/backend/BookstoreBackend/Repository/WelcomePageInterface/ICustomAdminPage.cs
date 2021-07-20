@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Amazon.S3.Model;
-using BookstoreBackend.Models.Book;
-using BookstoreBackend.Models.Order;
+using BobsBookstore.Models.Books;
+using BobsBookstore.Models.Orders;
 using BookstoreBackend.ViewModel.UpdateBooks;
 
 namespace BookstoreBackend.Repository.WelcomePageInterface

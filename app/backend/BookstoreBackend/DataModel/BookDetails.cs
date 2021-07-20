@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.AspNetCore.Http;
-using BookstoreBackend.Models.Book;
+using BobsBookstore.Models.Books;
+using Type = BobsBookstore.Models.Books.Type;
 
 namespace BookstoreBackend.DataModel
 {
@@ -14,7 +15,7 @@ namespace BookstoreBackend.DataModel
 
         public Condition BookCondition { get; set; }
 
-        public Models.Book.Type BookType { get; set; }
+        public Type BookType { get; set; }
 
         public double Price { get; set; }
 

@@ -13,10 +13,10 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using Amazon.Extensions.CognitoAuthentication;
 using Amazon.AspNetCore.Identity.Cognito;
-using BobBookstore.Data;
-using BobBookstore.Models.ViewModels;
-using BobBookstore.Models.Customer;
-using BobBookstore.Models.Carts;
+using BobsBookstore.DataAccess.Data;
+using BobsBookstore.Models.ViewModels;
+using BobsBookstore.Models.Customers;
+using BobsBookstore.Models.Carts;
 
 namespace BobBookstore.Areas.Identity.Pages.Account
 {
@@ -26,8 +26,8 @@ namespace BobBookstore.Areas.Identity.Pages.Account
         private readonly SignInManager<CognitoUser> _signInManager;
         private readonly UserManager<CognitoUser> _userManager;
         private readonly ILogger<LoginModel> _logger;
-        private readonly UsedBooksContext _context;
-        public LoginModel(SignInManager<CognitoUser> signInManager, ILogger<LoginModel> logger, UsedBooksContext context, UserManager<CognitoUser> userManager)
+        private readonly ApplicationDbContext _context;
+        public LoginModel(SignInManager<CognitoUser> signInManager, ILogger<LoginModel> logger, ApplicationDbContext context, UserManager<CognitoUser> userManager)
         {
             _signInManager = signInManager;
             _logger = logger;

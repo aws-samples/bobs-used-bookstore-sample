@@ -3,12 +3,12 @@
 *@
 @{
 }
-@model IEnumerable<BobBookstore.Models.Customer.Address>
-@*@model Tuple<IEnumerable<BobBookstore.Models.Customer.Address>,IEnumerable<BobBookstore.Models.Order.OrderDetail>>*@
-@*@model Tuple<IEnumerable<BobBookstore.Models.Customer.Address>, IEnumerable<BobBookstore.Models.Customer.Address>>*@
+@model IEnumerable<BobsBookstore.Models.Customers.Address>
+@*@model Tuple<IEnumerable<BobsBookstore.Models.Customers.Address>,IEnumerable<BobsBookstore.Models.Orders.OrderDetail>>*@
+@*@model Tuple<IEnumerable<BobsBookstore.Models.Customers.Address>, IEnumerable<BobsBookstore.Models.Customers.Address>>*@
 @{
     var totalprice = 0.0;
-    foreach (var item in ViewData["order"] as List<BobBookstore.Models.ViewModels.OrderDetailViewModel>)
+    foreach (var item in ViewData["order"] as List<BobsBookstore.Models.ViewModels.OrderDetailViewModel>)
     {
         totalprice += item.price * item.quantity;
     }
@@ -209,7 +209,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in ViewData["order"] as List<BobBookstore.Models.ViewModels.OrderDetailViewModel>)
+            @foreach (var item in ViewData["order"] as List<BobsBookstore.Models.ViewModels.OrderDetailViewModel>)
             {
                 double total = item.price * item.quantity;
                 <tr>

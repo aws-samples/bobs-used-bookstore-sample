@@ -5,15 +5,16 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore.Storage;
 using BookstoreBackend.Database;
 using BookstoreBackend.Repository.OrdersInterface;
+using BobsBookstore.DataAccess.Data;
 
 namespace BookstoreBackend.Repository.Implementations.OrderImplementations
 {
     public class OrderDatabaseCalls : IOrderDatabaseCalls
     {
 
-        private DatabaseContext _context;
+        private ApplicationDbContext _context;
 
-        public OrderDatabaseCalls(DatabaseContext context)
+        public OrderDatabaseCalls(ApplicationDbContext context)
         {
             _context = context;
         }

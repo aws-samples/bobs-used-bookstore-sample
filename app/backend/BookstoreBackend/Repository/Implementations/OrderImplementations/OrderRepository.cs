@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Linq.Dynamic.Core;
 using System.Data.Entity;
-using BookstoreBackend.Models.Order;
+using BobsBookstore.Models.Orders;
 using BookstoreBackend.Repository.OrdersInterface;
 using BookstoreBackend.ViewModel.ManageOrders;
 using BookstoreBackend.Repository.SearchImplementations;
@@ -83,7 +83,7 @@ namespace BookstoreBackend.Repository.Implementations.OrderImplementations
 
             ManageOrderViewModel viewModel = new ManageOrderViewModel();
 
-            var orderBase = _orderDbCalls.GetBaseQuery("BookstoreBackend.Models.Order.Order");
+            var orderBase = _orderDbCalls.GetBaseQuery("BobsBookstore.Models.Orders.Order");
 
             var query = _orderDbCalls.ReturnBaseQuery<Order>(orderBase, OrderIncludes);
 
@@ -133,7 +133,7 @@ namespace BookstoreBackend.Repository.Implementations.OrderImplementations
                 viewModel = RetrieveViewModel("", "", 1, 1, pages, null);
                 return viewModel;
             }
-            var orderBase = _orderDbCalls.GetBaseQuery("BookstoreBackend.Models.Order.Order");
+            var orderBase = _orderDbCalls.GetBaseQuery("BobsBookstore.Models.Orders.Order");
 
             var query = _orderDbCalls.ReturnBaseQuery<Order>(orderBase, OrderIncludes);
 
@@ -161,7 +161,7 @@ namespace BookstoreBackend.Repository.Implementations.OrderImplementations
 
             Expression<Func<Order, bool>> lambda = _expFunc.ReturnLambdaExpression<Order>(tableName, filterValue, searchString, inBetween, operand, negate);
 
-            var orderBase = _orderDbCalls.GetBaseQuery("BookstoreBackend.Models.Order.Order");
+            var orderBase = _orderDbCalls.GetBaseQuery("BobsBookstore.Models.Orders.Order");
 
             var query = _orderDbCalls.ReturnBaseQuery<Order>(orderBase, OrderIncludes);
 

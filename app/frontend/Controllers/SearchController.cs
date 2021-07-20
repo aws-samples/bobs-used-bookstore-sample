@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using BobBookstore.Data;
-using BobBookstore.Models.Book;
-using BobBookstore.Models.Carts;
-using BobBookstore.Models.ViewModels;
+using BobsBookstore.DataAccess.Data;
+using BobsBookstore.Models.Books;
+using BobsBookstore.Models.Carts;
+using BobsBookstore.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using X.PagedList;
@@ -14,9 +14,9 @@ namespace BobBookstore.Controllers
 {
     public class SearchController : Controller
     {
-        private readonly UsedBooksContext _context;
+        private readonly ApplicationDbContext _context;
 
-        public SearchController(UsedBooksContext context)
+        public SearchController(ApplicationDbContext context)
         {
             _context = context;
         }

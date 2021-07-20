@@ -2,17 +2,18 @@
 using System.Linq;
 using System.Linq.Expressions;
 using BookstoreBackend.Database;
-using BookstoreBackend.Models.Book;
+using BobsBookstore.Models.Books;
 using BookstoreBackend.Repository.Implementations.SearchImplementation;
 using BookstoreBackend.Repository.InventoryInterface;
+using BobsBookstore.DataAccess.Data;
 
 namespace BookstoreBackend.Repository.Implementations.InventoryImplementation
 {
     public class BookDatabaseCalls : IBookDatabaseCalls
     {
-        private DatabaseContext _context;
+        private ApplicationDbContext _context;
 
-        public BookDatabaseCalls(DatabaseContext context)
+        public BookDatabaseCalls(ApplicationDbContext context)
         {
             _context = context;
         }

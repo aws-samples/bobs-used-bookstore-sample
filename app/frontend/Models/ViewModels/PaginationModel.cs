@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace BobBookstore.Models.ViewModels
+namespace BobsBookstore.Models.ViewModels
 {
     public class PaginationModel
     {
