@@ -4,6 +4,6 @@
     {
         public string Username { get; set; }
         public string Email { get; set; }
-        public string group { get; set; }
+        public string Group { get; set; }
     }
 }

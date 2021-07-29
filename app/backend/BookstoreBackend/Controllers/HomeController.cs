@@ -32,9 +32,9 @@ namespace BookstoreBackend.Controllers
            
             LatestUpdates bookUpdates = new LatestUpdates();
             // the sortByValue input for different sorting parameters. 
-            List<string> orderByMethods = new List<string>{"price", "price_desc", "date", "date_desc"};
+            List<string> orderByMethods = new List<string>{"OrderDetailPrice", "price_desc", "date", "date_desc"};
             // assigns ViewBag a default value just to initialize it 
-            ViewBag.SortPrice = "price";
+            ViewBag.SortPrice = "OrderDetailPrice";
             ViewBag.SortDate = "date";
             ViewBag.SortStatus = "status";
             ViewBag.PriceArrow = "▲";
@@ -57,14 +57,14 @@ namespace BookstoreBackend.Controllers
             if (orderByMethods.Contains(sortByValue))
             {
                 // assigns ViewBag.Sort with the opposite value of sortByValue
-                if (sortByValue == "price" || sortByValue == "price_desc")
-                    ViewBag.SortPrice = sortByValue == "price" ? "price_desc" : "price";
+                if (sortByValue == "OrderDetailPrice" || sortByValue == "price_desc")
+                    ViewBag.SortPrice = sortByValue == "OrderDetailPrice" ? "price_desc" : "OrderDetailPrice";
                 else if (sortByValue == "date" || sortByValue == "date_desc")
                     ViewBag.SortDate = sortByValue == "date" ? "date_desc" : "date";
                 else if (sortByValue == "status" || sortByValue == "status_desc")
                     ViewBag.SortDate = sortByValue == "status" ? "status_desc" : "status";
                 //to change the arrow on the html anchors based on asc or desc
-                if (ViewBag.SortPrice == "price")
+                if (ViewBag.SortPrice == "OrderDetailPrice")
                     ViewBag.PriceArrow = "▲";
                 else if (ViewBag.SortPrice == "price_desc")
                     ViewBag.PriceArrow = "▼";

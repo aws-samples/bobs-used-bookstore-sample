@@ -4,9 +4,9 @@ namespace BookstoreBackend.ViewModel.SearchBooks
 {
     public class SearchBookViewModel
     {
-        public string searchby { get; set; }
+        public string SearchBy { get; set; }
 
-        public string searchfilter { get; set; }
+        public string SearchFilter { get; set; }
 
         public int PageNumber { get; set; }
 

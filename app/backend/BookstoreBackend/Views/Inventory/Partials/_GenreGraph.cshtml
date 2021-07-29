@@ -20,7 +20,7 @@
             var ctx = document.getElementById(chartName).getContext('2d');
 
         var data = {
-                labels: ["@orders_genre.Keys.ElementAt(0)","@orders_genre.Keys.ElementAt(1)","@orders_genre.Keys.ElementAt(2)","@orders_genre.Keys.ElementAt(3)","@orders_genre.Keys.ElementAt(4)"],
+            labels: ["@orders_genre.Keys.ElementAt(0)"],@*,"@orders_genre.Keys.ElementAt(1)","@orders_genre.Keys.ElementAt(2)","@orders_genre.Keys.ElementAt(3)","@orders_genre.Keys.ElementAt(4)"*@
                 datasets: [{
                     label: "Top 5 Genres",
                     backgroundColor: [
@@ -52,13 +52,13 @@
                         'rgba(255, 0, 255)'
                     ],
                     borderWidth: 1,
-                    data: [@orders_genre.Values.ElementAt(0),@orders_genre.Values.ElementAt(1),@orders_genre.Values.ElementAt(2),@orders_genre.Values.ElementAt(3),@orders_genre.Values.ElementAt(4)]
+                    data: [@orders_genre.Values.ElementAt(0)] @*@orders_genre.Values.ElementAt(1),@orders_genre.Values.ElementAt(2),@orders_genre.Values.ElementAt(3),@orders_genre.Values.ElementAt(4)*@
     }]
             };
 
             var options = {
                 maintainAspectRatio: true,
-                
+
             };
 
        var myChart = new  Chart(ctx, {

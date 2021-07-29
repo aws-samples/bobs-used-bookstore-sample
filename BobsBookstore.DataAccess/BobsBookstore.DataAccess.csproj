@@ -9,13 +9,13 @@
     <PackageReference Include="AWSSDK.Polly" Version="3.7.1.15" />
     <PackageReference Include="AWSSDK.Rekognition" Version="3.7.1.21" />
     <PackageReference Include="AWSSDK.S3" Version="3.7.1.5" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.*" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.*">
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.8" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.8">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.*" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.*">
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.8" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.8">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>

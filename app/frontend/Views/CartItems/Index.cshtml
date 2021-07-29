@@ -43,11 +43,11 @@
 
             @foreach (var item in Model)
             {
-                if (item.quantity <= 5 && item.quantity > 0)
+                if (item.Quantity <= 5 && item.Quantity > 0)
                 {
                     <h4 style="color:red">There is only a few @Html.DisplayFor(modelitem => item.BookName) in the store</h4>
                 }
-                if (item.quantity == 0)
+                if (item.Quantity == 0)
                 {
                     <h4 style="color:red">@Html.DisplayFor(modelitem => item.BookName) is out of stock,please wait or remove it!</h4>
                 }
@@ -83,7 +83,7 @@
                                 <td>
                                     @Html.DisplayFor(modelitem => item.BookName)
                                 </td>
-                                @if (item.quantity != 0)
+                                @if (item.Quantity != 0)
                                 {
                                     <td>
                                         <input type="hidden" name="bookF" value="@Html.DisplayFor(modelitem => item.BookId)">
@@ -92,7 +92,7 @@
                                         <input type="hidden" name="IDs" value="@Html.DisplayFor(modelitem => item.CartItem_Id)">
                                         &nbsp;&nbsp;$@Html.DisplayFor(modelitem => item.Prices)
                                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                        <input type="number" name="quantity" min="1" max="@Html.DisplayFor(modelitem => item.quantity)" value="1" id="quantity" class="numbers"><br />
+                                        <input type="number" name="quantity" min="1" max="@Html.DisplayFor(modelitem => item.Quantity)" value="1" id="quantity" class="numbers"><br />
 
                                     </td>
                                 }

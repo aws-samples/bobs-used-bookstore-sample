@@ -58,7 +58,7 @@
         <div class="col-12">
 
             <form enctype="multipart/form-data" class="input-group mb-3" asp-controller="Inventory" asp-action="SearchBeta" method="get" style="padding-bottom: 0px;">
-                <select class="main-text col-2 custom-select title-1 text-center font-weight-light " id="inputGroupSelect01" asp-for="searchby">
+                <select class="main-text col-2 custom-select title-1 text-center font-weight-light " id="inputGroupSelect01" asp-for="SearchBy">
                     <option selected value="">Filter By</option>
                     <option value="Book.Name">Book Name</option>
                     <option value="Book.Publisher.Name">Publisher</option>
@@ -66,7 +66,7 @@
                     <option value="Condition.ConditionName">Condition</option>
                     <option value="Book.Type.TypeName">Type</option>
                 </select>
-                <input id="tags" type="text" asp-page-handler="@Model.searchby" asp-for="searchfilter" placeholder="Please , Enter the search query" class=" main-text form-control bg-light text-dark font-weight-light" aria-label="Text input with dropdown button">
+                <input id="tags" type="text" asp-page-handler="@Model.SearchBy" asp-for="SearchFilter" placeholder="Please , Enter the search query" class=" main-text form-control bg-light text-dark font-weight-light" aria-label="Text input with dropdown button">
                 @section Scripts{
                     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
                     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
@@ -141,24 +141,24 @@
 
                             <div class="col-12 col-md-6 col-lg-4">
                                 <div class="card">
-                                        @if(!String.IsNullOrEmpty(@book.Price.Book.Front_Url))
+                                        @if(!String.IsNullOrEmpty(@book.Price.Book.FrontUrl))
                                         {
-                                            <img class="card-img-top" src="@book.Price.Book.Front_Url" alt="Card image cap"> 
+                                            <img class="card-img-top" src="@book.Price.Book.FrontUrl" alt="Card image cap"> 
                                         }
 
-                                        else if (!String.IsNullOrEmpty(@book.Price.Book.Back_Url))
+                                        else if (!String.IsNullOrEmpty(@book.Price.Book.BackUrl))
                                         {
-                                            <img class="card-img-top" src="@book.Price.Book.Back_Url" alt="Card image cap">
+                                            <img class="card-img-top" src="@book.Price.Book.BackUrl" alt="Card image cap">
                                         }
 
-                                        else if (!String.IsNullOrEmpty(@book.Price.Book.Left_Url))
+                                        else if (!String.IsNullOrEmpty(@book.Price.Book.LeftUrl))
                                         {
-                                            <img class="card-img-top" src="@book.Price.Book.Left_Url" alt="Card image cap">
+                                            <img class="card-img-top" src="@book.Price.Book.LeftUrl" alt="Card image cap">
                                         }
 
-                                        else if (!String.IsNullOrEmpty(@book.Price.Book.Right_Url))
+                                        else if (!String.IsNullOrEmpty(@book.Price.Book.RightUrl))
                                         {
-                                            <img class="card-img-top" src="@book.Price.Book.Right_Url" alt="Card image cap">
+                                            <img class="card-img-top" src="@book.Price.Book.RightUrl" alt="Card image cap">
                                         }
 
                                         else
@@ -194,8 +194,8 @@
 
                                     var SortBy = new Dictionary<string, string>
                                                                         {
-                                        {"searchfilter",Model.searchfilter},
-                                        {"searchby",Model.searchby},
+                                        {"searchfilter",Model.SearchFilter},
+                                        {"searchby",Model.SearchBy},
                                         {"SortBy","Price.Book.Name"},
                                         {"pageNum",Model.CurrentPage+""},
                                         {"style",Model.ViewStyle},
@@ -208,8 +208,8 @@
                                 @{
                                     var Sort = new Dictionary<string, string>
                                                                             {
-                                        {"searchfilter",Model.searchfilter},
-                                        {"searchby",Model.searchby},
+                                        {"searchfilter",Model.SearchFilter},
+                                        {"searchby",Model.SearchBy},
                                         {"SortBy","Price.Book.Author"},
                                         {"pageNum",Model.CurrentPage+""},
                                         {"style",Model.ViewStyle},
@@ -224,8 +224,8 @@
                                 @{
                                     var sort = new Dictionary<string, string>
                                                                             {
-                                        {"searchfilter",Model.searchfilter},
-                                        {"searchby",Model.searchby},
+                                        {"searchfilter",Model.SearchFilter},
+                                        {"searchby",Model.SearchBy},
                                         {"SortBy","LowestPrice"},
                                         {"pageNum",Model.CurrentPage+""},
                                         {"style",Model.ViewStyle},
@@ -239,8 +239,8 @@
                                 @{
                                     var sortby = new Dictionary<string, string>
                                                                             {
-                                        {"searchfilter",Model.searchfilter},
-                                        {"searchby",Model.searchby},
+                                        {"searchfilter",Model.SearchFilter},
+                                        {"searchby",Model.SearchBy},
                                         {"SortBy","TotalQuantity"},
                                         {"pageNum",Model.CurrentPage+""},
                                         {"style",Model.ViewStyle},

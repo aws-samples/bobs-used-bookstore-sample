@@ -12,7 +12,7 @@
 
         public string CartItem_Id { get; set; }
 
-        public int quantity { get; set; }
+        public int Quantity { get; set; }
         public long PriceId { get; set; }
 
     }

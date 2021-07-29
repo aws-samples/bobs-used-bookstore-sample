@@ -6,7 +6,7 @@
     var conditions = (List<string>)ViewData["Conditions"];
 }
 @{
-    var Genre = Model.genre.ToUpper();
+    var Genre = Model.Genre.ToUpper();
     var books = (IEnumerable<BookstoreBackend.ViewModel.ManageInventory.BookDetailsViewModel>)ViewData["Books"];
 
     var Author = Model.Author.ToUpper();
@@ -37,33 +37,66 @@
             <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
                 <div class="carousel-inner">
                     <div class="carousel-item active">
-                        @if (String.IsNullOrEmpty(@Model.front_url))
+                        @if (String.IsNullOrEmpty(@Model.FrontUrl))
                         {
                             <img class="img-thumbnail" style="width:100%;height:100%" src="https://dtdt6j0vhq1rq.cloudfront.net/default0Kind of New.jpg" alt="Ft slide">
                         }
                         else
                         {
-                            <img class="img-thumbnail" style="width:100%;height:100%" src="@Model.front_url" alt="First slide">
+                            <img class="img-thumbnail" style="width:100%;height:100%" src="@Model.FrontUrl" alt="First slide">
                         }
                     </div>
                     <div class="carousel-item">
-                        @if (String.IsNullOrEmpty(@Model.back_url))
+                        @if (String.IsNullOrEmpty(@Model.BackUrl))
                         {
                             <img class="img-thumbnail" style="width:100%;height:100%" src="https://dtdt6j0vhq1rq.cloudfront.net/default0Kind of New.jpg" alt="Second slide">
                         }
                         else
                         {
-                            <img class="img-thumbnail" style="width:100%;height:100%" src="@Model.back_url" alt="Second slide">
+                            <img class="img-thumbnail" style="width:100%;height:100%" src="@Model.BackUrl" alt="Second slide">
                         }
                     </div>
                     <div class="carousel-item">
-                        @if (string.IsNullOrEmpty(@Model.left_url))
+                        @if (String.IsNullOrEmpty(@Model.BackUrl))
                         {
+                            
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 52 "C:\Users\srinianu\Documents\BobsUsedBookstore\app\backend\BookstoreBackend\Views\Inventory\BookDetails.cshtml"
+                                                                                                                                                                            
+                        }
+                        else
+    {
+
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 56 "C:\Users\srinianu\Documents\BobsUsedBookstore\app\backend\BookstoreBackend\Views\Inventory\BookDetails.cshtml"
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 56 "C:\Users\srinianu\Documents\BobsUsedBookstore\app\backend\BookstoreBackend\Views\Inventory\BookDetails.cshtml"
+
+    }
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 60 "C:\Users\srinianu\Documents\BobsUsedBookstore\app\backend\BookstoreBackend\Views\Inventory\BookDetails.cshtml"
+    if (string.IsNullOrEmpty(@Model.LeftUrl))
+    {
                             <img class="img-thumbnail" style="width:100%;height:100%" src="https://dtdt6j0vhq1rq.cloudfront.net/default0Kind of New.jpg" alt="Third slide">
                         }
                         else
                         {
-                            <img class="img-thumbnail" style="width:100%;height:100%" src="@Model.left_url" alt="Third slide">
+                            <img class="img-thumbnail" style="width:100%;height:100%" src="@Model.LeftUrl" alt="Third slide">
                         }
                     </div>
                 </div>
@@ -119,7 +152,7 @@
             @{ var param = new Dictionary<string, string>
                                                                                                                      {
                         {"BookName",Model.BookName + ""},
-                        {"type",Model.type + ""},
+                        {"type",Model.Type + ""},
                         {"condition_chosen", Model.Condition + "" }
 
                      };
@@ -127,7 +160,7 @@
             <form asp-controller="Inventory" asp-action="BookDetails" asp-all-route-data="param" style="padding-bottom: 0px;" method="post">
                 <div class="row">
                     <div class="col">
-                        <select class="main-text custom-select bg-light text-dark" asp-for="type" style="margin-top: 3%; margin-bottom: 2%; margin-left: 25%; width: 90%">
+                        <select class="main-text custom-select bg-light text-dark" asp-for="Type" style="margin-top: 3%; margin-bottom: 2%; margin-left: 25%; width: 90%">
                             <option value="">Select the Format</option>
                             @foreach (var type in types)
                             {
@@ -136,7 +169,7 @@
                         </select>
                     </div>
                     <div class="col">
-                        <select class="main-text custom-select bg-light text-dark" asp-for="condition_chosen" style="margin-top: 3%; margin-bottom: 2%; margin-left: 25%; width: 90%">
+                        <select class="main-text custom-select bg-light text-dark" asp-for="ConditionChosen" style="margin-top: 3%; margin-bottom: 2%; margin-left: 25%; width: 90%">
                             <option value="">Select the Condition</option>
                             @foreach (var condition in conditions)
                             {

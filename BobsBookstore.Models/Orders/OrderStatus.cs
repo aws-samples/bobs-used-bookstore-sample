@@ -10,6 +10,6 @@ namespace BobsBookstore.Models.Orders
 
         public string Status { get; set; }
 
-        public int position { get; set; }
+        public int Position { get; set; }
     }
 }

@@ -26,16 +26,16 @@ namespace BobsBookstore.DataAccess.Migrations
                         .HasColumnType("bigint")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("AudioBook_Url")
+                    b.Property<string>("AudioBookUrl")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Author")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Back_Url")
+                    b.Property<string>("BackUrl")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Front_Url")
+                    b.Property<string>("FrontUrl")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<long?>("Genre_Id")
@@ -44,7 +44,7 @@ namespace BobsBookstore.DataAccess.Migrations
                     b.Property<string>("ISBN")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Left_Url")
+                    b.Property<string>("LeftUrl")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
@@ -53,7 +53,7 @@ namespace BobsBookstore.DataAccess.Migrations
                     b.Property<long?>("Publisher_Id")
                         .HasColumnType("bigint");
 
-                    b.Property<string>("Right_Url")
+                    b.Property<string>("RightUrl")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<byte[]>("RowVersion")
@@ -366,22 +366,22 @@ namespace BobsBookstore.DataAccess.Migrations
                     b.Property<bool>("IsRemoved")
                         .HasColumnType("bit");
 
+                    b.Property<decimal>("OrderDetailPrice")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<long?>("Order_Id")
                         .HasColumnType("bigint");
 
                     b.Property<long?>("Price_Id")
                         .HasColumnType("bigint");
 
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
                     b.Property<byte[]>("RowVersion")
                         .IsConcurrencyToken()
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("rowversion");
-
-                    b.Property<decimal>("price")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("quantity")
-                        .HasColumnType("int");
 
                     b.HasKey("OrderDetail_Id");
 
@@ -401,11 +401,11 @@ namespace BobsBookstore.DataAccess.Migrations
                         .HasColumnType("bigint")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int>("Position")
+                        .HasColumnType("int");
+
                     b.Property<string>("Status")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("position")
-                        .HasColumnType("int");
 
                     b.HasKey("OrderStatus_Id");
 

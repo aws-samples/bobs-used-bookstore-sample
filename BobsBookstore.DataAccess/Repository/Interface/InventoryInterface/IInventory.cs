@@ -16,13 +16,13 @@ namespace BobsBookstore.DataAccess.Repository.Interface.InventoryInterface
 
         public void SavePrice(Price price);
       
-        public int AddPublishers(Publisher publishers);
+        public bool AddPublishers(Publisher publishers);
 
-        public int AddGenres(Genre genres);
+        public bool AddGenres(Genre genres);
 
-        public int AddBookTypes(Type booktype);
+        public bool AddBookTypes(Type booktype);
 
-        public int AddBookConditions(Condition bookcondition);
+        public bool AddBookConditions(Condition bookcondition);
 
         public List<Type> GetTypes();
 
@@ -34,7 +34,7 @@ namespace BobsBookstore.DataAccess.Repository.Interface.InventoryInterface
 
         public BookDetailsDto GetBookDetails(long bookid, long priceid);
 
-        public int AddToTables(BooksDto bookview);
+        public bool AddToTables(BooksDto bookview);
 
         public IEnumerable<BookDetailsDto> GetDetails(long BookId);
 
@@ -45,7 +45,7 @@ namespace BobsBookstore.DataAccess.Repository.Interface.InventoryInterface
 
         public List<BookDetailsDto> GetRelevantBooks(string Bookname , string type , string condition_chosen);
 
-        public List<Dictionary<string, int>> DashBoard();
+        public List<Dictionary<string, int>> DashBoard(int numberOfDetails);
 
 
         public void PushDetails(BookDetailsDto details);

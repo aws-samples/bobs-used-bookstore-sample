@@ -38,7 +38,6 @@ namespace BobBookstore
 
             //new part
             services.AddSession();
-            //services.AddMvc();
             services.AddSingleton<IHttpContextAccessor,
             HttpContextAccessor>();
         }

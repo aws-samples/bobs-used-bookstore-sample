@@ -22,14 +22,14 @@ namespace BobsBookstore.Models.Books
 
         public Genre Genre { get; set; }
 
-        public string Front_Url { get; set; }
+        public string FrontUrl { get; set; }
 
-        public string Back_Url { get; set; }
+        public string BackUrl { get; set; }
 
-        public string Left_Url { get; set; }
-        public string Right_Url { get; set; }
+        public string LeftUrl { get; set; }
+        public string RightUrl { get; set; }
 
-        public string AudioBook_Url { get; set; }
+        public string AudioBookUrl { get; set; }
 
         public string Summary { get; set; }
 

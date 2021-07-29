@@ -59,7 +59,7 @@ namespace BobsBookstore.DataAccess.Migrations
                     OrderStatus_Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Status = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    position = table.Column<int>(type: "int", nullable: false)
+                    Position = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -151,11 +151,11 @@ namespace BobsBookstore.DataAccess.Migrations
                     Type_Id = table.Column<long>(type: "bigint", nullable: true),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Genre_Id = table.Column<long>(type: "bigint", nullable: true),
-                    Front_Url = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Back_Url = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Left_Url = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Right_Url = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    AudioBook_Url = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FrontUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    BackUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LeftUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    RightUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    AudioBookUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Summary = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     RowVersion = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: true)
                 },
@@ -293,8 +293,8 @@ namespace BobsBookstore.DataAccess.Migrations
                     Order_Id = table.Column<long>(type: "bigint", nullable: true),
                     Book_Id = table.Column<long>(type: "bigint", nullable: true),
                     Price_Id = table.Column<long>(type: "bigint", nullable: true),
-                    price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    quantity = table.Column<int>(type: "int", nullable: false),
+                    OrderDetailPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Quantity = table.Column<int>(type: "int", nullable: false),
                     IsRemoved = table.Column<bool>(type: "bit", nullable: false),
                     RowVersion = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: true)
                 },

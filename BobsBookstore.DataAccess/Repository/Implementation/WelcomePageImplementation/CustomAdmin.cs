@@ -109,12 +109,12 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.WelcomePageImplemen
                 // list of filtered orders to be returned 
                 List<FilterOrdersDto> filtered_order = new List<FilterOrdersDto>();
                 // Date at the time 
-                DateTime todayDate = DateTime.Now;
+                DateTime todayDate = DateTime.Now.ToUniversalTime();
                 foreach (var order in allOrders)
                 {
 
 
-                    DateTime time = Convert.ToDateTime(order.DeliveryDate);
+                    DateTime time = Convert.ToDateTime(order.DeliveryDate).ToUniversalTime();
                     if (order.OrderStatus.Status == "Pending")
 
                     {
@@ -184,7 +184,7 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.WelcomePageImplemen
                     orders = orders.OrderByDescending(o => o.Order.OrderStatus.Status).ToList();
                     break;
 
-                case "price":
+                case "OrderDetailPrice":
                     orders = orders.OrderBy(o => o.Order.Subtotal).ToList();
                     break;
                 case "date":

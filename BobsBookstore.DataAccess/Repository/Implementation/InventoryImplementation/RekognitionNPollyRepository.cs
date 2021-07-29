@@ -155,7 +155,6 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.InventoryImplementa
         public async Task<bool> IsImageSafe(string bucket, string key)
         {
             _logger.LogInformation("Content Moderation : Checks for profanity");
-        //    var RekognitionClient = new AmazonRekognitionClient("AKIA6DYNIKQLFG4HU2LU", "4RM8WQL3tH4+c7RgIQ/LPBHqt6ESwleokqsDx1Gf", bucketRegion);
             var response = await _rekognitionClient.DetectModerationLabelsAsync(new DetectModerationLabelsRequest
             {
                 Image = new Amazon.Rekognition.Model.Image
@@ -223,22 +222,18 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.InventoryImplementa
             _logger.LogInformation("Encoding Picture");
             IImageEncoder encoder = null;
             // get the encoder based on file extension
-            switch (extension)
+            switch (extension.ToLower())
             {
                 case "png":
-                case "PNG":
                     encoder = new PngEncoder();
                     break;
                 case "jpeg":
-                case "JPEG":
                     encoder = new JpegEncoder();
                     break;
                 case "jpg":
-                case "JPG":
                     encoder = new JpegEncoder();
                     break;
                 case "gif":
-                case "GIF":
                     encoder = new GifEncoder();
                     break;
                 default:

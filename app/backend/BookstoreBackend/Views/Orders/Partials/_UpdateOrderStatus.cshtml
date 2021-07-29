@@ -23,13 +23,13 @@
     <select asp-for="OrderId" class="invisible">
         <option selected value="@fullOrder.Order.Order_Id">id</option>
     </select>
-    <select asp-for="oldStatus" class="invisible">
+    <select asp-for="OldStatus" class="invisible">
         <option selected value="@fullOrder.Order.OrderStatus.OrderStatus_Id">id</option>
     </select>
     <select asp-for="Status" class="col-5 custom-select website-text" id="inputGroupSelect01">
         @foreach (var status in orderStatus)
         {
-            if ((status.position < fullOrder.Order.OrderStatus.position) || (fullOrder.Order.OrderStatus.Status != "Just Placed" && fullOrder.Order.OrderStatus.Status != "Cancelled" && status.Status == "Cancelled"))
+            if ((status.Position < fullOrder.Order.OrderStatus.Position) || (fullOrder.Order.OrderStatus.Status != "Just Placed" && fullOrder.Order.OrderStatus.Status != "Cancelled" && status.Status == "Cancelled"))
             {
                 <option disabled value="@status.OrderStatus_Id">@status.Status</option>
             }

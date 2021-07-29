@@ -20,7 +20,7 @@
             var ctx = document.getElementById(chartName).getContext('2d');
 
         var data = {
-                labels: ["@orders_type.Keys.ElementAt(0)","@orders_type.Keys.ElementAt(1)"],
+                labels: ["@orders_type.Keys.ElementAt(0)"],
                 datasets: [{
                     label: "Top 5 Genres",
                     backgroundColor: [
@@ -52,7 +52,7 @@
                         'rgba(255, 0, 255)'
                     ],
                     borderWidth: 1,
-                    data: [@orders_type.Values.ElementAt(0),@orders_type.Values.ElementAt(1)]
+                    data: [@orders_type.Values.ElementAt(0)]
     }]
             };
 

@@ -65,11 +65,11 @@ namespace BobBookstore.Controllers
                 .Select(c => new CartViewModel
                 {
                     BookId = c.Book.Book_Id,
-                    Url = c.Book.Back_Url,
+                    Url = c.Book.BackUrl,
                     Prices = c.Price.ItemPrice,
                     BookName = c.Book.Name,
                     CartItem_Id = c.CartItem_Id,
-                    quantity = c.Price.Quantity,
+                    Quantity = c.Price.Quantity,
                     PriceId = c.Price.Price_Id,
 
                 });
@@ -86,11 +86,11 @@ namespace BobBookstore.Controllers
                 .Select(c => new CartViewModel
                 {
                     BookId = c.Book.Book_Id,
-                    Url = c.Book.Back_Url,
+                    Url = c.Book.BackUrl,
                     Prices = c.Price.ItemPrice,
                     BookName = c.Book.Name,
                     CartItem_Id = c.CartItem_Id,
-                    quantity = c.Price.Quantity,
+                    Quantity = c.Price.Quantity,
                     PriceId = c.Price.Price_Id,
                 });
 
@@ -173,10 +173,9 @@ namespace BobBookstore.Controllers
             {
                 
                 var orderDetailBook = _bookRepository.Get(Convert.ToInt64(bookF[i]));
-                //var orderDetailPrice = itemIdList[i].Price;
                 var orderDetailPrice =_priceRepository.Get(Convert.ToInt64(priceF[i]));
                 var newOrderDetail = new OrderDetail() { };
-                var OrderDetail = new OrderDetail() { Book = orderDetailBook, Price = orderDetailPrice, price =Convert.ToDecimal(fruits[i]), quantity = Convert.ToInt32(quantity[i]), Order = recentOrder, IsRemoved = false };
+                var OrderDetail = new OrderDetail() { Book = orderDetailBook, Price = orderDetailPrice, OrderDetailPrice =Convert.ToDecimal(fruits[i]), Quantity = Convert.ToInt32(quantity[i]), Order = recentOrder, IsRemoved = false };
                 orderDetailPrice.Quantity = orderDetailPrice.Quantity - Convert.ToInt32(quantity[i]);
                 _priceRepository.Update(orderDetailPrice);
                 _orderDetailRepository.Add(OrderDetail);
@@ -193,7 +192,6 @@ namespace BobBookstore.Controllers
 
             _cartItemRepository.Save();
             return RedirectToAction(nameof(ConfirmCheckout),new { OrderId=orderId});
-            //return View();
         }
 
         public async Task<IActionResult> ConfirmCheckout(long OrderId)
@@ -207,9 +205,9 @@ namespace BobBookstore.Controllers
             var orderDeteail = _orderDetailRepository.Get(m=> m.Order == order, includeProperties:"Book")
                                .Select(m=> new OrderDetailViewModel()
                                { Bookname=m.Book.Name,
-                               Url=m.Book.Back_Url,
-                               price=m.price,
-                               quantity=m.quantity
+                               Url=m.Book.BackUrl,
+                               Price=m.OrderDetailPrice,
+                               Quantity=m.Quantity
                                });
             ViewData["order"] = orderDeteail.ToList();
             ViewData["orderId"] = OrderId;
@@ -223,9 +221,9 @@ namespace BobBookstore.Controllers
                            .Select(c => new OrderDetailViewModel()
                            {
                                Bookname = c.Book.Name,
-                               Url = c.Book.Back_Url,
-                               price = c.price,
-                               quantity = c.quantity
+                               Url = c.Book.BackUrl,
+                               Price = c.OrderDetailPrice,
+                               Quantity = c.Quantity
                            });
             ViewData["order"] = OrderItem.ToList();
             return View();

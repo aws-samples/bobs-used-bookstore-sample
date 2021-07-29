@@ -43,14 +43,14 @@
             @foreach (var book in Model.OrderBookDetails)
             {
 <tr>
-    <td><img src="@book.Book.Back_Url" height="80" width="50" /></td>
+    <td><img src="@book.Book.BackUrl" height="80" width="50" /></td>
     <td>
         <a asp-controller="Search" asp-action="Detail" asp-route-id="@book.Book.Book_Id">
             @book.Book.Name
         </a>
     </td>
-    <td>@book.quantity</td>
-    <td>$@book.price</td>
+    <td>@book.Quantity</td>
+    <td>$@book.OrderDetailPrice</td>
 </tr>            }
         </tbody>
 

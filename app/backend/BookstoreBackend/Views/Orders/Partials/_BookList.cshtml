@@ -77,23 +77,23 @@
                         <div class="modal-body">
                             <p class="website-text">How many copies of the book do you have?</p>
                             <p class="card-subtitle mb-2 text-muted website-text">
-                                Max Limit: @detail.quantity
+                                Max Limit: @detail.Quantity
                             </p>
-                            @if (Model.OrderDetails.Count() - 1 == Model.itemsRemoved && detail.IsRemoved != true)
+                            @if (Model.OrderDetails.Count() - 1 == Model.ItemsRemoved && detail.IsRemoved != true)
                             {
-                                <select asp-for="isLast" class="invisible">
+                                <select asp-for="IsLast" class="invisible">
                                     <option selected value="true">tets</option>
                                 </select>
                                 <p class="card-subtitle mb-2 text-muted website-text">Warning removing last item will cancel the order</p>
                             }
-                            <input asp-for="quantity" type="text" class="form-control website-text" id="quantity" name="quantity" min="1" max="@detail.quantity">
-                            <select asp-for="orderDetailId" class="invisible">
+                            <input asp-for="Quantity" type="text" class="form-control website-text" id="quantity" name="quantity" min="1" max="@detail.Quantity">
+                            <select asp-for="OrderDetailId" class="invisible">
                                 <option selected value="@detail.OrderDetail_Id">tets</option>
                             </select>
-                            <select asp-for="maxQuant" class="invisible">
-                                <option selected value="@detail.quantity">tets</option>
+                            <select asp-for="MaxQuant" class="invisible">
+                                <option selected value="@detail.Quantity">tets</option>
                             </select>
-                            <select asp-for="orderId" class="invisible">
+                            <select asp-for="OrderId" class="invisible">
                                 <option selected value="@Model.Order.Order_Id">tets</option>
                             </select>
                         </div>
@@ -118,7 +118,7 @@
                 </div>
                 <div class="col-6 item-col">
                     <ul class="list-group ">
-                        <li class="item-left list-group-item website-text">Quantity: @detail.quantity</li>
+                        <li class="item-left list-group-item website-text">Quantity: @detail.Quantity</li>
                         <li class="item-left list-group-item website-text">Condition: @detail.Price.Condition.ConditionName</li>
                         <li class="item-left list-group-item website-text">Type: @detail.Book.Type.TypeName </li>
                     </ul>

@@ -206,21 +206,17 @@ namespace BobBookstore.Areas.Identity.Pages.Account.Manage
                 Address recentAddress = new Address();
                 foreach (var add in address)
                 {
-                    //addressId = add.Address_Id;
                     recentAddress = add;
                 }
-                //var recentAddress =await  _context.Address.FindAsync(addressId);
                 recentAddress.AddressLine1 = Input.AddressLine1;
                 recentAddress.AddressLine2 = Input.AddressLine2;
                 recentAddress.City = Input.City;
                 recentAddress.Country = Input.Country;
-                //recentAddress.ZipCode = Convert.ToInt32(Input.ZipCode);
                 recentAddress.State = Input.State;
                 recentAddress.Customer = recentCustomer;
                 recentAddress.IsPrimary = true;
 
                 _context.Update(recentAddress);
-
 
                 await _context.SaveChangesAsync();
 

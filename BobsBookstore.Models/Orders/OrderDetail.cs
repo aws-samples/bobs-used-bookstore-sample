@@ -25,9 +25,9 @@ namespace BobsBookstore.Models.Orders
 
         [Column(TypeName = "decimal(18,2)")]
 
-        public decimal price { get; set; }
+        public decimal OrderDetailPrice { get; set; }
 
-        public int quantity { get; set; }
+        public int Quantity { get; set; }
 
         public bool IsRemoved { get; set; }
 

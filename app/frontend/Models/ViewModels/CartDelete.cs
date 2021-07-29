@@ -2,6 +2,6 @@
 {
     public class CartDelete
     {
-        public string customerId { get; set; }
+        public string CustomerId { get; set; }
     }
 }

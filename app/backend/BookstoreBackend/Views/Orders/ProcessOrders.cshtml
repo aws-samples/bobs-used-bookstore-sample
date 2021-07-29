@@ -53,10 +53,10 @@
 <div class="container">
     <div class="text-center">
         <h2 class="website-text">Process Order</h2>
-        @if (!string.IsNullOrEmpty(Model.errorMessage))
+        @if (!string.IsNullOrEmpty(Model.ErrorMessage))
         {
             <div class="alert alert-secondary alert-dismissible fade show" role="alert">
-                @Model.errorMessage
+                @Model.ErrorMessage
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -104,7 +104,7 @@
             <h4 class="website-text col-12">Expected Delivery Date: </h4>
 
             <h4 style="margin-top:10px;" class="website-text text-center col-12">@( (fullOrder.Order.DeliveryDate == null) ? "Pending Confirmation": DateTime.Parse(fullOrder.Order.DeliveryDate).ToString("MM/dd/yyyy") )</h4>
-            @if (Model.FullOrder.OrderDetails.Count() == Model.FullOrder.itemsRemoved && Model.FullOrder.Order.OrderStatus.Status != "Cancelled")
+            @if (Model.FullOrder.OrderDetails.Count() == Model.FullOrder.ItemsRemoved && Model.FullOrder.Order.OrderStatus.Status != "Cancelled")
             {
                 var cancelId = Model.Statuses.FirstOrDefault(o => o.Status == "Cancelled").OrderStatus_Id;
 

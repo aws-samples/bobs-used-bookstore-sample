@@ -86,38 +86,38 @@
                     <hr class="mt-2 mb-5">
 
                     <div class="row text-center text-lg-left">
-                        @if (!String.IsNullOrEmpty(Model.front_url))
+                        @if (!String.IsNullOrEmpty(Model.FrontUrl))
                         {
                             <div class="col-lg-3 col-md-4 col-6">
                                 <a href="#" class="d-block mb-4 h-100">
-                                    <img class="img-fluid img-thumbnail" src="@Model.front_url" alt="">
+                                    <img class="img-fluid img-thumbnail" src="@Model.FrontUrl" alt="">
                                     <h4 class="main-text text-center font-weight-light">1</h4>
                                 </a>
                             </div>
                         }
-                        @if (!String.IsNullOrEmpty(Model.back_url))
+                        @if (!String.IsNullOrEmpty(Model.BackUrl))
                         {
                             <div class="col-lg-3 col-md-4 col-6">
                                 <a href="#" class="d-block mb-4 h-100">
-                                    <img class="img-fluid img-thumbnail" src="@Model.back_url" alt="">
+                                    <img class="img-fluid img-thumbnail" src="@Model.BackUrl" alt="">
                                     <h4 class="main-text text-center font-weight-light">2</h4>
                                 </a>
                             </div>
                         }
-                        @if (!String.IsNullOrEmpty(Model.left_url))
+                        @if (!String.IsNullOrEmpty(Model.LeftUrl))
                         {
                             <div class="col-lg-3 col-md-4 col-6">
                                 <a href="#" class="d-block mb-4 h-100">
-                                    <img class="img-fluid img-thumbnail" src="@Model.left_url" alt="">
+                                    <img class="img-fluid img-thumbnail" src="@Model.LeftUrl" alt="">
                                     <h4 class="main-text main-text text-center font-weight-light">2</h4>
                                 </a>
                             </div>
                         }
-                        @if (!String.IsNullOrEmpty(Model.right_url))
+                        @if (!String.IsNullOrEmpty(Model.RightUrl))
                         {
                             <div class="col-lg-3 col-md-4 col-6">
                                 <a href="#" class="d-block mb-4 h-100">
-                                    <img class="img-fluid img-thumbnail" src="@Model.right_url" alt="">
+                                    <img class="img-fluid img-thumbnail" src="@Model.RightUrl" alt="">
                                     <h4 class="main-text text-center font-weight-light">2</h4>
                                 </a>
                             </div>
@@ -127,10 +127,10 @@
                 </div>
 
                 <div class="container">
-                    <input  asp-for="@Model.front_url" hidden class="main-text form-control custom-file-input">
-                    <input asp-for="@Model.back_url" hidden class="main-text form-control custom-file-input">
-                    <input asp-for="@Model.left_url" hidden class="main-text form-control custom-file-input">
-                    <input asp-for="@Model.right_url" hidden class="main-text form-control custom-file-input">
+                    <input  asp-for="@Model.FrontUrl" hidden class="main-text form-control custom-file-input">
+                    <input asp-for="@Model.BackUrl" hidden class="main-text form-control custom-file-input">
+                    <input asp-for="@Model.LeftUrl" hidden class="main-text form-control custom-file-input">
+                    <input asp-for="@Model.RightUrl" hidden class="main-text form-control custom-file-input">
 
                     <div class="form-group row">
                         <label asp-for="FrontPhoto" class="main-text col-sm-2 col-form-label">Picture 1</label>

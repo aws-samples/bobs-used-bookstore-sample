@@ -46,7 +46,6 @@ namespace BobBookstore.Controllers
 
             if (String.IsNullOrEmpty(searchString))
             {
-                //searchString = ViewBag.currentFilter;
                 var prices = _priceRepository.Get(p => p.Quantity > 0 &&
                              p.Active);
 
@@ -60,7 +59,7 @@ namespace BobBookstore.Controllers
                         GenreName = b.Genre.Name,
                         TypeName = b.Type.TypeName,
                         PublisherName = b.Publisher.Name,
-                        Url = b.Back_Url,
+                        Url = b.BackUrl,
                         Prices = prices.Where(p => p.Book.Book_Id == b.Book_Id).ToList(),
                         MinPrice = prices.Where(p => p.Book.Book_Id == b.Book_Id).FirstOrDefault().ItemPrice
                     });
@@ -97,7 +96,7 @@ namespace BobBookstore.Controllers
                                 GenreName = b.Genre.Name,
                                 TypeName = b.Type.TypeName,
                                 PublisherName = b.Publisher.Name,
-                                Url = b.Back_Url,
+                                Url = b.BackUrl,
                                 Prices = pricesQuery.Where(p => p.Book.Book_Id == b.Book_Id).ToList(),
                                 MinPrice = pricesQuery.Where(p => p.Book.Book_Id == b.Book_Id).FirstOrDefault().ItemPrice
                             });
@@ -182,7 +181,7 @@ namespace BobBookstore.Controllers
                            ISBN = m.ISBN,
                            GenreName = m.Genre.Name,
                            TypeName = m.Type.TypeName,
-                           Url = m.Back_Url,
+                           Url = m.BackUrl,
                            Prices = pricesLst,
                            BookId = m.Book_Id,
                            Summary = m.Summary

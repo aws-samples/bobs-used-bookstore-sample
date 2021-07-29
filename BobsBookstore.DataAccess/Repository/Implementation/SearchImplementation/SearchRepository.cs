@@ -12,6 +12,7 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.SearchImplementatio
     {
 
         private ISearchDatabaseCalls _searchDbCalls;
+        private int pagesPerPage = 10;
 
         public SearchRepository(ISearchDatabaseCalls searchDatabaseCalls)
         {
@@ -22,18 +23,18 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.SearchImplementatio
         {
             int[] pages = null;
 
-            var start = pageNum / 10;
+            var start = pageNum / pagesPerPage;
 
-            bool Noremainder = pageNum % 10 == 0;
+            bool Noremainder = pageNum % pagesPerPage == 0;
 
 
-            if (start < (totalPages / 10) || Noremainder == true)
+            if (start < (totalPages / pagesPerPage) || Noremainder == true)
             {
-                pages = Enumerable.Range((Noremainder) ? ((start - 1) * 10 + 1) : (start * 10 + 1), 10).ToArray();
+                pages = Enumerable.Range((Noremainder) ? ((start - 1) * pagesPerPage + 1) : (start * pagesPerPage + 1), pagesPerPage).ToArray();
             }
             else
             {
-                pages = Enumerable.Range((Noremainder) ? ((start - 1) * 10) : (start * 10 + 1), totalPages - (start * 10)).ToArray();
+                pages = Enumerable.Range((Noremainder) ? ((start - 1) * pagesPerPage) : (start * pagesPerPage + 1), totalPages - (start * pagesPerPage)).ToArray();
             }
 
             return pages;
@@ -139,10 +140,6 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.SearchImplementatio
                 }
             }
 
-            //var exp2 = GenerateExpressionOrder(type, searchString, method, property, true);
-
-            //lambda = (isFirst == true) ? Expression.Or(exp2, exp2) : Expression.Or(lambda, exp2);
-
             return lambda;
 
         }
@@ -238,9 +235,6 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.SearchImplementatio
                 }
             }
 
-            //var exp2 = GenerateExpressionSubOrder(type, searchString, method, splitFilter, parameterExpression, true);
-
-            //lambda = (isFirst == true) ? Expression.Or(exp2, exp2) : Expression.Or(lambda, exp2); 
             return lambda;
 
         }

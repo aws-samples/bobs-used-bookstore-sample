@@ -71,7 +71,7 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.OrderImplementation
             var query = (IQueryable<OrderStatus>)orderBase;
 
             var orderStatus = query
-                 .OrderBy(os => os.position)
+                 .OrderBy(os => os.Position)
                  .ToList();
 
             return orderStatus;
@@ -86,7 +86,7 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.OrderImplementation
 
                 order.OrderStatus = newStatus;
 
-                if (order.OrderStatus.Status != "Just Placed" && order.DeliveryDate == null) order.DeliveryDate = DateTime.Now.AddDays(14).ToString();
+                if (order.OrderStatus.Status != "Just Placed" && order.DeliveryDate == null) order.DeliveryDate = DateTime.Now.ToUniversalTime().AddDays(14).ToString();
 
                 await _orderDbCalls.ContextSaveChanges();
 

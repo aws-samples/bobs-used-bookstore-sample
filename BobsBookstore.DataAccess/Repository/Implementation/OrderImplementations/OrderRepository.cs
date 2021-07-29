@@ -98,7 +98,7 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.OrderImplementation
         {
 
             var orders = filterQuery
-                            .OrderBy(order => order.OrderStatus.position)
+                            .OrderBy(order => order.OrderStatus.Position)
                             .ThenBy(order => order.DeliveryDate)
                             .Skip((pageNum - 1) * _ordersPerPage)
                             .Take(_ordersPerPage)

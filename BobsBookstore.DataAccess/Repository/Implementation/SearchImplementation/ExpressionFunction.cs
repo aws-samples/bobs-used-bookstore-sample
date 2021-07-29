@@ -38,7 +38,7 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.SearchImplementatio
 
             var value = converter.ConvertFrom(subSearch);
             ConstantExpression constant = null;
-
+            
             constant = Expression.Constant(value);
 
             Expression property2 = parameterExpression;
@@ -104,14 +104,6 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.SearchImplementatio
 
         public BinaryExpression ReturnExpression(string filterValue,string tableName, ParameterExpression parameterExpression,string searchString, string inBetween,string operand, string negate)
         {
-            //string filterValue = "Order_Id Customer.Customer_Id";
-            //string tableName = "Order";
-            //var parameterExpression = Expression.Parameter(typeof(Order), "order");
-            //var searchString = "47&&2";
-            //var inBetween = "And";
-            //var operand = "== ==";
-            //var negate = "false true";
-
             string[] listOfFilters = filterValue.Split(' ');
             bool isFirst = true;
 
@@ -137,7 +129,6 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.SearchImplementatio
                 else
                 {
 
-                    //exp2 = GenerateDynamicLambdaFunctionSubObjectProperty(listOfFilters[i].Split("."), parameterExpression, searchString);
                     exp2 = GenerateDynamicLambdaFunctionSubObjectProperty(parameterExpression,listOfFilters[i].Split("."), splitSearchString[i], splitOperand[i], splitNegate[i]);
 
 

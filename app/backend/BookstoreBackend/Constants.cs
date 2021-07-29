@@ -35,7 +35,7 @@ namespace BookstoreBackend
         public const string SortByQuantityPhrase = "Quantity";
         public const string SortByAuthorPhrase = "Author";
         public const string LambdaExpressionType = "shared_code.Models.Book.Price";
-        public const string LAMBDAEXPRESSIONPHRASE = "price";
+        public const string LAMBDAEXPRESSIONPHRASE = "OrderDetailPrice";
         public const string photosBucketName = "bookcoverpictures";
         public const string audioBucketName = "audiosummary";
         public RegionEndpoint bucketRegion = RegionEndpoint.USEast1;

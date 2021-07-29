@@ -20,6 +20,8 @@ using BobsBookstore.DataAccess.Repository.Implementation.InventoryImplementation
 using BobsBookstore.DataAccess.Repository.Interface.Implementations;
 using BobsBookstore.DataAccess.Repository.Interface.WelcomePageInterface;
 using BobsBookstore.DataAccess.Repository.Implementation.WelcomePageImplementation;
+using BobsBookstore.DataAccess.Repository.Implementation;
+using BobsBookstore.DataAccess.Repository.Interface;
 
 namespace BookstoreBackend
 {
@@ -61,6 +63,9 @@ namespace BookstoreBackend
 
             services.AddTransient<INotifications, Notifications.Implementations.Notifications>();
             services.AddTransient<ICustomAdminPage, CustomAdmin>();
+
+            services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+
             services.AddAuthentication(options =>
             {
                 // uses cookies on local machine for maintaining authentication

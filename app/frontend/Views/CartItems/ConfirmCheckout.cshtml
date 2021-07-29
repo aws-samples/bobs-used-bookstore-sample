@@ -10,7 +10,7 @@
     decimal totalprice = 0;
     foreach (var item in ViewData["order"] as List<BobsBookstore.Models.ViewModels.OrderDetailViewModel>)
     {
-        totalprice += item.price * (decimal)item.quantity;
+        totalprice += item.Price * (decimal)item.Quantity;
     }
 }
 <head>
@@ -211,7 +211,7 @@
         <tbody>
             @foreach (var item in ViewData["order"] as List<BobsBookstore.Models.ViewModels.OrderDetailViewModel>)
             {
-                decimal total = item.price * item.quantity;
+                decimal total = item.Price * item.Quantity;
                 <tr>
                     <td>
                         <img src="@item.Url" height="80" width="50" />
@@ -222,11 +222,11 @@
 
                     <td>
 
-                        $@item.price
+                        $@item.Price
 
                     <td>
 
-                        @item.quantity
+                        @item.Quantity
                     </td>
                     <td>$@total</td>
 

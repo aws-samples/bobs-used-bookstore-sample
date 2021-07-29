@@ -51,7 +51,6 @@ namespace BobBookstore.Controllers
                 
                 //get customer
                 var user = await _userManager.GetUserAsync(User);
-                //var currentCustomer = _context.Customer.Find(user.Attributes[CognitoAttribute.Sub.AttributeName]);
                 var currentCustomer = _customerRepository.Get(user.Attributes[CognitoAttribute.Sub.AttributeName]);
                 //get cart
                 var cart = _cartRepository.Get(s => s.Customer == currentCustomer).FirstOrDefault();

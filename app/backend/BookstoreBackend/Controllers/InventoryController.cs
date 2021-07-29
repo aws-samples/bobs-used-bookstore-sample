@@ -27,6 +27,8 @@ namespace BookstoreBackend.Controllers
         private INotifications _emailSender;
         private readonly IMapper _mapper;
         private readonly IGenericRepository<Book> _bookRepository;
+        private int numberOfDetails = 5;
+
 
         public InventoryController(IGenericRepository<Book> bookRepository, IMapper mapper, IInventory Inventory, ApplicationDbContext context, ILogger<InventoryController> logger, INotifications emailSender)
         {
@@ -51,7 +53,7 @@ namespace BookstoreBackend.Controllers
                 _logger.LogError(e, "Error in authentication @ Adding a new Book");
             }
 
-            DateTime time = DateTime.Now;
+            DateTime time = DateTime.Now.ToUniversalTime();
             try
             {
                 if (!string.IsNullOrEmpty(BookName))
@@ -87,7 +89,7 @@ namespace BookstoreBackend.Controllers
         {
             _logger.LogInformation("Posting new book details from form to Database ");
             bookview.UpdatedBy = @User.Claims.FirstOrDefault(c => c.Type.Equals("cognito:username"))?.Value;
-            bookview.UpdatedOn = DateTime.Now;
+            bookview.UpdatedOn = DateTime.Now.ToUniversalTime();
             bookview.Active = true;
             if (String.IsNullOrEmpty(bookview.Author))
             {
@@ -101,7 +103,7 @@ namespace BookstoreBackend.Controllers
                 BooksDto booksDto = _mapper.Map<BooksDto>(bookview);
                 var status = _Inventory.AddToTables(booksDto);
 
-                if (status != 1)
+                if (!status)
                 {
 
                     ViewData["ErrorStatus"] = Constants.ErrorStatusYes;
@@ -145,11 +147,11 @@ namespace BookstoreBackend.Controllers
             {
                 var status = _Inventory.AddPublishers(publisher);
 
-                if (status == 0)
+                if (status)
                 {
                     return RedirectToAction("EditBookDetails");
                 }
-                if (status == 1)
+                else
                 {
                     ViewData["Status"] = Constants.PublisherExistsStatus;
                 }
@@ -178,11 +180,11 @@ namespace BookstoreBackend.Controllers
             {
                 var status = _Inventory.AddGenres(genre);
 
-                if (status == 0)
+                if (status)
                 {
                     return RedirectToAction("EditBookDetails");
                 }
-                if (status == 1)
+                else
                 {
                     ViewData["Status"] = Constants.GenreExistsStatus;
                 }
@@ -212,11 +214,11 @@ namespace BookstoreBackend.Controllers
             {
                 var status = _Inventory.AddBookTypes(booktype);
 
-                if (status == 0)
+                if (status)
                 {
                     return RedirectToAction("EditBookDetails");
                 }
-                if (status == 1)
+                else
                 {
                     ViewData["Status"] = Constants.TypeExistsStatus;
                 }
@@ -246,11 +248,11 @@ namespace BookstoreBackend.Controllers
             {
                 var status = _Inventory.AddBookConditions(bookcondition);
 
-                if (status == 0)
+                if (status)
                 {
                     return RedirectToAction("EditBookDetails");
                 }
-                if (status == 1)
+                else
                 {
                     ViewData["Status"] = Constants.ConditionExistsStatus;
                 }
@@ -377,15 +379,15 @@ namespace BookstoreBackend.Controllers
             {
                 var bookdetails = _Inventory.GetBookByID(BookId);
                 IEnumerable<BookDetailsViewModel> bookDetails = _mapper.Map<IEnumerable<BookDetailsDto>, IEnumerable<BookDetailsViewModel>>(_Inventory.GetDetails(BookId));
-                books.publisher = bookdetails.Publisher.Name;
-                books.genre = bookdetails.Genre.Name;
+                books.Publisher = bookdetails.Publisher.Name;
+                books.Genre = bookdetails.Genre.Name;
                 books.BookType = bookdetails.BookType.TypeName;
                 books.BookName = bookdetails.BookName;
                 books.Books = bookDetails;
-                books.front_url = bookdetails.front_url;
-                books.back_url = bookdetails.back_url;
-                books.left_url = bookdetails.left_url;
-                books.right_url = bookdetails.right_url;
+                books.FrontUrl = bookdetails.FrontUrl;
+                books.BackUrl = bookdetails.BackUrl;
+                books.LeftUrl = bookdetails.LeftUrl;
+                books.RightUrl = bookdetails.RightUrl;
                 books.Author = bookdetails.Author;
                 books.ISBN = bookdetails.ISBN;
                 books.Summary = bookdetails.Summary;
@@ -431,7 +433,7 @@ namespace BookstoreBackend.Controllers
                 {
                     var temp = _bookRepository.Get(b => b.Name == BookName).FirstOrDefault();
                     var variant = _Inventory.GetBookByID(temp.Book_Id);
-                    book.genre = variant.Genre.Name;
+                    book.Genre = variant.Genre.Name;
                     book.Author = variant.Author;
                     book.Summary = variant.Summary;
                     ViewData["status"] = Constants.BookDetailsStatusDetails;
@@ -439,10 +441,10 @@ namespace BookstoreBackend.Controllers
                     return View(book);
                 }
                 book.BookType = lis[0].BookType.TypeName;
-                book.publisher = lis[0].Publisher.Name;
-                book.genre = lis[0].Genre.Name;
-                book.front_url = lis[0].front_url;
-                book.back_url = lis[0].back_url;
+                book.Publisher = lis[0].Publisher.Name;
+                book.Genre = lis[0].Genre.Name;
+                book.FrontUrl = lis[0].FrontUrl;
+                book.BackUrl = lis[0].BackUrl;
                 book.Author = lis[0].Author;
                 book.Author = lis[0].Author;
                 book.ISBN = lis[0].ISBN;
@@ -461,7 +463,8 @@ namespace BookstoreBackend.Controllers
             _logger.LogInformation("Search Page");
             try
             {
-                var stats = _Inventory.DashBoard();
+
+                var stats = _Inventory.DashBoard(numberOfDetails);
                 ViewData["genre"] = stats[0].OrderByDescending(x => x.Value).First().Key;
                 ViewData["type"] = stats[1].OrderByDescending(x => x.Value).First().Key;
                 ViewData["publisher"] = stats[2].OrderByDescending(x => x.Value).First().Key;
@@ -533,7 +536,7 @@ namespace BookstoreBackend.Controllers
             try
             {
                 details.UpdatedBy = @User.Claims.FirstOrDefault(c => c.Type.Equals("cognito:username"))?.Value;
-                details.UpdatedOn = DateTime.Now;
+                details.UpdatedOn = DateTime.Now.ToUniversalTime();
                 _Inventory.PushDetails(details);
 
             }
@@ -552,7 +555,7 @@ namespace BookstoreBackend.Controllers
             _emailSender.SendInventoryLowEmail(_Inventory.ScreenInventory(), Constants.BoBsEmailAddress);
             try
             {
-                var stats = _Inventory.DashBoard();
+                var stats = _Inventory.DashBoard(numberOfDetails);
                 ViewData["ordes_top_genre"] = stats[0].First().Key;
                 ViewData["ordes_top_genre_count"] = stats[0].First().Value;
 

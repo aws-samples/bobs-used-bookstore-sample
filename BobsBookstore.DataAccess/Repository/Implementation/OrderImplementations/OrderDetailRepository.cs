@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using BobsBookstore.Models.Orders;
 using BobsBookstore.DataAccess.Repository.Interface.OrdersInterface;
 using BobsBookstore.DataAccess.Repository.Interface.SearchImplementations;
+using Microsoft.Extensions.Logging;
 
 namespace BobsBookstore.DataAccess.Repository.Implementation.OrderImplementations
 {
@@ -23,14 +24,17 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.OrderImplementation
         private readonly IOrderStatusRepository _orderStatusRepo;
         private IOrderDatabaseCalls _orderDbCalls;
         private IExpressionFunction _expFunc;
+        private readonly ILogger<OrderDetailRepository> _logger;
+
 
         // Set up conncection to Database
-        public OrderDetailRepository(IOrderRepository ordeRepo, IOrderStatusRepository orderStatusRepo,IOrderDatabaseCalls orderDbCalls, IExpressionFunction expFunc)
+        public OrderDetailRepository(ILogger<OrderDetailRepository> logger, IOrderRepository ordeRepo, IOrderStatusRepository orderStatusRepo,IOrderDatabaseCalls orderDbCalls, IExpressionFunction expFunc)
         {
             _orderRepo = ordeRepo;
             _orderStatusRepo = orderStatusRepo;
             _orderDbCalls = orderDbCalls;
             _expFunc = expFunc;
+            _logger = logger;
         }
 
 
@@ -66,12 +70,12 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.OrderImplementation
                     {
                         if (detail.IsRemoved != true)
                         {
-                            order.Subtotal -= (detail.quantity * detail.price);
-                            order.Tax -= detail.quantity * detail.price * (decimal).1;
+                            order.Subtotal -= (detail.Quantity * detail.OrderDetailPrice);
+                            order.Tax -= detail.Quantity * detail.OrderDetailPrice * (decimal).1;
 
                             await _orderDbCalls.ContextSaveChanges();
 
-                            detail.Price.Quantity += detail.quantity;
+                            detail.Price.Quantity += detail.Quantity;
                             detail.IsRemoved = true;
 
                             await _orderDbCalls.ContextSaveChanges();
@@ -89,14 +93,14 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.OrderImplementation
                 }
 
             }
-            catch (DbUpdateConcurrencyException)
+            catch (DbUpdateConcurrencyException ex)
             {
-                // todo: log exception
+                _logger.LogError(ex, "DBConcurrency Error");
                 return null;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                // todo: log exception
+                _logger.LogError(ex, "Error");
                 return null;
             }
         }
@@ -107,14 +111,14 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.OrderImplementation
             {
                 var origOrderDetail = await FindOrderDetailById(id);
 
-                var moneyOwe = origOrderDetail.price * origOrderDetail.quantity;
+                var moneyOwe = origOrderDetail.OrderDetailPrice * origOrderDetail.Quantity;
 
 
                 var pending = _orderStatusRepo.FindOrderStatusByName("Pending");
 
                 var origOrder = _orderRepo.FindOrderById(orderId);
 
-                if (origOrderDetail.IsRemoved == true || origOrder.OrderStatus.position > pending.position) return null;
+                if (origOrderDetail.IsRemoved == true || origOrder.OrderStatus.Position > pending.Position) return null;
 
                 using(var transaction = _orderDbCalls.BeginTransaction())
                 {
@@ -148,10 +152,13 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.OrderImplementation
             }
             catch(DbUpdateConcurrencyException ex)
             {
+                _logger.LogError(ex, "DBConcurrency Error");
                 return null;
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, "Error");
+
                 return null;
             }
 

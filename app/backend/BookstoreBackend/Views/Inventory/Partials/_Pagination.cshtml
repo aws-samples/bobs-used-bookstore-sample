@@ -14,8 +14,8 @@
     {
         var prevPag = new Dictionary<string, string>
         {
-                        {"searchfilter",Model.searchfilter},
-                        {"searchby",Model.searchby},
+                        {"searchfilter",Model.SearchFilter},
+                        {"searchby",Model.SearchBy},
                         {"pageNum",Model.CurrentPage-1+""},
                         {"style",Model.ViewStyle},
                         {"SortBy",Model.SortBy},
@@ -38,8 +38,8 @@
         {
             var pag = new Dictionary<string, string>
         {
-                        {"searchfilter",Model.searchfilter},
-                        {"searchby",Model.searchby},
+                        {"searchfilter",Model.SearchFilter},
+                        {"searchby",Model.SearchBy},
                         {"pageNum",page+""},
                         {"style",Model.ViewStyle},
                         {"SortBy",Model.SortBy},
@@ -55,8 +55,8 @@
     {
         var nextPag = new Dictionary<string, string>
         {
-                        {"searchfilter",Model.searchfilter},
-                        {"searchby",Model.searchby},
+                        {"searchfilter",Model.SearchFilter},
+                        {"searchby",Model.SearchBy},
                         {"pageNum",Model.CurrentPage+1+""},
                         {"style",Model.ViewStyle},
                         {"SortBy",Model.SortBy},

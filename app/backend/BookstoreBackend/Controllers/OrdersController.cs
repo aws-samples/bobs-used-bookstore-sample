@@ -134,7 +134,7 @@ namespace BookstoreBackend.Controllers
             var cancelled = _orderStatus.FindOrderStatusByName("Cancelled");
             var newStatus = _orderStatus.FindOrderStatusById(status);
 
-            if (newStatus.position < order.OrderStatus.position || order.OrderStatus.OrderStatus_Id != oldStatus)
+            if (newStatus.Position < order.OrderStatus.Position || order.OrderStatus.OrderStatus_Id != oldStatus)
             {
                 errorMessage = "Error Occurred: The order status has changed";
                 return RedirectToAction("ProcessOrders", new { orderId, errorMessage });
@@ -199,11 +199,11 @@ namespace BookstoreBackend.Controllers
 
                 fullOrder.Order = order;
                 fullOrder.OrderDetails = orderDetails;
-                fullOrder.itemsRemoved = await _orderDetail.FindOrderDetailsRemovedCountAsync(orderId);
+                fullOrder.ItemsRemoved = await _orderDetail.FindOrderDetailsRemovedCountAsync(orderId);
 
                 viewModel.Statuses = orderStatus;
                 viewModel.FullOrder = fullOrder;
-                viewModel.errorMessage = string.IsNullOrEmpty(errorMessage) ? "" : errorMessage;
+                viewModel.ErrorMessage = string.IsNullOrEmpty(errorMessage) ? "" : errorMessage;
 
                 return View(viewModel);
             }

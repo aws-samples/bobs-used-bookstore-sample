@@ -13,7 +13,7 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.AdminImplementation
                 string type = claim.Type;
                 switch (type)
                 {
-                    case "cognito:groups":ad.group = claim.Value;
+                    case "cognito:groups":ad.Group = claim.Value;
                         break;
                     case "cognito:username":ad.Username = claim.Value;
                         break;

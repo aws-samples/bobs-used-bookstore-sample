@@ -14,16 +14,16 @@ namespace BookstoreBackend.ViewModel.ManageOrders
 
         public IEnumerable<OrderDetail> OrderDetails {get; set;}
         
-        public long orderId { get; set; }
-        public long orderDetailId { get; set; }
+        public long OrderId { get; set; }
+        public long OrderDetailId { get; set; }
 
-        public string quantity { get; set; }
+        public string Quantity { get; set; }
 
-        public bool isLast { get; set; }
+        public bool IsLast { get; set; }
        
-        public int maxQuant { get; set; }
+        public int MaxQuant { get; set; }
 
-        public int itemsRemoved { get; set; }
+        public int ItemsRemoved { get; set; }
 
     }
 }

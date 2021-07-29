@@ -22,13 +22,13 @@ namespace BookstoreBackend.ViewModel.ManageInventory
 
         public int Quantity { get; set; }
 
-        public string front_url { get; set; }
+        public string FrontUrl { get; set; }
 
-        public string back_url { get; set; }
+        public string BackUrl { get; set; }
 
-        public string left_url { get; set; }
+        public string LeftUrl { get; set; }
 
-        public string right_url { get; set; }
+        public string RightUrl { get; set; }
 
         public string BookNameSearchParameter { get; set; }
 
