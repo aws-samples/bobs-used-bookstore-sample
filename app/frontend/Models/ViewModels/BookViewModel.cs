@@ -23,7 +23,7 @@ namespace BobsBookstore.Models.ViewModels
         [DefaultValue("No Author")]
         public string Author { get; set; }
 
-        public long ISBN { get; set; }
+        public string ISBN { get; set; }
 
         [Display(Name = "Genre")]
         public string GenreName { get; set; }
@@ -35,7 +35,7 @@ namespace BobsBookstore.Models.ViewModels
         public string Url { get; set; }
 
         [Display(Name = "$$")]
-        public double MinPrice { get; set; }
+        public decimal MinPrice { get; set; }
 
         public string Summary { get; set; }
 

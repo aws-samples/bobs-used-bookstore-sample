@@ -19,7 +19,7 @@ namespace BobsBookstore.Models.Customers
 
         public string Country { get; set; }
 
-        public long ZipCode { get; set; }
+        public string ZipCode { get; set; }
 
         public Customer Customer { get; set; }
     }

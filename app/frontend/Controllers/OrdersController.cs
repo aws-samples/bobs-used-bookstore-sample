@@ -8,7 +8,11 @@ using Amazon.Extensions.CognitoAuthentication;
 using BobsBookstore.DataAccess.Data;
 using BobsBookstore.Models.Orders;
 using BobsBookstore.Models.ViewModels;
-
+using BookstoreFrontend.Models.ViewModels;
+using System.Collections.Generic;
+using BobsBookstore.DataAccess.Repository.Interface;
+/*using BookstoreBackend.Database;
+*/
 namespace BobBookstore.Controllers
 {
     public class OrdersController : Controller
@@ -16,12 +20,18 @@ namespace BobBookstore.Controllers
         private readonly ApplicationDbContext _context;
         private readonly SignInManager<CognitoUser> _SignInManager;
         private readonly UserManager<CognitoUser> _userManager;
+        private readonly IGenericRepository<Order> _orderRepository;
+        private readonly IGenericRepository<OrderDetail> _orderDetailRepository;
 
-        public OrdersController(ApplicationDbContext context, SignInManager<CognitoUser> SignInManager, UserManager<CognitoUser> userManager)
+
+
+        public OrdersController(IGenericRepository<Order> orderRepository, IGenericRepository<OrderDetail> orderDetailRepository, ApplicationDbContext context, SignInManager<CognitoUser> SignInManager, UserManager<CognitoUser> userManager)
         {
             _context = context;
             _SignInManager = SignInManager;
             _userManager = userManager;
+            _orderRepository = orderRepository;
+            _orderDetailRepository = orderDetailRepository;
         }
         public async Task<IActionResult> Index()
         {
@@ -29,19 +39,10 @@ namespace BobBookstore.Controllers
             {
                 var user = await _userManager.GetUserAsync(User);
                 string customer_id = user.Attributes[CognitoAttribute.Sub.AttributeName];
-                var orders = from o in _context.Order
-                             where o.Customer.Customer_Id == customer_id
-                             select new OrderViewModel()
-                             {
-                                 Order_Id = o.Order_Id,
-                                 Status = o.OrderStatus.Status,
-                                 Tax = o.Tax,
-                                 Subtotal = o.Subtotal,
-                                 DeliveryDate = o.DeliveryDate
-                             };
 
+                IEnumerable<Order> orders = _orderRepository.Get(o => o.Customer.Customer_Id == customer_id, includeProperties:"OrderStatus,Customer");
 
-                return View(await orders.ToListAsync());
+                return View(orders);
             }
             return NotFound("You must be signed in.");
         }
@@ -52,35 +53,19 @@ namespace BobBookstore.Controllers
             {
                 var user = await _userManager.GetUserAsync(User);
                 string customer_id = user.Attributes[CognitoAttribute.Sub.AttributeName];
-                var orderDetails = from od in _context.OrderDetail
-                                   where od.Order.Order_Id == id && !od.IsRemoved
-                                   select new OrderDetailViewModel()
-                                   {
-                                       Bookname = od.Book.Name,
-                                       Book_Id = od.Book.Book_Id,
-                                       quantity = od.quantity,
-                                       price = od.price,
-                                       Url=od.Book.Back_Url
-                                   };
-                var books = await orderDetails.OrderBy(o => o.Bookname).ToListAsync();
+                IEnumerable<OrderDetail> orderDetails = _orderDetailRepository.Get(od => od.Order.Order_Id == id && !od.IsRemoved, orderBy: q => q.OrderBy(s => s.Book.Name), includeProperties: "Book");
+                IEnumerable<Order> order = _orderRepository.Get(o => o.Customer.Customer_Id == customer_id && o.Order_Id == id, includeProperties: "OrderStatus");
+                
+                OrderDisplayModel viewModel = new OrderDisplayModel();
+                viewModel.OrderBookDetails = orderDetails;
+                viewModel.OrderDetail = order.FirstOrDefault();
 
-                var order = from o in _context.Order
-                            where o.Customer.Customer_Id == customer_id &&
-                            o.Order_Id == id
-                            select new OrderViewModel()
-                            {
-                                Order_Id = o.Order_Id,
-                                Status = o.OrderStatus.Status,
-                                Tax = o.Tax,
-                                Subtotal = o.Subtotal,
-                                DeliveryDate = o.DeliveryDate,
-                                Books = books
-                            };
-                return View(order.FirstOrDefault());
+                return View(viewModel);
 
             }
             return NotFound("You must be signed in.");
         }
+    
 
         public async Task<IActionResult> Delete(long id)
         {

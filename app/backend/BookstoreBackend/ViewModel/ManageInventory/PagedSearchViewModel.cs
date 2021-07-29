@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using BookstoreBackend.DataModel;
 
 namespace BookstoreBackend.ViewModel.ManageInventory
 {
@@ -12,7 +11,7 @@ namespace BookstoreBackend.ViewModel.ManageInventory
 
         public int PageNumber { get; set; }
 
-        public IEnumerable<BookDetails> Books { get; set; }
+        public IEnumerable<BookDetailsViewModel> Books { get; set; }
 
         public bool HasPreviousPages { get; set; }
 

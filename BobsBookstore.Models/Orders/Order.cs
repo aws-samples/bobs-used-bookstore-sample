@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using BobsBookstore.Models.Customers;
+using System.ComponentModel.DataAnnotations.Schema;
 
 
 namespace BobsBookstore.Models.Orders
@@ -9,9 +10,11 @@ namespace BobsBookstore.Models.Orders
         [Key]
         public long Order_Id { get; set; }
 
-        public double Subtotal { get; set; }
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal Subtotal { get; set; }
 
-        public double Tax { get; set; }
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal Tax { get; set; }
 
         public string DeliveryDate { get; set; }
 

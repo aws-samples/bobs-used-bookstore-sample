@@ -6,6 +6,6 @@
         public long Book_Id { get; set; }
         public int quantity { get; set; }
         public string Url { get; set; }
-        public double  price { get; set; }
+        public decimal  price { get; set; }
     }
 }

@@ -9,17 +9,17 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Amazon.S3;
 using Amazon.Polly;
-using BookstoreBackend.Repository;
-using BookstoreBackend.Repository.Implementations;
-using BookstoreBackend.Repository.OrdersInterface;
-using BookstoreBackend.Repository.Implementations.OrderImplementations;
-using BookstoreBackend.Repository.WelcomePageInterface;
-using BookstoreBackend.Repository.Implementations.WelcomePageImplementation;
 using BookstoreBackend.Notifications.NotificationsInterface;
-using BookstoreBackend.Repository.Implementations.InventoryImplementation;
-using BookstoreBackend.Repository.SearchImplementations;
-using BookstoreBackend.Repository.Implementations.SearchImplementation;
 using BobsBookstore.DataAccess.Data;
+using BobsBookstore.DataAccess.Repository.Interface.SearchImplementations;
+using BobsBookstore.DataAccess.Repository.Implementation.SearchImplementation;
+using BobsBookstore.DataAccess.Repository.Interface.OrdersInterface;
+using BobsBookstore.DataAccess.Repository.Implementation.OrderImplementations;
+using BobsBookstore.DataAccess.Repository.Interface.InventoryInterface;
+using BobsBookstore.DataAccess.Repository.Implementation.InventoryImplementation;
+using BobsBookstore.DataAccess.Repository.Interface.Implementations;
+using BobsBookstore.DataAccess.Repository.Interface.WelcomePageInterface;
+using BobsBookstore.DataAccess.Repository.Implementation.WelcomePageImplementation;
 
 namespace BookstoreBackend
 {
@@ -42,6 +42,7 @@ namespace BookstoreBackend
             services.AddAWSService<Amazon.Rekognition.IAmazonRekognition>();
             services.AddAWSService<Amazon.Translate.IAmazonTranslate>();
             services.AddAWSService<Amazon.CloudWatch.IAmazonCloudWatch>();
+            services.AddAutoMapper(typeof(Startup));
 
             services.AddControllersWithViews();
             services.AddDbContext<ApplicationDbContext>(option => option.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));

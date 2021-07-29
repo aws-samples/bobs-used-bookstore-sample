@@ -6,8 +6,9 @@
     var conditions = (List<string>)ViewData["Conditions"];
 }
 @{
-    var books = (IEnumerable<BookstoreBackend.DataModel.BookDetails>)ViewData["Books"];
     var Genre = Model.genre.ToUpper();
+    var books = (IEnumerable<BookstoreBackend.ViewModel.ManageInventory.BookDetailsViewModel>)ViewData["Books"];
+
     var Author = Model.Author.ToUpper();
     var BookName = Model.BookName.ToUpper();
     var fetch_status = (string)ViewData["fetchstatus"];

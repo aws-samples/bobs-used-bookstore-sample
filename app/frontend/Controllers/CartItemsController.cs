@@ -14,6 +14,8 @@ using BobsBookstore.DataAccess.Data;
 using BobsBookstore.Models.Carts;
 using BobsBookstore.Models.ViewModels;
 using BobsBookstore.Models.Customers;
+using BobsBookstore.DataAccess.Repository.Interface;
+using BobsBookstore.Models.Books;
 
 namespace BobBookstore.Controllers
 {
@@ -22,11 +24,35 @@ namespace BobBookstore.Controllers
         private readonly ApplicationDbContext _context;
         private readonly SignInManager<CognitoUser> _SignInManager;
         private readonly UserManager<CognitoUser> _userManager;
-        public CartItemsController(ApplicationDbContext context, SignInManager<CognitoUser> SignInManager, UserManager<CognitoUser> userManager)
+        private readonly IGenericRepository<CartItem> _cartItemRepository;
+        private readonly IGenericRepository<OrderStatus> _orderStatusRepository;
+        private readonly IGenericRepository<Customer> _customerRepository;
+        private readonly IGenericRepository<Book> _bookRepository;
+        private readonly IGenericRepository<Price> _priceRepository;
+        private readonly IGenericRepository<OrderDetail> _orderDetailRepository;
+        private readonly IGenericRepository<Order> _orderRepository;
+        private readonly IGenericRepository<Address> _addressRepository;
+
+
+
+
+
+        public CartItemsController(IGenericRepository<Address> addressRepository, IGenericRepository<OrderDetail> orderDetailRepository, IGenericRepository<Order> orderRepository, IGenericRepository<Price> priceRepository, IGenericRepository<Book> bookRepository, IGenericRepository<Customer> customerRepository, IGenericRepository<OrderStatus> orderStatusRepository, IGenericRepository<CartItem> cartItemRepository, ApplicationDbContext context, SignInManager<CognitoUser> SignInManager, UserManager<CognitoUser> userManager)
         {
             _context = context;
             _SignInManager = SignInManager;
             _userManager = userManager;
+            _cartItemRepository = cartItemRepository;
+            _orderStatusRepository = orderStatusRepository;
+            _customerRepository = customerRepository;
+            _bookRepository = bookRepository;
+            _priceRepository = priceRepository;
+            _orderRepository = orderRepository;
+            _orderDetailRepository = orderDetailRepository;
+            _addressRepository = addressRepository;
+
+
+
         }
 
         // GET: CartItems
@@ -34,119 +60,100 @@ namespace BobBookstore.Controllers
         {
             
             var id = Convert.ToString (HttpContext.Request.Cookies["CartId"]);
-            var cart = _context.Cart.Find(id);
-            var cartItem = from c in _context.CartItem
-                           where c.Cart==cart&&c.WantToBuy==true
-                       select new CartViewModel()
-                       {
-                           BookId=c.Book.Book_Id,
-                           Url=c.Book.Back_Url,
-                           Prices=c.Price.ItemPrice,
-                           BookName=c.Book.Name,
-                           CartItem_Id=c.CartItem_Id,
-                           quantity=c.Price.Quantity,
-                           PriceId=c.Price.Price_Id,
 
-                       };
+            IEnumerable<CartViewModel> cartItem = _cartItemRepository.Get(c => c.Cart.Cart_Id == id && c.WantToBuy == true, includeProperties: "Price,Book,Cart")
+                .Select(c => new CartViewModel
+                {
+                    BookId = c.Book.Book_Id,
+                    Url = c.Book.Back_Url,
+                    Prices = c.Price.ItemPrice,
+                    BookName = c.Book.Name,
+                    CartItem_Id = c.CartItem_Id,
+                    quantity = c.Price.Quantity,
+                    PriceId = c.Price.Price_Id,
+
+                });
+         
             
-            return View(await cartItem.ToListAsync());
+            return View(cartItem);
         }
 
-        public async Task<IActionResult> WishListIndex()
+
+        public IActionResult WishListIndex()
         {
             var id = Convert.ToString(HttpContext.Request.Cookies["CartId"]);
-            var cart = _context.Cart.Find(id);
-            var cartItem = from c in _context.CartItem
-                           where c.Cart == cart && c.WantToBuy==false
-                           select new CartViewModel()
-                           {
-                               BookId = c.Book.Book_Id,
-                               Url = c.Book.Back_Url,
-                               Prices = c.Price.ItemPrice,
-                               BookName = c.Book.Name,
-                               CartItem_Id = c.CartItem_Id,
-                               quantity = c.Price.Quantity,
-                               PriceId = c.Price.Price_Id,
+            IEnumerable<CartViewModel> cartItem = _cartItemRepository.Get(c => c.Cart.Cart_Id == id && c.WantToBuy == false, includeProperties: "Price,Book,Cart")
+                .Select(c => new CartViewModel
+                {
+                    BookId = c.Book.Book_Id,
+                    Url = c.Book.Back_Url,
+                    Prices = c.Price.ItemPrice,
+                    BookName = c.Book.Name,
+                    CartItem_Id = c.CartItem_Id,
+                    quantity = c.Price.Quantity,
+                    PriceId = c.Price.Price_Id,
+                });
 
-                           };
-
-            return View(await cartItem.ToListAsync());
-            //return View(Tuple.Create(item1,book));
+            return View(cartItem);
 
         }
-        public async Task<IActionResult> MoveToCart(int? id)
+        [HttpPost]
+        public IActionResult MoveToCart(string id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
 
-            var cartItem = await _context.CartItem.FindAsync(id);
+
+            var cartItem = _cartItemRepository.Get(id);
             if (cartItem == null)
             {
                 return NotFound();
             }
             cartItem.WantToBuy = true;
-            _context.Update(cartItem);
-            await _context.SaveChangesAsync();
+            _cartItemRepository.Update(cartItem);
+            _cartItemRepository.Save();
             return RedirectToAction("WishListIndex");
         }
 
         [HttpPost]
-        public async Task<IActionResult> AllMoveToCart(string[] fruits)
+        public IActionResult AllMoveToCart()
         {
-            foreach (var ids in fruits)
-            {
-                var id = Convert.ToInt32(ids);
-                if (id == null)
-                {
-                    return NotFound();
-                }
+            var id = Convert.ToString(HttpContext.Request.Cookies["CartId"]);
 
-                var cartItem = await _context.CartItem.FindAsync(id);
-                if (cartItem == null)
-                {
-                    return NotFound();
-                }
-                cartItem.WantToBuy = true;
-                _context.Update(cartItem);
+            IEnumerable<CartItem> cartItem = _cartItemRepository.Get(c => c.Cart.Cart_Id == id && c.WantToBuy == false);
+
+            foreach (CartItem item in cartItem)
+            {
+
+
+
+                item.WantToBuy = true;
+                _cartItemRepository.Update(item);
+                _cartItemRepository.Save();
+
             }
 
-            await _context.SaveChangesAsync();
 
             return RedirectToAction("WishListIndex");
         }
-        
+
         public async Task<IActionResult> CheckOut(string[] fruits,string[] IDs,string[] quantity,string[] bookF,string[]priceF)
         {
             //set the origin value
             long statueId = 1;
-            var orderStatue = _context.OrderStatus.Find(statueId);
+            var orderStatue = _orderStatusRepository.Get(statueId);
             var user = await _userManager.GetUserAsync(User);
             var userId = user.Attributes[CognitoAttribute.Sub.AttributeName];
-            var customer = _context.Customer.Find(userId);
-            double subTotal = 0.0;
-            var itemIdList = new List<CartItem>();
+            var customer = _customerRepository.Get(userId);
+            decimal subTotal = 0;
             //calculate the total price and put all book in a list
             for (int i = 0; i < IDs.Length; i++)
             {
-                var cartItem = from c in _context.CartItem
-                               where c.CartItem_Id == Convert.ToString (IDs[i])
-                               select c;
-                              
-                var item = new CartItem();
-                foreach (var ii in cartItem)
-                {
-                    item = ii;
-                }
-                
-                itemIdList.Add(item);
-                subTotal += Convert.ToDouble( fruits[i]) * Convert.ToInt32(quantity[i]);
+                subTotal += Convert.ToDecimal(fruits[i]) * Convert.ToInt32(quantity[i]);
             }
+
             //creat a new order
-            var recentOrder = new Order() { OrderStatus = orderStatue, Subtotal = subTotal, Tax = subTotal * 0.1, Customer = customer };
-            _context.Add(recentOrder);
-            _context.SaveChanges();
+            var recentOrder = new Order() { OrderStatus = orderStatue, Subtotal = subTotal, Tax = subTotal * (decimal)0.1, Customer = customer };
+            _orderRepository.Add(recentOrder);
+            _orderRepository.Save();
             var orderId = recentOrder.Order_Id;
             if (!HttpContext.Request.Cookies.ContainsKey("OrderId"))
             {
@@ -165,25 +172,26 @@ namespace BobBookstore.Controllers
             for (int i = 0; i < bookF.Length; i++)
             {
                 
-                var orderDetailBook = _context.Book.Find(Convert.ToInt64(bookF[i]));
+                var orderDetailBook = _bookRepository.Get(Convert.ToInt64(bookF[i]));
                 //var orderDetailPrice = itemIdList[i].Price;
-                var orderDetailPrice = _context.Price.Find(Convert.ToInt64(priceF[i]));
+                var orderDetailPrice =_priceRepository.Get(Convert.ToInt64(priceF[i]));
                 var newOrderDetail = new OrderDetail() { };
-                var OrderDetail = new OrderDetail() { Book = orderDetailBook, Price = orderDetailPrice, price =Convert.ToDouble(fruits[i]), quantity = Convert.ToInt32(quantity[i]), Order = recentOrder, IsRemoved = false };
+                var OrderDetail = new OrderDetail() { Book = orderDetailBook, Price = orderDetailPrice, price =Convert.ToDecimal(fruits[i]), quantity = Convert.ToInt32(quantity[i]), Order = recentOrder, IsRemoved = false };
                 orderDetailPrice.Quantity = orderDetailPrice.Quantity - Convert.ToInt32(quantity[i]);
-                _context.Update(orderDetailPrice);
-                _context.Add(OrderDetail);
-                _context.SaveChanges();
+                _priceRepository.Update(orderDetailPrice);
+                _orderDetailRepository.Add(OrderDetail);
+                _priceRepository.Save();
+                _orderDetailRepository.Save();
             }
             //remove from cart
             for (int i = 0; i < IDs.Length; i++)
             {
-                var cartItemD = _context.CartItem.Find(Convert.ToString (IDs[i]));
-                _context.CartItem.Remove(cartItemD);
+                var cartItemD = _cartItemRepository.Get(Convert.ToString (IDs[i]));
+                _cartItemRepository.Remove(cartItemD);
             }
 
 
-            await _context.SaveChangesAsync();
+            _cartItemRepository.Save();
             return RedirectToAction(nameof(ConfirmCheckout),new { OrderId=orderId});
             //return View();
         }
@@ -192,48 +200,44 @@ namespace BobBookstore.Controllers
         {
             var user = await _userManager.GetUserAsync(User);
             var id = user.Attributes[CognitoAttribute.Sub.AttributeName];
-            var customer = _context.Customer.Find(id);
-            var address = from c in _context.Address
-                          where c.Customer == customer
-                          select c;
+            var customer = _customerRepository.Get(id);
+            var address = _addressRepository.Get(c => c.Customer == customer);
 
-            var order = _context.Order.Find(OrderId);
-            var orderDeteail = from m in _context.OrderDetail
-                               where m.Order == order
-                               select new OrderDetailViewModel()
+            var order = _orderRepository.Get(OrderId);
+            var orderDeteail = _orderDetailRepository.Get(m=> m.Order == order, includeProperties:"Book")
+                               .Select(m=> new OrderDetailViewModel()
                                { Bookname=m.Book.Name,
                                Url=m.Book.Back_Url,
                                price=m.price,
                                quantity=m.quantity
-                               };
+                               });
             ViewData["order"] = orderDeteail.ToList();
             ViewData["orderId"] = OrderId;
             return View(address.ToList());
         }
 
-        public async Task<IActionResult> Congratulation(long OrderIdC)
+        public IActionResult Congratulation(long OrderIdC)
         {
-            var order = _context.Order.Find(OrderIdC);
-            var OrderItem = from c in _context.OrderDetail
-                           where c.Order == order
-                           select new OrderDetailViewModel()
+            var order = _orderRepository.Get(OrderIdC);
+            var OrderItem = _orderDetailRepository.Get(c => c.Order == order, includeProperties:"Book")
+                           .Select(c => new OrderDetailViewModel()
                            {
                                Bookname = c.Book.Name,
                                Url = c.Book.Back_Url,
                                price = c.price,
                                quantity = c.quantity
-                           };
+                           });
             ViewData["order"] = OrderItem.ToList();
             return View();
         }
 
-        public async Task<IActionResult> ConfirmOrderAddress(string addressID,long OrderId)
+        public IActionResult ConfirmOrderAddress(string addressID, long OrderId)
         {
-            var address = _context.Address.Find(Convert.ToInt64(addressID));
-            var order = _context.Order.Find(OrderId);
+            var address = _addressRepository.Get(Convert.ToInt64(addressID));
+            var order = _orderRepository.Get(OrderId);
             order.Address = address;
-            _context.Update(order);
-            _context.SaveChanges();
+            _orderRepository.Update(order);
+            _orderRepository.Save();
             return RedirectToAction(nameof(Congratulation), new { OrderIdC = OrderId });
         }
 
@@ -248,24 +252,24 @@ namespace BobBookstore.Controllers
             {
                 var user = await _userManager.GetUserAsync(User);
                 var id = user.Attributes[CognitoAttribute.Sub.AttributeName];
-                var customer = _context.Customer.Find(id);
+                var customer = _customerRepository.Get(id);
                 address.Customer = customer;
-                _context.Add(address);
-                await _context.SaveChangesAsync();
+                _addressRepository.Add(address);
+                _addressRepository.Save();
                 var orderId = Convert.ToInt64(HttpContext.Request.Cookies["OrderId"]);
                 return RedirectToAction(nameof(ConfirmCheckout), new { OrderId = orderId });
             }
             return View(address);
         }
 
-        public async Task<IActionResult> EditAddress(long? id)
+        public IActionResult EditAddress(long? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var address = await _context.Address.FindAsync(id);
+            var address = _addressRepository.Get(id);
             if (address == null)
             {
                 return NotFound();
@@ -285,8 +289,8 @@ namespace BobBookstore.Controllers
             if (ModelState.IsValid)
             {
                 
-                _context.Update(address);
-                await _context.SaveChangesAsync();
+                _addressRepository.Update(address);
+                _addressRepository.Save();
                 var orderId = Convert.ToInt64(HttpContext.Request.Cookies["OrderId"]);
                 return RedirectToAction(nameof(ConfirmCheckout), new { OrderId = orderId });
                 
@@ -318,27 +322,18 @@ namespace BobBookstore.Controllers
         {
             var user = await _userManager.GetUserAsync(User);
             var userId = user.Attributes[CognitoAttribute.Sub.AttributeName];
-            var cartItem = from c in _context.CartItem
-                           where c.CartItem_Id == id
-                           select new CartDelete
-                           {
-                               customerId=c.Cart.Customer.Customer_Id
-                           };
+            var cartItem = _cartItemRepository.Get(c => c.CartItem_Id == id, includeProperties:"Cart,Cart.Customer").FirstOrDefault();
+                
 
-            var ccc = new CartDelete();
-            foreach (var item in cartItem)
-            {
-                ccc = item;
-            }
 
-            if (ccc.customerId!=userId)
+            if (cartItem.Cart.Customer.Customer_Id!=userId)
             {
                 return RedirectToAction(nameof(Error));
             }
 
-            var trueDelete = _context.CartItem.Find(id);
-            _context.CartItem.Remove(trueDelete);
-            await _context.SaveChangesAsync();
+            var trueDelete = _cartItemRepository.Get(id);
+            _cartItemRepository.Remove(trueDelete);
+             _cartItemRepository.Save();
             return RedirectToAction(nameof(Index));
         }
 

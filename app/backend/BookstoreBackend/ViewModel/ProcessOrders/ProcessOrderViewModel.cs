@@ -20,7 +20,7 @@ namespace BookstoreBackend.ViewModel.ProcessOrders
 
         public List<OrderStatus> Statuses {get; set;}
 
-        public PartialOrder FullOrder { get; set; }
+        public PartialOrderViewModel FullOrder { get; set; }
 
         public string errorMessage { get; set; }
 

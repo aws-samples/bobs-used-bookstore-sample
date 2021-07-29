@@ -1,6 +1,6 @@
 ﻿using BobsBookstore.Models.Books;
 
-namespace BookstoreBackend.ViewModel.SearchBooks
+namespace BookstoreBackend.ViewModel
 {
     public class FullBook
     {

@@ -3,7 +3,7 @@ using BobsBookstore.Models.Orders;
 
 namespace BookstoreBackend.ViewModel.ManageOrders
 {
-    public class PartialOrder
+    public class PartialOrderViewModel
     {
         /*
          * ViewModel PartialOrder

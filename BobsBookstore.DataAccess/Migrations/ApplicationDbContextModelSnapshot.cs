@@ -41,8 +41,8 @@ namespace BobsBookstore.DataAccess.Migrations
                     b.Property<long?>("Genre_Id")
                         .HasColumnType("bigint");
 
-                    b.Property<long>("ISBN")
-                        .HasColumnType("bigint");
+                    b.Property<string>("ISBN")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Left_Url")
                         .HasColumnType("nvarchar(max)");
@@ -134,8 +134,8 @@ namespace BobsBookstore.DataAccess.Migrations
                     b.Property<long?>("Condition_Id")
                         .HasColumnType("bigint");
 
-                    b.Property<double>("ItemPrice")
-                        .HasColumnType("float");
+                    b.Property<decimal>("ItemPrice")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
@@ -274,8 +274,8 @@ namespace BobsBookstore.DataAccess.Migrations
                     b.Property<string>("State")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<long>("ZipCode")
-                        .HasColumnType("bigint");
+                    b.Property<string>("ZipCode")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Address_Id");
 
@@ -336,11 +336,11 @@ namespace BobsBookstore.DataAccess.Migrations
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("rowversion");
 
-                    b.Property<double>("Subtotal")
-                        .HasColumnType("float");
+                    b.Property<decimal>("Subtotal")
+                        .HasColumnType("decimal(18,2)");
 
-                    b.Property<double>("Tax")
-                        .HasColumnType("float");
+                    b.Property<decimal>("Tax")
+                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Order_Id");
 
@@ -377,8 +377,8 @@ namespace BobsBookstore.DataAccess.Migrations
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("rowversion");
 
-                    b.Property<double>("price")
-                        .HasColumnType("float");
+                    b.Property<decimal>("price")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("quantity")
                         .HasColumnType("int");

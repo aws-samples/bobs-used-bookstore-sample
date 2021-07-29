@@ -7,10 +7,10 @@
 @*@model Tuple<IEnumerable<BobsBookstore.Models.Customers.Address>,IEnumerable<BobsBookstore.Models.Orders.OrderDetail>>*@
 @*@model Tuple<IEnumerable<BobsBookstore.Models.Customers.Address>, IEnumerable<BobsBookstore.Models.Customers.Address>>*@
 @{
-    var totalprice = 0.0;
+    decimal totalprice = 0;
     foreach (var item in ViewData["order"] as List<BobsBookstore.Models.ViewModels.OrderDetailViewModel>)
     {
-        totalprice += item.price * item.quantity;
+        totalprice += item.price * (decimal)item.quantity;
     }
 }
 <head>
@@ -211,7 +211,7 @@
         <tbody>
             @foreach (var item in ViewData["order"] as List<BobsBookstore.Models.ViewModels.OrderDetailViewModel>)
             {
-                double total = item.price * item.quantity;
+                decimal total = item.price * item.quantity;
                 <tr>
                     <td>
                         <img src="@item.Url" height="80" width="50" />

@@ -93,7 +93,7 @@ else
                 <div class="card-body">
                     <div style="padding-right:0; padding-left:0" class="col-12 d-flex justify-content-between">
                         <h6 class="card-subtitle mb-2 text-muted website-text">Order ID: @order.Order_Id</h6>
-                        <span class="filter-pill-tag badge badge-pill text-white website-text">@order.OrderStatus.Status</span>
+                        @*                        <span class="filter-pill-tag badge badge-pill text-white website-text">@order.OrderStatus.Status</span>*@
                     </div>
                     <p class="card-text website-text">Customer ID: @order.Customer.Customer_Id</p>
                     <p class="card-text website-text">Customer Name: @( order.Customer.FirstName == null || order.Customer.LastName == null ? "Error Missing" : (order.Customer.FirstName + " " + order.Customer.LastName) )</p>

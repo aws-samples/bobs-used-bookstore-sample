@@ -4,9 +4,9 @@ using System.Diagnostics;
 using System.Linq;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using BookstoreBackend.Models;
-using BookstoreBackend.Repository.WelcomePageInterface;
 using BookstoreBackend.ViewModel.UpdateBooks;
+using BobsBookstore.DataAccess.Repository.Interface.WelcomePageInterface;
+using BookstoreBackend.ViewModel.ManageInventory;
 
 namespace BookstoreBackend.Controllers
 {
@@ -45,8 +45,8 @@ namespace BookstoreBackend.Controllers
             int dateMaxRange = 5;
 
             //Get books updated by current user
-            var UserBooks = _customeAdmin.GetUserUpdatedBooks(adminUsername);
-            bookUpdates.UserBooks = UserBooks.Result;
+            var userBooks = _customeAdmin.GetUserUpdatedBooks(adminUsername);
+            bookUpdates.UserBooks = userBooks.Result;
             // get recent books updated globally
             bookUpdates.NotUserBooks = _customeAdmin.OtherUpdatedBooks(adminUsername).Result;
             // get important orders

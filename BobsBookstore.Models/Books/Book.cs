@@ -13,7 +13,7 @@ namespace BobsBookstore.Models.Books
         public Publisher Publisher { get; set; }
 
 
-        public long ISBN { get; set; }
+        public string ISBN { get; set; }
 
 
         public Type Type { get; set; }

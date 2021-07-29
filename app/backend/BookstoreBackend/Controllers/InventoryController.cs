@@ -6,27 +6,36 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using BobsBookstore.DataAccess.Data;
 
-using BookstoreBackend.DataModel;
 using BobsBookstore.Models.Books;
 using BookstoreBackend.Notifications.NotificationsInterface;
 using BookstoreBackend.ViewModel;
 using Type = BobsBookstore.Models.Books.Type;
+using BobsBookstore.DataAccess.Repository.Interface.InventoryInterface;
+using BobsBookstore.DataAccess.Dtos;
+using BookstoreBackend.ViewModel.ManageInventory;
+using AutoMapper;
+using BookstoreBackend.ViewModel;
+using BookstoreBackend.ViewModel.SearchBooks;
+using BobsBookstore.DataAccess.Repository.Interface;
 
 namespace BookstoreBackend.Controllers
 {
     public class InventoryController : Controller
     {
         private readonly IInventory _Inventory;
-        public ApplicationDbContext _context;
         private readonly ILogger<InventoryController> _logger;
         private INotifications _emailSender;
+        private readonly IMapper _mapper;
+        private readonly IGenericRepository<Book> _bookRepository;
 
-        public InventoryController(IInventory Inventory, ApplicationDbContext context, ILogger<InventoryController> logger, INotifications emailSender)
+        public InventoryController(IGenericRepository<Book> bookRepository, IMapper mapper, IInventory Inventory, ApplicationDbContext context, ILogger<InventoryController> logger, INotifications emailSender)
         {
             _Inventory = Inventory;
-            _context = context;
             _logger = logger;
             _emailSender = emailSender;
+            _mapper = mapper;
+            _bookRepository = bookRepository;
+
         }
 
         [HttpGet]
@@ -47,7 +56,7 @@ namespace BookstoreBackend.Controllers
             {
                 if (!string.IsNullOrEmpty(BookName))
                 {
-                    var temp = _context.Book.Where(b => b.Name == BookName).ToList()[0];
+                    var temp = _bookRepository.Get(b => b.Name == BookName).FirstOrDefault();
                     var variant = _Inventory.GetBookByID(temp.Book_Id);
                     ViewData["ISBN"] = variant.ISBN;
                     ViewData["Author"] = variant.Author;
@@ -82,15 +91,15 @@ namespace BookstoreBackend.Controllers
             bookview.Active = true;
             if (String.IsNullOrEmpty(bookview.Author))
             {
-                var temp = _context.Book.Where(b => b.Name == bookview.BookName).ToList()[0];
+                var temp = _bookRepository.Get(b => b.Name == bookview.BookName).FirstOrDefault();
                 var variant = _Inventory.GetBookByID(temp.Book_Id);
                 bookview.Author = variant.Author;
                 bookview.Summary = variant.Summary;
             }
             if (ModelState.IsValid)
             {
-
-                var status = _Inventory.AddToTables(bookview);
+                BooksDto booksDto = _mapper.Map<BooksDto>(bookview);
+                var status = _Inventory.AddToTables(booksDto);
 
                 if (status != 1)
                 {
@@ -106,7 +115,7 @@ namespace BookstoreBackend.Controllers
                     return View(bookview);
                 }
 
-                var temp = _context.Book.Where(b => b.Name == bookview.BookName).ToList()[0];
+                var temp = _bookRepository.Get(b => b.Name == bookview.BookName).FirstOrDefault();
                 var BookId = temp.Book_Id;
                 return RedirectToAction("BookDetails", new { BookId });
 
@@ -367,11 +376,12 @@ namespace BookstoreBackend.Controllers
             try
             {
                 var bookdetails = _Inventory.GetBookByID(BookId);
+                IEnumerable<BookDetailsViewModel> bookDetails = _mapper.Map<IEnumerable<BookDetailsDto>, IEnumerable<BookDetailsViewModel>>(_Inventory.GetDetails(BookId));
                 books.publisher = bookdetails.Publisher.Name;
                 books.genre = bookdetails.Genre.Name;
                 books.BookType = bookdetails.BookType.TypeName;
                 books.BookName = bookdetails.BookName;
-                books.Books = _Inventory.GetDetails(BookId);
+                books.Books = bookDetails;
                 books.front_url = bookdetails.front_url;
                 books.back_url = bookdetails.back_url;
                 books.left_url = bookdetails.left_url;
@@ -383,6 +393,7 @@ namespace BookstoreBackend.Controllers
                 ViewData["Types"] = _Inventory.GetFormatsOfTheSelectedBook(bookdetails.BookName);
                 ViewData["Conditions"] = _Inventory.GetConditionsOfTheSelectedBook(bookdetails.BookName);
                 ViewData["status"] = Constants.BookDetailsStatusDetails;
+
             }
             catch (Exception e)
             {
@@ -412,11 +423,13 @@ namespace BookstoreBackend.Controllers
                 ViewData["Types"] = _Inventory.GetFormatsOfTheSelectedBook(BookName);
                 ViewData["Conditions"] = _Inventory.GetConditionsOfTheSelectedBook(BookName);
                 ViewData["status"] = "List";
-                ViewData["Books"] = _Inventory.GetRelevantBooks(BookName, type, condition_chosen);
+
+                IEnumerable<BookDetailsViewModel> bookDetails = _mapper.Map<List<BookDetailsDto>, IEnumerable<BookDetailsViewModel>>(_Inventory.GetRelevantBooks(BookName, type, condition_chosen));
+                ViewData["Books"] = bookDetails;
                 var lis = _Inventory.GetRelevantBooks(BookName, type, condition_chosen);
                 if (lis.Count == 0)
                 {
-                    var temp = _context.Book.Where(b => b.Name == BookName).ToList()[0];
+                    var temp = _bookRepository.Get(b => b.Name == BookName).FirstOrDefault();
                     var variant = _Inventory.GetBookByID(temp.Book_Id);
                     book.genre = variant.Genre.Name;
                     book.Author = variant.Author;
@@ -469,18 +482,22 @@ namespace BookstoreBackend.Controllers
 
 
                     var books = _Inventory.GetAllBooks(pageNum, ViewStyle, SortBy, ascdesc);
-
                     books.SortBy = SortBy;
-                    return View(books);
+                    
+                    SearchBookViewModel viewModel = _mapper.Map<SearchBookViewModel>(books);
+
+                    return View(viewModel);
                 }
 
                 else
                 {
-                    //var books = _Inventory.SearchBeta(searchby, searchfilter, ViewStyle, SortBy, pageNum , ascdesc , pagination);
 
                     var books = _Inventory.SearchBooks(searchby, searchfilter, ViewStyle, SortBy, pageNum, ascdesc);
                     books.SortBy = SortBy;
-                    return View(books);
+
+                    SearchBookViewModel viewModel = _mapper.Map<SearchBookViewModel>(books);
+
+                    return View(viewModel);
                 }
             }
 
@@ -510,7 +527,7 @@ namespace BookstoreBackend.Controllers
             return View();
         }
 
-        public IActionResult Submitchanges(BookDetails details)
+        public IActionResult Submitchanges(BookDetailsDto details)
         {
             _logger.LogInformation("Posting the Edit Book form values to database");
             try
@@ -578,7 +595,7 @@ namespace BookstoreBackend.Controllers
 
 
         [HttpGet]
-        public async Task<IActionResult> AutoSuggest(string searchby)
+        public IActionResult AutoSuggest(string searchby)
         {
             try
             {

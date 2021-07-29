@@ -1,24 +1,36 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using BobsBookstore.DataAccess.Data;
 using BobsBookstore.Models.Books;
 using BobsBookstore.Models.Carts;
 using BobsBookstore.Models.ViewModels;
+using BobsBookstore.DataAccess.Repository.Interface;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using X.PagedList;
+using BobsBookstore.DataAccess.Repository.Interface.SearchImplementations;
 
 namespace BobBookstore.Controllers
 {
     public class SearchController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IGenericRepository<Book> _bookRepository;
+        private readonly IGenericRepository<Price> _priceRepository;
+        private readonly IGenericRepository<Cart> _cartRepository;
+        private readonly IGenericRepository<CartItem> _cartItemRepository;
+        private readonly IGenericRepository<Condition> _conditionRepository;
+        private readonly IBookSearch _bookSearch;
+        private readonly IPriceSearch _priceSearch;
 
-        public SearchController(ApplicationDbContext context)
+        public SearchController(IBookSearch bookSearch, IPriceSearch priceSearch, IGenericRepository<Condition> conditionRepository, IGenericRepository<CartItem> cartItemRepository, IGenericRepository<Cart> cartRepository, IGenericRepository<Price> priceRepository, IGenericRepository<Book> bookRepository)
         {
-            _context = context;
+            _priceRepository = priceRepository;
+            _bookRepository = bookRepository;
+            _cartRepository = cartRepository;
+            _cartItemRepository = cartItemRepository;
+            _conditionRepository = conditionRepository;
+            _priceSearch = priceSearch;
+            _bookSearch = bookSearch;
         }
 
         // Load Search results page
@@ -31,29 +43,27 @@ namespace BobBookstore.Controllers
             {
                 ViewBag.CurrentSort = SortBy;
             }
-            
+
             if (String.IsNullOrEmpty(searchString))
             {
                 //searchString = ViewBag.currentFilter;
-                var prices = from p in _context.Price
-                             where p.Quantity > 0 &&
-                             p.Active
-                             select p;
-                var books = from b in _context.Book
+                var prices = _priceRepository.Get(p => p.Quantity > 0 &&
+                             p.Active);
 
-                            select new BookViewModel
-                            {
-                                BookId = b.Book_Id,
-                                BookName = b.Name,
-                                ISBN = b.ISBN,
-                                Author = b.Author,
-                                GenreName = b.Genre.Name,
-                                TypeName = b.Type.TypeName,
-                                PublisherName = b.Publisher.Name,
-                                Url = b.Back_Url,
-                                Prices = prices.Where(p => p.Book.Book_Id == b.Book_Id).ToList(),
-                                MinPrice = prices.Where(p => p.Book.Book_Id == b.Book_Id).FirstOrDefault().ItemPrice
-                            };
+                var books = _bookRepository.Get(includeProperties: "Genre,Type,Publisher")
+                    .Select(b => new BookViewModel
+                    {
+                        BookId = b.Book_Id,
+                        BookName = b.Name,
+                        ISBN = b.ISBN,
+                        Author = b.Author,
+                        GenreName = b.Genre.Name,
+                        TypeName = b.Type.TypeName,
+                        PublisherName = b.Publisher.Name,
+                        Url = b.Back_Url,
+                        Prices = prices.Where(p => p.Book.Book_Id == b.Book_Id).ToList(),
+                        MinPrice = prices.Where(p => p.Book.Book_Id == b.Book_Id).FirstOrDefault().ItemPrice
+                    });
 
                 int pageSize = 10;
                 int currentPage = (page ?? 1);
@@ -75,25 +85,10 @@ namespace BobBookstore.Controllers
             if (!String.IsNullOrEmpty(searchString))
             {
                 ViewBag.currentFilter = searchString;
-                var pricesQuery = from p in _context.Price
-                             where p.Quantity > 0 &&
-                             p.Active && (
-                            p.Book.Name.Contains(searchString) ||
-                            p.Book.Genre.Name.Contains(searchString) ||
-                            p.Book.Type.TypeName.Contains(searchString) ||
-                            p.Book.ISBN.ToString().Contains(searchString)) ||
-                            p.Book.Publisher.Name.Contains(searchString)
-                             select p;
+                var pricesQuery = _priceSearch.GetPricebySearch(searchString).OrderBy(d => d.ItemPrice);
 
-                pricesQuery = pricesQuery.OrderBy(p => p.ItemPrice);
-
-                var booksQuery = from b in _context.Book
-                            where b.Name.Contains(searchString) ||
-                            b.Genre.Name.Contains(searchString) ||
-                            b.Type.TypeName.Contains(searchString) ||
-                            b.ISBN.ToString().Contains(searchString)||
-                            b.Publisher.Name.Contains(searchString)
-                            select new BookViewModel
+                var booksQuery = _bookSearch.GetBooksbySearch(searchString)
+                            .Select(b => new BookViewModel
                             {
                                 BookId = b.Book_Id,
                                 BookName = b.Name,
@@ -105,7 +100,7 @@ namespace BobBookstore.Controllers
                                 Url = b.Back_Url,
                                 Prices = pricesQuery.Where(p => p.Book.Book_Id == b.Book_Id).ToList(),
                                 MinPrice = pricesQuery.Where(p => p.Book.Book_Id == b.Book_Id).FirstOrDefault().ItemPrice
-                            };
+                            });
 
                 // sort query
                 switch (ViewBag.CurrentSort)
@@ -132,9 +127,9 @@ namespace BobBookstore.Controllers
 
                 int pageSize = 10;
                 int currentPage = (page ?? 1);
-                
-                return View(new PaginationModel 
-                    {
+
+                return View(new PaginationModel
+                {
                     Count = booksQuery.Count(),
                     Data = await booksQuery.Skip((currentPage - 1) * pageSize).Take(pageSize).ToListAsync(),
                     CurrentPage = currentPage,
@@ -149,25 +144,14 @@ namespace BobBookstore.Controllers
 
         // Load book details page
         public async Task<IActionResult> DetailAsync(long id, string sortBy)
-        { 
+        {
             if (!String.IsNullOrEmpty(sortBy))
             {
                 ViewBag.CurrentSort = sortBy;
             }
             ViewBag.id = id;
 
-
-            var prices = (from p in _context.Price where p.Book.Book_Id == id &&
-                          p.Active && p.Quantity > 0
-                         join c in _context.Condition
-                         on p.Condition.Condition_Id equals c.Condition_Id
-                         select new Price
-                         {
-                             Price_Id = p.Price_Id,
-                             Condition = c,
-                             ItemPrice = p.ItemPrice,
-                             Quantity = p.Quantity
-                         });
+            var prices = _priceRepository.Get(p => p.Book.Book_Id == id && p.Active && p.Quantity > 0, includeProperties: "Condition,Book");
 
             switch (sortBy)
             {
@@ -189,9 +173,8 @@ namespace BobBookstore.Controllers
             }
             var pricesLst = await prices.ToListAsync();
 
-            var book = from m in _context.Book
-                       where m.Book_Id == id
-                       select new BookViewModel()
+            var book = _bookRepository.Get(m => m.Book_Id == id, includeProperties: "Publisher,Genre,Type")
+                       .Select(m => new BookViewModel()
                        {
                            BookName = m.Name,
                            Author = m.Author,
@@ -203,37 +186,37 @@ namespace BobBookstore.Controllers
                            Prices = pricesLst,
                            BookId = m.Book_Id,
                            Summary = m.Summary
-                       };
+                       });
 
-            return View(await book.FirstOrDefaultAsync());
+            return View(book.FirstOrDefault());
         }
 
-        public async Task<IActionResult> AddtoCartitem(long bookid, long priceid)
+        public IActionResult AddtoCartitem(long bookid, long priceid)
         {
-            var book = _context.Book.Find(bookid);
-            var price = _context.Price.Find(priceid);
+            var book = _bookRepository.Get(bookid);
+            var price = _priceRepository.Get(priceid);
             var cartId = HttpContext.Request.Cookies["CartId"];
-            var cart = _context.Cart.Find(Convert.ToString (cartId));
+            var cart = _cartRepository.Get(Convert.ToString(cartId));
             Guid gu_id = Guid.NewGuid();
-            var cartItem = new CartItem() { Book = book, Price = price, Cart = cart,WantToBuy=true, CartItem_Id = gu_id.ToString() };
+            var cartItem = new CartItem() { Book = book, Price = price, Cart = cart, WantToBuy = true, CartItem_Id = gu_id.ToString() };
 
-            _context.Add(cartItem);
-            _context.SaveChanges();
+            _cartItemRepository.Add(cartItem);
+            _cartItemRepository.Save();
             var stringBookid = Convert.ToString(bookid);
-            return RedirectToAction("Detail","Search",new { @id = bookid });
+            return RedirectToAction("Detail", "Search", new { @id = bookid });
         }
-        public async Task<IActionResult> AddtoWishList(long bookid, long priceid)
-        {
-            var book = _context.Book.Find(bookid);
-            var price = _context.Price.Find(priceid);
-            var cartId = HttpContext.Request.Cookies["CartId"];
-            var cart = _context.Cart.Find(Convert.ToString(cartId));
-            Guid gu_id = Guid.NewGuid();
-            var cartItem = new CartItem() { Book = book, Price = price, Cart = cart,CartItem_Id=gu_id.ToString()};
 
-            _context.Add(cartItem);
-            _context.SaveChanges();
-            var stringBookid = Convert.ToString(bookid);
+        public IActionResult AddtoWishList(long bookid, long priceid)
+        {
+            var book = _bookRepository.Get(bookid);
+            var price = _priceRepository.Get(priceid);
+            var cartId = HttpContext.Request.Cookies["CartId"];
+            var cart = _cartRepository.Get(Convert.ToString(cartId));
+            Guid gu_id = Guid.NewGuid();
+            var cartItem = new CartItem() { Book = book, Price = price, Cart = cart, CartItem_Id = gu_id.ToString() };
+
+            _cartItemRepository.Add(cartItem);
+            _cartItemRepository.Save();
             return RedirectToAction("Detail", "Search", new { @id = bookid });
         }
     }

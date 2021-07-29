@@ -7,6 +7,8 @@ using Amazon.AspNetCore.Identity.Cognito;
 using Amazon.Extensions.CognitoAuthentication;
 using BobsBookstore.DataAccess.Data;
 using BobsBookstore.Models.Customers;
+using BobsBookstore.DataAccess.Repository.Interface;
+using System.Collections.Generic;
 
 namespace BobBookstore.Controllers
 {
@@ -16,12 +18,18 @@ namespace BobBookstore.Controllers
         private readonly ApplicationDbContext _context;
         private readonly SignInManager<CognitoUser> _SignInManager;
         private readonly UserManager<CognitoUser> _userManager;
-        public AddressesController(ApplicationDbContext context, SignInManager<CognitoUser> SignInManager, UserManager<CognitoUser> userManager)
+        private readonly IGenericRepository<Customer> _customerRepository;
+        private readonly IGenericRepository<Address> _addressRepository;
+
+
+        public AddressesController(IGenericRepository<Address> addressRepository, IGenericRepository<Customer> customerRepository, ApplicationDbContext context, SignInManager<CognitoUser> SignInManager, UserManager<CognitoUser> userManager)
         {
            
             _context = context;
             _SignInManager = SignInManager;
             _userManager = userManager;
+            _customerRepository = customerRepository;
+            _addressRepository = addressRepository;
         }
 
         
@@ -30,12 +38,10 @@ namespace BobBookstore.Controllers
             
             var user = await _userManager.GetUserAsync(User);
             var id = user.Attributes[CognitoAttribute.Sub.AttributeName];
-            var customer = _context.Customer.Find(id);
-            var address = from c in _context.Address
-                          where c.Customer == customer
-                          select c;
 
-            return View(await address.ToListAsync());
+            IEnumerable<Address> temp = _addressRepository.Get(c => c.Customer.Customer_Id == id, includeProperties:"Customer");
+
+            return View(temp);
         }
         //creat address
         public IActionResult Create()
@@ -52,10 +58,12 @@ namespace BobBookstore.Controllers
             {
                 var user = await _userManager.GetUserAsync(User);
                 var id = user.Attributes[CognitoAttribute.Sub.AttributeName];
-                var customer = _context.Customer.Find(id);
+                var customer = _customerRepository.Get(id);
+
                 address.Customer = customer;
-                _context.Add(address);
-                await _context.SaveChangesAsync();
+                _addressRepository.Add(address);
+                _addressRepository.Save();
+
                 return RedirectToAction(nameof(Index));
             }
             return View(address);
@@ -69,7 +77,7 @@ namespace BobBookstore.Controllers
                 return NotFound();
             }
 
-            var address = await _context.Address.FindAsync(id);
+            var address = _addressRepository.Get(id);
             if (address == null)
             {
                 return NotFound();
@@ -77,10 +85,10 @@ namespace BobBookstore.Controllers
             return View(address);
         }
 
-        
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(long id, [Bind("Address_Id,AddressLine1,AddressLine2,City,State,Country,ZipCode")] Address address)
+        public IActionResult Edit(long id, [Bind("Address_Id,AddressLine1,AddressLine2,City,State,Country,ZipCode")] Address address)
         {
             if (id != address.Address_Id)
             {
@@ -91,13 +99,13 @@ namespace BobBookstore.Controllers
             {
                 try
                 {
-                    
-                    _context.Update(address);
-                    await _context.SaveChangesAsync();
+
+                    _addressRepository.Update(address);
+                    _addressRepository.Save();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!AddressExists(address.Address_Id))
+                    if (_addressRepository.Get(address.Address_Id) == null)
                     {
                         return NotFound();
                     }
@@ -112,15 +120,14 @@ namespace BobBookstore.Controllers
         }
 
         //delete address
-        public async Task<IActionResult> Delete(long? id)
+        public IActionResult Delete(long? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var address = await _context.Address
-                .FirstOrDefaultAsync(m => m.Address_Id == id);
+            var address = _addressRepository.Get(id);
             if (address == null)
             {
                 return NotFound();
@@ -129,20 +136,16 @@ namespace BobBookstore.Controllers
             return View(address);
         }
 
-        
+
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(long id)
+        public IActionResult DeleteConfirmed(long id)
         {
-            var address = await _context.Address.FindAsync(id);
-            _context.Address.Remove(address);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
+            var address = _addressRepository.Get(id);
+            _addressRepository.Remove(address);
+            _addressRepository.Save();
 
-        private bool AddressExists(long id)
-        {
-            return _context.Address.Any(e => e.Address_Id == id);
+            return RedirectToAction(nameof(Index));
         }
 
         public async Task<IActionResult> SwitchToPrime(long id)
@@ -150,8 +153,8 @@ namespace BobBookstore.Controllers
            
             //change origin to not prime
             var user = await _userManager.GetUserAsync(User);
-            var idd = user.Attributes[CognitoAttribute.Sub.AttributeName];
-            var customer = _context.Customer.Find(idd);
+            var customer_id = user.Attributes[CognitoAttribute.Sub.AttributeName];
+            var customer = _customerRepository.Get(customer_id);
             var addresses = from c in _context.Address
                           where c.Customer == customer&&c.IsPrimary==true
                           select c;

@@ -6,6 +6,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using BobsBookstore.DataAccess.Data;
+using BobsBookstore.DataAccess.Repository.Interface;
+using BobsBookstore.DataAccess.Repository.Implementation;
+using BobsBookstore.DataAccess.Repository.Interface.SearchImplementations;
+using BobsBookstore.DataAccess.Repository.Implementation.SearchImplementation;
 
 namespace BobBookstore
 {
@@ -26,6 +30,12 @@ namespace BobBookstore
             services.AddRazorPages();
             services.AddDbContext<ApplicationDbContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("BobBookstoreContextConnection")));
+
+            services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+            services.AddTransient<IBookSearch, BookSearchRepository>();
+            services.AddTransient<IPriceSearch, PriceSearchRepository>();
+
+
             //new part
             services.AddSession();
             //services.AddMvc();

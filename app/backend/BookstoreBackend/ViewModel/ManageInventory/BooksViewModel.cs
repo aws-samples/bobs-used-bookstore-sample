@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
 
-namespace BookstoreBackend.ViewModel
+namespace BookstoreBackend.ViewModel.ManageInventory
 {
     public class BooksViewModel
     {

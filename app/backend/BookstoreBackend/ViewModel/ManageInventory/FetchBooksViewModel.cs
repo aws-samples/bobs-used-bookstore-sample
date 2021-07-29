@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using BookstoreBackend.DataModel;
+﻿using BookstoreBackend.ViewModel.ManageInventory;
+using System.Collections.Generic;
 
 namespace BookstoreBackend.ViewModel
 {
@@ -11,7 +11,7 @@ namespace BookstoreBackend.ViewModel
         public string genre { get; set; }
         public string Condition { get; set; }
 
-        public IEnumerable<BookDetails> Books { get; set; }
+        public IEnumerable<BookDetailsViewModel> Books { get; set; }
 
         public string searchfilter { get; set; }
 
@@ -38,7 +38,7 @@ namespace BookstoreBackend.ViewModel
 
         public string Summary { get; set; }
 
-        public long ISBN { get; set; }
+        public string ISBN { get; set; }
 
     }
 }

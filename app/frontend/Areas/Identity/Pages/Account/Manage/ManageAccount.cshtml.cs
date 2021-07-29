@@ -305,7 +305,7 @@ namespace BobBookstore.Areas.Identity.Pages.Account.Manage
                         Country = Input.Country, 
                         State = Input.State,
                         Customer = recentCustomer, 
-                        ZipCode = Convert.ToInt32(Input.ZipCode) 
+                        ZipCode = Input.ZipCode
                     };
                     _context.Add(newAddress);
 
@@ -324,7 +324,7 @@ namespace BobBookstore.Areas.Identity.Pages.Account.Manage
                     recentAddress.City = Input.City;
                     recentAddress.Country = Input.Country;
                     
-                    recentAddress.ZipCode = Convert.ToInt32(Input.ZipCode);
+                    recentAddress.ZipCode = Input.ZipCode;
                     recentAddress.State = Input.State;
                     recentAddress.Customer = recentCustomer;
                     recentAddress.IsPrimary = true;

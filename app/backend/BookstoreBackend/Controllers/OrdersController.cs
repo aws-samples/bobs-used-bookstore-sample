@@ -5,11 +5,12 @@ using System.Text.RegularExpressions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using BookstoreBackend.Repository;
-using BookstoreBackend.Repository.OrdersInterface;
+using BobsBookstore.DataAccess.Repository.Interface.OrdersInterface;
 using BookstoreBackend.ViewModel.ManageOrders;
 using BookstoreBackend.ViewModel.ProcessOrders;
 using BookstoreBackend.Notifications.NotificationsInterface;
+using BobsBookstore.DataAccess.Dtos;
+using AutoMapper;
 
 namespace BookstoreBackend.Controllers
 {
@@ -20,17 +21,20 @@ namespace BookstoreBackend.Controllers
         private IOrderRepository _order;
         private IOrderStatusRepository _orderStatus;
         private INotifications _emailSender;
-   
+        private readonly IMapper _mapper;
+
+
 
         public OrdersController() { }
 
         [ActivatorUtilitiesConstructor]
-        public OrdersController(IOrderDetailRepository orderDetail, IOrderRepository order, IOrderStatusRepository orderStatus, INotifications emailSender)
+        public OrdersController(IMapper mapper, IOrderDetailRepository orderDetail, IOrderRepository order, IOrderStatusRepository orderStatus, INotifications emailSender)
         {
             _orderDetail = orderDetail;
             _order = order;
             _orderStatus = orderStatus;
             _emailSender = emailSender;
+            _mapper = mapper;
         }
        
         public async Task<IActionResult> EditOrderDetailAsync(long orderId, long orderDetailId,string quantity,int maxQuant,bool isLast)
@@ -58,8 +62,8 @@ namespace BookstoreBackend.Controllers
                     
                     if (isLast)
                     {
-                        var cancelled = await _orderStatus.FindOrderStatusByName("Cancelled");
-                        var order = await _order.FindOrderById(orderId);
+                        var cancelled = _orderStatus.FindOrderStatusByName("Cancelled");
+                        var order = _order.FindOrderById(orderId);
                         status = cancelled.OrderStatus_Id;
                         return RedirectToAction("UpdateOrderStatus", new { orderId, status, oldStatus = order.OrderStatus.OrderStatus_Id });
                     }
@@ -81,21 +85,21 @@ namespace BookstoreBackend.Controllers
 
             return RedirectToAction("ProcessOrders", new {orderId, errorMessage });
         }
-        public async Task<IActionResult> Index(string filterValue, string filterValueText, string searchString, int pageNum)
+        public IActionResult Index(string filterValue, string filterValueText, string searchString, int pageNum)
         {
             if (pageNum == 0) pageNum++;
-       
-            if ( (String.IsNullOrEmpty(searchString)  && String.IsNullOrEmpty(filterValue)) )
-            {
-                var orders = await _order.GetAllOrders(pageNum);
 
-                return View(orders);
+            if ((String.IsNullOrEmpty(searchString) && String.IsNullOrEmpty(filterValue)))
+            {
+                var orders = _order.GetAllOrders(pageNum);
+                var manageOrderViewModel = _mapper.Map<ManageOrderViewModel>(orders);
+                return View(manageOrderViewModel);
             }
             else if (!String.IsNullOrEmpty(searchString) && !String.IsNullOrEmpty(filterValue))
             {
                 searchString = Regex.Replace(searchString, @"\s+", " ");
 
-                var orders = await _order.FilterList(filterValue, searchString,pageNum);
+                var orders = _order.FilterList(filterValue, searchString, pageNum);
 
 
                 filterValueText = filterValueText.Replace("Filter By: ", "");
@@ -105,30 +109,30 @@ namespace BookstoreBackend.Controllers
             }
             else
             {
-                ManageOrderViewModel viewModel = new ManageOrderViewModel();
+                ManageOrderViewModel manageOrderViewModel = new ManageOrderViewModel();
 
                 int[] pages = Enumerable.Range(1, 1).ToArray();
 
                 filterValueText = filterValueText.Replace("Filter By: ", "");
 
-                viewModel.Orders = null;
-                viewModel.FilterValue = filterValue;
-                viewModel.SearchString = searchString;
-                viewModel.FilterValueText = filterValueText;
-                viewModel.Pages = pages;
-                viewModel.HasPreviousPages = false;
-                viewModel.CurrentPage = 1;
-                viewModel.HasNextPages = false;
-                return View(viewModel);
+                manageOrderViewModel.Orders = null;
+                manageOrderViewModel.FilterValue = filterValue;
+                manageOrderViewModel.SearchString = searchString;
+                manageOrderViewModel.FilterValueText = filterValueText;
+                manageOrderViewModel.Pages = pages;
+                manageOrderViewModel.HasPreviousPages = false;
+                manageOrderViewModel.CurrentPage = 1;
+                manageOrderViewModel.HasNextPages = false;
+                return View(manageOrderViewModel);
             }
         }
 
         public async Task<IActionResult> UpdateOrderStatusAsync(long orderId,long status, long oldStatus)
         {
-            var order = await _order.FindOrderById(orderId);
+            var order = _order.FindOrderById(orderId);
             string errorMessage = "";
-            var cancelled = await _orderStatus.FindOrderStatusByName("Cancelled");
-            var newStatus = await _orderStatus.FindOrderStatusById(status);
+            var cancelled = _orderStatus.FindOrderStatusByName("Cancelled");
+            var newStatus = _orderStatus.FindOrderStatusById(status);
 
             if (newStatus.position < order.OrderStatus.position || order.OrderStatus.OrderStatus_Id != oldStatus)
             {
@@ -182,16 +186,16 @@ namespace BookstoreBackend.Controllers
             else
             {
             
-                var orderStatus = await _orderStatus.GetOrderStatuses();
+                var orderStatus = _orderStatus.GetOrderStatuses();
 
-                var order = await _order.FindOrderById(orderId);
+                var order = _order.FindOrderById(orderId);
 
 
                 var orderDetails = await _orderDetail.FindOrderDetailByOrderId(orderId);
 
                 ProcessOrderViewModel viewModel = new ProcessOrderViewModel();
 
-                PartialOrder fullOrder = new PartialOrder();
+                PartialOrderViewModel fullOrder = new PartialOrderViewModel();
 
                 fullOrder.Order = order;
                 fullOrder.OrderDetails = orderDetails;

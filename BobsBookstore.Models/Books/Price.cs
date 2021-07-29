@@ -15,7 +15,9 @@ namespace BobsBookstore.Models.Books
 
         [RegularExpression(@"^\d+\.\d{0,2}$")]
         [Range(0, 9999999999999999.99)]
-        public double ItemPrice { get; set; }
+
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal ItemPrice { get; set; }
 
         public int Quantity { get; set; }
         public string UpdatedBy { get; set; }

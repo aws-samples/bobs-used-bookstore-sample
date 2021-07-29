@@ -1,11 +1,13 @@
-﻿@model BookstoreBackend.ViewModel.SearchBooks.SearchBookViewModel;
+﻿@model BookstoreBackend.ViewModel.SearchBooks.SearchBookViewModel
 @{
-    ViewData["Title"] = "Checkout";
-    var types = (List<BobsBookstore.Models.Books.Type>)ViewData["Types"];
-    var publishers = (List<BobsBookstore.Models.Books.Publisher>)ViewData["Publishers"];
-    var genres = (List<BobsBookstore.Models.Books.Genre>)ViewData["Genres"];
-    var conditions = (List<BobsBookstore.Models.Books.Condition>)ViewData["Conditions"];
-    var count = @Model.Books.Count();
+        ViewData["Title"] = "Checkout";
+        var types = (List<BobsBookstore.Models.Books.Type>)ViewData["Types"];
+        var publishers = (List<BobsBookstore.Models.Books.Publisher>)ViewData["Publishers"];
+        var genres = (List<BobsBookstore.Models.Books.Genre>)ViewData["Genres"];
+        var conditions = (List<BobsBookstore.Models.Books.Condition>)ViewData["Conditions"];
+ }
+@{
+    var count = Model.PageNumber;
     var viewstyle = Model.ViewStyle;
 
 

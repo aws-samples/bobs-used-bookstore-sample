@@ -11,6 +11,8 @@ using Amazon.AspNetCore.Identity.Cognito;
 using BobsBookstore.Models;
 using BobsBookstore.DataAccess.Data;
 using BobsBookstore.Models.Carts;
+using BobsBookstore.DataAccess.Repository.Interface;
+using BobsBookstore.Models.Customers;
 
 namespace BobBookstore.Controllers
 {
@@ -21,13 +23,22 @@ namespace BobBookstore.Controllers
         private readonly ApplicationDbContext _context;
         private readonly SignInManager<CognitoUser> _SignInManager;
         private readonly UserManager<CognitoUser> _userManager;
-        public HomeController(ILogger<HomeController> logger, IHttpContextAccessor httpContextAccessor,ApplicationDbContext context, SignInManager<CognitoUser> SignInManager, UserManager<CognitoUser> userManager)
+        private readonly IGenericRepository<Cart> _cartRepository;
+        private readonly IGenericRepository<CartItem> _cartItemRepository;
+
+        private readonly IGenericRepository<Customer> _customerRepository;
+
+
+        public HomeController(IGenericRepository<CartItem> cartItemRepository, IGenericRepository<Customer> customerRepository, IGenericRepository<Cart> cartRepository, ILogger<HomeController> logger, IHttpContextAccessor httpContextAccessor,ApplicationDbContext context, SignInManager<CognitoUser> SignInManager, UserManager<CognitoUser> userManager)
         {
             _logger = logger;
             _httpContextAccessor = httpContextAccessor;
             _context = context;
             _SignInManager = SignInManager;
             _userManager = userManager;
+            _cartRepository = cartRepository;
+            _cartItemRepository = cartItemRepository;
+            _customerRepository = customerRepository;
         }
 
         public async Task<IActionResult> Index()
@@ -40,56 +51,35 @@ namespace BobBookstore.Controllers
                 
                 //get customer
                 var user = await _userManager.GetUserAsync(User);
-                var currentCustomer = _context.Customer.Find(user.Attributes[CognitoAttribute.Sub.AttributeName]);
-
+                //var currentCustomer = _context.Customer.Find(user.Attributes[CognitoAttribute.Sub.AttributeName]);
+                var currentCustomer = _customerRepository.Get(user.Attributes[CognitoAttribute.Sub.AttributeName]);
                 //get cart
-                var cart = from c in _context.Cart
-                           select c;
-                cart = cart.Where(s => s.Customer == currentCustomer);
-                Cart currentCart = new Cart();
-                foreach (var ca in cart)
-                {
-                    currentCart = ca;
-                }
+                var cart = _cartRepository.Get(s => s.Customer == currentCustomer).FirstOrDefault();
+                
                 //put cartid in cookie
-                /*if (!HttpContext.Request.Cookies.ContainsKey("CartId"))
+                if (!HttpContext.Request.Cookies.ContainsKey("CartId"))
                 {
                     CookieOptions options = new CookieOptions();
 
-                    HttpContext.Response.Cookies.Append("CartId", Convert.ToString(currentCart.Cart_Id));
+                    HttpContext.Response.Cookies.Append("CartId", Convert.ToString(cart.Cart_Id));
                 }
                 else
                 {
-                    
+
                     HttpContext.Response.Cookies.Delete("CartId");
-                    HttpContext.Response.Cookies.Append("CartId", Convert.ToString(currentCart.Cart_Id));
-                }*/
-                //put cart item in user cart
-                var id = Convert.ToString (HttpContext.Request.Cookies["CartId"]);
-                var cartC = _context.Cart.Find(id);
-                var cartItem = from c in _context.CartItem
-                               where c.Cart == cartC && c.WantToBuy == true
-                               select c;
-                var userC = await _userManager.GetUserAsync(User);
-
-                var UserId = userC.Attributes[CognitoAttribute.Sub.AttributeName];
-
-                var recentcustomer = _context.Customer.Find(UserId);
-                var customerCart = from c in _context.Cart
-                                   where c.Customer == recentcustomer
-                                   select c;
-                Cart recentCart = new Cart();
-                foreach (var item in customerCart)
-                {
-                    recentCart = item;
+                    HttpContext.Response.Cookies.Append("CartId", Convert.ToString(cart.Cart_Id));
                 }
-                //foreach (var item in cartItem)
-                //{
-                //    item.Cart = recentCart;
-                //    _context.Update(item);
-                //}
-                await _context.SaveChangesAsync();
+                //put cart item in user cart
+                var cartItem = _cartItemRepository.Get(c => c.Cart == cart && c.WantToBuy == true);
+            
+               foreach (var item in cartItem)
+                {
+                    item.Cart = cart;
+                    _cartItemRepository.Update(item);
+                }
+                _cartItemRepository.Save();
             }
+
             else
             {
                 if (!HttpContext.Request.Cookies.ContainsKey("CartIp"))
@@ -101,37 +91,30 @@ namespace BobBookstore.Controllers
                     Guid gu_id1 = Guid.NewGuid();
                     string id = gu_id1.ToString();
                     var IP = new Cart() { IP = ip ,Cart_Id=id};
-                    _context.Add(IP);
-
-                    await _context.SaveChangesAsync();
+                    _cartRepository.Add(IP);
+                    _cartRepository.Save();
 
                 }
                 else
                 {
-                    string CartIp = HttpContext.Request.Cookies["CartIp"];
-                    ip = CartIp;
+                    ip = HttpContext.Request.Cookies["CartIp"];
                 }
                 //put cart id in cookie
-                var cart = from c in _context.Cart
-                           select c;
-                cart = cart.Where(s => s.IP == ip);
-                Cart currentCart = new Cart();
-                foreach (var ca in cart)
-                {
-                    currentCart = ca;
-                }
+                var currentCart = _cartRepository.Get(s => s.IP == ip).FirstOrDefault();
+               
+              
 
-                /*if (!HttpContext.Request.Cookies.ContainsKey("CartId"))
+                if (!HttpContext.Request.Cookies.ContainsKey("CartId"))
                 {
                     CookieOptions options = new CookieOptions();
-                    HttpContext.Response.Cookies.Append("CartId",Convert.ToString(currentCart.Cart_Id));
+                    HttpContext.Response.Cookies.Append("CartId", Convert.ToString(currentCart.Cart_Id));
 
                 }
                 else
                 {
                     HttpContext.Response.Cookies.Delete("CartId");
                     HttpContext.Response.Cookies.Append("CartId", Convert.ToString(currentCart.Cart_Id));
-                }*/
+                }
             }
             return View();
         }
