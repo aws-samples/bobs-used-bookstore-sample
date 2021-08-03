@@ -519,9 +519,9 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.InventoryImplementa
 
             query = query.Include(PriceIncludes);
 
-            var finalBooksList = RetrieveUniqueBookList(query);
+            var booksList = RetrieveUniqueBookList(query);
 
-            finalBooksList = RetrieveSortedBookList(finalBooksList, SortBy, ascdesc);
+            var finalBooksList = RetrieveSortedBookList(booksList, SortBy, ascdesc);
 
             int totalPages = _searchRepo.GetTotalPages(finalBooksList.Count(), _booksPerPage);
 
@@ -554,15 +554,13 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.InventoryImplementa
                 return RetrieveDto(ascdesc, style, "", "", 1, 1, pages, null);
             }
 
-            var query = (IQueryable<Price>)_context.Price;
-
-            query = query.Include(PriceIncludes);
+            var query = (IQueryable<Price>)_context.Price.Include(PriceIncludes); ;
 
             var filterQuery = query.Where(lambda);
 
-            var finalBooksList = RetrieveUniqueBookList(filterQuery);
+            var booksList = RetrieveUniqueBookList(filterQuery);
 
-            finalBooksList = RetrieveSortedBookList(finalBooksList, SortBy, ascdesc);
+            var finalBooksList = RetrieveSortedBookList(booksList, SortBy, ascdesc);
 
             int totalPages = _searchRepo.GetTotalPages(finalBooksList.Count(), _booksPerPage);
 
@@ -642,14 +640,14 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.InventoryImplementa
 
         private List<Dictionary<string, int>> topStatsForOrders(int numberOfDetails)
         {
-            _logger.LogInformation("calculating Top 5 stats for orders");
+            _logger.LogInformation("calculating Top stats for orders");
 
             Dictionary<string, int> genre_stats = new Dictionary<string, int>();
             Dictionary<string, int> publisher_stats = new Dictionary<string, int>();
             Dictionary<string, int> condition_stats = new Dictionary<string, int>();
             Dictionary<string, int> bookname_stats = new Dictionary<string, int>();
             Dictionary<string, int> type_stats = new Dictionary<string, int>();
-            List<Dictionary<string, int>> topfiveStats = new List<Dictionary<string, int>>();
+            List<Dictionary<string, int>> topStats = new List<Dictionary<string, int>>();
 
 
             var list = _context.OrderDetail
@@ -730,15 +728,15 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.InventoryImplementa
             }
             catch
             {
-                Console.WriteLine("Error In Fetching Dashboard Top 5 Stats");
+                Console.WriteLine("Error In Fetching Dashboard Top Stats");
             }
 
-            topfiveStats.Add(genre_stats);
-            topfiveStats.Add(type_stats);
-            topfiveStats.Add(publisher_stats);
-            topfiveStats.Add(bookname_stats);
+            topStats.Add(genre_stats);
+            topStats.Add(type_stats);
+            topStats.Add(publisher_stats);
+            topStats.Add(bookname_stats);
 
-            return topfiveStats;
+            return topStats;
         }
 
 
@@ -746,8 +744,8 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.InventoryImplementa
         {
             _logger.LogInformation("calculating Inventory stats");
 
-            int total_merchandise_value = 0;
-            int total_books_inventory = 0;
+            int totalMerchandiseValue = 0;
+            int totalBooksInventory = 0;
             int total_titles = 0;
 
             Dictionary<string, int> count_stats = new Dictionary<string, int>();
@@ -757,15 +755,15 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.InventoryImplementa
                 var books = GetBaseOrderQuery().ToList();
                 foreach (var i in books)
                 {
-                    total_books_inventory = total_books_inventory + i.Quantity;
-                    total_merchandise_value = total_merchandise_value + (int)i.ItemPrice * i.Quantity;
+                    totalBooksInventory = totalBooksInventory + i.Quantity;
+                    totalMerchandiseValue = totalMerchandiseValue + (int)i.ItemPrice * i.Quantity;
                 }
 
                 total_titles = _context.Book.ToList().Count();
 
                 count_stats["total_titles"] = total_titles;
-                count_stats["total_books"] = total_books_inventory;
-                count_stats["total_merchandise_value"] = total_merchandise_value;
+                count_stats["total_books"] = totalBooksInventory;
+                count_stats["total_merchandise_value"] = totalMerchandiseValue;
                 count_stats["total_genres"] = GetGenres().Count();
                 count_stats["total_publishers"] = GetAllPublishers().Count();
                 count_stats["total_types"] = GetTypes().Count();

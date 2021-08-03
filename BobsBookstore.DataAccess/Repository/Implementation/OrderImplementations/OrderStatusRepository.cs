@@ -18,6 +18,7 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.OrderImplementation
 
         private IOrderDatabaseCalls _orderDbCalls;
         private IExpressionFunction _expFunc;
+        private const string OrderStatusJustPlaced = "Just Placed";
 
 
         // Set up Database Connection
@@ -58,9 +59,6 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.OrderImplementation
 
             var orderStatus = query.FirstOrDefault();
             return orderStatus;
-
-
-
         }
 
         // Returns all Order Statuses in a Table
@@ -86,7 +84,7 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.OrderImplementation
 
                 order.OrderStatus = newStatus;
 
-                if (order.OrderStatus.Status != "Just Placed" && order.DeliveryDate == null) order.DeliveryDate = DateTime.Now.ToUniversalTime().AddDays(14).ToString();
+                if (order.OrderStatus.Status != OrderStatusJustPlaced && order.DeliveryDate == null) order.DeliveryDate = DateTime.Now.ToUniversalTime().AddDays(14).ToString();
 
                 await _orderDbCalls.ContextSaveChanges();
 

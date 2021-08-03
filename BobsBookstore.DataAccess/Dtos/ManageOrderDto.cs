@@ -5,10 +5,6 @@ namespace BobsBookstore.DataAccess.Dtos
 {
     public class ManageOrderDto
     {
-        /*
-         * ManageOrder ViewModel
-         * Contains the search query and the Table Column (FIlterValue) needed to fitler Orders
-         */
         public string SearchString { get; set; }
 
         public string FilterValue { get; set; }

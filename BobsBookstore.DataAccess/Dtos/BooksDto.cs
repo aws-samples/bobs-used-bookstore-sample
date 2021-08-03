@@ -7,7 +7,7 @@ namespace BobsBookstore.DataAccess.Dtos
     public class BooksDto
     {
 
-        public String BookName { get; set; }
+        public string BookName { get; set; }
         public string ISBN { get; set; }
         public long BookId { get; set; }
         public long PublisherId { get; set; }
@@ -18,7 +18,6 @@ namespace BobsBookstore.DataAccess.Dtos
         public long PriceId { get; set; }
         public decimal Price { get; set; }
         public int Quantity { get; set; }
-        public String Name { get; set; }
         public IFormFile FrontPhoto { get; set; }
         public IFormFile BackPhoto { get; set; }
         public IFormFile RearPhoto { get; set; }
