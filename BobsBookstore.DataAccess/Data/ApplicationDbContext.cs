@@ -48,7 +48,8 @@ namespace BobsBookstore.DataAccess.Data
                 .Build();
             var builder = new DbContextOptionsBuilder<ApplicationDbContext>();
             var connectionString = configuration.GetConnectionString("BobBookstoreContextConnection");
-            builder.UseSqlServer(connectionString);
+            builder.UseSqlServer(connectionString, b => b.MigrationsAssembly("BobsBookstore.Migrations"));
+            
             return new ApplicationDbContext(builder.Options);
         }
     }
