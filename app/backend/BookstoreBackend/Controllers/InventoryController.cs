@@ -14,7 +14,6 @@ using BobsBookstore.DataAccess.Repository.Interface.InventoryInterface;
 using BobsBookstore.DataAccess.Dtos;
 using BookstoreBackend.ViewModel.ManageInventory;
 using AutoMapper;
-using BookstoreBackend.ViewModel;
 using BookstoreBackend.ViewModel.SearchBooks;
 using BobsBookstore.DataAccess.Repository.Interface;
 

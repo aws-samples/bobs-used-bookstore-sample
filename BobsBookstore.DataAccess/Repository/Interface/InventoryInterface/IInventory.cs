@@ -43,7 +43,7 @@ namespace BobsBookstore.DataAccess.Repository.Interface.InventoryInterface
 
         public List<string> GetConditionsOfTheSelectedBook(string bookName);
 
-        public List<BookDetailsDto> GetRelevantBooks(string bookName , string type , string conditionChosen);
+        public List<BookDetailsDto> GetRelevantBooks(string bookName, string type, string conditionChosen);
 
         public List<Dictionary<string, int>> DashBoard(int numberOfDetails);
 

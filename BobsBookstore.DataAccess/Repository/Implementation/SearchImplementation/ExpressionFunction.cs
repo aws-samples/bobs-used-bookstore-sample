@@ -32,7 +32,7 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.SearchImplementatio
         }
 
 
-        private BinaryExpression GenerateExpressionSubObject(ParameterExpression parameterExpression,string[] splitFilter, string type, string subSearch, string operand, string negate)
+        private BinaryExpression GenerateExpressionSubObject(ParameterExpression parameterExpression, string[] splitFilter, string type, string subSearch, string operand, string negate)
         {
             var converter = TypeDescriptor.GetConverter(Type.GetType(type));
 
@@ -82,7 +82,7 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.SearchImplementatio
 
             return exp;
         }
-        private BinaryExpression GenerateDynamicLambdaFunctionObjectProperty(ParameterExpression parameterExpression,string tableName,string filterCat,string searchString, string operand, string negate)
+        private BinaryExpression GenerateDynamicLambdaFunctionObjectProperty(ParameterExpression parameterExpression, string tableName, string filterCat, string searchString, string operand, string negate)
         {
             var property = Expression.Property(parameterExpression, filterCat);
 
@@ -102,7 +102,7 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.SearchImplementatio
             return result;
         }
 
-        public BinaryExpression ReturnExpression(string filterValue,string tableName, ParameterExpression parameterExpression,string searchString, string inBetween,string operand, string negate)
+        public BinaryExpression ReturnExpression(string filterValue, string tableName, ParameterExpression parameterExpression, string searchString, string inBetween, string operand, string negate)
         {
             string[] listOfFilters = filterValue.Split(' ');
             bool isFirst = true;
@@ -163,7 +163,7 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.SearchImplementatio
             return expression;
         }
 
-        public Expression<Func<T, bool>> ReturnLambdaExpression<T>(string tableName,string filterValue, string searchString, string inBetween, string operand, string negate)
+        public Expression<Func<T, bool>> ReturnLambdaExpression<T>(string tableName, string filterValue, string searchString, string inBetween, string operand, string negate)
         {
             var parameterExpression = ReturnParameterExpression(typeof(T), tableName);
             var expression = ReturnExpression(filterValue, tableName, parameterExpression, searchString, inBetween, operand, negate);

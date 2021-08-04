@@ -20,17 +20,17 @@ using BobsBookstore.DataAccess.Repository.Interface.Implementations;
 
 namespace BobsBookstore.DataAccess.Repository.Implementation.InventoryImplementation
 {
-    public class RekognitionNPollyRepository : IRekognitionNPollyRepository
+    public class RekognitionPollyRepository : IRekognitionPollyRepository
     {
         IAmazonS3 _s3Client { get; set; }
         IAmazonRekognition _rekognitionClient { get; set; }
         IAmazonPolly _pollyClient { get; set; }
 
-        private readonly ILogger<RekognitionNPollyRepository> _logger;
+        private readonly ILogger<RekognitionPollyRepository> _logger;
         public ApplicationDbContext _context;
         private IWebHostEnvironment _env;
 
-        public RekognitionNPollyRepository(ApplicationDbContext context, IWebHostEnvironment env , IAmazonS3 s3Client , IAmazonRekognition rekognitionClient, IAmazonPolly pollyClient , ILogger<RekognitionNPollyRepository> logger)
+        public RekognitionPollyRepository(ApplicationDbContext context, IWebHostEnvironment env , IAmazonS3 s3Client , IAmazonRekognition rekognitionClient, IAmazonPolly pollyClient , ILogger<RekognitionPollyRepository> logger)
         {
             _context = context;
             _env = env;

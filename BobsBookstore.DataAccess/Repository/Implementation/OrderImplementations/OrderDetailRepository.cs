@@ -105,7 +105,7 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.OrderImplementation
             }
         }
         
-        public async Task<Dictionary<string,string>> MakeOrderDetailInactive(long id,long orderId,int quantity) 
+        public async Task<Dictionary<string,string>> MakeOrderDetailInactive(long id, long orderId, int quantity) 
         {
             try
             {

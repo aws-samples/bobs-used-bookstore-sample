@@ -27,16 +27,16 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.InventoryImplementa
         public ApplicationDbContext _context;
         private readonly int _booksPerPage = 15;
         private readonly string[] PriceIncludes = { "Book", "Condition" };
-        private readonly IRekognitionNPollyRepository _RekognitionNPollyRepository;
+        private readonly IRekognitionPollyRepository _rekognitionNPollyRepository;
         private readonly ISearchRepository _searchRepo;
         private readonly ILogger<Inventory> _logger;
 
 
-        public Inventory(ApplicationDbContext context, ISearchRepository searchRepository, IRekognitionNPollyRepository RekognitionNPollyRepository, ILogger<Inventory> logger)
+        public Inventory(ApplicationDbContext context, ISearchRepository searchRepository, IRekognitionPollyRepository rekognitionPollyRepository, ILogger<Inventory> logger)
         {
             _context = context;
             _searchRepo = searchRepository;
-            _RekognitionNPollyRepository = RekognitionNPollyRepository;
+            _rekognitionNPollyRepository = rekognitionPollyRepository;
             _logger = logger;
         }
 
@@ -77,7 +77,7 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.InventoryImplementa
          *  function to add  details to the Publisher table
          */
 
-        public bool AddPublishers(BobsBookstore.Models.Books.Publisher publishers)
+        public bool AddPublishers(Publisher publishers)
         {
             _logger.LogInformation("Posting details to the Publisher table");
             var publishName = _context.Publisher.Where(publisher => publisher.Name == publishers.Name).ToList();
@@ -93,7 +93,7 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.InventoryImplementa
         /*
          *  function to add  details to the Genres table
          */
-        public bool AddGenres(BobsBookstore.Models.Books.Genre genres)
+        public bool AddGenres(Genre genres)
         {
             _logger.LogInformation("Posting details to the Genres table");
             var genreName = _context.Genre.Where(genre => genre.Name == genres.Name).ToList();
@@ -109,7 +109,7 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.InventoryImplementa
         /*
          *  function to add  details to the Types table
          */
-        public bool AddBookTypes(BobsBookstore.Models.Books.Type booktype)
+        public bool AddBookTypes(Models.Books.Type booktype)
         {
             _logger.LogInformation("Posting details to the Types table");
             var typeName = _context.Type.Where(type => type.TypeName == booktype.TypeName).ToList();
@@ -275,7 +275,7 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.InventoryImplementa
         /*
         *  function to fetch all Conditions for dynamic display in the drop down list 
         */
-        public List<BobsBookstore.Models.Books.Condition> GetConditions()
+        public List<Condition> GetConditions()
         {
 
             var conditions = _context.Condition.ToList();
@@ -304,32 +304,32 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.InventoryImplementa
                 string frontUrl = "", backUrl = "", leftUrl = "", rightUrl = "", audioBookUrl = "";
                 if (booksDto.FrontPhoto != null)
                 {
-                    frontUrl = _RekognitionNPollyRepository.UploadtoS3(booksDto.FrontPhoto, booksDto.BookId, booksDto.BookCondition).Result;
+                    frontUrl = _rekognitionNPollyRepository.UploadtoS3(booksDto.FrontPhoto, booksDto.BookId, booksDto.BookCondition).Result;
                 }
 
                 if (booksDto.BackPhoto != null)
                 {
-                    backUrl = _RekognitionNPollyRepository.UploadtoS3(booksDto.BackPhoto, booksDto.BookId, booksDto.BookCondition).Result;
+                    backUrl = _rekognitionNPollyRepository.UploadtoS3(booksDto.BackPhoto, booksDto.BookId, booksDto.BookCondition).Result;
                 }
 
                 if (booksDto.LeftSidePhoto != null)
                 {
-                    leftUrl = _RekognitionNPollyRepository.UploadtoS3(booksDto.LeftSidePhoto, booksDto.BookId, booksDto.BookCondition).Result;
+                    leftUrl = _rekognitionNPollyRepository.UploadtoS3(booksDto.LeftSidePhoto, booksDto.BookId, booksDto.BookCondition).Result;
                 }
 
                 if (booksDto.RightSidePhoto != null)
                 {
-                    rightUrl = _RekognitionNPollyRepository.UploadtoS3(booksDto.RightSidePhoto, booksDto.BookId, booksDto.BookCondition).Result;
+                    rightUrl = _rekognitionNPollyRepository.UploadtoS3(booksDto.RightSidePhoto, booksDto.BookId, booksDto.BookCondition).Result;
                 }
 
-                if (_RekognitionNPollyRepository.IsContentViolation(frontUrl) == true || _RekognitionNPollyRepository.IsContentViolation(backUrl) == true || _RekognitionNPollyRepository.IsContentViolation(leftUrl) == true || _RekognitionNPollyRepository.IsContentViolation(rightUrl) == true)
+                if (_rekognitionNPollyRepository.IsContentViolation(frontUrl) == true || _rekognitionNPollyRepository.IsContentViolation(backUrl) == true || _rekognitionNPollyRepository.IsContentViolation(leftUrl) == true || _rekognitionNPollyRepository.IsContentViolation(rightUrl) == true)
                 {
                     return false;
                 }
 
                 if (booksDto.Summary != null)
                 {
-                    audioBookUrl = _RekognitionNPollyRepository.GenerateAudioSummary(booksDto.BookName, booksDto.Summary, ConstantsData.TextToSpeechLanguageCode, VoiceId.Emma);
+                    audioBookUrl = _rekognitionNPollyRepository.GenerateAudioSummary(booksDto.BookName, booksDto.Summary, ConstantsData.TextToSpeechLanguageCode, VoiceId.Emma);
                 }
 
                 Book book = new Book();
@@ -858,23 +858,23 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.InventoryImplementa
                 var output = _context.Price.Where(p => p.Condition.ConditionName == bookdetailsDto.BookCondition.ConditionName && p.Book.Book_Id == bookdetailsDto.BookId).ToList();
                 if (bookdetailsDto.FrontPhoto != null)
                 {
-                    bookdetailsDto.FrontUrl = _RekognitionNPollyRepository.UploadtoS3(bookdetailsDto.FrontPhoto, bookdetailsDto.BookId, bookdetailsDto.BookCondition.ConditionName).Result;
+                    bookdetailsDto.FrontUrl = _rekognitionNPollyRepository.UploadtoS3(bookdetailsDto.FrontPhoto, bookdetailsDto.BookId, bookdetailsDto.BookCondition.ConditionName).Result;
                 }
 
                 if (bookdetailsDto.BackPhoto != null)
                 {
-                    bookdetailsDto.BackUrl = _RekognitionNPollyRepository.UploadtoS3(bookdetailsDto.BackPhoto, bookdetailsDto.BookId, bookdetailsDto.BookCondition.ConditionName).Result;
+                    bookdetailsDto.BackUrl = _rekognitionNPollyRepository.UploadtoS3(bookdetailsDto.BackPhoto, bookdetailsDto.BookId, bookdetailsDto.BookCondition.ConditionName).Result;
                 }
 
 
                 if (bookdetailsDto.LeftSidePhoto != null)
                 {
-                    bookdetailsDto.LeftUrl = _RekognitionNPollyRepository.UploadtoS3(bookdetailsDto.LeftSidePhoto, bookdetailsDto.BookId, bookdetailsDto.BookCondition.ConditionName).Result;
+                    bookdetailsDto.LeftUrl = _rekognitionNPollyRepository.UploadtoS3(bookdetailsDto.LeftSidePhoto, bookdetailsDto.BookId, bookdetailsDto.BookCondition.ConditionName).Result;
                 }
 
                 if (bookdetailsDto.RightSidePhoto != null)
                 {
-                    bookdetailsDto.RightUrl = _RekognitionNPollyRepository.UploadtoS3(bookdetailsDto.RightSidePhoto, bookdetailsDto.BookId, bookdetailsDto.BookCondition.ConditionName).Result;
+                    bookdetailsDto.RightUrl = _rekognitionNPollyRepository.UploadtoS3(bookdetailsDto.RightSidePhoto, bookdetailsDto.BookId, bookdetailsDto.BookCondition.ConditionName).Result;
                 }
 
                 using (var transaction = _context.Database.BeginTransaction())
