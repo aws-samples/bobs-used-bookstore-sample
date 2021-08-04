@@ -27,12 +27,12 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.InventoryImplementa
         public ApplicationDbContext _context;
         private readonly int _booksPerPage = 15;
         private readonly string[] PriceIncludes = { "Book", "Condition" };
-        private readonly IRekognitionPollyRepository _rekognitionNPollyRepository;
+        private readonly IRekognitionNPollyRepository _rekognitionNPollyRepository;
         private readonly ISearchRepository _searchRepo;
         private readonly ILogger<Inventory> _logger;
 
 
-        public Inventory(ApplicationDbContext context, ISearchRepository searchRepository, IRekognitionPollyRepository rekognitionPollyRepository, ILogger<Inventory> logger)
+        public Inventory(ApplicationDbContext context, ISearchRepository searchRepository, IRekognitionNPollyRepository rekognitionPollyRepository, ILogger<Inventory> logger)
         {
             _context = context;
             _searchRepo = searchRepository;

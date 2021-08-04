@@ -53,7 +53,7 @@ namespace BookstoreBackend
             services.AddTransient<IOrderDatabaseCalls, OrderDatabaseCalls>();
 
             services.AddTransient<IInventory, Inventory>();
-            services.AddTransient<IRekognitionPollyRepository, RekognitionNPollyRepository>();
+            services.AddTransient<IRekognitionNPollyRepository, RekognitionNPollyRepository>();
 
             services.AddTransient<ISearchRepository, SearchRepository>();
             services.AddTransient<IOrderRepository, OrderRepository>();

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace BobsBookstore.DataAccess.Repository.Interface.Implementations
 {
-    public interface IRekognitionPollyRepository
+    public interface IRekognitionNPollyRepository
     {
 
         public Task<bool> IsBook(string bucket, string key);
