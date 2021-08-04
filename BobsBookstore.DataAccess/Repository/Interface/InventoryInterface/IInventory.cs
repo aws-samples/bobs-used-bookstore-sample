@@ -6,13 +6,13 @@ namespace BobsBookstore.DataAccess.Repository.Interface.InventoryInterface
 {
     public interface IInventory
     {
-        public SearchBookDto SearchBooks(string searchby, string searchfilter, string style, string SortBy, int pagenum, string ascdesc);
+        public SearchBookDto SearchBooks(string searchBy, string searchFilter, string style, string sortBy, int pageNum, string ascDesc);
 
         public void SaveBook(Book book );
 
-        public SearchBookDto GetAllBooks(int pagenum, string style, string SortBy, string ascdesc);
+        public SearchBookDto GetAllBooks(int pageNum, string style, string sortBy, string ascDesc);
 
-        public BookDetailsDto GetBookByID(long Id);
+        public BookDetailsDto GetBookByID(long bookId);
 
         public void SavePrice(Price price);
       
@@ -20,9 +20,9 @@ namespace BobsBookstore.DataAccess.Repository.Interface.InventoryInterface
 
         public bool AddGenres(Genre genres);
 
-        public bool AddBookTypes(Type booktype);
+        public bool AddBookTypes(Type bookType);
 
-        public bool AddBookConditions(Condition bookcondition);
+        public bool AddBookConditions(Condition bookCondition);
 
         public List<Type> GetTypes();
 
@@ -32,35 +32,35 @@ namespace BobsBookstore.DataAccess.Repository.Interface.InventoryInterface
 
         public List<Condition> GetConditions();
 
-        public BookDetailsDto GetBookDetails(long bookid, long priceid);
+        public BookDetailsDto GetBookDetails(long bookId, long priceId);
 
-        public bool AddToTables(BooksDto bookview);
+        public bool AddToTables(BooksDto booksDto);
 
-        public IEnumerable<BookDetailsDto> GetDetails(long BookId);
+        public IEnumerable<BookDetailsDto> GetDetails(long bookId);
 
 
-        public List<string> GetFormatsOfTheSelectedBook(string bookname);
+        public List<string> GetFormatsOfTheSelectedBook(string bookName);
 
-        public List<string> GetConditionsOfTheSelectedBook(string bookname);
+        public List<string> GetConditionsOfTheSelectedBook(string bookName);
 
-        public List<BookDetailsDto> GetRelevantBooks(string Bookname , string type , string condition_chosen);
+        public List<BookDetailsDto> GetRelevantBooks(string bookName , string type , string conditionChosen);
 
         public List<Dictionary<string, int>> DashBoard(int numberOfDetails);
 
 
-        public void PushDetails(BookDetailsDto details);
+        public void PushDetails(BookDetailsDto bookdetailsDto);
 
         public List<string> autosuggest(string input);
 
-        public BookDetailsDto UpdateDetails(int Id, string Condition);
+        public BookDetailsDto UpdateDetails(int id, string condition);
 
-        public void EditPublisher(string Actual, string New);
+        public void EditPublisher(string oldPublisherName, string newPublisherName);
 
-        public void EditGenre(string Actual, string New);
+        public void EditGenre(string oldGenre, string newGenre);
 
-        public void EditCondition(string Actual, string New);
+        public void EditCondition(string oldCondition, string newCondition);
 
-        public void EditType(string Actual, string New);
+        public void EditType(string oldType, string newType);
 
         public List<string> ScreenInventory();
 

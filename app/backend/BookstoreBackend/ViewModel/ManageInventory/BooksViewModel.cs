@@ -7,7 +7,7 @@ namespace BookstoreBackend.ViewModel.ManageInventory
     public class BooksViewModel
     {
 
-        public String BookName { get; set; }
+        public string BookName { get; set; }
         public long ISBN { get; set; }
         public long BookId { get; set; }
         public long PublisherId { get; set; }
@@ -18,7 +18,7 @@ namespace BookstoreBackend.ViewModel.ManageInventory
         public long PriceId { get; set; }
         public double price { get; set; }
         public int Quantity { get; set; }
-        public String Name { get; set; }
+        public string Name { get; set; }
         public IFormFile FrontPhoto { get; set; }
         public IFormFile BackPhoto { get; set; }
         public IFormFile RearPhoto { get; set; }

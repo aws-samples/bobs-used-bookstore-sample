@@ -39,7 +39,7 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.WelcomePageImplemen
                         .Include(p => p.Book)
                             .ThenInclude(b => b.Publisher)
                         .OrderByDescending(p => p.UpdatedOn.Date)
-                        .Take(ConstantsData.TOTAL_RESULTS).ToListAsync();
+                        .Take(ConstantsData.TotalResults).ToListAsync();
 
 
 
@@ -69,7 +69,7 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.WelcomePageImplemen
                             .Include(p => p.Book)
                                 .ThenInclude(b => b.Publisher)
                             .OrderByDescending(p => p.UpdatedOn.Date)
-                            .Take(ConstantsData.TOTAL_RESULTS).ToListAsync();
+                            .Take(ConstantsData.TotalResults).ToListAsync();
 
             return books;
         }

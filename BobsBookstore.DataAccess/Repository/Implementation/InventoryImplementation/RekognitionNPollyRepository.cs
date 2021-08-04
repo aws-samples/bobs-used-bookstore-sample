@@ -70,14 +70,14 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.InventoryImplementa
 
                 var fileTransferUtility = new TransferUtility(_s3Client);
 
-                await fileTransferUtility.UploadAsync(Path.Combine(dir, filename), ConstantsData.photosBucketName);
+                await fileTransferUtility.UploadAsync(Path.Combine(dir, filename), ConstantsData.PhotosBucketName);
 
 
-                bool check = await IsImageSafe(ConstantsData.photosBucketName, filename);
+                bool check = await IsImageSafe(ConstantsData.PhotosBucketName, filename);
 
                 if (check)
                 {
-                    if (await IsBook(ConstantsData.photosBucketName, filename))
+                    if (await IsBook(ConstantsData.PhotosBucketName, filename))
                     {
                         url = String.Concat(ConstantsData.CoverPicturesCloudFrontLink, filename);
                         return url;
@@ -203,7 +203,7 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.InventoryImplementa
             // create new image variable
            var img = SixLabors.ImageSharp.Image.Load(file.OpenReadStream());
                // change size of image
-            img.Mutate(x => x.Resize(ConstantsData.resize_width, ConstantsData.resize_height));
+            img.Mutate(x => x.Resize(ConstantsData.ResizeWidth, ConstantsData.ResizeHeight));
             //get the extension encoder
             IImageEncoder encoder = selectEncoder(fileExt);
             img.Save(result, encoder);
@@ -265,7 +265,7 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.InventoryImplementa
                 response.AudioStream.CopyTo(output);
                 output.Close();
                 var fileTransferUtility = new TransferUtility(_s3Client);
-                fileTransferUtility.UploadAsync(outputFileName,ConstantsData.audioBucketName);
+                fileTransferUtility.UploadAsync(outputFileName,ConstantsData.AudioBucketName);
                 var url = String.Concat(ConstantsData.AudioFilesCloudFrontLink, BookName);
                 return url;
             }
