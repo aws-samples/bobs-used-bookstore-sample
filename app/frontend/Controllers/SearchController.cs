@@ -59,7 +59,7 @@ namespace BobBookstore.Controllers
                         GenreName = b.Genre.Name,
                         TypeName = b.Type.TypeName,
                         PublisherName = b.Publisher.Name,
-                        Url = b.BackUrl,
+                        Url = b.FrontUrl,
                         Prices = prices.Where(p => p.Book.Book_Id == b.Book_Id).ToList(),
                         MinPrice = prices.Where(p => p.Book.Book_Id == b.Book_Id).FirstOrDefault().ItemPrice
                     });
@@ -96,7 +96,7 @@ namespace BobBookstore.Controllers
                                 GenreName = b.Genre.Name,
                                 TypeName = b.Type.TypeName,
                                 PublisherName = b.Publisher.Name,
-                                Url = b.BackUrl,
+                                Url = b.FrontUrl,
                                 Prices = pricesQuery.Where(p => p.Book.Book_Id == b.Book_Id).ToList(),
                                 MinPrice = pricesQuery.Where(p => p.Book.Book_Id == b.Book_Id).FirstOrDefault().ItemPrice
                             });
@@ -181,7 +181,7 @@ namespace BobBookstore.Controllers
                            ISBN = m.ISBN,
                            GenreName = m.Genre.Name,
                            TypeName = m.Type.TypeName,
-                           Url = m.BackUrl,
+                           Url = m.FrontUrl,
                            Prices = pricesLst,
                            BookId = m.Book_Id,
                            Summary = m.Summary
