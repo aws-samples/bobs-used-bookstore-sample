@@ -69,7 +69,7 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.InventoryImplementa
                 }
 
                 var fileTransferUtility = new TransferUtility(_s3Client);
-
+                var combine = Path.Combine(dir, filename);
                 await fileTransferUtility.UploadAsync(Path.Combine(dir, filename), ConstantsData.PhotosBucketName);
 
 
@@ -77,20 +77,17 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.InventoryImplementa
 
                 if (check)
                 {
-                    if (await IsBook(ConstantsData.PhotosBucketName, filename))
-                    {
+                    
                         url = String.Concat(ConstantsData.CoverPicturesCloudFrontLink, filename);
                         return url;
 
-                    }
-                    else
-                    {
-                        return $"NotABook";
-
-                    }
+                    
                 }
 
                 else
+                {
+
+                }
                 {
                     return $"PolicyViolation";
                 }

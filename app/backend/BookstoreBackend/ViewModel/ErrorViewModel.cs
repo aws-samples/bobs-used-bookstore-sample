@@ -1,4 +1,4 @@
-﻿namespace BookstoreBackend.ViewModel.ManageInventory
+﻿namespace BookstoreBackend
 {
     public class ErrorViewModel
     {
