@@ -1,0 +1,69 @@
+﻿@model  IEnumerable<BobsBookstore.Models.Books.Resale> 
+@{ ViewData["Title"]="Index" ; }
+
+<style>
+    .card-border {
+        border-radius: 2px 2px 2px 2px;
+    }
+</style>
+
+<div class="card shadow card-border border-dark mb-3">
+    <div class="card-body">
+        <div class="p-0 m-0">
+            <table class="table_font  table  table-striped table-hover">
+
+                <thead>
+                    <tr>
+                        <th scope="col">Book Name</th>
+                        <th scope="col">Author</th>
+                        <th scope="col">Genre</th>
+                        @*<th scope="col">Publisher</th>
+                        <th scope="col">Book Type</th>
+                        <th scope="col">ISBN</th>
+                        <th scope="col">Front Cover</th>
+                        <th scope="col">Back Cover</th>
+                        <th scope="col">Left Cover</th>
+                        <th scope="col">Right Cover</th>
+                        <th scope="col">Audio Book Url</th>*@
+                        <th scope="col">Status</th>
+                        <th scope="col">Action</th>
+
+
+
+                    </tr>
+                </thead>
+                @foreach (var b in Model)
+                {
+                    var param = new Dictionary<string, string>{
+                                         {"id",b.Resale_Id + ""}
+                                        };
+            <tr>
+                <td>@b.BookName</td>
+                <td>@b.Author</td>
+                <td>@b.GenreName</td>
+                @*<td>@b.PublisherName</td>
+                <td>@b.TypeName</td>
+                <td>@b.ISBN</td>
+                <td>@b.FrontUrl</td>
+                <td>@b.BackUrl</td>
+                <td>@b.LeftUrl</td>
+                <td>@b.RightUrl</td>
+                <td>@b.AudioBookUrl</td>*@
+                <td>@b.ResaleStatus.Status</td>
+                <td>
+                    <a class="card-link" asp-action="Details" asp-controller="Resale" asp-all-route-data="param">Details</a>
+                    
+                    @*<form asp-controller="Resale" asp-action="Details" method="get">
+                        <input type="hidden" name="id" value="@b.Resale_Id" />
+                        <input type="submit" value="<a> Details </a>" />
+                    </form>*@
+                </td>
+               
+            </tr>}
+            </table>
+        </div>
+    </div>
+</div>
+
+
+

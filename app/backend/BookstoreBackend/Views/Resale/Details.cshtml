@@ -1,0 +1,133 @@
+﻿@model BobsBookstore.Models.Books.Resale;
+@{ var customerInfo = Model.Customer;
+
+}
+@*
+    if (fullOrder.Order.OrderStatus.OrderStatus_Id == 1) orderStatusWidth = "25%";
+    else if (fullOrder.Order.OrderStatus.OrderStatus_Id == 2) orderStatusWidth = "50%";
+    else if (fullOrder.Order.OrderStatus.OrderStatus_Id == 3) orderStatusWidth = "75%";
+    else if (fullOrder.Order.OrderStatus.OrderStatus_Id == 4) orderStatusWidth = "100%"; }*@
+<style>
+    .progress-bar-empty {
+        height: 1.7rem;
+        margin-top: 25px;
+        margin-bottom: 45px;
+        border-radius: 1.8rem;
+        margin-top: 25px;
+        margin-bottom: 45px;
+    }
+
+    .progress-bar-filled {
+        background-color: #7D53DE;
+    }
+
+    .website-text {
+        font-family: 'Arvo',serif;
+    }
+
+    .manage-order-button {
+        border-color: #7D53DE;
+        border-radius: 3rem;
+        background-color: #7D53DE;
+        color: white;
+    }
+
+        .manage-order-button:hover {
+            color: white;
+        }
+
+    .filter-pill {
+        font-weight: normal;
+        font-family: 'Arvo',serif;
+        padding: .6em;
+        border-top-left-radius: 12rem;
+        border-bottom-left-radius: 12rem;
+        border-top-right-radius: 12rem;
+        border-bottom-right-radius: 12rem;
+        background-color: #7D53DE;
+    }
+</style>
+<div class="container">
+
+    @*<div class="progress progress-bar-empty">
+            <div id="order-status-progress-bar" style="width:@orderStatusWidth;" class="progress-bar progress-bar-filled" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+        </div>*@
+
+<div class="row">
+    <div class="text-left col-3">
+        <a asp-controller="Resale" asp-action="Index" class="btn shadow manage-order-button website-text">
+            <svg class="bi bi-chevron-left" width="24" height="24" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z" /></svg>
+            Manage Orders
+        </a>
+    </div>
+    <div class="text-center col-6 website-text">
+        <h3>Status: @Model.ResaleStatus.Status</h3>
+    </div>
+    @if (Model.ResaleStatus.Status == Constants.ResaleStatusPending)
+    {
+<div class="col-1 text-right">
+    <form asp-controller="Resale" asp-action="ApproveResale" method="get">
+
+        <button class="btn shadow manage-order-button website-text" name="id" value="@Model.Resale_Id" type="submit">Approve</button>
+    </form>
+</div>
+
+<div class="col-1 text-right">
+    <form asp-controller="Resale" asp-action="RejectResale" method="get">
+
+        <button class="btn shadow manage-order-button website-text" name="id" value="@Model.Resale_Id" type="submit">Reject</button>
+    </form>
+</div>
+    }
+    @if (Model.ResaleStatus.Status == Constants.ResaleStatusApproved)
+    {
+<div class="col-3 text-right">
+    <form asp-controller="Resale" asp-action="ConfirmResale" method="get">
+
+        <button class="btn shadow manage-order-button website-text" name="id" value="@Model.Resale_Id" type="submit">Confirm Shipment</button>
+    </form>
+</div>
+
+    }
+            </div>
+    
+        
+
+        <div class="row" style="margin-top:35px">
+
+            <div class="col-3">
+                <partial name="./Partials/_BookInfo" model="Model" />
+            </div>
+
+            <div class="col-5">
+                <partial name="./Partials/_CustomerResaleInfo" model="customerInfo" />
+            </div>
+
+
+        </div>
+
+        @* <div class="row" style="margin-top:35px">
+                    <div class="col-4">
+                        <h4 class="website-text col-12">Expected Delivery Date: </h4>
+
+                        <h4 style="margin-top:10px;" class="website-text text-center col-12">@( (fullOrder.Order.DeliveryDate == null) ? "Pending Confirmation": DateTime.Parse(fullOrder.Order.DeliveryDate).ToString("MM/dd/yyyy") )</h4>
+                        @if (Model.FullOrder.OrderDetails.Count() == Model.FullOrder.ItemsRemoved && Model.FullOrder.Order.OrderStatus.Status != "Cancelled")
+                        {
+                            var cancelId = Model.Statuses.FirstOrDefault(o => o.Status == "Cancelled").OrderStatus_Id;
+
+                            var data = new Dictionary<string, string>
+                        {
+                            { "orderId", "" + Model.FullOrder.Order.Order_Id },
+                            { "status", "" + cancelId},
+                            {"oldStatus", "" + Model.FullOrder.Order.OrderStatus.OrderStatus_Id }
+
+                        };
+            <a asp-controller="Orders" asp-action="UpdateOrderStatus" asp-all-route-data="data" style="padding-top:.8rem; margin-left:.7rem;" class=" filter-pill badge badge-pill text-white">Cancel Order</a>}
+
+                    </div>
+                    <div class="col-8">
+                        <partial name="./Partials/_BookList" model="fullOrder" />
+                    </div>
+                </div>*@
+
+</div>

@@ -10,7 +10,7 @@ namespace BobsBookstore.DataAccess.Repository.Interface
     {
         TModel Get(long? id);
         TModel Get(string id);
-        IEnumerable<TModel> GetAll();
+        IEnumerable<TModel> GetAll(string includeProperties = "");
         void Add(TModel entity);
         void Remove(TModel entity);
         void Update(TModel entity);

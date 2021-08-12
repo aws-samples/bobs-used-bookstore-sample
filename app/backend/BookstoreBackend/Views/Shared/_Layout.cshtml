@@ -44,22 +44,25 @@
                         </li>
                         @if (User.Identity.IsAuthenticated)
                         {
-                            <li class="nav-item">
-                                <a class="main-color-text" asp-area="" asp-controller="Orders" asp-action="Index">Manage Orders</a>
-                            </li>
-                            <li class="nav-item dropdown">
-                                <a class="main-color-text dropdown-toggle" id="navbarDropdownMenuLink-333" data-toggle="dropdown"
-                                   aria-haspopup="true" aria-expanded="false">
-                                    Inventory
-                                </a>
-                                <div class="nav-background-color dropdown-menu dropdown-default" aria-labelledby="navbarDropdownMenuLink-333">
-                                    <a class="dropdown-item main-color-text" asp-controller="Inventory" asp-action="EditBookDetails">Add New Book</a>
-                                    <a class="dropdown-item main-color-text" asp-controller="Inventory" asp-action="SearchBeta">Search Inventory</a>
-                                    <a class="dropdown-item main-color-text" asp-controller="Inventory" asp-action="Dashboard">Dashboard</a>
+                    <li class="nav-item">
+                        <a class="main-color-text" asp-area="" asp-controller="Orders" asp-action="Index">Manage Orders</a>
+                    </li>
+                                    <li class="nav-item dropdown">
+                                        <a class="main-color-text dropdown-toggle" id="navbarDropdownMenuLink-333" data-toggle="dropdown"
+                                           aria-haspopup="true" aria-expanded="false">
+                                            Inventory
+                                        </a>
+                                        <div class="nav-background-color dropdown-menu dropdown-default" aria-labelledby="navbarDropdownMenuLink-333">
+                                            <a class="dropdown-item main-color-text" asp-controller="Inventory" asp-action="EditBookDetails">Add New Book</a>
+                                            <a class="dropdown-item main-color-text" asp-controller="Inventory" asp-action="SearchBeta">Search Inventory</a>
+                                            <a class="dropdown-item main-color-text" asp-controller="Inventory" asp-action="Dashboard">Dashboard</a>
 
-                                </div>
-                            </li>
-                        }
+                                        </div>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="main-color-text" asp-area="" asp-controller="Resale" asp-action="Index">Resale Books</a>
+                                    </li>
+                         }
                     </ul>
                 </div>
                 <div class="nav navbar-nav navbar-right">

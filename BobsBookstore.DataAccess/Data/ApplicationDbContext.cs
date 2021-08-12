@@ -35,6 +35,9 @@ namespace BobsBookstore.DataAccess.Data
         public DbSet<Cart> Cart { get; set; }
         public DbSet<CartItem> CartItem { get; set; }
         public DbSet<OrderDetail> OrderDetail { get; set; }
+        public DbSet<Resale> Resale { get; set; }
+        public DbSet<ResaleStatus> ResaleStatus { get; set; }
+
 
     }
 

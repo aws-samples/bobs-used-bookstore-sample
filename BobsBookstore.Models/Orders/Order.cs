@@ -20,7 +20,7 @@ namespace BobsBookstore.Models.Orders
 
         public OrderStatus OrderStatus { get; set; }
 
-        public BobsBookstore.Models.Customers.Customer Customer { get; set; }
+        public Customer Customer { get; set; }
 
         public Address Address { get; set; }
 

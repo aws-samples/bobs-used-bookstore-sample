@@ -45,5 +45,9 @@ namespace BookstoreBackend
         public const int ResizeHeight = 200;
         public const string CombinationErrorStatus = "Sorry , We don't currently have any relevant results for the given Combination";
         public const string BoBsEmailAddress = "";
+        public const string ResaleStatusPending = "Pending Approval";
+        public const string ResaleStatusApproved = "Approved/Awaiting Shipment";
+        public const string ResaleStatusRejected = "Rejected";
+
     }
 }

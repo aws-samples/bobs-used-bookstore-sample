@@ -4,14 +4,16 @@ using BobsBookstore.DataAccess.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace BobsBookstore.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210810030502_AddResaleStatusModel")]
+    partial class AddResaleStatusModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -202,9 +204,6 @@ namespace BobsBookstore.DataAccess.Migrations
                     b.Property<string>("Comment")
                         .HasColumnType("varchar(MAX)");
 
-                    b.Property<string>("Customer_Id")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("FrontUrl")
                         .HasColumnType("nvarchar(max)");
 
@@ -238,8 +237,6 @@ namespace BobsBookstore.DataAccess.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Resale_Id");
-
-                    b.HasIndex("Customer_Id");
 
                     b.HasIndex("ResaleStatus_Id");
 
@@ -531,15 +528,9 @@ namespace BobsBookstore.DataAccess.Migrations
 
             modelBuilder.Entity("BobsBookstore.Models.Books.Resale", b =>
                 {
-                    b.HasOne("BobsBookstore.Models.Customers.Customer", "Customer")
-                        .WithMany()
-                        .HasForeignKey("Customer_Id");
-
                     b.HasOne("BobsBookstore.Models.Books.ResaleStatus", "ResaleStatus")
                         .WithMany()
                         .HasForeignKey("ResaleStatus_Id");
-
-                    b.Navigation("Customer");
 
                     b.Navigation("ResaleStatus");
                 });

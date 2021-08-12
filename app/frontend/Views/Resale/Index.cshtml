@@ -1,0 +1,139 @@
+﻿@model IEnumerable<BobsBookstore.Models.Books.Resale>
+
+@{ ViewData["Title"] = "Index"; }
+
+
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>log in</title>
+
+    <link href="css/sb-admin-2.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://dtdt6j0vhq1rq.cloudfront.net/bootstrap.min.css">
+
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:200,300,400,500,600,700,800,900" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="https://dtdt6j0vhq1rq.cloudfront.net/owl.carousel.min.css">
+    <link rel="stylesheet" href="https://dtdt6j0vhq1rq.cloudfront.net/styles.css">
+</head>
+
+<body>
+
+    <div>
+        <div>
+            <div>
+                <h1>
+                   Resale Books
+                </h1>
+
+            </div>
+            <p>
+                <a asp-action="Create">Sell Book</a>
+            </p>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>
+                            Book Name
+                        </th>
+                        <th>
+                            Author
+                        </th>
+                        <th>
+                            Genre
+                        </th>
+                        <th>
+                            Publisher
+                        </th>
+                        <th>
+                            Book Type
+                        </th>
+                        <th>
+                            ISBN
+                        </th>
+                        <th>
+                            Front Cover
+                        </th>
+                        <th>
+                            Back Cover
+                        </th>
+                        <th>
+                            Left Cover
+                        </th>
+                        <th>
+                            Right Cover
+                        </th>
+                        <th>
+                            Audio Book Url
+                        </th>
+                        <th>
+                            Status
+                        </th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.BookName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Author)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.GenreName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.PublisherName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.TypeName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ISBN)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.FrontUrl)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.BackUrl)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.LeftUrl)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.RightUrl)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.AudioBookUrl)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ResaleStatus.Status)
+                        </td>
+
+                    </tr>
+
+
+                 }
+                </tbody>
+            </table>
+        </div>
+    </div>
+            
+    
+
+
+
+
+
+</body>
+</html>

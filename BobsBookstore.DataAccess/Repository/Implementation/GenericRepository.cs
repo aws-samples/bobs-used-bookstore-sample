@@ -34,9 +34,15 @@ namespace BobsBookstore.DataAccess.Repository.Implementation
             return DatabaseContext.Set<TModel>().Find(id);
         }
 
-        public IEnumerable<TModel> GetAll()
+        public IEnumerable<TModel> GetAll(string includeProperties = "")
         {
-            return DatabaseContext.Set<TModel>().ToList();
+            IQueryable<TModel> query = DatabaseContext.Set<TModel>();
+            foreach (var includeProperty in includeProperties.Split
+               (new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+            {
+                query = query.Include(includeProperty);
+            }
+            return query.ToList();
         }
 
         public void Remove(TModel entity)

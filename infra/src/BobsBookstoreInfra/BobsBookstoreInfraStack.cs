@@ -92,8 +92,9 @@ namespace BobsBookstoreInfra
             // The user pool is where user registrations on the site will be held.
             var userPool = new UserPool(this, "BookstoreUserPool", new UserPoolProps
             {
-                UserPoolName = "BobsBookstoreUsers"
-            });
+                UserPoolName = "BobsBookstoreUsers",
+                CustomAttributes = [""]
+            }) ;
 
             // The pool client will allow our front-end to permit user registration. Note that we cannot
             // recover the client secret here, so some post-processing or initial start-up code in the
