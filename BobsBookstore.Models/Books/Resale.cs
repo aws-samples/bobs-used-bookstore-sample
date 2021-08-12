@@ -35,7 +35,9 @@ namespace BobsBookstore.Models.Books
         [Column(TypeName = "varchar(MAX)")]
         public string Comment { get; set; }
         public Customer Customer { get; set; }
-
+        
+        public decimal BookPrice { get; set; }
+        public string ConditionName { get; set; }
         [Timestamp]
         public byte[] RowVersion { get; set; }
 

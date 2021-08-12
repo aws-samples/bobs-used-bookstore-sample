@@ -59,6 +59,12 @@
                             ISBN
                         </th>
                         <th>
+                            Condition
+                        </th>
+                        <th>
+                            Book Price
+                        </th>
+                        <th>
                             Front Cover
                         </th>
                         <th>
@@ -100,6 +106,12 @@
                         </td>
                         <td>
                             @Html.DisplayFor(modelItem => item.ISBN)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ConditionName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.BookPrice)
                         </td>
                         <td>
                             @Html.DisplayFor(modelItem => item.FrontUrl)
