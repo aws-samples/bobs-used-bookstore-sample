@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BobsBookstore.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210810033238_AddCustomerToResale")]
-    partial class AddCustomerToResale
+    [Migration("20210813212017_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -201,8 +201,14 @@ namespace BobsBookstore.DataAccess.Migrations
                     b.Property<string>("BookName")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<decimal>("BookPrice")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<string>("Comment")
                         .HasColumnType("varchar(MAX)");
+
+                    b.Property<string>("ConditionName")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Customer_Id")
                         .HasColumnType("nvarchar(450)");

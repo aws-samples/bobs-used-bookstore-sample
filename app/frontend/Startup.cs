@@ -10,6 +10,13 @@ using BobsBookstore.DataAccess.Repository.Interface;
 using BobsBookstore.DataAccess.Repository.Implementation;
 using BobsBookstore.DataAccess.Repository.Interface.SearchImplementations;
 using BobsBookstore.DataAccess.Repository.Implementation.SearchImplementation;
+using Amazon.Extensions.NETCore.Setup;
+using System;
+using Amazon.SecretsManager;
+using Amazon.SecretsManager.Model;
+using BobsBookstore.Models.AdminUser;
+using System.Text.Json;
+using Microsoft.Data.SqlClient;
 
 namespace BobBookstore
 {
@@ -18,6 +25,8 @@ namespace BobBookstore
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            var config = (Configuration as IConfigurationRoot).GetDebugView();
+
         }
 
         public IConfiguration Configuration { get; }
@@ -26,10 +35,13 @@ namespace BobBookstore
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+            var awsOptions = Configuration.GetAWSOptions();
+            services.AddDefaultAWSOptions(awsOptions);
             services.AddCognitoIdentity();
             services.AddRazorPages();
+            var connectionString = GetConnectionString(awsOptions);
             services.AddDbContext<ApplicationDbContext>(options =>
-            options.UseSqlServer(Configuration.GetConnectionString("BobBookstoreContextConnection")));
+            options.UseSqlServer(connectionString));
 
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             services.AddTransient<IBookSearch, BookSearchRepository>();
@@ -73,5 +85,49 @@ namespace BobBookstore
                 endpoints.MapRazorPages();
             });
         }
+
+        private string GetConnectionString(AWSOptions awsOptions)
+        {
+            var connString = Configuration.GetConnectionString("BobBookstoreContextConnection");
+            try
+            {
+                Console.WriteLine("Non-development mode, building connection string for SQL Server");
+
+                //take the db details from secret manager
+                var secretsClient = awsOptions.CreateServiceClient<IAmazonSecretsManager>();
+                var response = secretsClient.GetSecretValueAsync(new GetSecretValueRequest
+                {
+                    SecretId = Configuration.GetValue<string>("dbsecretsname")
+                }).Result;
+
+
+                var dbSecrets = JsonSerializer.Deserialize<DbSecrets>(response.SecretString, new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                });
+
+
+                var partialConnString = string.Format(connString, dbSecrets.Host, dbSecrets.Port);
+
+                var builder = new SqlConnectionStringBuilder(partialConnString)
+                {
+                    UserID = dbSecrets.Username,
+                    Password = dbSecrets.Password
+                };
+
+                return builder.ConnectionString;
+            }
+            catch (AmazonSecretsManagerException e)
+            {
+                Console.WriteLine($"Failed to read secret {Configuration.GetValue<string>("DbSecretsParameterName")}, error {e.Message}, inner {e.InnerException.Message}");
+                throw;
+            }
+            catch (JsonException e)
+            {
+                Console.WriteLine($"Failed to parse content for secret {Configuration.GetValue<string>("DbSecretsParameterName")}, error {e.Message}");
+                throw;
+            }
+        }
+
     }
 }

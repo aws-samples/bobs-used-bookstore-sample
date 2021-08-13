@@ -11,13 +11,14 @@ namespace BobBookstore
         {
             CreateHostBuilder(args).Build().Run();
         }
-
+            
         public static IHostBuilder CreateHostBuilder(string[] args) =>
              Host.CreateDefaultBuilder(args)
                  .ConfigureAppConfiguration((context, builder) =>
                  {
 
-                     builder.AddSystemsManager("/Bookstore/");
+                     builder.AddSystemsManager("/BobsUsedBookCustomerStoreVersion9/");
+                     builder.AddSystemsManager("/bookstorecdkVersion9/");
 
                  })
               .ConfigureWebHostDefaults(webBuilder =>

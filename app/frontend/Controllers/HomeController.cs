@@ -100,7 +100,13 @@ namespace BobBookstore.Controllers
                 }
                 //put cart id in cookie
                 var currentCart = _cartRepository.Get(s => s.IP == ip).FirstOrDefault();
-               
+                if (currentCart == null){
+                    Guid gu_id1 = Guid.NewGuid();
+                    string id = gu_id1.ToString();
+                    currentCart = new Cart() { IP = ip, Cart_Id = id };
+                    _cartRepository.Add(currentCart);
+                    _cartRepository.Save();
+                }
               
 
                 if (!HttpContext.Request.Cookies.ContainsKey("CartId"))

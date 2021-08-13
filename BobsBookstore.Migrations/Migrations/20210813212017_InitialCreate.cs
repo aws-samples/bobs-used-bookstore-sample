@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace BobsBookstore.DataAccess.Migrations
 {
-    public partial class Initial : Migration
+    public partial class InitialCreate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -81,6 +81,19 @@ namespace BobsBookstore.DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ResaleStatus",
+                columns: table => new
+                {
+                    ResaleStatus_Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Status = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ResaleStatus", x => x.ResaleStatus_Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Type",
                 columns: table => new
                 {
@@ -136,6 +149,48 @@ namespace BobsBookstore.DataAccess.Migrations
                         column: x => x.Customer_Id,
                         principalTable: "Customer",
                         principalColumn: "Customer_Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Resale",
+                columns: table => new
+                {
+                    Resale_Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Author = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ISBN = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    BookName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FrontUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    GenreName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    BackUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LeftUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    RightUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    AudioBookUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Summary = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PublisherName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TypeName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ResaleStatus_Id = table.Column<long>(type: "bigint", nullable: true),
+                    Comment = table.Column<string>(type: "varchar(MAX)", nullable: true),
+                    Customer_Id = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    BookPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    ConditionName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    RowVersion = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Resale", x => x.Resale_Id);
+                    table.ForeignKey(
+                        name: "FK_Resale_Customer_Customer_Id",
+                        column: x => x.Customer_Id,
+                        principalTable: "Customer",
+                        principalColumn: "Customer_Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Resale_ResaleStatus_ResaleStatus_Id",
+                        column: x => x.ResaleStatus_Id,
+                        principalTable: "ResaleStatus",
+                        principalColumn: "ResaleStatus_Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
@@ -400,6 +455,16 @@ namespace BobsBookstore.DataAccess.Migrations
                 name: "IX_Price_Condition_Id",
                 table: "Price",
                 column: "Condition_Id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Resale_Customer_Id",
+                table: "Resale",
+                column: "Customer_Id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Resale_ResaleStatus_Id",
+                table: "Resale",
+                column: "ResaleStatus_Id");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -411,6 +476,9 @@ namespace BobsBookstore.DataAccess.Migrations
                 name: "OrderDetail");
 
             migrationBuilder.DropTable(
+                name: "Resale");
+
+            migrationBuilder.DropTable(
                 name: "Cart");
 
             migrationBuilder.DropTable(
@@ -418,6 +486,9 @@ namespace BobsBookstore.DataAccess.Migrations
 
             migrationBuilder.DropTable(
                 name: "Price");
+
+            migrationBuilder.DropTable(
+                name: "ResaleStatus");
 
             migrationBuilder.DropTable(
                 name: "Address");
