@@ -1,5 +1,6 @@
 using System;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using NLog.Web;
@@ -31,6 +32,13 @@ namespace DIAndLoggingTestApp
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
+           .ConfigureAppConfiguration((context, builder) =>
+           {
+
+               builder.AddSystemsManager("/BobsUsedBookAdminStoreVersion9/");
+               builder.AddSystemsManager("/bookstorecdkVersion9/");
+
+           })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<BookstoreBackend.Startup>();

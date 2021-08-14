@@ -1,0 +1,20 @@
+
+{
+    "region" : "us-west-2",
+    "configuration" : "Debug",
+    "framework"     : "net5.0",
+    "self-contained" : false,
+    "application"    : "BookstoreFrontend",
+    "environment"    : "BookstoreFrontend-test",
+    "enable-xray"    : false,
+    "enhanced-health-type" : "basic",
+    "additional-options"   : "\"aws:autoscaling:launchconfiguration,SecurityGroups\"=\"sg-14b0c146,sg-053b0089ec8a787d1\";\"aws:ec2:vpc,Subnets\"=\"subnet-d28fdbf9\"",
+    "solution-stack"       : "64bit Amazon Linux 2 v2.2.4 running .NET Core",
+    "environment-type"     : "SingleInstance",
+    "cname"                : "bookstorefrontend-test",
+    "instance-type"        : "t2.micro",
+    "key-pair"             : "",
+    "instance-profile"     : "aws-elasticbeanstalk-ec2-role",
+    "service-role"         : "aws-elasticbeanstalk-service-role",
+    "proxy-server"         : "none"
+}

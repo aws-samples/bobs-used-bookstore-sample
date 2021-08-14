@@ -22,6 +22,12 @@ using BobsBookstore.DataAccess.Repository.Interface.WelcomePageInterface;
 using BobsBookstore.DataAccess.Repository.Implementation.WelcomePageImplementation;
 using BobsBookstore.DataAccess.Repository.Implementation;
 using BobsBookstore.DataAccess.Repository.Interface;
+using Amazon.Extensions.NETCore.Setup;
+using Amazon.SecretsManager;
+using BobsBookstore.Models.AdminUser;
+using System.Text.Json;
+using Microsoft.Data.SqlClient;
+using Amazon.SecretsManager.Model;
 
 namespace BookstoreBackend
 {
@@ -30,6 +36,8 @@ namespace BookstoreBackend
         public Startup(IConfiguration configuration )
         {
             Configuration = configuration;
+            var config = (Configuration as IConfigurationRoot).GetDebugView();
+
         }
 
         public IConfiguration Configuration { get; }
@@ -47,7 +55,10 @@ namespace BookstoreBackend
             services.AddAutoMapper(typeof(Startup));
 
             services.AddControllersWithViews();
-            services.AddDbContext<ApplicationDbContext>(option => option.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            var awsOptions = Configuration.GetAWSOptions();
+            services.AddDefaultAWSOptions(awsOptions);
+            var connectionString = GetConnectionString(awsOptions);
+            services.AddDbContext<ApplicationDbContext>(option => option.UseSqlServer(connectionString));
             services.AddTransient<ISearchDatabaseCalls, SearchDatabaseCalls>();
             services.AddTransient<IExpressionFunction, ExpressionFunction>();
             services.AddTransient<IOrderDatabaseCalls, OrderDatabaseCalls>();
@@ -84,12 +95,13 @@ namespace BookstoreBackend
        })
        .AddOpenIdConnect(options =>
        {
+
            // sets the OpenId connect options for cognito hosted UI
            options.ResponseType = Configuration["Authentication:Cognito:ResponseType"];
-           options.MetadataAddress = Configuration["Authentication:Cognito:MetadataAddress"];
-           options.ClientId = Configuration["Authentication:Cognito:ClientId"];
+           options.MetadataAddress = $"https://cognito-idp.{Configuration["Authentication:Cognito:Region"]}.amazonaws.com/{Configuration["AWS:UserPoolId"]}/.well-known/openid-configuration";
+           options.ClientId = Configuration["AWS:UserPoolClientId"];
            
-           options.Authority = "https://bobsbackendbookstore.auth.us-east-1.amazoncognito.com";
+           options.Authority = "https://bobsusedbookstore.auth.us-west-2.amazoncognito.com";
            options.GetClaimsFromUserInfoEndpoint = true;
            options.TokenValidationParameters.ValidateIssuer = true;
            
@@ -129,5 +141,49 @@ namespace BookstoreBackend
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
         }
+
+        private string GetConnectionString(AWSOptions awsOptions)
+        {
+            var connString = Configuration.GetConnectionString("DefaultConnection");
+            try
+            {
+                Console.WriteLine("Non-development mode, building connection string for SQL Server");
+
+                //take the db details from secret manager
+                var secretsClient = awsOptions.CreateServiceClient<IAmazonSecretsManager>();
+                var response = secretsClient.GetSecretValueAsync(new GetSecretValueRequest
+                {
+                    SecretId = Configuration.GetValue<string>("dbsecretsname")
+                }).Result;
+
+
+                var dbSecrets = JsonSerializer.Deserialize<DbSecrets>(response.SecretString, new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                });
+
+
+                var partialConnString = string.Format(connString, dbSecrets.Host, dbSecrets.Port);
+
+                var builder = new SqlConnectionStringBuilder(partialConnString)
+                {
+                    UserID = dbSecrets.Username,
+                    Password = dbSecrets.Password
+                };
+
+                return builder.ConnectionString;
+            }
+            catch (AmazonSecretsManagerException e)
+            {
+                Console.WriteLine($"Failed to read secret {Configuration.GetValue<string>("DbSecretsParameterName")}, error {e.Message}, inner {e.InnerException.Message}");
+                throw;
+            }
+            catch (JsonException e)
+            {
+                Console.WriteLine($"Failed to parse content for secret {Configuration.GetValue<string>("DbSecretsParameterName")}, error {e.Message}");
+                throw;
+            }
+        }
+
     }
 }
