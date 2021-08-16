@@ -551,7 +551,7 @@ namespace BookstoreBackend.Controllers
         {
             _logger.LogInformation("Dashboard Display");
 
-            _emailSender.SendInventoryLowEmail(_Inventory.ScreenInventory(), Constants.BoBsEmailAddress);
+           // _emailSender.SendInventoryLowEmail(_Inventory.ScreenInventory(), Constants.BoBsEmailAddress);
             try
             {
                 var stats = _Inventory.DashBoard(numberOfDetails);

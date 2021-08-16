@@ -17,6 +17,7 @@ using SixLabors.ImageSharp.Formats.Jpeg;
 using SixLabors.ImageSharp.Formats.Png;
 using BobsBookstore.DataAccess.Data;
 using BobsBookstore.DataAccess.Repository.Interface.Implementations;
+using Microsoft.Extensions.Configuration;
 
 namespace BobsBookstore.DataAccess.Repository.Implementation.InventoryImplementation
 {
@@ -29,8 +30,9 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.InventoryImplementa
         private readonly ILogger<RekognitionNPollyRepository> _logger;
         public ApplicationDbContext _context;
         private IWebHostEnvironment _env;
+        private IConfiguration _configuration;
 
-        public RekognitionNPollyRepository(ApplicationDbContext context, IWebHostEnvironment env , IAmazonS3 s3Client , IAmazonRekognition rekognitionClient, IAmazonPolly pollyClient , ILogger<RekognitionNPollyRepository> logger)
+        public RekognitionNPollyRepository(IConfiguration configuration, ApplicationDbContext context, IWebHostEnvironment env , IAmazonS3 s3Client , IAmazonRekognition rekognitionClient, IAmazonPolly pollyClient , ILogger<RekognitionNPollyRepository> logger)
         {
             _context = context;
             _env = env;
@@ -38,6 +40,7 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.InventoryImplementa
             _rekognitionClient = rekognitionClient;
             _pollyClient = pollyClient;
             _logger = logger;
+            _configuration = configuration;
         }
 
         /*
@@ -51,6 +54,7 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.InventoryImplementa
             string filename = split[0] + BookId.ToString() + Condition + "."+split[1];
             var dir = _env.ContentRootPath;
             string url = "";
+            var bucketName = _configuration["AWS:BucketName"];
 
             HashSet<string> _validImageExtensions = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
         {
@@ -70,15 +74,15 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.InventoryImplementa
 
                 var fileTransferUtility = new TransferUtility(_s3Client);
                 var combine = Path.Combine(dir, filename);
-                await fileTransferUtility.UploadAsync(Path.Combine(dir, filename), ConstantsData.PhotosBucketName);
+                fileTransferUtility.Upload(combine, bucketName);
 
 
-                bool check = await IsImageSafe(ConstantsData.PhotosBucketName, filename);
+                bool check = await IsImageSafe(bucketName, filename);
 
                 if (check)
                 {
                     
-                        url = String.Concat(ConstantsData.CoverPicturesCloudFrontLink, filename);
+                        url = String.Concat(_configuration["AWS:CloudFrontDomain"],"/", filename);
                         return url;
 
                     
@@ -246,6 +250,7 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.InventoryImplementa
        */
         public string GenerateAudioSummary(string BookName, string Summary, string targetLanguageCode, VoiceId voice)
         {
+            var bucketName = _configuration["AWS:BucketName"];
             _logger.LogInformation("Converting text to speech");
             using (_pollyClient)
             {
@@ -262,8 +267,8 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.InventoryImplementa
                 response.AudioStream.CopyTo(output);
                 output.Close();
                 var fileTransferUtility = new TransferUtility(_s3Client);
-                fileTransferUtility.UploadAsync(outputFileName,ConstantsData.AudioBucketName);
-                var url = String.Concat(ConstantsData.AudioFilesCloudFrontLink, BookName);
+                fileTransferUtility.UploadAsync(outputFileName,bucketName);
+                var url = String.Concat(_configuration["AWS:CloudFrontDomain"],"/", BookName);
                 return url;
             }
         }

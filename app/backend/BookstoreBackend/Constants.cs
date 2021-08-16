@@ -36,10 +36,10 @@ namespace BookstoreBackend
         public const string SortByAuthorPhrase = "Author";
         public const string LambdaExpressionType = "shared_code.Models.Book.Price";
         public const string LambdaExpressionPhrase = "OrderDetailPrice";
-        public const string PhotosBucketName = "bookcoverpictures";
-        public const string AudioBucketName = "audiosummary";
-        public RegionEndpoint BucketRegion = RegionEndpoint.USEast1;
-        public const string CoverPicturesCloudFrontLink = "https://dtdt6j0vhq1rq.cloudfront.net/";
+        public const string PhotosBucketName = "testbucketwebapp";
+        public const string AudioBucketName = "testbucketwebapp";
+        public RegionEndpoint BucketRegion = RegionEndpoint.USWest2;
+        public const string CoverPicturesCloudFrontLink = "https://de01ukvgkirpl.cloudfront.net/";
         public const string AudioFilesCloudFrontLink = "https://d3iukz826t8vlr.cloudfront.net/";
         public const int ResizeWidth = 200;
         public const int ResizeHeight = 200;

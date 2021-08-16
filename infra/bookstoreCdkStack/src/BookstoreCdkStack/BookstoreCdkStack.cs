@@ -245,7 +245,13 @@ namespace BookstoreCdkStack
                      ParameterName = $"/{adminParameterNameRoot}/AWS/CloudFrontDomain",
                      StringValue = $"https://{distribution.DistributionDomainName}"
                  });
-            
+
+            new StringParameter(this, "S3BucketNameVersion7", new StringParameterProps
+            {
+                ParameterName = $"/{adminParameterNameRoot}/AWS/BucketName",
+                StringValue = bookstoreBucket.BucketName
+            });
+
             // the app also needs to retrieve the database password, etc, posted automatically
             // to Secrets Manager
             db.Secret.GrantRead(appRole);
