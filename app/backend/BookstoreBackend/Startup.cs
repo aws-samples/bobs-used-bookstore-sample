@@ -100,8 +100,7 @@ namespace BookstoreBackend
            options.ResponseType = Configuration["Authentication:Cognito:ResponseType"];
            options.MetadataAddress = $"https://cognito-idp.{Configuration["Authentication:Cognito:Region"]}.amazonaws.com/{Configuration["AWS:UserPoolId"]}/.well-known/openid-configuration";
            options.ClientId = Configuration["AWS:UserPoolClientId"];
-           
-           options.Authority = "https://bobsusedbookstore.auth.us-west-2.amazoncognito.com";
+           options.Authority = $"https://{Constants.DomainName}.auth.{Configuration["Authentication:Cognito:Region"]}.amazoncognito.com";
            options.GetClaimsFromUserInfoEndpoint = true;
            options.TokenValidationParameters.ValidateIssuer = true;
            
