@@ -6,80 +6,87 @@
 }
 
 
-    <html lang="en">
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="stylesheet" href="https://dtdt6j0vhq1rq.cloudfront.net/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:200,300,400,500,600,700,800,900" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="https://dtdt6j0vhq1rq.cloudfront.net/owl.carousel.min.css">
+    <link rel="stylesheet" href="https://dtdt6j0vhq1rq.cloudfront.net/styles.css">
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>log in</title>
+
+    <link href="css/sb-admin-2.min.css" rel="stylesheet">
+
+</head>
+<style>
+    .main-text {
+        font-family: 'Arvo', serif
+    }
+</style>
+<body class="bg-gradient-primary">
+
+    <div class="container" style="color:blueviolet">
+
+        <!-- Outer Row -->
+        <div class="row justify-content-center">
+
+            <div class="col-xl-10 col-lg-12 col-md-9">
+
+                <div class="card o-hidden border-0 my-5">
+                    <div class="card-body p-0">
+                        <!-- Nested Row within Card Body -->
+                        <div class="row">
+                            <div class="col-lg-6 d-none d-lg-block bg-login-image"><img src="/images/login_book.jpg" height="600" width="500" /></div>
+                            <div class="col-lg-6">
+                                <div class="p-5">
+                                    <div class="text-center">
+                                        <h1 class="h4 mb-4 text-dark">Welcome Back!</h1>
+                                    </div>
+                                    <form method="post">
 
 
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <meta name="description" content="">
-        <meta name="author" content="">
-
-        <title>log in</title>
-
-        <link href="css/sb-admin-2.min.css" rel="stylesheet">
-
-    </head>
-
-    <body class="bg-gradient-primary">
-
-        <div class="container" style="color:blueviolet">
-
-            <!-- Outer Row -->
-            <div class="row justify-content-center">
-
-                <div class="col-xl-10 col-lg-12 col-md-9">
-
-                    <div class="card o-hidden border-0 shadow-lg my-5">
-                        <div class="card-body p-0">
-                            <!-- Nested Row within Card Body -->
-                            <div class="row">
-                                <div class="col-lg-6 d-none d-lg-block bg-login-image" style="background-color:#ebcd22"><img src=" https://dtdt6j0vhq1rq.cloudfront.net/Login.jpeg" height="600" width="500"/></div>
-                                <div class="col-lg-6">
-                                    <div class="p-5">
-                                        <div class="text-center">
-                                            <h1 class="h4 text-gray-900 mb-4" style="color:aqua">Welcome Back!</h1>
+                                        <div asp-validation-summary="All" class="text-danger"></div>
+                                        <div class="form-group text-dark main-text">
+                                            <label asp-for="Input.UserName">Username</label>
+                                            <input asp-for="Input.UserName" class="form-control" required />
+                                            <span asp-validation-for="Input.UserName" class="text-danger"></span>
                                         </div>
-                                        <form method="post">
-                                            <h4>Use a local account to log in.</h4>
-                                            <hr />
-                                            <div asp-validation-summary="All" class="text-danger"></div>
-                                            <div class="form-group">
-                                                <label asp-for="Input.UserName"></label>
-                                                <input asp-for="Input.UserName" class="form-control" />
-                                                <span asp-validation-for="Input.UserName" class="text-danger"></span>
+                                        <div class="form-group text-dark main-text">
+                                            <label asp-for="Input.Password"></label>
+                                            <input asp-for="Input.Password" class="form-control" required />
+                                            <span asp-validation-for="Input.Password" class="text-danger"></span>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="checkbox text-dark main-text">
+                                                <label asp-for="Input.RememberMe">
+                                                    <input asp-for="Input.RememberMe" />
+                                                    @Html.DisplayNameFor(m => m.Input.RememberMe)
+                                                </label>
                                             </div>
-                                            <div class="form-group">
-                                                <label asp-for="Input.Password"></label>
-                                                <input asp-for="Input.Password" class="form-control" />
-                                                <span asp-validation-for="Input.Password" class="text-danger"></span>
-                                            </div>
-                                            <div class="form-group">
-                                                <div class="checkbox">
-                                                    <label asp-for="Input.RememberMe">
-                                                        <input asp-for="Input.RememberMe" />
-                                                        @Html.DisplayNameFor(m => m.Input.RememberMe)
-                                                    </label>
-                                                </div>
 
-                                            </div>
-                                            <div class="form-group">
-                                                <button type="submit" class="btn btn-default" style="background-color: #2D99F9 ;color: #FFFFFF">Log in</button>
-                                            </div>
-                                            
-                                        </form>
-                                        
-                                        <hr>
-                                        <div class="text-center">
-                                            <div class="form-group">
-                                                <p>
-                                                    <a asp-page="./ResetPassword">Forgot your password?</a>
-                                                </p>
-                                                <p>
-                                                    <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Register as a new user</a>
-                                                </p>
-                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <button type="submit" class="btn">Log in</button>
+                                        </div>
+
+                                    </form>
+
+                                    <hr>
+                                    <div class="text-center">
+                                        <div class="form-group">
+                                            <p>
+                                                <a asp-page="./ResetPassword">Forgot your password?</a>
+                                            </p>
+                                            <p>
+                                                <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Register as a new user</a>
+                                            </p>
                                         </div>
                                     </div>
                                 </div>
@@ -89,8 +96,9 @@
                 </div>
             </div>
         </div>
-    </body>
-    </html>
+    </div>
+</body>
+</html>
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }

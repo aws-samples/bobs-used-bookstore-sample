@@ -34,10 +34,6 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.InventoryImplementa
         private readonly IGenericRepository<Genre> _genreRepository;
         private readonly IGenericRepository<Models.Books.Type> _typeRepository;
         private readonly IGenericRepository<Condition> _conditionRepository;
-
-
-
-
         public Inventory(IGenericRepository<Condition> conditionRepository, IGenericRepository<Models.Books.Type> typeRepository, IGenericRepository<Genre> genreRepository, IGenericRepository<Publisher> publisherRepository, ApplicationDbContext context, ISearchRepository searchRepository, IRekognitionNPollyRepository rekognitionPollyRepository, ILogger<Inventory> logger)
         {
             _context = context;

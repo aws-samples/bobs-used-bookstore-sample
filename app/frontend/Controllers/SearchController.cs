@@ -98,8 +98,8 @@ namespace BobBookstore.Controllers
                                 TypeName = b.Type.TypeName,
                                 PublisherName = b.Publisher.Name,
                                 Url = b.FrontUrl,
-                                Prices = pricesQuery.Where(p => p.Book.Book_Id == b.Book_Id).ToList(),
-                                MinPrice = pricesQuery.Where(p => p.Book.Book_Id == b.Book_Id).FirstOrDefault().ItemPrice
+                               /* Prices = pricesQuery.Where(p => p.Book.Book_Id == b.Book_Id).ToList(),
+                                MinPrice = pricesQuery.Where(p => p.Book.Book_Id == b.Book_Id).FirstOrDefault().ItemPrice*/
                             });
 
                 // sort query

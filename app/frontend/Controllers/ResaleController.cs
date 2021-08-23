@@ -45,9 +45,7 @@ namespace BookstoreFrontend.Controllers
         {
             var user = await _userManager.GetUserAsync(User);
             var id = user.Attributes[CognitoAttribute.Sub.AttributeName];
-
             var resaleBooks = _resaleRepository.Get(c => c.Customer.Customer_Id == id, includeProperties: "Customer,ResaleStatus");
-
             return View(resaleBooks);
         }
 
@@ -69,14 +67,12 @@ namespace BookstoreFrontend.Controllers
             {
                 var user = await _userManager.GetUserAsync(User);
                 var id = user.Attributes[CognitoAttribute.Sub.AttributeName];
-
                 var customer = _customerRepository.Get(id);
                 Resale resale = _mapper.Map<Resale>(resaleViewModel);
                 resale.Customer = customer;
                 resale.ResaleStatus = _resaleStatusRepository.Get(c => c.Status == ResaleStatusPending).FirstOrDefault();
                 _resaleRepository.Add(resale);
                 _resaleRepository.Save();
-
                 return RedirectToAction(nameof(Index));
             }
             return View();
