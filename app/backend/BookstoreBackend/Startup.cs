@@ -47,6 +47,7 @@ namespace BookstoreBackend
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDefaultAWSOptions(Configuration.GetAWSOptions());
+            services.AddDefaultAWSOptions(Configuration.GetAWSOptions());
             services.AddAWSService<IAmazonS3>();
             services.AddAWSService<IAmazonPolly>();
             services.AddAWSService<Amazon.Rekognition.IAmazonRekognition>();

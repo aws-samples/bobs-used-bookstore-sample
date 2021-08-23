@@ -138,8 +138,7 @@ namespace BobBookstore.Controllers
         public async Task<IActionResult> CheckOut(string[] fruits,string[] IDs,string[] quantity,string[] bookF,string[]priceF)
         {
             //set the origin value
-            long statueId = 1;
-            var orderStatue = _orderStatusRepository.Get(statueId);
+            var orderStatue = _orderStatusRepository.Get(s => s.Status == ConstantsData.OrderStatusJustPlaced).FirstOrDefault();
             var user = await _userManager.GetUserAsync(User);
             var userId = user.Attributes[CognitoAttribute.Sub.AttributeName];
             var customer = _customerRepository.Get(userId);

@@ -12,11 +12,16 @@ using BobsBookstore.DataAccess.Repository.Interface.SearchImplementations;
 using BobsBookstore.DataAccess.Repository.Implementation.SearchImplementation;
 using Amazon.Extensions.NETCore.Setup;
 using System;
+using Amazon.S3;
+using Amazon.Polly;
 using Amazon.SecretsManager;
 using Amazon.SecretsManager.Model;
 using BobsBookstore.Models.AdminUser;
 using System.Text.Json;
 using Microsoft.Data.SqlClient;
+using BobsBookstore.DataAccess.Repository.Interface.InventoryInterface;
+using BobsBookstore.DataAccess.Repository.Implementation.InventoryImplementation;
+using BobsBookstore.DataAccess.Repository.Interface.Implementations;
 
 namespace BobBookstore
 {
@@ -42,10 +47,19 @@ namespace BobBookstore
             var connectionString = GetConnectionString(awsOptions);
             services.AddDbContext<ApplicationDbContext>(options =>
             options.UseSqlServer(connectionString));
-
+            services.AddAWSService<IAmazonS3>();
+            services.AddAWSService<IAmazonPolly>();
+            services.AddAWSService<Amazon.Rekognition.IAmazonRekognition>();
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             services.AddTransient<IBookSearch, BookSearchRepository>();
             services.AddTransient<IPriceSearch, PriceSearchRepository>();
+            services.AddTransient<IInventory, Inventory>();
+            services.AddTransient<IRekognitionNPollyRepository, RekognitionNPollyRepository>();
+            services.AddTransient<ISearchRepository, SearchRepository>();
+            services.AddTransient<ISearchDatabaseCalls, SearchDatabaseCalls>();
+            services.AddAutoMapper(typeof(Startup));
+
+
 
 
             //new part

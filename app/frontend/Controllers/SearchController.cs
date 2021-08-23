@@ -46,8 +46,9 @@ namespace BobBookstore.Controllers
 
             if (String.IsNullOrEmpty(searchString))
             {
-                var prices = _priceRepository.Get(p => p.Quantity > 0 &&
-                             p.Active);
+                /* var prices = _priceRepository.Get(p => p.Quantity > 0 &&
+                              p.Active);*/
+                var prices = _priceRepository.GetAll();
 
                 var books = _bookRepository.Get(includeProperties: "Genre,Type,Publisher")
                     .Select(b => new BookViewModel

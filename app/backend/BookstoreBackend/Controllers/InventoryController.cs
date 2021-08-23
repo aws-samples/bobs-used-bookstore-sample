@@ -551,21 +551,33 @@ namespace BookstoreBackend.Controllers
         {
             _logger.LogInformation("Dashboard Display");
 
-           // _emailSender.SendInventoryLowEmail(_Inventory.ScreenInventory(), Constants.BoBsEmailAddress);
+            // _emailSender.SendInventoryLowEmail(_Inventory.ScreenInventory(), Constants.BoBsEmailAddress);
             try
             {
                 var stats = _Inventory.DashBoard(numberOfDetails);
-                ViewData["ordes_top_genre"] = stats[0].First().Key;
-                ViewData["ordes_top_genre_count"] = stats[0].First().Value;
 
-                ViewData["ordes_top_type"] = stats[1].First().Key;
-                ViewData["ordes_top_type_count"] = stats[1].First().Value;
+                if (stats[0].Count()!=0) { 
+                    ViewData["ordes_top_genre"] = stats[0].First().Key;
+                    ViewData["ordes_top_genre_count"] = stats[0].First().Value;
+                }
 
-                ViewData["ordes_top_publisher"] = stats[2].First().Key;
-                ViewData["ordes_top_publisher_count"] = stats[2].First().Value;
+                if (stats[1].Count()!=0)
+                { 
+                    ViewData["ordes_top_type"] = stats[1].First().Key;
+                    ViewData["ordes_top_type_count"] = stats[1].First().Value;
+                }
 
-                ViewData["ordes_top_name"] = stats[3].First().Key;
-                ViewData["ordes_top_name_count"] = stats[3].First().Value;
+                if (stats[2].Count != 0)
+                {
+                    ViewData["ordes_top_publisher"] = stats[2].First().Key;
+                    ViewData["ordes_top_publisher_count"] = stats[2].First().Value;
+                }
+
+                if (stats[1].Count() != 0)
+                {
+                    ViewData["ordes_top_name"] = stats[3].First().Key;
+                    ViewData["ordes_top_name_count"] = stats[3].First().Value;
+                }
 
                 ViewData["orders_genre"] = stats[0];
                 ViewData["orders_type"] = stats[1];

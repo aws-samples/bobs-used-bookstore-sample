@@ -2,7 +2,13 @@
 
 
     var orders_genre = (Dictionary<string, int>)ViewData["orders_genre"];
-
+    List<string> listKeys = new List<string>();
+    List<int> listValues = new List<int>();
+    foreach (KeyValuePair<string, int> kvp in @orders_genre)
+    {
+        listKeys.Add(kvp.Key);
+        listValues.Add(kvp.Value);
+    }
 
 
 }
@@ -18,9 +24,11 @@
         $(function () {
     var chartName = "genreChart";
             var ctx = document.getElementById(chartName).getContext('2d');
-
+            var labelList = JSON.parse('@Html.Raw(Json.Serialize(@listKeys))');
+            var dataList = JSON.parse('@Html.Raw(Json.Serialize(@listValues))');
         var data = {
-            labels: ["@orders_genre.Keys.ElementAt(0)"],@*,"@orders_genre.Keys.ElementAt(1)","@orders_genre.Keys.ElementAt(2)","@orders_genre.Keys.ElementAt(3)","@orders_genre.Keys.ElementAt(4)"*@
+            labels: labelList,
+                
                 datasets: [{
                     label: "Top 5 Genres",
                     backgroundColor: [
@@ -52,7 +60,8 @@
                         'rgba(255, 0, 255)'
                     ],
                     borderWidth: 1,
-                    data: [@orders_genre.Values.ElementAt(0)] @*@orders_genre.Values.ElementAt(1),@orders_genre.Values.ElementAt(2),@orders_genre.Values.ElementAt(3),@orders_genre.Values.ElementAt(4)*@
+                    data: dataList
+                     
     }]
             };
 

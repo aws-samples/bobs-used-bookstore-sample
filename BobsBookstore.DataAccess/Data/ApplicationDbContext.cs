@@ -38,6 +38,20 @@ namespace BobsBookstore.DataAccess.Data
         public DbSet<Resale> Resale { get; set; }
         public DbSet<ResaleStatus> ResaleStatus { get; set; }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<ResaleStatus>().HasData(new ResaleStatus { ResaleStatus_Id = 1, Status = "Pending Approval" });
+            modelBuilder.Entity<ResaleStatus>().HasData(new ResaleStatus { ResaleStatus_Id = 2, Status = "Approved/Awaiting Shipment" });
+            modelBuilder.Entity<ResaleStatus>().HasData(new ResaleStatus { ResaleStatus_Id = 3, Status = "Rejected" });
+            modelBuilder.Entity<ResaleStatus>().HasData(new ResaleStatus { ResaleStatus_Id = 4, Status = "Received" });
+
+            modelBuilder.Entity<OrderStatus>().HasData(new OrderStatus { OrderStatus_Id = 1, Status = "Just Placed", Position=1 });
+            modelBuilder.Entity<OrderStatus>().HasData(new OrderStatus { OrderStatus_Id = 2, Status = "En Route", Position = 2 });
+            modelBuilder.Entity<OrderStatus>().HasData(new OrderStatus { OrderStatus_Id = 3, Status = "Pending", Position = 3 });
+            modelBuilder.Entity<OrderStatus>().HasData(new OrderStatus { OrderStatus_Id = 4, Status = "Delivered", Position = 4 });
+
+
+        }
 
     }
 

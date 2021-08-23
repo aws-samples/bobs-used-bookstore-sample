@@ -14,16 +14,22 @@ namespace BobBookstore
             
         public static IHostBuilder CreateHostBuilder(string[] args) =>
              Host.CreateDefaultBuilder(args)
+            
                  .ConfigureAppConfiguration((context, builder) =>
                  {
 
                      builder.AddSystemsManager("/BobsUsedBookCustomerStoreVersion9/");
                      builder.AddSystemsManager("/bookstorecdkVersion9/");
+                     /* builder.AddSystemsManager("/BobsUsedBookCustomerStoreversion25/");
+                      builder.AddSystemsManager("/bookstorecdkversion25/");*/
 
                  })
               .ConfigureWebHostDefaults(webBuilder =>
               {
-                  webBuilder.UseStartup<Startup>();
+                  webBuilder
+                  .UseSetting("https_port", "5000")
+                  .UseStartup<Startup>();
+                  
               });
     }
 }

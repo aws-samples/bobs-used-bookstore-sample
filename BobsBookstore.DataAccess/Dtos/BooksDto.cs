@@ -6,7 +6,6 @@ namespace BobsBookstore.DataAccess.Dtos
 {
     public class BooksDto
     {
-
         public string BookName { get; set; }
         public string ISBN { get; set; }
         public long BookId { get; set; }
@@ -38,5 +37,6 @@ namespace BobsBookstore.DataAccess.Dtos
         public DateTime UpdatedOn { get; set; }
 
         public bool Active { get; set; }
+
     }
 }

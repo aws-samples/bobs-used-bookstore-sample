@@ -2,9 +2,14 @@
 
 
     var orders_publisher = (Dictionary<string, int>)ViewData["orders_publisher"];
+    List<string> listKeys = new List<string>();
+    List<int> listValues = new List<int>();
 
-
-
+    foreach (KeyValuePair<string, int> kvp in @orders_publisher)
+    {
+        listKeys.Add(kvp.Key);
+        listValues.Add(kvp.Value);
+    }
 }
 <canvas id="publisherChart" width="250" height="250"></canvas>
 
@@ -16,11 +21,14 @@
 <script type="text/javascript">
 
         $(function () {
-    var chartName = "publisherChart";
+            var chartName = "publisherChart";
+            var labelList = JSON.parse('@Html.Raw(Json.Serialize(@listKeys))');
+            var dataList = JSON.parse('@Html.Raw(Json.Serialize(@listValues))');
+
             var ctx = document.getElementById(chartName).getContext('2d');
 
         var data = {
-                labels: ["@orders_publisher.Keys.ElementAt(0)"],
+                labels: labelList,
                 datasets: [{
                     label: "Top 5 Genres",
                     backgroundColor: [
@@ -52,7 +60,7 @@
                         'rgba(255, 0, 255)'
                     ],
                     borderWidth: 1,
-                    data: [@orders_publisher.Values.ElementAt(0)]
+                    data: dataList
     }]
             };
 

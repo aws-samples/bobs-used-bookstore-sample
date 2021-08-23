@@ -45,10 +45,12 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Search" asp-action="Index">Search Books</a>
                         </li>
-
+                        @if (SignInManager.IsSignedIn(User))
+                        {
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Resale" asp-action="Index">Sell Books</a>
                         </li>
+                        }
 
                         <li><p>                       </p></li>
 

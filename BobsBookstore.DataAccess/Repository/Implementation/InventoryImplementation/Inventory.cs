@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using Type = System.Type;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using SixLabors.ImageSharp;
@@ -14,6 +13,7 @@ using BobsBookstore.DataAccess.Repository.Interface.InventoryInterface;
 using BobsBookstore.DataAccess.Repository.Interface.Implementations;
 using BobsBookstore.DataAccess.Repository.Interface.SearchImplementations;
 using BobsBookstore.DataAccess.Dtos;
+using BobsBookstore.DataAccess.Repository.Interface;
 
 namespace BobsBookstore.DataAccess.Repository.Implementation.InventoryImplementation
 {
@@ -30,14 +30,24 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.InventoryImplementa
         private readonly IRekognitionNPollyRepository _rekognitionNPollyRepository;
         private readonly ISearchRepository _searchRepo;
         private readonly ILogger<Inventory> _logger;
+        private readonly IGenericRepository<Publisher> _publisherRepository;
+        private readonly IGenericRepository<Genre> _genreRepository;
+        private readonly IGenericRepository<Models.Books.Type> _typeRepository;
+        private readonly IGenericRepository<Condition> _conditionRepository;
 
 
-        public Inventory(ApplicationDbContext context, ISearchRepository searchRepository, IRekognitionNPollyRepository rekognitionPollyRepository, ILogger<Inventory> logger)
+
+
+        public Inventory(IGenericRepository<Condition> conditionRepository, IGenericRepository<Models.Books.Type> typeRepository, IGenericRepository<Genre> genreRepository, IGenericRepository<Publisher> publisherRepository, ApplicationDbContext context, ISearchRepository searchRepository, IRekognitionNPollyRepository rekognitionPollyRepository, ILogger<Inventory> logger)
         {
             _context = context;
             _searchRepo = searchRepository;
             _rekognitionNPollyRepository = rekognitionPollyRepository;
             _logger = logger;
+            _publisherRepository = publisherRepository;
+            _genreRepository = genreRepository;
+            _typeRepository = typeRepository;
+            _conditionRepository = conditionRepository;
         }
 
         public BookDetailsDto GetBookByID(long bookId)
@@ -335,16 +345,43 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.InventoryImplementa
                 Book book = new Book();
                 Price price = new Price();
 
-                var publisherdata = _context.Publisher.Where(publisher => publisher.Name == booksDto.PublisherName).ToList();
-                var genredata = _context.Genre.Where(genre => genre.Name == booksDto.Genre).ToList();
-                var typedata = _context.Type.Where(type => type.TypeName == booksDto.BookType).ToList();
-                var conditiondata = _context.Condition.Where(condition => condition.ConditionName == booksDto.BookCondition).ToList();
-
+                var publisherData = _context.Publisher.Where(publisher => publisher.Name == booksDto.PublisherName).FirstOrDefault();
+                if (publisherData == null)
+                {
+                    publisherData = new Publisher();
+                    publisherData.Name = booksDto.PublisherName;
+                    _publisherRepository.Add(publisherData);
+                    _publisherRepository.Save();
+                }
+                var genreData = _context.Genre.Where(genre => genre.Name == booksDto.Genre).FirstOrDefault();
+                if (genreData == null)
+                {
+                    genreData = new Genre();
+                    genreData.Name = booksDto.Genre;
+                    _genreRepository.Add(genreData);
+                    _genreRepository.Save();
+                }
+                var typeData = _typeRepository.Get(type => type.TypeName == booksDto.BookType).FirstOrDefault();
+                if (typeData == null)
+                {
+                    typeData = new Models.Books.Type();
+                    typeData.TypeName = booksDto.BookType;
+                    _typeRepository.Add(typeData);
+                    _typeRepository.Save();
+                }
+                var conditionData = _context.Condition.Where(condition => condition.ConditionName == booksDto.BookCondition).FirstOrDefault();
+                if (conditionData == null)
+                {
+                    conditionData = new Condition();
+                    conditionData.ConditionName = booksDto.PublisherName;
+                    _conditionRepository.Add(conditionData);
+                    _conditionRepository.Save();
+                }
                 book.Name = booksDto.BookName;
-                book.Type = typedata[0];
-                book.Genre = genredata[0];
+                book.Type = typeData;
+                book.Genre = genreData;
                 book.ISBN = booksDto.ISBN;
-                book.Publisher = publisherdata[0];
+                book.Publisher = publisherData;
                 book.FrontUrl = frontUrl;
                 book.BackUrl = backUrl;
                 book.LeftUrl = leftUrl;
@@ -353,7 +390,7 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.InventoryImplementa
                 book.AudioBookUrl = audioBookUrl;
                 book.Author = booksDto.Author;
 
-                price.Condition = conditiondata[0];
+                price.Condition = conditionData;
                 price.ItemPrice = booksDto.Price;
                 price.Book = book;
                 price.Quantity = booksDto.Quantity;
@@ -439,7 +476,7 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.InventoryImplementa
 
         private List<FullBookDto> RetrieveSortedBookList(List<FullBookDto> finalBooksList, string sortBy, string ascDesc)
         {
-            var parameterExpression2 = Expression.Parameter(Type.GetType("BobsBookstore.DataAccess.Dtos.FullBookDto"), "fullbook");
+            var parameterExpression2 = Expression.Parameter(System.Type.GetType("BobsBookstore.DataAccess.Dtos.FullBookDto"), "fullbook");
 
             Expression property = null;
 
@@ -539,7 +576,7 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.InventoryImplementa
 
             searchBy = " " + searchBy;
 
-            var parameterExpression = Expression.Parameter(Type.GetType("BobsBookstore.Models.Books.Price"), "order");
+            var parameterExpression = Expression.Parameter(System.Type.GetType("BobsBookstore.Models.Books.Price"), "order");
 
 
             var expression = _searchRepo.ReturnExpression(parameterExpression, searchBy, searchFilter);

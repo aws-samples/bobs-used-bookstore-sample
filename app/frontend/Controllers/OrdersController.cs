@@ -33,6 +33,7 @@ namespace BobBookstore.Controllers
             _orderRepository = orderRepository;
             _orderDetailRepository = orderDetailRepository;
         }
+       
         public async Task<IActionResult> Index()
         {
             if (_SignInManager.IsSignedIn(User))

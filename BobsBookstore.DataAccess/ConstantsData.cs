@@ -27,5 +27,8 @@ public class ConstantsData
     public RegionEndpoint BucketRegion = RegionEndpoint.USWest2;
     public const int ResizeWidth = 200;
     public const int ResizeHeight = 200;
+    public const string ResaleStatusPending = "Pending Approval";
+    public const string ResaleStatusApproved = "Approved/Awaiting Shipment";
+    public const string ResaleStatusRejected = "Rejected";
 }
     

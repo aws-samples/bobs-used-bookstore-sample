@@ -267,6 +267,7 @@ namespace BobBookstore.Areas.Identity.Pages.Account.Manage
             user.Attributes[CognitoAttribute.PhoneNumber.AttributeName] = Input.PhoneNumber;
             user.Attributes[CognitoAttribute.FamilyName.AttributeName] = Input.FamilyName;
             user.Attributes[CognitoAttribute.GivenName.AttributeName] = Input.GivenName;
+            user.Attributes[CognitoAttribute.PhoneNumber.AttributeName] = Input.PhoneNumber;
             user.Attributes["custom:AddressLine1"] = Input.AddressLine1;
             user.Attributes["custom:AddressLine2"] = Input.AddressLine2;
             user.Attributes["custom:City"] = Input.City;

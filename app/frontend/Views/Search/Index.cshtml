@@ -3,17 +3,6 @@
     ViewData["Title"] = "Search for books";
 }
 
-@*<head>
-    <meta charset="UTF-8">
-    <title>Book Store</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="theme-color" content="#03a6f3">
-    <link rel="stylesheet" href="~/css/bootstrap.min.css">
-    <link href="https://fonts.googleapis.com/css?family=Montserrat:200,300,400,500,600,700,800,900" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" type="text/css" href="~/css/owl.carousel.min.css">
-    <link rel="stylesheet" href="~/css/styles.css">
-</head>*@
 
 <head>
     <meta charset="UTF-8">
@@ -26,35 +15,35 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="https://dtdt6j0vhq1rq.cloudfront.net/owl.carousel.min.css">
     <link rel="stylesheet" href="https://dtdt6j0vhq1rq.cloudfront.net/styles.css">
+     <link rel="stylesheet" href="/css/Line.css">
 
 </head>
 
 <h2>Search for Books</h2>
-
+</br>
 
 <form asp-controller="Search" asp-action="Index" method="get">
-        
-    <div class="form-group mt-5">
-        <label class="col-sm-2 col-form-label">Sort By:</label>
-        <select id="selectId" class="col-2 custom-select form-control" name="SortBy" onchange="javascript:this.form.submit()">
-            <option value="Name">Name</option>
-            <option value="Genre">Genre</option>
-            <option value="Type">Type</option>
-            <option value="PriceAsc">Price (ascending)</option>
-            <option value="PriceDesc">Price (descending)</option>
-        </select>
-    </div>
-    <div class="form-group">
-        <input class="form-control col-md-3" type="text" name="SearchString" value="@ViewBag.currentFilter" />
-        <button type="submit" class="btn btn-primary" value="Search">Search</button>
-    </div>
-        
 
-
-        
-
+        <div class="form-row">
+            <div class="form-group col-md-6">
+            <input class="form-control" type="text" name="SearchString" value="@ViewBag.currentFilter" />
+            <button type="submit" class="btn btn-primary" value="Search">Search</button>
     
-</form>
+            </div>
+      
+                <div class="form-group col-md-6">
+                    <select id="selectId" class="form-control" name="SortBy" onchange="javascript:this.form.submit()">
+                        <option value="Name">Name</option>
+                        <option value="Genre">Genre</option>
+                        <option value="Type">Type</option>
+                        <option value="PriceAsc">Price (ascending)</option>
+                        <option value="PriceDesc">Price (descending)</option>
+                    </select>
+                </div>
+         
+        </div>
+        
+    </form>
 
 @if (Model != null && Model.Count == 0)
 {
@@ -65,55 +54,52 @@
 else if (Model != null)
 {
     <body>
+        
         <section class="static about-sec">
             <div class="container">
                 <h2>Search Results:</h2>
+                
+                                <div class="recent-book-sec">
+                                    <div class="row">
 
-                <div class="recent-book-sec">
-                    <div class="row">
-
-                        @foreach (var item in Model.Data)
-                        {
+                                        @foreach (var item in Model.Data)
+                                        {
 
 
-                            <div class="col-md-3">
-                                <div class="item">
-                                    <img src="@Html.DisplayFor(modelItem => item.Url)" alt="img">
-                                    <h3>@Html.DisplayFor(modelitem => item.BookName)</h3>
-                                    @if (item.Prices.Count != 0)
-                                    {
-                                        <h6><span class="price">$@item.MinPrice </span> </h6>
-                                    }
-                                    else
-                                    {
-                                        <h6>Out Of Stock</h6>
-                                    }
-                                    <div class="hover">
-                                        <form asp-controller="Search" asp-action="Detail" method="get">
-                                            <input type="hidden" name="id" value="@item.BookId" />
-                                            <input type="submit" value="details" />
-                                        </form>
-
-                                    </div>
+                        <div class="col-md-3">
+                            <div class="item">
+                                <a asp-controller="Search" asp-action="Detail" asp-route-id="@item.BookId"><img src="@Html.DisplayFor(modelItem => item.Url)" alt="img" class="book_image"> </a>
+                                <h3>@Html.DisplayFor(modelitem => item.BookName)</h3>
+                                @if (item.Prices.Count != 0)
+                                {
+            <h6><span class="price">$@item.MinPrice </span> </h6> }
+                                else
+                                {
+            <h6>Out Of Stock</h6>}
+                                <div class="hover">
+                                    @*<form asp-controller="Search" asp-action="Detail" method="get">
+                                        <input type="hidden" name="id" value="@item.BookId" />
+                                        <input type="submit" class="btn btn-sm" value="details" />
+                                    </form>*@
 
                                 </div>
 
                             </div>
-                        }
-                    </div>
-                </div>
 
-                <div>
-                    <ul class="pagination">
-                        @for (var i = 1; i <= (int)Math.Ceiling(Model.Count / 10.0); i++)
-                        {
-                            <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
-                                <a asp-route-page="@i" asp-route-sortBy="@ViewBag.CurrentSort" asp-route-searchstring="@ViewBag.currentFilter" class="page-link">@i</a>
-                            </li>
-                        }
-                    </ul>
-                </div>
-        </section>
+                        </div>}
+                                    </div>
+                                </div>
+
+                                                <div>
+                                                    <ul class="pagination">
+                                                        @for (var i = 1; i <= (int)Math.Ceiling(Model.Count / 10.0); i++)
+                                                        {
+                                        <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+                                            <a asp-route-page="@i" asp-route-sortBy="@ViewBag.CurrentSort" asp-route-searchstring="@ViewBag.currentFilter" class="page-link">@i</a>
+                                        </li>}
+                                                    </ul>
+                                                </div>
+</section>
 
         <script src="js/jquery.min.js"></script>
         <script src="js/bootstrap.min.js"></script>

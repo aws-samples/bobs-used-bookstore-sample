@@ -12,6 +12,7 @@
     <PackageReference Include="Amazon.AspNetCore.Identity.Cognito" Version="2.2.0" />
     <PackageReference Include="Amazon.Extensions.CognitoAuthentication" Version="2.2.1" />
     <PackageReference Include="Amazon.Extensions.Configuration.SystemsManager" Version="2.1.0" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.7" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="5.0.7" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.7" />

@@ -30,13 +30,18 @@
         <div>
             <div>
                 <h1>
-                   Resale Books
+                    Resale Books
                 </h1>
 
             </div>
-            <p>
-                <a asp-action="Create">Sell Book</a>
-            </p>
+    
+            <div class="col-12 text-right">
+                <form asp-controller="Resale" asp-action="Create" method="get">
+
+                    <button class="btn" name="id" type="submit">Resell Book</button>
+                </form>
+            </div>
+
             <table class="table">
                 <thead>
                     <tr>
@@ -65,21 +70,6 @@
                             Book Price
                         </th>
                         <th>
-                            Front Cover
-                        </th>
-                        <th>
-                            Back Cover
-                        </th>
-                        <th>
-                            Left Cover
-                        </th>
-                        <th>
-                            Right Cover
-                        </th>
-                        <th>
-                            Audio Book Url
-                        </th>
-                        <th>
                             Status
                         </th>
 
@@ -88,54 +78,36 @@
                 <tbody>
                     @foreach (var item in Model)
                     {
-                    <tr>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.BookName)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Author)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.GenreName)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.PublisherName)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.TypeName)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.ISBN)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.ConditionName)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.BookPrice)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.FrontUrl)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.BackUrl)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.LeftUrl)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.RightUrl)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.AudioBookUrl)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.ResaleStatus.Status)
-                        </td>
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.BookName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Author)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.GenreName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PublisherName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TypeName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ISBN)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ConditionName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.BookPrice)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ResaleStatus.Status)
+            </td>
 
-                    </tr>
-
-
-                 }
+        </tr>}
                 </tbody>
             </table>
         </div>

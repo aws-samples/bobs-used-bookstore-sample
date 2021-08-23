@@ -2,6 +2,13 @@
 
 
     var orders_name = (Dictionary<string, int>)ViewData["orders_name"];
+    List<string> listKeys = new List<string>();
+    List<int> listValues = new List<int>();
+    foreach (KeyValuePair<string, int> kvp in @orders_name)
+    {
+        listKeys.Add(kvp.Key);
+        listValues.Add(kvp.Value);
+    }
 
 
 
@@ -19,9 +26,10 @@
         $(function () {
     var chartName = "nameChart";
             var ctx = document.getElementById(chartName).getContext('2d');
-
+            var labelList = JSON.parse('@Html.Raw(Json.Serialize(@listKeys))');
+            var dataList = JSON.parse('@Html.Raw(Json.Serialize(@listValues))');
         var data = {
-                labels: ["@orders_name.Keys.ElementAt(0)"],
+            labels: labelList,
                 datasets: [{
                     label: "Top 5 Genres",
                     backgroundColor: [
@@ -53,7 +61,7 @@
                         'rgba(255, 0, 255)'
                     ],
                     borderWidth: 1,
-                    data: [@orders_name.Values.ElementAt(0)]
+                    data: dataList
     }]
             };
 

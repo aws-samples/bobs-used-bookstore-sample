@@ -11,16 +11,16 @@ namespace DIAndLoggingTestApp
     {
         public static void Main(string[] args)
         {
-            var logger = NLog.Web.NLogBuilder.ConfigureNLog("NLog.config").GetCurrentClassLogger();
+            //var logger = NLog.Web.NLogBuilder.ConfigureNLog("NLog.config").GetCurrentClassLogger();
             try
             {
-                logger.Debug("init main");
+                //logger.Debug("init main");
                 CreateHostBuilder(args).Build().Run();
             }
             catch (Exception exception)
             {
                 //NLog: catch setup errors
-                logger.Error(exception, "Stopped program because of exception");
+                //logger.Error(exception, "Stopped program because of exception");
                 throw;
             }
             finally
@@ -37,17 +37,20 @@ namespace DIAndLoggingTestApp
 
                builder.AddSystemsManager("/BobsUsedBookAdminStoreVersion9/");
                builder.AddSystemsManager("/bookstorecdkVersion9/");
+              
+              //builder.AddSystemsManager("/BobsUsedBookAdminStoreversion25/");
+              // builder.AddSystemsManager("/bookstorecdkversion25/");
 
            })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<BookstoreBackend.Startup>();
-                })
-                .ConfigureLogging(logging =>
+                });
+               /* .ConfigureLogging(logging =>
                 {
                     logging.ClearProviders();
                     logging.SetMinimumLevel(Microsoft.Extensions.Logging.LogLevel.Trace);
                 })
-                .UseNLog();    // NLog: Setup NLog for Dependency injection
+                .UseNLog();  */  // NLog: Setup NLog for Dependency injection
     }
 }

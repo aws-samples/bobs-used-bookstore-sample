@@ -48,7 +48,11 @@ namespace BookstoreBackend
         public const string ResaleStatusPending = "Pending Approval";
         public const string ResaleStatusApproved = "Approved/Awaiting Shipment";
         public const string ResaleStatusRejected = "Rejected";
-        public const string DomainName = "bobsusedbookstore";
+        public const string ResaleStatusReceived = "Received";
+        public const string ResaleStatusPaymentCompleted = "Payment Completed";
+
+
+        public const string DomainName = "bobsbookstoreVersion9";
 
     }
 }

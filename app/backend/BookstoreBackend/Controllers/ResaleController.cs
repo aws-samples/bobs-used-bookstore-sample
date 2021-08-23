@@ -1,5 +1,9 @@
-﻿using BobsBookstore.DataAccess.Repository.Interface;
+﻿using AutoMapper;
+using BobsBookstore.DataAccess.Dtos;
+using BobsBookstore.DataAccess.Repository.Interface;
+using BobsBookstore.DataAccess.Repository.Interface.InventoryInterface;
 using BobsBookstore.Models.Books;
+using BookstoreBackend.ViewModel.ResaleBooks;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Linq;
@@ -17,10 +21,12 @@ namespace BookstoreBackend.Controllers
         private readonly IGenericRepository<Book> _bookRepository;
         private readonly IGenericRepository<Condition> _conditionRepository;
         private readonly IGenericRepository<Price> _priceRepository;
+        private readonly IInventory _inventory;
+        private IMapper _mapper;
 
 
 
-        public ResaleController(IGenericRepository<Price> priceRepository, IGenericRepository<Condition> conditionRepository, IGenericRepository<Book> bookRepository, IGenericRepository<Type> typeRepository, IGenericRepository<Genre> genreRepository, IGenericRepository<Publisher> publisherRepository, IGenericRepository<ResaleStatus> resaleStatusRepository, IGenericRepository<Resale> resaleRepository)
+        public ResaleController(IInventory inventory, IMapper mapper,IGenericRepository<Price> priceRepository, IGenericRepository<Condition> conditionRepository, IGenericRepository<Book> bookRepository, IGenericRepository<Type> typeRepository, IGenericRepository<Genre> genreRepository, IGenericRepository<Publisher> publisherRepository, IGenericRepository<ResaleStatus> resaleStatusRepository, IGenericRepository<Resale> resaleRepository)
         {
 
             _resaleRepository = resaleRepository;
@@ -31,6 +37,8 @@ namespace BookstoreBackend.Controllers
             _bookRepository = bookRepository;
             _conditionRepository = conditionRepository;
             _priceRepository = priceRepository;
+            _mapper = mapper;
+            _inventory = inventory;
         }
         public IActionResult Index()
         {
@@ -53,6 +61,28 @@ namespace BookstoreBackend.Controllers
             resaleBook.ResaleStatus = _resaleStatusRepository.Get(c => c.Status == Constants.ResaleStatusRejected).FirstOrDefault();
             _resaleRepository.Save();
             return RedirectToAction("Index");
+        }
+        [HttpGet]
+        public IActionResult AddResaleBookDetails(long id)
+        {
+            /* ViewData["ResaleBooks"] = _resaleRepository.Get(c => c.Resale_Id == id, includeProperties: "ResaleStatus").FirstOrDefault();
+             ViewData["Genre"] = _genreRepository.GetAll();*/
+            var resaleBooks = _resaleRepository.Get(c => c.Resale_Id == id, includeProperties: "ResaleStatus,Customer").FirstOrDefault();
+            ResaleViewModel resaleViewModel = _mapper.Map<ResaleViewModel>(resaleBooks);
+            return View(resaleViewModel);
+        }
+
+        [HttpPost]
+        public IActionResult AddResaleBookDetails(ResaleViewModel resaleViewModel)
+        {
+            resaleViewModel.ConditionName = resaleViewModel.ConditionName;
+            //ViewData["ResaleBooks"] = _resaleRepository.Get(c => c.Resale_Id == resaleViewModel.ResaleId, includeProperties: "ResaleStatus").FirstOrDefault();
+            BooksDto booksDto = _mapper.Map<BooksDto>(resaleViewModel);
+            _inventory.AddToTables(booksDto);
+            Resale resale = _resaleRepository.Get(c => c.Resale_Id == resaleViewModel.Resale_Id, includeProperties: "ResaleStatus").FirstOrDefault();
+            resale.ResaleStatus = _resaleStatusRepository.Get(s => s.Status == "Received").FirstOrDefault();
+            _resaleStatusRepository.Save();
+            return RedirectToAction("Index", new { resale = resale});
         }
 
         public IActionResult ConfirmResale(long id)
@@ -138,10 +168,17 @@ namespace BookstoreBackend.Controllers
         public IActionResult Details(long id)
         {
             var resaleBooks = _resaleRepository.Get(c => c.Resale_Id == id, includeProperties: "ResaleStatus,Customer").FirstOrDefault();
-
-            return View(resaleBooks);
+            ResaleViewModel resaleViewModel = _mapper.Map<ResaleViewModel>(resaleBooks);
+            return View(resaleViewModel);
         }
-
+        public IActionResult PaymentDone(long id)
+        {
+            var resaleBook = _resaleRepository.Get(c => c.Resale_Id == id, includeProperties: "ResaleStatus").FirstOrDefault();
+            resaleBook.ResaleStatus = _resaleStatusRepository.Get(c => c.Status == Constants.ResaleStatusPaymentCompleted).FirstOrDefault();
+            _resaleRepository.Update(resaleBook);
+            _resaleRepository.Save();
+            return RedirectToAction("Index");
+        }
 
         }
 }
