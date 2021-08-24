@@ -40,10 +40,10 @@
 </head>
 <style>
     .bg {
-        background: url('https://dtdt6j0vhq1rq.cloudfront.net/ManagerPage.jpg');
+        background: url('/images/manage_cover.jpg');
         background-repeat: no-repeat;
         background-position: center;
-        padding: 200px;
+        padding: 175px;
         background-size: contain;
         height: 600px;
     }
@@ -52,15 +52,15 @@
     <h2>Hello @user.Attributes[Amazon.AspNetCore.Identity.Cognito.CognitoAttribute.GivenName.AttributeName]!</h2>
     <div class="container bg">
         <div class="row justify-content-center">
-            <div class="col-6 text-center">
+            <div class="col-4 text-center">
                 <h4>Username</h4><br />
                 @UserManager.GetUserName(User)<br /><br />
-                <h4>Email address:</h4><br />
+                <h4>Email address</h4><br />
                 @user.Attributes[Amazon.AspNetCore.Identity.Cognito.CognitoAttribute.Email.AttributeName]
             </div>
-            <div class="col-6 text-center">
+            <div class="col-4 text-center">
                 <h4>Manage your account</h4><br />
-                <hr />
+               
                 <partial name="_ManageNav" />
             </div>
         </div>
