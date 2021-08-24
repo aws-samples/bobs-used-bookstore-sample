@@ -98,30 +98,30 @@ namespace BobBookstore.Controllers
                                 TypeName = b.Type.TypeName,
                                 PublisherName = b.Publisher.Name,
                                 Url = b.FrontUrl,
-                               /* Prices = pricesQuery.Where(p => p.Book.Book_Id == b.Book_Id).ToList(),
-                                MinPrice = pricesQuery.Where(p => p.Book.Book_Id == b.Book_Id).FirstOrDefault().ItemPrice*/
+                                Prices = pricesQuery.Where(p => p.Book.Book_Id == b.Book_Id).ToList(),
+                                MinPrice = pricesQuery.Where(p => p.Book.Book_Id == b.Book_Id).FirstOrDefault().ItemPrice
                             });
 
                 // sort query
                 switch (ViewBag.CurrentSort)
                 {
                     case "Name":
-                        booksQuery = booksQuery.OrderByDescending(b => b.BookName);
+                        booksQuery = booksQuery.OrderByDescending(b => b.BookName).ToList();
                         break;
                     case "Genre":
-                        booksQuery = booksQuery.OrderBy(b => b.GenreName);
+                        booksQuery = booksQuery.OrderBy(b => b.GenreName).ToList();
                         break;
                     case "Type":
-                        booksQuery = booksQuery.OrderBy(b => b.TypeName);
+                        booksQuery = booksQuery.OrderBy(b => b.TypeName).ToList();
                         break;
                     case "PriceAsc":
-                        booksQuery = booksQuery.OrderBy(b => b.MinPrice);
+                        booksQuery = booksQuery.OrderBy(b => b.MinPrice).ToList();
                         break;
                     case "PriceDesc":
-                        booksQuery = booksQuery.OrderByDescending(b => b.MinPrice);
+                        booksQuery = booksQuery.OrderByDescending(b => b.MinPrice).ToList();
                         break;
                     default:
-                        booksQuery = booksQuery.OrderBy(b => b.BookName);
+                        booksQuery = booksQuery.OrderBy(b => b.BookName).ToList();
                         break;
                 }
 

@@ -52,7 +52,7 @@ namespace BookstoreBackend
         public const string ResaleStatusPaymentCompleted = "Payment Completed";
 
 
-        public const string DomainName = "bobsbookstoreVersion9";
+        public const string DomainName = "bobsusedbookstore";
 
     }
 }

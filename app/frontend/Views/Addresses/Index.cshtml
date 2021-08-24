@@ -1,270 +1,154 @@
 ﻿@model IEnumerable<BobsBookstore.Models.Customers.Address>
 
-@{
-    ViewData["Title"] = "Index";
-}
+@{ ViewData["Title"] = "Index"; }
 
 
-    <html lang="en">
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <meta name="description" content="">
-        <meta name="author" content="">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
 
-        <title>log in</title>
+    <title>log in</title>
 
-        <link href="css/sb-admin-2.min.css" rel="stylesheet">
-        <link rel="stylesheet" href="https://dtdt6j0vhq1rq.cloudfront.net/bootstrap.min.css">
+    <link href="css/sb-admin-2.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://dtdt6j0vhq1rq.cloudfront.net/bootstrap.min.css">
 
-        <link href="https://fonts.googleapis.com/css?family=Montserrat:200,300,400,500,600,700,800,900" rel="stylesheet">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-        <link rel="stylesheet" type="text/css" href="https://dtdt6j0vhq1rq.cloudfront.net/owl.carousel.min.css">
-        <link rel="stylesheet" href="https://dtdt6j0vhq1rq.cloudfront.net/styles.css">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:200,300,400,500,600,700,800,900" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="https://dtdt6j0vhq1rq.cloudfront.net/owl.carousel.min.css">
+    <link rel="stylesheet" href="https://dtdt6j0vhq1rq.cloudfront.net/styles.css">
 
 
-    </head>
+</head>
 
-    <body class="bg-gradient-primary">
+<body>
+    <h1>Your Addresses</h1>
+    <div class="col-md-12 text-right">
+        <form asp-controller="Addresses" asp-action="Create" method="get">
 
-        <div class="container" style="color:blueviolet">
+            <button class="btn" type="submit">Create New Address</button>
+        </form>
+    </div>
 
-            <!-- Outer Row -->
-            <div class="row justify-content-center">
+    <div class="container">
 
-                <div class="col-xl-10 col-lg-12 col-md-9">
+        <!-- Outer Row -->
+        <div class="row justify-content-center">
 
-                    <div class="card o-hidden border-0 shadow-lg my-5">
-                        <div class="card-body p-0">
-                            <!-- Nested Row within Card Body -->
-                            <h1 align="center">Your Addresses</h1>
+            <div class="col-xl-10 col-lg-12 col-md-9">
 
-                            <p>
-                                <a asp-action="Create">Create New Address</a>
-                            </p>
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th>
-                                            Primary Address
-                                        </th>
-                                        <th>
-                                            @Html.DisplayNameFor(model => model.AddressLine1)
-                                        </th>
-                                        <th>
-                                            @Html.DisplayNameFor(model => model.AddressLine2)
-                                        </th>
-                                        <th>
-                                            @Html.DisplayNameFor(model => model.City)
-                                        </th>
-                                        <th>
-                                            @Html.DisplayNameFor(model => model.State)
-                                        </th>
-                                        <th>
-                                            @Html.DisplayNameFor(model => model.Country)
-                                        </th>
-                                        <th>
-                                            @Html.DisplayNameFor(model => model.ZipCode)
-                                        </th>
-                                        <th></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach (var item in Model)
-                                    {
-                                        @if (item.IsPrimary == true)
-                                        {
-                                            <tr>
-                                                <td>
-                                                    @Html.DisplayFor(modelItem => item.IsPrimary)
-                                                </td>
-                                                <td>
-                                                    @Html.DisplayFor(modelItem => item.AddressLine1)
-                                                </td>
-                                                <td>
-                                                    @Html.DisplayFor(modelItem => item.AddressLine2)
-                                                </td>
-                                                <td>
-                                                    @Html.DisplayFor(modelItem => item.City)
-                                                </td>
-                                                <td>
-                                                    @Html.DisplayFor(modelItem => item.State)
-                                                </td>
-                                                <td>
-                                                    @Html.DisplayFor(modelItem => item.Country)
-                                                </td>
-                                                <td>
-                                                    @Html.DisplayFor(modelItem => item.ZipCode)
-                                                </td>
-                                                <td>
-                                                    <a id="PrimeryAddressEdit" asp-area="Identity" asp-page="/Account/Manage/PrimeryAddressEdit">Edit</a>
+                <div class="card o-hidden border-0 my-5">
+                    <div class="card-body p-0">
+                        <!-- Nested Row within Card Body -->
 
-                                                </td>
-                                            </tr>
-                                        }}
 
-                                    @foreach (var item in Model)
-                                    {
 
-                                        @if (item.IsPrimary == false)
-                                        {
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">
+                                        Primary Address
+                                    </th>
+                                    <th scope="col">
+                                        Address Line 1
+                                    </th>
+                                    <th scope="col">
+                                        Address Line 2
+                                    </th>
+                                    <th scope="col">
+                                        @Html.DisplayNameFor(model => model.City)
+                                    </th>
+                                    <th scope="col">
+                                        @Html.DisplayNameFor(model => model.State)
+                                    </th>
+                                    <th scope="col">
+                                        @Html.DisplayNameFor(model => model.Country)
+                                    </th>
+                                    <th scope="col">
+                                        @Html.DisplayNameFor(model => model.ZipCode)
+                                    </th>
+                                    <th scope="col">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                    @if (item.IsPrimary == true)
+                    {
+    <tr>
+        <th scope="row">
+            @Html.DisplayFor(modelItem => item.IsPrimary)
+        </th>
+        <td>
+            @Html.DisplayFor(modelItem => item.AddressLine1)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.AddressLine2)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.City)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.State)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Country)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ZipCode)
+        </td>
+        <td>
+            <a id="PrimeryAddressEdit" asp-area="Identity" asp-page="/Account/Manage/PrimeryAddressEdit">Edit</a>
 
-                                            <tr>
-                                                <td>
-                                                    @Html.DisplayFor(modelItem => item.IsPrimary)
-                                                </td>
-                                                <td>
-                                                    @Html.DisplayFor(modelItem => item.AddressLine1)
-                                                </td>
-                                                <td>
-                                                    @Html.DisplayFor(modelItem => item.AddressLine2)
-                                                </td>
-                                                <td>
-                                                    @Html.DisplayFor(modelItem => item.City)
-                                                </td>
-                                                <td>
-                                                    @Html.DisplayFor(modelItem => item.State)
-                                                </td>
-                                                <td>
-                                                    @Html.DisplayFor(modelItem => item.Country)
-                                                </td>
-                                                <td>
-                                                    @Html.DisplayFor(modelItem => item.ZipCode)
-                                                </td>
-                                                <td>
-                                                    <a asp-action="Edit" asp-route-id="@item.Address_Id">Edit</a> |
+        </td>
+    </tr>}}
 
-                                                    <a asp-action="Delete" asp-route-id="@item.Address_Id">Delete</a>|
-                                                    <a asp-action="SwitchToPrime" asp-route-id="@item.Address_Id">switch</a>
-                                                </td>
-                                            </tr>
-                                        }
-                                    }
-                                </tbody>
-                            </table>
-                        </div>
+                                @foreach (var item in Model)
+                                {
+
+                    @if (item.IsPrimary == false)
+                    {
+
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.IsPrimary)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.AddressLine1)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.AddressLine2)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.City)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.State)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Country)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ZipCode)
+        </td>
+        <td>
+            <a asp-action="Edit" asp-route-id="@item.Address_Id">Edit</a> |
+
+            <a asp-action="Delete" asp-route-id="@item.Address_Id">Delete</a>|
+            <a asp-action="SwitchToPrime" asp-route-id="@item.Address_Id">switch</a>
+        </td>
+    </tr>}}
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
         </div>
-        </div>
-
-
-
-
-
-    </body>
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    </html>
+    </div>
+</body>
+</html>
