@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using BookstoreBackend.ViewModel.UpdateBooks;
 using BobsBookstore.DataAccess.Repository.Interface.WelcomePageInterface;
 using BookstoreBackend.ViewModel.ManageInventory;
+using Amazon.Extensions.CognitoAuthentication;
+using Microsoft.AspNetCore.Identity;
 
 namespace BookstoreBackend.Controllers
 {
@@ -14,10 +16,14 @@ namespace BookstoreBackend.Controllers
     { 
         private ICustomAdminPage _customeAdmin;
         private string adminUsername;
-        
-        public HomeController(ICustomAdminPage customAdmin)
+        private readonly SignInManager<CognitoUser> _SignInManager;
+        private readonly UserManager<CognitoUser> _userManager;
+
+        public HomeController(ICustomAdminPage customAdmin, SignInManager<CognitoUser> SignInManager, UserManager<CognitoUser> userManager)
         {
             _customeAdmin = customAdmin;
+            _SignInManager = SignInManager;
+            _userManager = userManager;
         }
 
         public IActionResult Index()
@@ -25,10 +31,11 @@ namespace BookstoreBackend.Controllers
             return View();
         }
 
-        [Authorize]
-        public IActionResult WelcomePage(string sortByValue)
+        
+        public async System.Threading.Tasks.Task<IActionResult> WelcomePageAsync(string sortByValue)
         {
-            adminUsername = User.Claims.FirstOrDefault(c => c.Type.Equals("cognito:username"))?.Value;
+            var user = await _userManager.GetUserAsync(User);
+            var adminUsername = user.Username;
            
             LatestUpdates bookUpdates = new LatestUpdates();
             // the sortByValue input for different sorting parameters. 

@@ -27,7 +27,6 @@ namespace BobBookstore
               .ConfigureWebHostDefaults(webBuilder =>
               {
                   webBuilder
-                  .UseSetting("https_port", "5000")
                   .UseStartup<Startup>();
                   
               });

@@ -16,6 +16,8 @@ using BookstoreBackend.ViewModel.ManageInventory;
 using AutoMapper;
 using BookstoreBackend.ViewModel.SearchBooks;
 using BobsBookstore.DataAccess.Repository.Interface;
+using Amazon.Extensions.CognitoAuthentication;
+using Microsoft.AspNetCore.Identity;
 
 namespace BookstoreBackend.Controllers
 {
@@ -27,25 +29,30 @@ namespace BookstoreBackend.Controllers
         private readonly IMapper _mapper;
         private readonly IGenericRepository<Book> _bookRepository;
         private int numberOfDetails = 5;
+        private readonly SignInManager<CognitoUser> _SignInManager;
+        private readonly UserManager<CognitoUser> _userManager;
 
 
-        public InventoryController(IGenericRepository<Book> bookRepository, IMapper mapper, IInventory Inventory, ApplicationDbContext context, ILogger<InventoryController> logger, INotifications emailSender)
+        public InventoryController(IGenericRepository<Book> bookRepository, IMapper mapper, IInventory Inventory, ApplicationDbContext context, ILogger<InventoryController> logger, INotifications emailSender, SignInManager<CognitoUser> SignInManager, UserManager<CognitoUser> userManager)
         {
             _Inventory = Inventory;
             _logger = logger;
             _emailSender = emailSender;
             _mapper = mapper;
             _bookRepository = bookRepository;
+            _SignInManager = SignInManager;
+            _userManager = userManager;
 
         }
 
         [HttpGet]
-        public IActionResult EditBookDetails(string BookName)
+        public async Task<IActionResult> EditBookDetailsAsync(string BookName)
         {
             _logger.LogInformation("Loading : Add New Book View");
             try
             {
-                ViewData["user"] = @User.Claims.FirstOrDefault(c => c.Type.Equals("cognito:username"))?.Value;
+                var user = await _userManager.GetUserAsync(User);
+                ViewData["user"] = user.Username;
             }
             catch (Exception e)
             {
@@ -84,10 +91,11 @@ namespace BookstoreBackend.Controllers
         }
 
         [HttpPost] //Post Data from forms to tables
-        public IActionResult EditBookDetails(BooksViewModel bookview)
+        public async Task<IActionResult> EditBookDetailsAsync(BooksViewModel bookview)
         {
             _logger.LogInformation("Posting new book details from form to Database ");
-            bookview.UpdatedBy = @User.Claims.FirstOrDefault(c => c.Type.Equals("cognito:username"))?.Value;
+            var user = await _userManager.GetUserAsync(User);
+            bookview.UpdatedBy = user.Username;
             bookview.UpdatedOn = DateTime.Now.ToUniversalTime();
             bookview.Active = true;
             if (String.IsNullOrEmpty(bookview.Author))
@@ -529,12 +537,13 @@ namespace BookstoreBackend.Controllers
             return View();
         }
 
-        public IActionResult Submitchanges(BookDetailsDto details)
+        public async Task<IActionResult> SubmitchangesAsync(BookDetailsDto details)
         {
             _logger.LogInformation("Posting the Edit Book form values to database");
             try
             {
-                details.UpdatedBy = @User.Claims.FirstOrDefault(c => c.Type.Equals("cognito:username"))?.Value;
+                var user = await _userManager.GetUserAsync(User);
+                details.UpdatedBy = user.Username;
                 details.UpdatedOn = DateTime.Now.ToUniversalTime();
                 _Inventory.PushDetails(details);
 

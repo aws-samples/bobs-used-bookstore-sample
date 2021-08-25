@@ -1,4 +1,10 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Identity
+@using Amazon.Extensions.CognitoAuthentication
+@inject SignInManager<CognitoUser> SignInManager
+@inject UserManager<CognitoUser> UserManager
+@{ var user = await UserManager.GetUserAsync(User); }
+@{ ViewBag.Title = "title"; }
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -19,17 +25,19 @@
             padding: .5rem;
             display: block;
         }
-        .main-color-text:hover {
-            color: #7D53DE;
-        }
+
+            .main-color-text:hover {
+                color: #7D53DE;
+            }
+
         .nav-background-color {
-            background-color:white;
+            background-color: white;
         }
     </style>
     <header>
         <nav class="navbar navbar-expand-lg navbar-toggleable-sm navbar-dark  nav-background-color  box-shadow mb-3">
             <div class="container-fluid">
-                
+
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -42,7 +50,7 @@
                         <li class="nav-item">
                             <a class="main-color-text" asp-area="" asp-controller="Home" asp-action="WelcomePage">Home</a>
                         </li>
-                        @if (User.Identity.IsAuthenticated)
+                        @if (SignInManager.IsSignedIn(User))
                         {
                     <li class="nav-item">
                         <a class="main-color-text" asp-area="" asp-controller="Orders" asp-action="Index">Manage Orders</a>
@@ -59,39 +67,37 @@
 
                                         </div>
                                     </li>
-                                    <li class="nav-item">
-                                        <a class="main-color-text" asp-area="" asp-controller="Resale" asp-action="Index">Resale Books</a>
-                                    </li>
-                         }
+                                                    <li class="nav-item">
+                                                        <a class="main-color-text" asp-area="" asp-controller="Resale" asp-action="Index">Resale Books</a>
+                                                    </li>
+}
                     </ul>
                 </div>
                 <div class="nav navbar-nav navbar-right">
                     <ul class="nav navbar-nav navbar-right">
                         <li class="nav-item">
 
-                            @if (User.Identity.IsAuthenticated)
+                           @* @if (User.Identity.IsAuthenticated)
                             {
-                                <p class="main-color-text">@User.Claims.FirstOrDefault(c => c.Type.Equals("cognito:username"))?.Value</p>
-                            }
+                <p class="main-color-text">@User.Claims.FirstOrDefault(c => c.Type.Equals("cognito:username"))?.Value</p>}
                         </li>
                         <li class="nav-item">
                             @if (User.Identity.IsAuthenticated)
                             {
 
-                                <a class="main-color-text " asp-controller="Authentication" asp-action="SignOut">Logout</a>
-                            }
+                <a class="main-color-text " asp-controller="Authentication" asp-action="SignOut">Logout</a> }
                             else
                             {
-                                <a class="main-color-text " asp-controller="Home" asp-action="WelcomePage">Login</a>
+                <a class="main-color-text " asp-controller="Home" asp-action="WelcomePage">Login</a>}
+                        </li>*@
 
-                            }
-                        </li>
-
-
+                            <div class="navbar-collapse collapse">
+                                <partial name="_LoginPartial" />
+                            </div>
 
                     </ul>
                 </div>
-                
+
             </div>
         </nav>
     </header>
@@ -103,12 +109,16 @@
 
     <footer class="border-top footer text-muted " style="bottom:0;">
         <div class="container-fluid">
-            &copy; 2020 - Bob's Used Bookstore - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; <span id="year"></span> - Bob's Used Bookstore - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @RenderSection("Scripts", required: false)
+    <script>
+        document.getElementById("year").innerHTML = new Date().getFullYear();
+    </script>
 </body>
 </html>
+

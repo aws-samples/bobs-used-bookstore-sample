@@ -53,7 +53,8 @@ namespace BookstoreBackend
             services.AddAWSService<Amazon.Translate.IAmazonTranslate>();
             services.AddAWSService<Amazon.CloudWatch.IAmazonCloudWatch>();
             services.AddAutoMapper(typeof(Startup));
-
+            services.AddCognitoIdentity();
+            services.AddRazorPages();
             services.AddControllersWithViews();
             var awsOptions = Configuration.GetAWSOptions();
             services.AddDefaultAWSOptions(awsOptions);
@@ -70,44 +71,45 @@ namespace BookstoreBackend
             services.AddTransient<IOrderRepository, OrderRepository>();
             services.AddTransient<IOrderDetailRepository, OrderDetailRepository>();
             services.AddTransient<IOrderStatusRepository, OrderStatusRepository>();
-            
+
 
             services.AddTransient<INotifications, Notifications.Implementations.Notifications>();
             services.AddTransient<ICustomAdminPage, CustomAdmin>();
 
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
-            services.AddAuthentication(options =>
-            {
-                // uses cookies on local machine for maintaining authentication
-                options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
-                
-                
-            })
-       .AddCookie(options =>
-       {
-           options.Cookie.Name = "BobsAdminCookie";
-           options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
-           
-
-       })
-       .AddOpenIdConnect(options =>
-       {
-
-           // sets the OpenId connect options for cognito hosted UI
-           options.ResponseType = Configuration["Authentication:Cognito:ResponseType"];
-           options.MetadataAddress = $"https://cognito-idp.{Configuration["Authentication:Cognito:Region"]}.amazonaws.com/{Configuration["AWS:UserPoolId"]}/.well-known/openid-configuration";
-           options.ClientId = Configuration["AWS:UserPoolClientId"];
-           options.Authority = $"https://{Constants.DomainName}.auth.{Configuration["Authentication:Cognito:Region"]}.amazoncognito.com";
-           options.GetClaimsFromUserInfoEndpoint = true;
-           options.TokenValidationParameters.ValidateIssuer = true;
-           
+            /*    services.AddAuthentication(options =>
+                {
+                    // uses cookies on local machine for maintaining authentication
+                    options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                    options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                    options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
 
 
+                })
+           .AddCookie(options =>
+           {
+               options.Cookie.Name = "BobsAdminCookie";
+               options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
 
-       });
+
+           })
+           .AddOpenIdConnect(options =>
+           {
+
+               // sets the OpenId connect options for cognito hosted UI
+               options.ResponseType = Configuration["Authentication:Cognito:ResponseType"];
+               options.MetadataAddress = $"https://cognito-idp.{Configuration["Authentication:Cognito:Region"]}.amazonaws.com/{Configuration["AWS:UserPoolId"]}/.well-known/openid-configuration";
+               options.ClientId = Configuration["AWS:UserPoolClientId"];
+               options.Authority = $"https://{Constants.DomainName}.auth.{Configuration["Authentication:Cognito:Region"]}.amazoncognito.com";
+               options.GetClaimsFromUserInfoEndpoint = true;
+               options.TokenValidationParameters.ValidateIssuer = true;
+
+
+
+
+           });
+            }*/
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -138,6 +140,7 @@ namespace BookstoreBackend
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapRazorPages();
             });
         }
 
