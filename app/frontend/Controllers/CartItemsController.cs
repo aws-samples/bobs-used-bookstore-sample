@@ -65,7 +65,7 @@ namespace BobBookstore.Controllers
                 .Select(c => new CartViewModel
                 {
                     BookId = c.Book.Book_Id,
-                    Url = c.Book.BackUrl,
+                    Url = c.Book.FrontUrl,
                     Prices = c.Price.ItemPrice,
                     BookName = c.Book.Name,
                     CartItem_Id = c.CartItem_Id,
@@ -86,7 +86,7 @@ namespace BobBookstore.Controllers
                 .Select(c => new CartViewModel
                 {
                     BookId = c.Book.Book_Id,
-                    Url = c.Book.BackUrl,
+                    Url = c.Book.FrontUrl,
                     Prices = c.Price.ItemPrice,
                     BookName = c.Book.Name,
                     CartItem_Id = c.CartItem_Id,
@@ -204,7 +204,7 @@ namespace BobBookstore.Controllers
             var orderDeteail = _orderDetailRepository.Get(m=> m.Order == order, includeProperties:"Book")
                                .Select(m=> new OrderDetailViewModel()
                                { Bookname=m.Book.Name,
-                               Url=m.Book.BackUrl,
+                               Url=m.Book.FrontUrl,
                                Price=m.OrderDetailPrice,
                                Quantity=m.Quantity
                                });
@@ -220,7 +220,7 @@ namespace BobBookstore.Controllers
                            .Select(c => new OrderDetailViewModel()
                            {
                                Bookname = c.Book.Name,
-                               Url = c.Book.BackUrl,
+                               Url = c.Book.FrontUrl,
                                Price = c.OrderDetailPrice,
                                Quantity = c.Quantity
                            });

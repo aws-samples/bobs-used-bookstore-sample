@@ -78,16 +78,16 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.InventoryImplementa
 
 
                 bool check = await IsImageSafe(bucketName, filename);
-
                 if (check)
                 {
                     
                         url = String.Concat(_configuration["AWS:CloudFrontDomain"],"/", filename);
+                        File.Delete(Path.Combine(dir, filename));
+
                         return url;
 
                     
                 }
-
                 else
                 {
 

@@ -12,17 +12,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="Views\Home\indexPage.jpg" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="Views\Home\indexPage.jpg">
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-  </ItemGroup>
-
-  <ItemGroup>
     <None Include="Areas\Identity\Pages\Account\ChangePassword.cshtml" />
     <None Include="Areas\Identity\Pages\Account\ConfirmAccount.cshtml" />
     <None Include="Areas\Identity\Pages\Account\Login.cshtml" />

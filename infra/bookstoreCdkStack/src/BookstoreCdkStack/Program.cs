@@ -10,7 +10,7 @@ namespace BookstoreCdkStack
         public static void Main(string[] args)
         {
             var app = new App();
-            new BookstoreCdkStack(app, "BookstoreCdkStackVersion25", new StackProps
+            new BookstoreCdkStack(app, "BookstoreCdkStackVersion27", new StackProps
             {
                 // If you don't specify 'env', this stack will be environment-agnostic.
                 // Account/Region-dependent features and context lookups will not work,

@@ -4,7 +4,6 @@
 @{
 }
 @model IEnumerable<BobsBookstore.Models.ViewModels.CartViewModel>
-@*@model Tuple<IEnumerable<BobsBookstore.Models.Carts.CartItem>, BobsBookstore.Models.Books.Book>*@
 
 @{
     ViewData["Title"] = "WishListIndex";
@@ -66,7 +65,7 @@
     </head>
 
     <body>
-        <h1>Wish List</h1>
+        <h1>Wish List</h1> <br/>
 
         
         @*<h3>Total price：$ <span id="totalprice">0</span></h3>*@
@@ -114,7 +113,7 @@
                             </td>
                         </tr>
                     }
-                    <input type="submit" value="Move to cart" />
+                    <input type="submit" class="btn" value="Move to cart" />
                 }
             </tbody>
         </table>
