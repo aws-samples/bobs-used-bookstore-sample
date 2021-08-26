@@ -35,11 +35,11 @@ namespace DIAndLoggingTestApp
            .ConfigureAppConfiguration((context, builder) =>
            {
 
-               builder.AddSystemsManager("/BobsUsedBookAdminStoreVersion9/");
-               builder.AddSystemsManager("/bookstorecdkVersion9/");
-              
-              //builder.AddSystemsManager("/BobsUsedBookAdminStoreversion25/");
-              // builder.AddSystemsManager("/bookstorecdkversion25/");
+               builder.AddSystemsManager("/BobsUsedBookAdminStoreVersion27/");
+               builder.AddSystemsManager("/bookstorecdkVersion27/");
+
+               //builder.AddSystemsManager("/BobsUsedBookAdminStoreversion25/");
+               // builder.AddSystemsManager("/bookstorecdkversion25/");
 
            })
                 .ConfigureWebHostDefaults(webBuilder =>

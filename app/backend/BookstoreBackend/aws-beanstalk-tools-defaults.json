@@ -13,7 +13,7 @@
   "cname": "bookstorebackend-admindev",
   "instance-type": "t3a.medium",
   "key-pair": "",
-  "instance-profile": "BookstoreCdkStackVersion9-InstanceProfile",
+  "instance-profile": "BookstoreCdkStackVersion27-BookstoreInstanceProfileVersion27-1BUBA8HQ3Z78Z",
   "service-role": "aws-elasticbeanstalk-service-role",
   "proxy-server": "none",
   "profile": "default",

@@ -52,7 +52,8 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.InventoryImplementa
 
             var split = file.FileName.Split(".");
             string filename = split[0] + BookId.ToString() + Condition + "."+split[1];
-            var dir = _env.ContentRootPath;
+            //var dir = _env.ContentRootPath;
+            var dir = Path.GetTempPath();
             string url = "";
             var bucketName = _configuration["AWS:BucketName"];
 
@@ -70,6 +71,7 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.InventoryImplementa
                 using (var fileStream = new FileStream(Path.Combine(dir, filename), FileMode.Create, FileAccess.Write))
                 {
                     resizeStream.CopyTo(fileStream);
+                    File.SetAttributes(Path.Combine(dir, filename), FileAttributes.Normal);
                 }
 
                 var fileTransferUtility = new TransferUtility(_s3Client);
@@ -82,6 +84,7 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.InventoryImplementa
                 {
                     
                         url = String.Concat(_configuration["AWS:CloudFrontDomain"],"/", filename);
+                        File.SetAttributes(Path.Combine(dir, filename), FileAttributes.Normal);
                         File.Delete(Path.Combine(dir, filename));
 
                         return url;

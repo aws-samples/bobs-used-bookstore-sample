@@ -20,7 +20,7 @@
 </head>
 
 <h2>Search for Books</h2>
-</br>
+<br/>
 
 <form asp-controller="Search" asp-action="Index" method="get">
 
@@ -64,8 +64,6 @@ else if (Model != null)
 
                         @foreach (var item in Model.Data)
                         {
-
-
                             <div class="col-md-3">
                                 <div class="item">
                                     <a asp-controller="Search" asp-action="Detail" asp-route-id="@item.BookId"><img src="@Html.DisplayFor(modelItem => item.Url)" alt="img" class="book_image"> </a>
@@ -77,10 +75,6 @@ else if (Model != null)
                                     {
                                         <h6>Out Of Stock</h6>}
                                     <div class="hover">
-                                        @*<form asp-controller="Search" asp-action="Detail" method="get">
-                                                <input type="hidden" name="id" value="@item.BookId" />
-                                                <input type="submit" class="btn btn-sm" value="details" />
-                                            </form>*@
 
                                     </div>
 
@@ -97,7 +91,7 @@ else if (Model != null)
                             <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
                                 <a asp-route-page="@i" asp-route-sortBy="@ViewBag.CurrentSort" asp-route-searchstring="@ViewBag.currentFilter" class="page-link">@i</a>
                             </li>
-}
+                        }
                     </ul>
                 </div>
         </section>
@@ -112,3 +106,13 @@ else if (Model != null)
 }
 
 
+@*<script>
+    $(document).ready(function () {
+        $(".backup_picture").on("error", function () {
+            $(this).attr('src', './images/nopicture.png');
+        });
+    });
+</script>
+
+<img class='backup_picture' src='./images/nonexistent_image_file.png' />
+*@

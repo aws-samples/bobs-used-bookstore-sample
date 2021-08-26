@@ -44,6 +44,8 @@ namespace BobsBookstore.DataAccess.Data
             modelBuilder.Entity<ResaleStatus>().HasData(new ResaleStatus { ResaleStatus_Id = 2, Status = "Approved/Awaiting Shipment" });
             modelBuilder.Entity<ResaleStatus>().HasData(new ResaleStatus { ResaleStatus_Id = 3, Status = "Rejected" });
             modelBuilder.Entity<ResaleStatus>().HasData(new ResaleStatus { ResaleStatus_Id = 4, Status = "Received" });
+            modelBuilder.Entity<ResaleStatus>().HasData(new ResaleStatus { ResaleStatus_Id = 5, Status = "Payment Completed" });
+            
 
             modelBuilder.Entity<OrderStatus>().HasData(new OrderStatus { OrderStatus_Id = 1, Status = "Just Placed", Position=1 });
             modelBuilder.Entity<OrderStatus>().HasData(new OrderStatus { OrderStatus_Id = 2, Status = "En Route", Position = 2 });

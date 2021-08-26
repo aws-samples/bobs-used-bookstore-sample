@@ -14,16 +14,16 @@ namespace BookstoreCdkStack
     public class BookstoreCdkStack : Stack
     {
         const double dbPort = 1433;
-        const string vpcResource = "BookstoreVpcVersion26";
-        const string dbResource = "BookstoreCdkDBVersion26";
-        const string roleResource = "BookstoreCdkInstanceRoleVersion26";
-        const string subnetResource1 = "BookstoreVpcVersion26CdkPublic1";
-        const string subnetResource2 = "BookstoreVpcVersion26CdkPrivate1";
-        const string customerParameterNameRoot = "BobsUsedBookCustomerStoreVersion26";
-        const string adminParameterNameRoot = "BobsUsedBookAdminStoreVersion26";
-        const string dbParameter = "bookstorecdkVersion26";
-        const string userPoolCustomerResource = "BobsBookstoreCustomerUsersVersion26";
-        const string userPoolAdminResource = "BobsBookstoreAdminUsersVersion26";
+        const string vpcResource = "BookstoreVpcVersion27";
+        const string dbResource = "BookstoreCdkDBVersion27";
+        const string roleResource = "BookstoreCdkInstanceRoleVersion27";
+        const string subnetResource1 = "BookstoreVpcVersion27CdkPublic1";
+        const string subnetResource2 = "BookstoreVpcVersion27CdkPrivate1";
+        const string customerParameterNameRoot = "BobsUsedBookCustomerStoreVersion27";
+        const string adminParameterNameRoot = "BobsUsedBookAdminStoreVersion27";
+        const string dbParameter = "bookstorecdkVersion27";
+        const string userPoolCustomerResource = "BobsBookstoreCustomerUsersVersion27";
+        const string userPoolAdminResource = "BobsBookstoreAdminUsersVersion27";
 
         internal BookstoreCdkStack(Construct scope, string id, IStackProps props = null) : base(scope, id, props)
         {
@@ -74,15 +74,15 @@ namespace BookstoreCdkStack
                 BackupRetention = Duration.Seconds(0)
             });
 
-            new StringParameter(this, "BookCdkVersion26", new StringParameterProps
+            new StringParameter(this, "BookCdkVersion27", new StringParameterProps
             {
                 ParameterName = $"/{dbParameter}/dbsecretsname",
                 StringValue = db.Secret.SecretName
             });
 
-            var bookstoreBucket = new Bucket(this, "BookstoreBucketVersion26");
+            var bookstoreBucket = new Bucket(this, "BookstoreBucketVersion27");
             // Grant access to CloudFront to access the bucket
-            var cloudfrontOAI = new OriginAccessIdentity(this, "cloudfront-OAIVersion26");
+            var cloudfrontOAI = new OriginAccessIdentity(this, "cloudfront-OAIVersion27");
 
             var policyProps = new PolicyStatementProps
             {
@@ -129,12 +129,12 @@ namespace BookstoreCdkStack
             };
 
             var distribution
-                = new CloudFrontWebDistribution(this, "SiteDistributionVersion26", distProps);
+                = new CloudFrontWebDistribution(this, "SiteDistributionVersion27", distProps);
 
 
 
             // The user pool is where user registrations on the site will be held.
-            var userPoolCustomer = new UserPool(this, "BookstoreCustomerUserPoolVersion26", new UserPoolProps
+            var userPoolCustomer = new UserPool(this, "BookstoreCustomerUserPoolVersion27", new UserPoolProps
             {
                 UserPoolName = userPoolCustomerResource,
                 SelfSignUpEnabled = true,
@@ -161,7 +161,7 @@ namespace BookstoreCdkStack
             // application is needed to recover the secret and make it into a Parameter Store entry that
             // we can recover at runtime.
             
-            var userPoolCustomerClient = userPoolCustomer.AddClient("BookstorePoolCustomerClientVersion26", new UserPoolClientProps
+            var userPoolCustomerClient = userPoolCustomer.AddClient("BookstorePoolCustomerClientVersion27", new UserPoolClientProps
             {
                 GenerateSecret = false,
                 ReadAttributes = new ClientAttributes().WithCustomAttributes(new string[] { "AddressLine1", "AddressLine2", "City", "State", "Country", "ZipCode" }).WithStandardAttributes(new StandardAttributesMask()
@@ -173,7 +173,7 @@ namespace BookstoreCdkStack
 
             });
 
-            var userPoolAdmin = new UserPool(this, "BookstoreAdminUserPoolVersion26", new UserPoolProps
+            var userPoolAdmin = new UserPool(this, "BookstoreAdminUserPoolVersion27", new UserPoolProps
             {
                 UserPoolName = userPoolAdminResource,
                 SelfSignUpEnabled = false,
@@ -188,7 +188,7 @@ namespace BookstoreCdkStack
 
             });
 
-            var userPoolAdminClient = userPoolAdmin.AddClient("BookstorePoolAdminClientVersion26", new UserPoolClientProps
+            var userPoolAdminClient = userPoolAdmin.AddClient("BookstorePoolAdminClientVersion27", new UserPoolClientProps
             {
                 GenerateSecret = false,
                 
@@ -197,13 +197,13 @@ namespace BookstoreCdkStack
            
             var ssmCustomerParameters = new StringParameter[]
             {
-                new StringParameter(this, "BookstoreUserPoolCustomerIdVersion26", new StringParameterProps
+                new StringParameter(this, "BookstoreUserPoolCustomerIdVersion27", new StringParameterProps
                 {
                     ParameterName = $"/{customerParameterNameRoot}/AWS/UserPoolId",
                     StringValue = userPoolCustomer.UserPoolId
                 }),
 
-                new StringParameter(this, "BookstoreUserPoolCustomerClientIdVersion26", new StringParameterProps
+                new StringParameter(this, "BookstoreUserPoolCustomerClientIdVersion27", new StringParameterProps
                 {
                     ParameterName = $"/{customerParameterNameRoot}/AWS/UserPoolClientId",
                     StringValue = userPoolCustomerClient.UserPoolClientId
@@ -212,13 +212,13 @@ namespace BookstoreCdkStack
 
             var ssmAdminParameters = new StringParameter[]
             {
-                new StringParameter(this, "BookstoreUserPoolAdminIdVersion26", new StringParameterProps
+                new StringParameter(this, "BookstoreUserPoolAdminIdVersion27", new StringParameterProps
                 {
                     ParameterName = $"/{adminParameterNameRoot}/AWS/UserPoolId",
                     StringValue = userPoolAdmin.UserPoolId
                 }),
 
-                new StringParameter(this, "BookstoreUserPoolAdminClientIdVersion26", new StringParameterProps
+                new StringParameter(this, "BookstoreUserPoolAdminClientIdVersion27", new StringParameterProps
                 {
                     ParameterName = $"/{adminParameterNameRoot}/AWS/UserPoolClientId",
                     StringValue = userPoolAdminClient.UserPoolClientId
@@ -288,20 +288,28 @@ namespace BookstoreCdkStack
 
             }));
 
-            var instanceProfile = new CfnInstanceProfile(this, "BookstoreInstanceProfileVersion26", new CfnInstanceProfileProps
+            appRole.AddToPolicy(new PolicyStatement(new PolicyStatementProps
+            {
+                Effect = Effect.ALLOW,
+                Actions = new string[] { "rekognition:DetectModerationLabels" },
+                Resources = new string[] {"*"}
+                    
+
+            }));
+            var instanceProfile = new CfnInstanceProfile(this, "BookstoreInstanceProfileVersion27", new CfnInstanceProfileProps
             {
                 Roles = new string[] {appRole.RoleName}
 
             });
 
 
-                 new StringParameter(this, "CDNVersion26", new StringParameterProps
+                 new StringParameter(this, "CDNVersion27", new StringParameterProps
                  {
                      ParameterName = $"/{adminParameterNameRoot}/AWS/CloudFrontDomain",
                      StringValue = $"https://{distribution.DistributionDomainName}"
                  });
 
-            new StringParameter(this, "S3BucketNameVersion26", new StringParameterProps
+            new StringParameter(this, "S3BucketNameVersion27", new StringParameterProps
             {
                 ParameterName = $"/{adminParameterNameRoot}/AWS/BucketName",
                 StringValue = bookstoreBucket.BucketName
