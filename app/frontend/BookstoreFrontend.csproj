@@ -34,7 +34,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\BobsBookstore.DataAccess\BobsBookstore.DataAccess.csproj" />
-    <ProjectReference Include="..\..\BobsBookstore.Models\BobsBookstore.Models.csproj" />
+    <ProjectReference Include="..\BobsBookstore.DataAccess\BobsBookstore.DataAccess.csproj" />
+    <ProjectReference Include="..\BobsBookstore.Models\BobsBookstore.Models.csproj" />
   </ItemGroup>
 </Project>

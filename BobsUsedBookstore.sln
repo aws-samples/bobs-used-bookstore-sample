@@ -9,11 +9,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookstoreBackend", "app\bac
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application", "Application", "{6FE85BC9-9E7E-4EBE-BB1A-AEB4198463F5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BobsBookstore.Models", "BobsBookstore.Models\BobsBookstore.Models.csproj", "{75CECDDF-C42D-4ED3-BC1E-AF29AFD69C5D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BobsBookstore.Models", "app\BobsBookstore.Models\BobsBookstore.Models.csproj", "{75CECDDF-C42D-4ED3-BC1E-AF29AFD69C5D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BobsBookstore.DataAccess", "BobsBookstore.DataAccess\BobsBookstore.DataAccess.csproj", "{9C5151EC-A0B0-4B79-B8FD-9B955349301A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BobsBookstore.DataAccess", "app\BobsBookstore.DataAccess\BobsBookstore.DataAccess.csproj", "{9C5151EC-A0B0-4B79-B8FD-9B955349301A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BobsBookstore.Migrations", "BobsBookstore.Migrations\BobsBookstore.Migrations.csproj", "{0A973E48-856B-4538-ABA9-0A21A838E51F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BobsBookstore.Migrations", "app\BobsBookstore.Migrations\BobsBookstore.Migrations.csproj", "{0A973E48-856B-4538-ABA9-0A21A838E51F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
