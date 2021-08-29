@@ -7,7 +7,7 @@
 <h2>@ViewData["Title"]</h2>
 <hr />
 <p>Your login is protected by an SMS 2FA code. Enter your code below.</p>
-<div class="row">
+<div class="row justify-content-md-center">
     <div class="col-md-4">
         <form method="post" asp-route-returnUrl="@Model.ReturnUrl">
             <input asp-for="RememberMe" type="hidden" />

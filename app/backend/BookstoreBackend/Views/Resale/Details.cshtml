@@ -47,13 +47,13 @@
 
 
     <div class="row">
-        <div class="text-left col-3">
+        <div class="col-3 text-left">
             <a asp-controller="Resale" asp-action="Index" class="btn shadow manage-order-button website-text">
                 <svg class="bi bi-chevron-left" width="24" height="24" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z" /></svg>
                 Manage Orders
             </a>
         </div>
-        <div class="text-center col-6 website-text">
+        <div class="text-center col website-text">
             <h3>Status: @Model.ResaleStatus.Status</h3>
         </div>
         @if (Model.ResaleStatus.Status == Constants.ResaleStatusPending)

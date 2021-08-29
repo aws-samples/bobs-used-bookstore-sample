@@ -2,17 +2,13 @@
 @*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
-<style>
-    .main-text {
-        font-family: 'Arvo', serif
-    }
-</style>
+
 <head>
-    <link rel="stylesheet" href="https://dtdt6j0vhq1rq.cloudfront.net/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
     <link href="https://fonts.googleapis.com/css?family=Montserrat:200,300,400,500,600,700,800,900" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" type="text/css" href="https://dtdt6j0vhq1rq.cloudfront.net/owl.carousel.min.css">
-    <link rel="stylesheet" href="https://dtdt6j0vhq1rq.cloudfront.net/styles.css">
+    <link rel="stylesheet" href="/css/font-awesome.min.css">
+
+    <link rel="stylesheet" href="/css/styles.css">
 </head>
 
 @if (Model == null)
@@ -21,123 +17,108 @@
 else
 {
 <h1>@Html.DisplayFor(modelitem => Model.BookName)</h1>
- <br>
-                <div class="container">
-                    <div class="row">
-                        <div class="col">
-                            <div class="media">
-                                <img class="mr-3" src="@Html.DisplayFor(modelitem => Model.Url)" />
-                                <div class="media-body">
+                <br>
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col">
+                                            <div class="media">
+                                                <img class="mr-3" src="@Html.DisplayFor(modelitem => Model.Url)" />
+                                                <div class="media-body">
 
-                                    <table class="table">
-                                        <tbody>
-                                            <tr>
-                                                <th scope="col">Title</th>
-                                                <td>@Html.DisplayFor(modelitem => Model.BookName)</td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="col">Author</th>
-                                                <td>@Html.DisplayFor(modelitem => Model.Author)</td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="col">Publisher</th>
-                                                <td>@Html.DisplayFor(modelitem => Model.PublisherName)</td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="col">Genre</th>
-                                                <td>@Html.DisplayFor(modelitem => Model.GenreName)</td>
-                                            </tr>
-                                            @if (String.IsNullOrEmpty(Model.Summary))
-                                            {
+                                                    <table class="table">
+                                                        <tbody>
+                                                            <tr>
+                                                                <th scope="col">Title</th>
+                                                                <td>@Html.DisplayFor(modelitem => Model.BookName)</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th scope="col">Author</th>
+                                                                <td>@Html.DisplayFor(modelitem => Model.Author)</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th scope="col">Publisher</th>
+                                                                <td>@Html.DisplayFor(modelitem => Model.PublisherName)</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th scope="col">Genre</th>
+                                                                <td>@Html.DisplayFor(modelitem => Model.GenreName)</td>
+                                                            </tr>
+                                                            @if (String.IsNullOrEmpty(Model.Summary))
+                                                            {
 
+
+                                            <tr>
+                                                <th scope="col">Description</th>
+                                                <td>No description found.</td>
+                                            </tr> }
+                                                            else
+                                                            {
+                                            <tr>
+                                                <th scope="col">Description</th>
+                                                <td>@Html.DisplayFor(modelitem => Model.Summary)</td>
+                                            </tr>
+}
+                                                        </tbody>
+                                                    </table>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                                <div class="container mt-5">
+                                                    @if (Model.Prices.Count == 0)
+                                                    {
+                                    <p>None in stock</p> }
+                                else
+                                {
+                <div class="row mb-5">
+                    <h3>Available in these conditions:</h3>
+                </div>
+                                    <div class="row">
+                                        <table class="table table-hover">
+                                            <thead>
 
                                                 <tr>
-                                                    <th scope="col">Description</th>
-                                                    <td>No description found.</td>
+                                                    @if (ViewBag.currentSort != "priceAsc")
+                                                    {
+                                <th scope="col"><a asp-controller="Search" asp-action="Detail" asp-route-id="@ViewBag.id" asp-route-sortBy="priceAsc">Price</a></th> }
+                                                    else
+                                                    {
+                                <th scope="col"><a asp-controller="Search" asp-action="Detail" asp-route-id="@ViewBag.id" asp-route-sortBy="priceDesc">Price</a></th>}
+                                                    @if (ViewBag.currentSort != "ConditionAsc")
+                                                    {
+                                <th scope="col"><a asp-controller="Search" asp-action="Detail" asp-route-id="@ViewBag.id" asp-route-sortBy="conditionAsc">Condition</a></th> }
+                                                    else
+                                                    {
+                                <th scope="col"><a asp-controller="Search" asp-action="Detail" asp-route-id="@ViewBag.id" asp-route-sortBy="conditionDesc">Condition</a></th>}
+
+                                                    <th scope="col">Condition</th>
+                                                    <th scope="col"></th>
                                                 </tr>
-                                            }
-                                            else
+                                            </thead>
+                                            @foreach (var price in Model.Prices)
                                             {
-                            <tr>
-                                <th scope="col">Description</th>
-                                <td>@Html.DisplayFor(modelitem => Model.Summary)</td>
-                            </tr>}
-                                        </tbody>
-                                    </table>
-
-                                    @*<h3 class="mt-0">Title: @Html.DisplayFor(modelitem => Model.BookName)</h3>
-                                        <h3>Author: @Html.DisplayFor(modelitem => Model.Author)</h3>
-                                        <h5>Publisher: @Html.DisplayFor(modelitem => Model.PublisherName), Genre: @Html.DisplayFor(modelitem => Model.GenreName)</h5>*@
-                                    @*@if (String.IsNullOrEmpty(Model.Summary))
-                                                        {
-                                        <p>No description found.</p> }
-                                                        else
-                                                        {
-                                        <p>@Html.DisplayFor(modelitem => Model.Summary)</p>}*@
-
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                                <div class="container mt-5">
-                                    @if (Model.Prices.Count == 0)
-                                    {
-                    <p>None in stock</p> }
-                else
-                {
-<div class="row mb-5">
-    <h3>Available in these conditions:</h3>
-</div>
-                    <div class="row">
-                        <table class="table table-hover">
-                            <thead>
-
-                                <tr>
-                                    @if (ViewBag.currentSort != "priceAsc")
-                                    {
-                <th scope="col"><a asp-controller="Search" asp-action="Detail" asp-route-id="@ViewBag.id" asp-route-sortBy="priceAsc">Price</a></th>
- }
-            else
-            {
-<th scope="col"><a asp-controller="Search" asp-action="Detail" asp-route-id="@ViewBag.id" asp-route-sortBy="priceDesc">Price</a></th>
-}
-                                    @if (ViewBag.currentSort != "ConditionAsc")
-                                    {
-                <th scope="col"><a asp-controller="Search" asp-action="Detail" asp-route-id="@ViewBag.id" asp-route-sortBy="conditionAsc">Condition</a></th>
- }
-            else
-            {
-<th scope="col"><a asp-controller="Search" asp-action="Detail" asp-route-id="@ViewBag.id" asp-route-sortBy="conditionDesc">Condition</a></th>
-}
-
-                                    <th scope="col">Condition</th>
-                                    <th scope="col"></th>
-                                </tr>
-                            </thead>
-                            @foreach (var price in Model.Prices)
-                            {
-        <tr>
-            <td>$@Html.DisplayFor(modelitem => price.ItemPrice)</td>
-            <td>@Html.DisplayFor(modelitem => price.Condition.ConditionName)</td>
-            <td>
-                <form asp-controller="Search" asp-action="AddtoCartitem" method="get">
-                    <div class="form-group">
-                        <input type="hidden" name="bookid" value="@Model.BookId" />
-                        <input type="hidden" name="priceid" value="@price.Price_Id" />
-                        <input type="submit" class="btn" value="Add to cart" />
-                    </div>
-                </form>
-                <form asp-controller="Search" asp-action="AddtoWishList" method="get">
-                    <div class="form-group">
-                        <input type="hidden" name="bookid" value="@Model.BookId" />
-                        <input type="hidden" name="priceid" value="@price.Price_Id" />
-                        <input type="submit" class="btn" value="Add to WishList" />
-                    </div>
-                </form>
-            </td>
-        </tr>
-   }
-                        </table>
-                    </div>}
-                                </div>}
+                        <tr>
+                            <td>$@Html.DisplayFor(modelitem => price.ItemPrice)</td>
+                            <td>@Html.DisplayFor(modelitem => price.Condition.ConditionName)</td>
+                            <td>
+                                <form asp-controller="Search" asp-action="AddtoCartitem" method="get">
+                                    <div class="form-group">
+                                        <input type="hidden" name="bookid" value="@Model.BookId" />
+                                        <input type="hidden" name="priceid" value="@price.Price_Id" />
+                                        <input type="submit" class="btn" value="Add to cart" />
+                                    </div>
+                                </form>
+                                <form asp-controller="Search" asp-action="AddtoWishList" method="get">
+                                    <div class="form-group">
+                                        <input type="hidden" name="bookid" value="@Model.BookId" />
+                                        <input type="hidden" name="priceid" value="@price.Price_Id" />
+                                        <input type="submit" class="btn" value="Add to WishList" />
+                                    </div>
+                                </form>
+                            </td>
+                        </tr>}
+                                        </table>
+                                    </div>}
+                                                </div>}

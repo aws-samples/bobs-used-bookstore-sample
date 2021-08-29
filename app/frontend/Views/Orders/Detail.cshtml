@@ -7,18 +7,18 @@
     <meta charset="UTF-8">
     <title>Bob's Book Store</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <link rel="stylesheet" href="https://dtdt6j0vhq1rq.cloudfront.net/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
 
     <link href="https://fonts.googleapis.com/css?family=Montserrat:200,300,400,500,600,700,800,900" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" type="text/css" href="https://dtdt6j0vhq1rq.cloudfront.net/owl.carousel.min.css">
-    <link rel="stylesheet" href="https://dtdt6j0vhq1rq.cloudfront.net/styles.css">
+    <link rel="stylesheet" href="/css/font-awesome.min.css">
+    
+    <link rel="stylesheet" href="/css/styles.css">
 
 </head>
 <h1>Order: #@Model.OrderDetail.Order_Id</h1>
 
 <div class="container mt-1">
-    <h3>Status: @Model.OrderDetail.OrderStatus.Status</h3>
+    <h5>Status: @Model.OrderDetail.OrderStatus.Status</h5>
 
     @if (String.IsNullOrEmpty(Model.OrderDetail.DeliveryDate))
     {
@@ -33,7 +33,7 @@
     <table class="table table-hover mt-5">
         <thead>
             <tr>
-                <th cope="col">Cover</thscope="col">
+                <th cope="col">Cover</th>
                 <th scope="col">Title</th>
                 <th scope="col">Quantity</th>
                 <th scope="col">Price</th>
@@ -56,15 +56,4 @@
 
     </table>
 </div>
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
 <br />

@@ -25,4 +25,36 @@ tab-custom {
     color:red;
 }
 
+.nav-tabs .nav-link.active {
+    color: white;
+    background-color: #7D53DE;
+    border-color: #dee2e6 #dee2e6 #343a40;
+}
+
+.nav-tabs .nav-link {
+    border: 1px solid transparent;
+    border-top-left-radius: .5rem;
+    border-top-right-radius: .25rem;
+    color: black;
+}
+
+.nav-tabs {
+    border-bottom: 1px solid #7D53DE;
+}
+
+.text {
+    font-family: 'Arvo', serif;
+}
+
+.login-button {
+    font-weight: normal;
+    font-family: 'Arvo',serif;
+    padding: .6em;
+    border-top-left-radius: 12rem;
+    border-bottom-left-radius: 12rem;
+    border-top-right-radius: 12rem;
+    border-bottom-right-radius: 12rem;
+    background-color: #7D53DE;
+    min-width: 10rem
+}
 

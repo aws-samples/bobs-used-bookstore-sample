@@ -15,17 +15,15 @@
 
   }
 
-<style>
-    .main-text {
-        font-family: 'Arvo', serif
-    }
-</style>
 <head>
-    <link rel="stylesheet" href="https://dtdt6j0vhq1rq.cloudfront.net/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
     <link href="https://fonts.googleapis.com/css?family=Montserrat:200,300,400,500,600,700,800,900" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" type="text/css" href="https://dtdt6j0vhq1rq.cloudfront.net/owl.carousel.min.css">
-    <link rel="stylesheet" href="https://dtdt6j0vhq1rq.cloudfront.net/styles.css">
+    <link rel="stylesheet" href="/css/font-awesome.min.css">
+
+    <link rel="stylesheet" href="/css/styles.css">
+
+    <script src="/js/jquery.min.js" defer></script>
+    <script type="text/javascript" src="/js/dropdown.js" defer></script>
 </head>
 
 <div class="panel-body">
@@ -108,39 +106,6 @@
                  </div>
                     </div>
                     <hr class="mt-2 mb-5">
-
-
-                    @section Scripts {
-
-                        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-                        <script type="text/javascript">
-                            function buttonFn(a) {
-
-                                var section_id = "#" + a.parentNode.previousElementSibling.id
-                                var newitem = a.previousElementSibling.value;
-                                var newOption = "<option value='" + newitem + "'>" + newitem + "</option>";
-                                $(newOption).insertBefore($(section_id + " option:last")); //add new option
-                                $(section_id).val(newitem);
-                                $("#" + a.parentNode.id).css("display", "none");
-                            }
-                            $(document).ready(function () {
-                                $(".dropdown").change(function () {
-                                    var item = $(this).find("option:selected");
-                                    var text = item.html(); //get the selected option text
-                                    var div_id = "#" + this.nextElementSibling.id
-                                    if (text == 'Others') {
-                                        $(div_id).css("display", "block"); //display the add new dialog
-                                    }
-                                    else {
-                                        $(div_id).css("display", "none");
-                                    }
-
-                                });
-                            });
-                        </script>
-
-                    }
-
                     <div class="form-group text-center">
                         <button class="btn btn-lg" type="submit">SUBMIT</button>
                     </div>

@@ -10,19 +10,20 @@
     ViewData["Title"] = "Index";
 }
 
-    <head>
-        <meta charset="UTF-8">
-        <title>>Book Store</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <meta name="theme-color" content="#03a6f3">
-        <link rel="stylesheet" href="https://dtdt6j0vhq1rq.cloudfront.net/bootstrap.min.css">
+<head>
+    <meta charset="UTF-8">
+    <title>>Book Store</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#03a6f3">
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
 
-        <link href="https://fonts.googleapis.com/css?family=Montserrat:200,300,400,500,600,700,800,900" rel="stylesheet">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-        <link rel="stylesheet" type="text/css" href="https://dtdt6j0vhq1rq.cloudfront.net/owl.carousel.min.css">
-        <link rel="stylesheet" href="https://dtdt6j0vhq1rq.cloudfront.net/styles.css">
-        <link href="css/Line.css" rel="stylesheet">
-    </head>
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:200,300,400,500,600,700,800,900" rel="stylesheet">
+    <link rel="stylesheet" href="/css/font-awesome.min.css">
+
+    <link rel="stylesheet" href="/css/styles.css">
+    <link href="css/Line.css" rel="stylesheet">
+    <script src="/js/cartitems.js" defer></script>
+</head>
     <body>
         <p style="text-align: center"><h1>Cart</h1></p>
 
@@ -124,57 +125,4 @@
             </table>
         </div>
         <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-
-        <script>
-            var fruits = document.getElementsByName('fruits');
-            var numbers = document.getElementsByClassName("numbers");
-            var totalprice = 0;
-            for (var i = 0; i < fruits.length; i++) {
-
-                var number = numbers[i].value;
-                totalprice += fruits[i].value * number;
-
-            }
-            document.getElementById('totalprice').innerHTML = totalprice;
-
-            for (var i = 0; i < numbers.length; i++) {
-                numbers[i].onclick = count;
-            }
-            function count() {
-                var totalprice = 0;
-                for (var i = 0; i < fruits.length; i++) {
-
-                    var number = numbers[i].value;
-                    totalprice += fruits[i].value * number;
-
-                }
-                document.getElementById('totalprice').innerHTML = totalprice;
-            }
-
-
-        </script>
-
     </body>

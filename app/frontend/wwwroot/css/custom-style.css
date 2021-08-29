@@ -42,4 +42,12 @@
 .book_image{
     width: 80%
 }
-        
+
+.bg-cover {
+    background: url('/images/manage_cover.jpg');
+    background-repeat: no-repeat;
+    background-position: center;
+    padding: 175px;
+    background-size: contain;
+    height: 600px;
+}

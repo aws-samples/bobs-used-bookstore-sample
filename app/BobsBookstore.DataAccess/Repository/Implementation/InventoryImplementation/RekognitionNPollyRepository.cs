@@ -207,7 +207,8 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.InventoryImplementa
             // create new image variable
            var img = SixLabors.ImageSharp.Image.Load(file.OpenReadStream());
                // change size of image
-            img.Mutate(x => x.Resize(ConstantsData.ResizeWidth, ConstantsData.ResizeHeight));
+            /*img.Mutate(x => x.Resize(ConstantsData.ResizeWidth, ConstantsData.ResizeHeight));*/
+            img.Mutate(x => x.Resize(0, ConstantsData.ResizeHeight));
             //get the extension encoder
             IImageEncoder encoder = selectEncoder(fileExt);
             img.Save(result, encoder);
