@@ -78,38 +78,6 @@ namespace BookstoreBackend
 
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
-            /*    services.AddAuthentication(options =>
-                {
-                    // uses cookies on local machine for maintaining authentication
-                    options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                    options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                    options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
-
-
-                })
-           .AddCookie(options =>
-           {
-               options.Cookie.Name = "BobsAdminCookie";
-               options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
-
-
-           })
-           .AddOpenIdConnect(options =>
-           {
-
-               // sets the OpenId connect options for cognito hosted UI
-               options.ResponseType = Configuration["Authentication:Cognito:ResponseType"];
-               options.MetadataAddress = $"https://cognito-idp.{Configuration["Authentication:Cognito:Region"]}.amazonaws.com/{Configuration["AWS:UserPoolId"]}/.well-known/openid-configuration";
-               options.ClientId = Configuration["AWS:UserPoolClientId"];
-               options.Authority = $"https://{Constants.DomainName}.auth.{Configuration["Authentication:Cognito:Region"]}.amazoncognito.com";
-               options.GetClaimsFromUserInfoEndpoint = true;
-               options.TokenValidationParameters.ValidateIssuer = true;
-
-
-
-
-           });
-            }*/
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
