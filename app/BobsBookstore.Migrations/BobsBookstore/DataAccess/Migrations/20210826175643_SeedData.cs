@@ -23,9 +23,9 @@ namespace BobsBookstore.DataAccess.Migrations
                 values: new object[,]
                 {
                     { 1L, "Pending Approval" },
-                    { 2L, "Approved/Awaiting Shipment" },
+                    { 2L, "Approved/Awaiting Shipment from Customer" },
                     { 3L, "Rejected" },
-                    { 4L, "Received" },
+                    { 4L, "Shipment Receipt Confirmed" },
                     { 5L, "Payment Completed"}
                 });
         }

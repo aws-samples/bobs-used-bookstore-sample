@@ -41,9 +41,9 @@ namespace BobsBookstore.DataAccess.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ResaleStatus>().HasData(new ResaleStatus { ResaleStatus_Id = 1, Status = "Pending Approval" });
-            modelBuilder.Entity<ResaleStatus>().HasData(new ResaleStatus { ResaleStatus_Id = 2, Status = "Approved/Awaiting Shipment" });
+            modelBuilder.Entity<ResaleStatus>().HasData(new ResaleStatus { ResaleStatus_Id = 2, Status = "Approved/Awaiting Shipment from Customer" });
             modelBuilder.Entity<ResaleStatus>().HasData(new ResaleStatus { ResaleStatus_Id = 3, Status = "Rejected" });
-            modelBuilder.Entity<ResaleStatus>().HasData(new ResaleStatus { ResaleStatus_Id = 4, Status = "Received" });
+            modelBuilder.Entity<ResaleStatus>().HasData(new ResaleStatus { ResaleStatus_Id = 4, Status = "Shipment Receipt Confirmed" });
             modelBuilder.Entity<ResaleStatus>().HasData(new ResaleStatus { ResaleStatus_Id = 5, Status = "Payment Completed" });
             
 
