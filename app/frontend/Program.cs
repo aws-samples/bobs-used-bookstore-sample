@@ -17,8 +17,6 @@ namespace BobBookstore
             
                  .ConfigureAppConfiguration((context, builder) =>
                  {
-                   /*  builder.AddSystemsManager("/BobsUsedBookCustomerStoreVersion27/");
-                      builder.AddSystemsManager("/bookstorecdkVersion27/");*/
                      builder.AddSystemsManager("/BobsUsedBookCustomerStore/");
                      builder.AddSystemsManager("/bookstoredb/");
 
