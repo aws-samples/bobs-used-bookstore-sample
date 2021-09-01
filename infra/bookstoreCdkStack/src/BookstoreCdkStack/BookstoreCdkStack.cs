@@ -14,16 +14,16 @@ namespace BookstoreCdkStack
     public class BookstoreCdkStack : Stack
     {
         const double dbPort = 1433;
-        const string vpcResource = "BookstoreVpcVersion27";
-        const string dbResource = "BookstoreCdkDBVersion27";
-        const string roleResource = "BookstoreCdkInstanceRoleVersion27";
-        const string subnetResource1 = "BookstoreVpcVersion27CdkPublic1";
-        const string subnetResource2 = "BookstoreVpcVersion27CdkPrivate1";
-        const string customerParameterNameRoot = "BobsUsedBookCustomerStoreVersion27";
-        const string adminParameterNameRoot = "BobsUsedBookAdminStoreVersion27";
+        const string vpcResource = "BookstoreVpc";
+        const string dbResource = "BookstoreCdkDB";
+        const string roleResource = "BookstoreCdkInstanceRole";
+        const string subnetResource1 = "BookstoreVpcCdkPublic1";
+        const string subnetResource2 = "BookstoreVpcCdkPrivate1";
+        const string customerParameterNameRoot = "BobsUsedBookCustomerStore";
+        const string adminParameterNameRoot = "BobsUsedBookAdminStore";
         const string dbParameter = "bookstoredb";
-        const string userPoolCustomerResource = "BobsBookstoreCustomerUsersVersion27";
-        const string userPoolAdminResource = "BobsBookstoreAdminUsersVersion27";
+        const string userPoolCustomerResource = "BobsBookstoreCustomerUsers";
+        const string userPoolAdminResource = "BobsBookstoreAdminUsers";
 
         internal BookstoreCdkStack(Construct scope, string id, IStackProps props = null) : base(scope, id, props)
         {
@@ -75,17 +75,17 @@ namespace BookstoreCdkStack
             });
 
             //Create a secret in Secrets Manager storing the database credentials
-            new StringParameter(this, "BookCdkVersion27", new StringParameterProps
+            new StringParameter(this, "BookCdkDbSecret", new StringParameterProps
             {
                 ParameterName = $"/{dbParameter}/dbsecretsname",
                 StringValue = db.Secret.SecretName
             });
 
             //Create a S3 bucket to store the book covers
-            var bookstoreBucket = new Bucket(this, "BookstoreBucketVersion27");
+            var bookstoreBucket = new Bucket(this, "BookstoreBucket");
 
             // Grant access to CloudFront to access the bucket
-            var cloudfrontOAI = new OriginAccessIdentity(this, "cloudfront-OAIVersion27");
+            var cloudfrontOAI = new OriginAccessIdentity(this, "cloudfront-OAI");
 
             var policyProps = new PolicyStatementProps
             {
@@ -133,13 +133,13 @@ namespace BookstoreCdkStack
             };
 
             var distribution
-                = new CloudFrontWebDistribution(this, "SiteDistributionVersion27", distProps);
+                = new CloudFrontWebDistribution(this, "SiteDistribution", distProps);
 
 
 
             // The user pool is where user registrations on the site will be held.
             //Create user pool for Customer appplication
-            var userPoolCustomer = new UserPool(this, "BookstoreCustomerUserPoolVersion27", new UserPoolProps
+            var userPoolCustomer = new UserPool(this, "BookstoreCustomerUserPool", new UserPoolProps
             {
                 UserPoolName = userPoolCustomerResource,
                 SelfSignUpEnabled = true,
@@ -166,7 +166,7 @@ namespace BookstoreCdkStack
             // application is needed to recover the secret and make it into a Parameter Store entry that
             // we can recover at runtime.
             
-            var userPoolCustomerClient = userPoolCustomer.AddClient("BookstorePoolCustomerClientVersion27", new UserPoolClientProps
+            var userPoolCustomerClient = userPoolCustomer.AddClient("BookstorePoolCustomerClient", new UserPoolClientProps
             {
                 GenerateSecret = false,
                 ReadAttributes = new ClientAttributes().WithCustomAttributes(new string[] { "AddressLine1", "AddressLine2", "City", "State", "Country", "ZipCode" }).WithStandardAttributes(new StandardAttributesMask()
@@ -179,7 +179,7 @@ namespace BookstoreCdkStack
             });
 
             //Create user pool for Admin appplication
-            var userPoolAdmin = new UserPool(this, "BookstoreAdminUserPoolVersion27", new UserPoolProps
+            var userPoolAdmin = new UserPool(this, "BookstoreAdminUserPool", new UserPoolProps
             {
                 UserPoolName = userPoolAdminResource,
                 SelfSignUpEnabled = false,
@@ -194,7 +194,7 @@ namespace BookstoreCdkStack
 
             });
 
-            var userPoolAdminClient = userPoolAdmin.AddClient("BookstorePoolAdminClientVersion27", new UserPoolClientProps
+            var userPoolAdminClient = userPoolAdmin.AddClient("BookstorePoolAdminClient", new UserPoolClientProps
             {
                 GenerateSecret = false,
                 
@@ -203,13 +203,13 @@ namespace BookstoreCdkStack
            //Store the user pool details in Parameter store
             var ssmCustomerParameters = new StringParameter[]
             {
-                new StringParameter(this, "BookstoreUserPoolCustomerIdVersion27", new StringParameterProps
+                new StringParameter(this, "BookstoreUserPoolCustomerId", new StringParameterProps
                 {
                     ParameterName = $"/{customerParameterNameRoot}/AWS/UserPoolId",
                     StringValue = userPoolCustomer.UserPoolId
                 }),
 
-                new StringParameter(this, "BookstoreUserPoolCustomerClientIdVersion27", new StringParameterProps
+                new StringParameter(this, "BookstoreUserPoolCustomerClientId", new StringParameterProps
                 {
                     ParameterName = $"/{customerParameterNameRoot}/AWS/UserPoolClientId",
                     StringValue = userPoolCustomerClient.UserPoolClientId
@@ -218,13 +218,13 @@ namespace BookstoreCdkStack
 
             var ssmAdminParameters = new StringParameter[]
             {
-                new StringParameter(this, "BookstoreUserPoolAdminIdVersion27", new StringParameterProps
+                new StringParameter(this, "BookstoreUserPoolAdminId", new StringParameterProps
                 {
                     ParameterName = $"/{adminParameterNameRoot}/AWS/UserPoolId",
                     StringValue = userPoolAdmin.UserPoolId
                 }),
 
-                new StringParameter(this, "BookstoreUserPoolAdminClientIdVersion27", new StringParameterProps
+                new StringParameter(this, "BookstoreUserPoolAdminClientId", new StringParameterProps
                 {
                     ParameterName = $"/{adminParameterNameRoot}/AWS/UserPoolClientId",
                     StringValue = userPoolAdminClient.UserPoolClientId
@@ -306,21 +306,21 @@ namespace BookstoreCdkStack
             }));
 
             //Create an instance profile which is later used in Elastic Beanstalk deployment
-            var instanceProfile = new CfnInstanceProfile(this, "BookstoreInstanceProfileVersion27", new CfnInstanceProfileProps
+            var instanceProfile = new CfnInstanceProfile(this, "BookstoreInstanceProfile", new CfnInstanceProfileProps
             {
                 Roles = new string[] {appRole.RoleName}
 
             });
 
             //Store the cloudfront distribution domain in Parameter Store
-            new StringParameter(this, "CDNVersion27", new StringParameterProps
+            new StringParameter(this, "CDN", new StringParameterProps
                {
                  ParameterName = $"/{adminParameterNameRoot}/AWS/CloudFrontDomain",
                  StringValue = $"https://{distribution.DistributionDomainName}"
                  });
 
             //Store the S3 bucket name in Parameter Store
-            new StringParameter(this, "S3BucketNameVersion27", new StringParameterProps
+            new StringParameter(this, "S3BucketName", new StringParameterProps
             {
                 ParameterName = $"/{adminParameterNameRoot}/AWS/BucketName",
                 StringValue = bookstoreBucket.BucketName
