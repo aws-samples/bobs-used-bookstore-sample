@@ -104,8 +104,8 @@ namespace BookstoreBackend.Controllers
 
                 filterValueText = filterValueText.Replace("Filter By: ", "");
                 orders.FilterValueText = filterValueText;
-
-                return View(orders);
+                var manageOrderViewModel = _mapper.Map<ManageOrderViewModel>(orders);
+                return View(manageOrderViewModel);
             }
             else
             {

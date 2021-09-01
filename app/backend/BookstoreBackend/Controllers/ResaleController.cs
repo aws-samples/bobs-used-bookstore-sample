@@ -74,9 +74,11 @@ namespace BookstoreBackend.Controllers
             resaleViewModel.ConditionName = resaleViewModel.ConditionName;
             BooksDto booksDto = _mapper.Map<BooksDto>(resaleViewModel);
             _inventory.AddToTables(booksDto);
-            Resale resale = _resaleRepository.Get(c => c.Resale_Id == resaleViewModel.Resale_Id, includeProperties: "ResaleStatus").FirstOrDefault();
-            resale.ResaleStatus = _resaleStatusRepository.Get(s => s.Status == "Received").FirstOrDefault();
-            _resaleStatusRepository.Save();
+            var resale = _resaleRepository.Get(c => c.Resale_Id == resaleViewModel.Resale_Id, includeProperties: "ResaleStatus").FirstOrDefault();
+            var resaleStatus = _resaleStatusRepository.Get(c => c.Status == Constants.ResaleStatusReceived).FirstOrDefault();
+            resale.ResaleStatus = resaleStatus;
+            _resaleRepository.Update(resale);
+            _resaleRepository.Save();
             return RedirectToAction("Index", new { resale = resale});
         }
         public IActionResult Details(long id)

@@ -33,10 +33,6 @@ namespace BobBookstore.Controllers
         private readonly IGenericRepository<Order> _orderRepository;
         private readonly IGenericRepository<Address> _addressRepository;
 
-
-
-
-
         public CartItemsController(IGenericRepository<Address> addressRepository, IGenericRepository<OrderDetail> orderDetailRepository, IGenericRepository<Order> orderRepository, IGenericRepository<Price> priceRepository, IGenericRepository<Book> bookRepository, IGenericRepository<Customer> customerRepository, IGenericRepository<OrderStatus> orderStatusRepository, IGenericRepository<CartItem> cartItemRepository, ApplicationDbContext context, SignInManager<CognitoUser> SignInManager, UserManager<CognitoUser> userManager)
         {
             _context = context;
@@ -50,8 +46,6 @@ namespace BobBookstore.Controllers
             _orderRepository = orderRepository;
             _orderDetailRepository = orderDetailRepository;
             _addressRepository = addressRepository;
-
-
 
         }
 
@@ -123,8 +117,6 @@ namespace BobBookstore.Controllers
             foreach (CartItem item in cartItem)
             {
 
-
-
                 item.WantToBuy = true;
                 _cartItemRepository.Update(item);
                 _cartItemRepository.Save();
@@ -138,11 +130,13 @@ namespace BobBookstore.Controllers
         public async Task<IActionResult> CheckOut(string[] fruits,string[] IDs,string[] quantity,string[] bookF,string[]priceF)
         {
             //set the origin value
-            var orderStatue = _orderStatusRepository.Get(s => s.Status == ConstantsData.OrderStatusJustPlaced).FirstOrDefault();
+            var orderStatue = _orderStatusRepository.Get(s => s.Status == ConstantsData.OrderStatusPending).FirstOrDefault();
             var user = await _userManager.GetUserAsync(User);
             var userId = user.Attributes[CognitoAttribute.Sub.AttributeName];
             var customer = _customerRepository.Get(userId);
             decimal subTotal = 0;
+            DateTime date = DateTime.Now.ToUniversalTime().AddDays(7);
+            var deliveryDate = date.ToString("dd/MM/yyyy");
             //calculate the total price and put all book in a list
             for (int i = 0; i < IDs.Length; i++)
             {
@@ -150,7 +144,7 @@ namespace BobBookstore.Controllers
             }
 
             //creat a new order
-            var recentOrder = new Order() { OrderStatus = orderStatue, Subtotal = subTotal, Tax = subTotal * (decimal)0.1, Customer = customer };
+            var recentOrder = new Order() { OrderStatus = orderStatue, Subtotal = subTotal, Tax = subTotal * (decimal)0.1, Customer = customer, DeliveryDate= deliveryDate };
             _orderRepository.Add(recentOrder);
             _orderRepository.Save();
             var orderId = recentOrder.Order_Id;
@@ -187,7 +181,6 @@ namespace BobBookstore.Controllers
                 var cartItemD = _cartItemRepository.Get(Convert.ToString (IDs[i]));
                 _cartItemRepository.Remove(cartItemD);
             }
-
 
             _cartItemRepository.Save();
             return RedirectToAction(nameof(ConfirmCheckout),new { OrderId=orderId});

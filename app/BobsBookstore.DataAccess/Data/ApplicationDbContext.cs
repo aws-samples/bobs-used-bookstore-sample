@@ -63,7 +63,7 @@ namespace BobsBookstore.DataAccess.Data
         {
             IConfigurationRoot configuration = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile(@Directory.GetCurrentDirectory() + "/../app/frontend/appsettings.json")
+                .AddJsonFile(@Directory.GetCurrentDirectory() + "/../frontend/appsettings.json")
                 .Build();
             var builder = new DbContextOptionsBuilder<ApplicationDbContext>();
             var connectionString = configuration.GetConnectionString("BobBookstoreContextConnection");

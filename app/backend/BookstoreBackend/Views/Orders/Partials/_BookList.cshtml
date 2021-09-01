@@ -39,91 +39,105 @@
 
         var num = index + 1;
 
-        <div class="card book-list-card col-12 ">
-            <div class="card-header book-list-card-header col-12" id="heading@(index)">
-                <div class="row">
-                    <h5 class="col-6">
-                        <button class="btn item-list-btn-link website-text" data-toggle="collapse" data-target="#collapse@(index)" aria-expanded="true" aria-controls="collapse@(index)">
-                            Item @num: @detail.Book.Name
-                        </button>
-                    </h5>
-                    @if (detail.IsRemoved)
-                    {
-                        <button style="padding-top:0" class="btn col-6 website-text">Item Has Been Removed</button>
-                    }
+    <div class="row" style="border: 1px solid black">
+        <h5 class="col">
+            <button class="btn item-list-btn-link website-text" data-toggle="collapse" data-target="#collapse@(index)" aria-expanded="true" aria-controls="collapse@(index)">
+                Item @num: @detail.Book.Name
+            </button>
+        </h5>
+        @if (detail.IsRemoved)
+        {
+    <button style="padding-top:0" class="btn col-6 website-text">Item Has Been Removed</button> }
                     else
                     {
-                        @if (Model.Order.OrderStatus.Status == "Just Placed" || Model.Order.OrderStatus.Status == "Pending")
-                        {
-                            <button data-toggle="modal" data-target="#Modal@(index)" type="button" style="padding-top:0" class="btn website-text col-6">Can't Find Book Click Here?</button>
-                        }
-                        
-                    }
+    @if (Model.Order.OrderStatus.Status == "Just Placed" || Model.Order.OrderStatus.Status == "Pending")
+    {
+    <button data-toggle="modal" data-target="#Modal@(index)" type="button" style="padding-top:0" class="btn website-text col">Can't Find Book Click Here?</button>}}
 
-                </div>
+    </div>
+    @*<div class="card book-list-card col-12 ">
+                        <div class="card-header book-list-card-header col-12" id="heading@(index)">
+                            <div class="row">
+                                <h5 class="col-6">
+                                    <button class="btn item-list-btn-link website-text" data-toggle="collapse" data-target="#collapse@(index)" aria-expanded="true" aria-controls="collapse@(index)">
+                                        Item @num: @detail.Book.Name
+                                    </button>
+                                </h5>
+                                @if (detail.IsRemoved)
+                                {
+                                    <button style="padding-top:0" class="btn col-6 website-text">Item Has Been Removed</button>
+                                }
+                                else
+                                {
+                                    @if (Model.Order.OrderStatus.Status == "Just Placed" || Model.Order.OrderStatus.Status == "Pending")
+                                    {
+                                        <button data-toggle="modal" data-target="#Modal@(index)" type="button" style="padding-top:0" class="btn website-text col-6">Can't Find Book Click Here?</button>
+                                    }
 
-            </div>
-        </div>
-        <div class="modal fade" id="Modal@(index)" tabindex="-1" role="dialog" aria-labelledby="ModalLabel@(index)" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title website-text" id="ModalLabel@(index)">Remove Item</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
+                                }
+
+                            </div>
+
+                        </div>
+                    </div>*@
+                <div class="modal fade" id="Modal@(index)" tabindex="-1" role="dialog" aria-labelledby="ModalLabel@(index)" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title website-text" id="ModalLabel@(index)">Remove Item</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <form asp-controller="Orders" asp-action="EditOrderDetail">
+                                <div class="modal-body">
+                                    <p class="website-text">How many copies of the book do you have?</p>
+                                    <p class="card-subtitle mb-2 text-muted website-text">
+                                        Max Limit: @detail.Quantity
+                                    </p>
+                                    @if (Model.OrderDetails.Count() - 1 == Model.ItemsRemoved && detail.IsRemoved != true)
+                                    {
+                    <select asp-for="IsLast" class="invisible">
+                        <option selected value="true">tets</option>
+                    </select>
+                                        <p class="card-subtitle mb-2 text-muted website-text">Warning removing last item will cancel the order</p>}
+                                    <input asp-for="Quantity" type="text" class="form-control website-text" id="quantity" name="quantity" min="1" max="@detail.Quantity">
+                                    <select asp-for="OrderDetailId" class="invisible">
+                                        <option selected value="@detail.OrderDetail_Id">tets</option>
+                                    </select>
+                                    <select asp-for="MaxQuant" class="invisible">
+                                        <option selected value="@detail.Quantity">tets</option>
+                                    </select>
+                                    <select asp-for="OrderId" class="invisible">
+                                        <option selected value="@Model.Order.Order_Id">tets</option>
+                                    </select>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary website-text" data-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-primary website-text">Save changes</button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
-                    <form asp-controller="Orders" asp-action="EditOrderDetail">
-                        <div class="modal-body">
-                            <p class="website-text">How many copies of the book do you have?</p>
-                            <p class="card-subtitle mb-2 text-muted website-text">
-                                Max Limit: @detail.Quantity
-                            </p>
-                            @if (Model.OrderDetails.Count() - 1 == Model.ItemsRemoved && detail.IsRemoved != true)
-                            {
-                                <select asp-for="IsLast" class="invisible">
-                                    <option selected value="true">tets</option>
-                                </select>
-                                <p class="card-subtitle mb-2 text-muted website-text">Warning removing last item will cancel the order</p>
-                            }
-                            <input asp-for="Quantity" type="text" class="form-control website-text" id="quantity" name="quantity" min="1" max="@detail.Quantity">
-                            <select asp-for="OrderDetailId" class="invisible">
-                                <option selected value="@detail.OrderDetail_Id">tets</option>
-                            </select>
-                            <select asp-for="MaxQuant" class="invisible">
-                                <option selected value="@detail.Quantity">tets</option>
-                            </select>
-                            <select asp-for="OrderId" class="invisible">
-                                <option selected value="@Model.Order.Order_Id">tets</option>
-                            </select>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary website-text" data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary website-text">Save changes</button>
-                        </div>
-                    </form>
                 </div>
-            </div>
-        </div>
 
 
-        <div id="collapse@(index)" style="margin-bottom:.25rem;" class="collapse col-12" aria-labelledby="heading@(index)" data-parent="#accordion">
-            <div class="row">
-                <div class="col-6 item-col">
-                    <ul class="list-group ">
-                        <li class="item-right list-group-item website-text">Book Name: @detail.Book.Name</li>
-                        <li class="item-right list-group-item website-text">Book Id: @detail.Book.Book_Id</li>
-                        <li class="item-right list-group-item website-text">ISBN: @detail.Book.ISBN</li>
-                    </ul>
-                </div>
-                <div class="col-6 item-col">
-                    <ul class="list-group ">
-                        <li class="item-left list-group-item website-text">Quantity: @detail.Quantity</li>
-                        <li class="item-left list-group-item website-text">Condition: @detail.Price.Condition.ConditionName</li>
-                        <li class="item-left list-group-item website-text">Type: @detail.Book.Type.TypeName </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    }
+                                <div id="collapse@(index)" style="margin-bottom:.25rem;" class="collapse col-12" aria-labelledby="heading@(index)" data-parent="#accordion">
+                                    <div class="row">
+                                        <div class="col-6 item-col">
+                                            <ul class="list-group ">
+                                                <li class="item-right list-group-item website-text">Book Name: @detail.Book.Name</li>
+                                                <li class="item-right list-group-item website-text">Book Id: @detail.Book.Book_Id</li>
+                                                <li class="item-right list-group-item website-text">ISBN: @detail.Book.ISBN</li>
+                                            </ul>
+                                        </div>
+                                        <div class="col-6 item-col">
+                                            <ul class="list-group ">
+                                                <li class="item-left list-group-item website-text">Quantity: @detail.Quantity</li>
+                                                <li class="item-left list-group-item website-text">Condition: @detail.Price.Condition.ConditionName</li>
+                                                <li class="item-left list-group-item website-text">Type: @detail.Book.Type.TypeName </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>}
 </div>

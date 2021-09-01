@@ -36,23 +36,15 @@ namespace BookstoreBackend
         public const string SortByAuthorPhrase = "Author";
         public const string LambdaExpressionType = "shared_code.Models.Book.Price";
         public const string LambdaExpressionPhrase = "OrderDetailPrice";
-        public const string PhotosBucketName = "testbucketwebapp";
-        public const string AudioBucketName = "testbucketwebapp";
         public RegionEndpoint BucketRegion = RegionEndpoint.USWest2;
-        public const string CoverPicturesCloudFrontLink = "https://de01ukvgkirpl.cloudfront.net/";
-        public const string AudioFilesCloudFrontLink = "https://d3iukz826t8vlr.cloudfront.net/";
         public const int ResizeWidth = 200;
         public const int ResizeHeight = 200;
         public const string CombinationErrorStatus = "Sorry , We don't currently have any relevant results for the given Combination";
         public const string BoBsEmailAddress = "";
         public const string ResaleStatusPending = "Pending Approval";
-        public const string ResaleStatusApproved = "Approved/Awaiting Shipment";
+        public const string ResaleStatusApproved = "Approved/Awaiting Shipment from Customer";
         public const string ResaleStatusRejected = "Rejected";
-        public const string ResaleStatusReceived = "Received";
+        public const string ResaleStatusReceived = "Shipment Receipt Confirmed";
         public const string ResaleStatusPaymentCompleted = "Payment Completed";
-
-
-        public const string DomainName = "bobsusedbookstore";
-
     }
 }

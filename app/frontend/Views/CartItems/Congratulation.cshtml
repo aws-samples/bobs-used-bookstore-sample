@@ -111,7 +111,7 @@
             decimal total = item.Price * item.Quantity;
             <tr>
                 <td>
-                    <img src="@item.Url" height="80" width="50" />
+                    <img src="@item.Url" height="80" width="50" onerror="this.onerror=null;this.src='/images/default_c.jpg';" />
                 </td>
                 <td>
                     @item.Bookname

@@ -17,11 +17,10 @@ namespace BobBookstore
             
                  .ConfigureAppConfiguration((context, builder) =>
                  {
-
-                    /* builder.AddSystemsManager("/BobsUsedBookCustomerStoreVersion9/");
-                     builder.AddSystemsManager("/bookstorecdkVersion9/");*/
-                     builder.AddSystemsManager("/BobsUsedBookCustomerStoreVersion27/");
-                      builder.AddSystemsManager("/bookstorecdkVersion27/");
+                   /*  builder.AddSystemsManager("/BobsUsedBookCustomerStoreVersion27/");
+                      builder.AddSystemsManager("/bookstorecdkVersion27/");*/
+                     builder.AddSystemsManager("/BobsUsedBookCustomerStore/");
+                     builder.AddSystemsManager("/bookstoredb/");
 
                  })
               .ConfigureWebHostDefaults(webBuilder =>

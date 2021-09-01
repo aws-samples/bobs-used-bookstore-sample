@@ -60,7 +60,6 @@ namespace BookstoreFrontend.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        //[Bind("Resale_Id,BookName,Author,GenreName,PublisherName,TypeName,ISBN, ConditionName, BookPrice, FrontUrl, BackUrl, LeftUrl, RightUrl, AudioBookUrl, Summary")] Resale resale
         public async Task<IActionResult> Create(ResaleViewModel resaleViewModel)
         {
             if (ModelState.IsValid)
