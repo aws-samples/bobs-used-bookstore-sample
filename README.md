@@ -34,7 +34,7 @@
 1) Run the migrations to create the tables.
 Go to `BobsUsedBookstore\app\BobsBookstore.Migrations` and run 
     ```
-    dotnet ef database update --connection "Server=<host>,<port>; Initial Catalog=BobsBookStore; User Id=<username>; Password=<password>"
+    dotnet ef database update --connection "Server=<host>,<port>; Initial Catalog=BobsUsedBookStore; User Id=<username>; Password=<password>"
     ```
 ## Module 4: Create Admin user for Admin application
 1) Go to Amazon Cognito in in AWS Management Console.
@@ -46,6 +46,10 @@ Go to `BobsUsedBookstore\app\BobsBookstore.Migrations` and run
 ## Module 5: Deploy the Customer and Admin application
 1) Host the sample application on Elastic Beanstalk using the VPC, security group, subnet and the IAM Instance role created by the CDK application
 
+
+## Configuration Details
+1) `\BobsUsedBookstore\app\frontend\Program.cs` has the System manager configuration for the Customer application 
+1) `\BobsUsedBookstore\app\backend\BookstoreBackend\Program.cs` has the System manager configuration for the Admin application.
 
 
 
