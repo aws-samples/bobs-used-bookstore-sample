@@ -2,6 +2,8 @@
 .cdk.staging
 cdk.out
 
+cdk.context.json
+
 # Created by https://www.gitignore.io/api/csharp
 
 ### Csharp ###

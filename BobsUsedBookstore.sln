@@ -1,19 +1,25 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30204.135
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32319.34
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookstoreFrontend", "app\frontend\BookstoreFrontend.csproj", "{D2EB32C8-015D-4CE0-B2A4-E6D8E9A0AACC}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookstoreBackend", "app\backend\BookstoreBackend\BookstoreBackend.csproj", "{088AE1C3-067F-4D59-B854-9B8C37D9196C}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application", "Application", "{6FE85BC9-9E7E-4EBE-BB1A-AEB4198463F5}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Applications", "Applications", "{6FE85BC9-9E7E-4EBE-BB1A-AEB4198463F5}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BobsBookstore.Models", "app\BobsBookstore.Models\BobsBookstore.Models.csproj", "{75CECDDF-C42D-4ED3-BC1E-AF29AFD69C5D}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BobsBookstore.DataAccess", "app\BobsBookstore.DataAccess\BobsBookstore.DataAccess.csproj", "{9C5151EC-A0B0-4B79-B8FD-9B955349301A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BobsBookstore.Migrations", "app\BobsBookstore.Migrations\BobsBookstore.Migrations.csproj", "{0A973E48-856B-4538-ABA9-0A21A838E51F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{B7EC0497-FA32-42AE-9491-4E4C9AB7F92E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{E0B5E284-3C47-4E3D-A4DA-B58B59CB5B10}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookstoreInfra", "infra\BookstoreInfra\src\BookstoreInfra\BookstoreInfra.csproj", "{9AEABFF0-97F4-4517-AAA7-66BE92E653AB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,6 +47,10 @@ Global
 		{0A973E48-856B-4538-ABA9-0A21A838E51F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0A973E48-856B-4538-ABA9-0A21A838E51F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0A973E48-856B-4538-ABA9-0A21A838E51F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9AEABFF0-97F4-4517-AAA7-66BE92E653AB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9AEABFF0-97F4-4517-AAA7-66BE92E653AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9AEABFF0-97F4-4517-AAA7-66BE92E653AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9AEABFF0-97F4-4517-AAA7-66BE92E653AB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -48,6 +58,11 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{D2EB32C8-015D-4CE0-B2A4-E6D8E9A0AACC} = {6FE85BC9-9E7E-4EBE-BB1A-AEB4198463F5}
 		{088AE1C3-067F-4D59-B854-9B8C37D9196C} = {6FE85BC9-9E7E-4EBE-BB1A-AEB4198463F5}
+		{75CECDDF-C42D-4ED3-BC1E-AF29AFD69C5D} = {E0B5E284-3C47-4E3D-A4DA-B58B59CB5B10}
+		{9C5151EC-A0B0-4B79-B8FD-9B955349301A} = {E0B5E284-3C47-4E3D-A4DA-B58B59CB5B10}
+		{0A973E48-856B-4538-ABA9-0A21A838E51F} = {E0B5E284-3C47-4E3D-A4DA-B58B59CB5B10}
+		{E0B5E284-3C47-4E3D-A4DA-B58B59CB5B10} = {6FE85BC9-9E7E-4EBE-BB1A-AEB4198463F5}
+		{9AEABFF0-97F4-4517-AAA7-66BE92E653AB} = {B7EC0497-FA32-42AE-9491-4E4C9AB7F92E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D60D37B9-D217-483C-BF42-FD824FD772D5}
