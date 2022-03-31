@@ -17,7 +17,7 @@ namespace DIAndLoggingTestApp
                 //logger.Debug("init main");
                 CreateHostBuilder(args).Build().Run();
             }
-            catch (Exception exception)
+            catch
             {
                 //NLog: catch setup errors
                 //logger.Error(exception, "Stopped program because of exception");

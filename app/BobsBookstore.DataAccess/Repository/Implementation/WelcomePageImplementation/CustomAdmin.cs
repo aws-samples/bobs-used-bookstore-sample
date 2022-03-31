@@ -39,16 +39,13 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.WelcomePageImplemen
                         .Include(p => p.Book)
                             .ThenInclude(b => b.Publisher)
                         .OrderByDescending(p => p.UpdatedOn.Date)
-                        .Take(ConstantsData.TotalResults).ToListAsync();
-
-
+                        .Take(Constants.TotalResults).ToListAsync();
 
             return books;
         }
 
         public async Task<List<Price>> OtherUpdatedBooks(string adminUsername)
         {
-
             /*
              Returns the latest updates made on the inventory excluding 
              the ones make by the current user
@@ -69,7 +66,7 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.WelcomePageImplemen
                             .Include(p => p.Book)
                                 .ThenInclude(b => b.Publisher)
                             .OrderByDescending(p => p.UpdatedOn.Date)
-                            .Take(ConstantsData.TotalResults).ToListAsync();
+                            .Take(Constants.TotalResults).ToListAsync();
 
             return books;
         }
@@ -95,9 +92,9 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.WelcomePageImplemen
                 }
                 return severity;
             }
-            catch (System.ArgumentNullException e)
+            catch (ArgumentNullException e)
             {
-                throw new System.ArgumentNullException("Order object or timeDiff cannot be null", e);
+                throw new ArgumentNullException("Order object or timeDiff cannot be null", e);
             }
         }
 
@@ -107,19 +104,16 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.WelcomePageImplemen
             try
             {
                 // list of filtered orders to be returned 
-                List<FilterOrdersDto> filtered_order = new List<FilterOrdersDto>();
+                var filtered_order = new List<FilterOrdersDto>();
                 // Date at the time 
-                DateTime todayDate = DateTime.Now.ToUniversalTime();
+                var todayDate = DateTime.Now.ToUniversalTime();
+                
                 foreach (var order in allOrders)
                 {
-
-
-                    DateTime time = Convert.ToDateTime(order.DeliveryDate).ToUniversalTime();
+                    var time = Convert.ToDateTime(order.DeliveryDate).ToUniversalTime();
                     if (order.OrderStatus.Status == "Pending")
-
                     {
                         // check pending orders which are due within 5 days
-
                         double diff = (time - todayDate).TotalDays;
                         if (diff <= orderDayRangeMax)
                         {
@@ -129,7 +123,6 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.WelcomePageImplemen
                             new_order.Severity = severity;
                             filtered_order.Add(new_order);
                         }
-
                     }
                     // check for delayed orders. i.e today's date is past delivery date
                     else if (order.OrderStatus.Status == "En Route")
@@ -148,12 +141,12 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.WelcomePageImplemen
                 filtered_order.OrderBy(o => o.Order.OrderStatus.OrderStatus_Id);
                 return filtered_order;
             }
-            catch (System.ArgumentNullException e)
+            catch (ArgumentNullException e)
             {
-
                 throw new ArgumentNullException("allOrders cannot be null", e);
             }
         }
+
         public async Task<List<FilterOrdersDto>> GetImportantOrders(int dateMaxRange, int dateMinRange)
         {
             /*
@@ -171,7 +164,6 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.WelcomePageImplemen
 
         public List<FilterOrdersDto> SortTable(List<FilterOrdersDto> orders, string sortByValue)
         {
-
             switch (sortByValue)
             {
                 case "price_desc":
@@ -197,6 +189,5 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.WelcomePageImplemen
             }
             return orders;
         }
-
     }
 }

@@ -29,7 +29,6 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.SearchImplementatio
                             .Include(book => book.Genre)
                             .Include(book => book.Type)
                             .Include(book => book.Publisher);
-            
         }
     }
 }

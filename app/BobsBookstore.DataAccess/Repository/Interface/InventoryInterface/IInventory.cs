@@ -38,7 +38,6 @@ namespace BobsBookstore.DataAccess.Repository.Interface.InventoryInterface
 
         public IEnumerable<BookDetailsDto> GetDetails(long bookId);
 
-
         public List<string> GetFormatsOfTheSelectedBook(string bookName);
 
         public List<string> GetConditionsOfTheSelectedBook(string bookName);
@@ -46,7 +45,6 @@ namespace BobsBookstore.DataAccess.Repository.Interface.InventoryInterface
         public List<BookDetailsDto> GetRelevantBooks(string bookName, string type, string conditionChosen);
 
         public List<Dictionary<string, int>> DashBoard(int numberOfDetails);
-
 
         public void PushDetails(BookDetailsDto bookdetailsDto);
 
@@ -63,8 +61,5 @@ namespace BobsBookstore.DataAccess.Repository.Interface.InventoryInterface
         public void EditType(string oldType, string newType);
 
         public List<string> ScreenInventory();
-
-
-
     }
 }

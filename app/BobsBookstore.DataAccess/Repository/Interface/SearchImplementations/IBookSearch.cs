@@ -1,9 +1,5 @@
-﻿using BobsBookstore.Models.Books;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using BobsBookstore.Models.Books;
 
 namespace BobsBookstore.DataAccess.Repository.Interface.SearchImplementations
 {
@@ -11,5 +7,4 @@ namespace BobsBookstore.DataAccess.Repository.Interface.SearchImplementations
     {
         public IEnumerable<Book> GetBooksbySearch(string searchString);
     }
-    
 }

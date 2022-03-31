@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using BobsBookstore.Models.Customers;
 using System.ComponentModel.DataAnnotations.Schema;
-
+using BobsBookstore.Models.Customers;
 
 namespace BobsBookstore.Models.Orders
 {

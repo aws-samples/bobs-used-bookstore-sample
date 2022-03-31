@@ -6,11 +6,8 @@ using BobsBookstore.DataAccess.Repository.Interface.SearchImplementations;
 
 namespace BobsBookstore.DataAccess.Repository.Implementation.SearchImplementation
 {
-
-
     public class SearchRepository : ISearchRepository
     {
-
         private ISearchDatabaseCalls _searchDbCalls;
         private int pagesPerPage = 10;
 
@@ -21,20 +18,18 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.SearchImplementatio
 
         public int[] GetModifiedPagesArr(int pageNum, int totalPages)
         {
-            int[] pages = null;
-
             var start = pageNum / pagesPerPage;
 
-            bool Noremainder = pageNum % pagesPerPage == 0;
+            bool noRemainder = pageNum % pagesPerPage == 0;
 
-
-            if (start < (totalPages / pagesPerPage) || Noremainder == true)
+            int[] pages;
+            if (start < (totalPages / pagesPerPage) || noRemainder == true)
             {
-                pages = Enumerable.Range((Noremainder) ? ((start - 1) * pagesPerPage + 1) : (start * pagesPerPage + 1), pagesPerPage).ToArray();
+                pages = Enumerable.Range((noRemainder) ? ((start - 1) * pagesPerPage + 1) : (start * pagesPerPage + 1), pagesPerPage).ToArray();
             }
             else
             {
-                pages = Enumerable.Range((Noremainder) ? ((start - 1) * pagesPerPage) : (start * pagesPerPage + 1), totalPages - (start * pagesPerPage)).ToArray();
+                pages = Enumerable.Range((noRemainder) ? ((start - 1) * pagesPerPage) : (start * pagesPerPage + 1), totalPages - (start * pagesPerPage)).ToArray();
             }
 
             return pages;
@@ -46,7 +41,10 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.SearchImplementatio
             {
                 return (totalCount / valsPerPage);
             }
-            else return (totalCount / valsPerPage) + 1;
+            else
+            {
+                return (totalCount / valsPerPage) + 1;
+            }
         }
 
         private BinaryExpression PerformArtithmeticExpresion(string operand, Expression property, ConstantExpression constant)
@@ -62,7 +60,6 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.SearchImplementatio
         {
             try
             {
-
                 var converter = TypeDescriptor.GetConverter(Type.GetType(type));
 
                 var test = converter.ConvertFrom(subSearch);
@@ -83,11 +80,9 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.SearchImplementatio
                     var method = typeof(string).GetMethod("Contains", new Type[] { typeof(string) });
 
                     var expression = Expression.Call(property, method, constant);
-
   
                     return Expression.Or(expression, expression);
                 }
-
             }
             catch
             {
@@ -116,24 +111,17 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.SearchImplementatio
             {
                 try
                 {
-
                     var expression = GenerateExpressionObject(type, subSearch, property, false);
-
-
                     if (isFirst)
                     {
                         lambda = expression;
                         isFirst = false;
-
-
                     }
                     else
                     {
                         lambda = Expression.Or(lambda, expression);
                         isFirst = false;
                     }
-
-
                 }
                 catch
                 {
@@ -183,14 +171,11 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.SearchImplementatio
 
                     return Expression.Or(expression,expression);
                 }
-
-                
             }
             catch
             {
                 return null;
             }
-
         }
 
         private BinaryExpression GenerateDynamicLambdaFunctionSubObjectProperty(string[] splitFilter, ParameterExpression parameterExpression, string searchString)
@@ -211,24 +196,18 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.SearchImplementatio
             {
                 try
                 {
-
-
                     var expression = GenerateExpressionSubObject(type, subSearch,splitFilter, parameterExpression, false);
 
                     if (isFirst)
                     {
-
                         lambda = expression;
                         isFirst = false;
-
-
                     }
                     else
                     {
                         lambda = Expression.Or(lambda, expression);
                         isFirst = false;
                     }
-
                 }
                 catch
                 {
@@ -236,20 +215,16 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.SearchImplementatio
             }
 
             return lambda;
-
         }
-
 
         public BinaryExpression ReturnExpression(ParameterExpression parameterExpression, string filterValue, string searchString)
         {
-       
             string[] listOfFilters = filterValue.Split(' ');
             bool isFirst = true;
             BinaryExpression expression = null;
 
             for (int i = 1; i < listOfFilters.Length; i++)
             {
-
                 BinaryExpression exp2 = null;
 
                 if (!listOfFilters[i].Contains("."))
@@ -258,34 +233,25 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.SearchImplementatio
                 }
                 else
                 {
-
                     exp2 = GenerateDynamicLambdaFunctionSubObjectProperty(listOfFilters[i].Split("."), parameterExpression, searchString);
-
-
-
                 }
 
                 if (exp2 == null)
                 {
                     continue;
                 }
+
                 if (isFirst)
                 {
                     expression = exp2;
                     isFirst = false;
-
-
                 }
                 else
                 {
                     expression = Expression.And(expression, exp2);
                     isFirst = false;
                 }
-
-
-
             }
-            var test = expression.ToString();
 
             return expression;
         }

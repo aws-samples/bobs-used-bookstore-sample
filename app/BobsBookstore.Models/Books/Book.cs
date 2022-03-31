@@ -12,9 +12,7 @@ namespace BobsBookstore.Models.Books
 
         public Publisher Publisher { get; set; }
 
-
         public string ISBN { get; set; }
-
 
         public Type Type { get; set; }
 
@@ -27,6 +25,7 @@ namespace BobsBookstore.Models.Books
         public string BackUrl { get; set; }
 
         public string LeftUrl { get; set; }
+
         public string RightUrl { get; set; }
 
         public string AudioBookUrl { get; set; }

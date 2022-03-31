@@ -1,17 +1,12 @@
-﻿using BobsBookstore.Models.Orders;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BobsBookstore.Models.Orders;
 
 namespace BobsBookstore.DataAccess.Repository.Interface.OrdersInterface
 {
     public interface IOrderStatusRepository
     {
-        /*
-         *  Order Status Repository
-         */
         public List<OrderStatus> GetOrderStatuses();
 
         public OrderStatus FindOrderStatusByName(string status);

@@ -17,14 +17,10 @@ using BobsBookstore.DataAccess.Repository.Interface;
 
 namespace BobsBookstore.DataAccess.Repository.Implementation.InventoryImplementation
 {
-    /*
-        * Inventory Repository contains all functions associated with managing and viewing Inventory
-        */
-
     public class Inventory : IInventory
     {
-
         public ApplicationDbContext _context;
+
         private readonly int _booksPerPage = 15;
         private readonly string[] PriceIncludes = { "Book", "Condition" };
         private readonly IRekognitionNPollyRepository _rekognitionNPollyRepository;
@@ -34,7 +30,15 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.InventoryImplementa
         private readonly IGenericRepository<Genre> _genreRepository;
         private readonly IGenericRepository<Models.Books.Type> _typeRepository;
         private readonly IGenericRepository<Condition> _conditionRepository;
-        public Inventory(IGenericRepository<Condition> conditionRepository, IGenericRepository<Models.Books.Type> typeRepository, IGenericRepository<Genre> genreRepository, IGenericRepository<Publisher> publisherRepository, ApplicationDbContext context, ISearchRepository searchRepository, IRekognitionNPollyRepository rekognitionPollyRepository, ILogger<Inventory> logger)
+        
+        public Inventory(IGenericRepository<Condition> conditionRepository, 
+                         IGenericRepository<Models.Books.Type> typeRepository, 
+                         IGenericRepository<Genre> genreRepository, 
+                         IGenericRepository<Publisher> publisherRepository, 
+                         ApplicationDbContext context, 
+                         ISearchRepository searchRepository, 
+                         IRekognitionNPollyRepository rekognitionPollyRepository, 
+                         ILogger<Inventory> logger)
         {
             _context = context;
             _searchRepo = searchRepository;
@@ -48,8 +52,8 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.InventoryImplementa
 
         public BookDetailsDto GetBookByID(long bookId)
         {
-
             var book = (from booke in _context.Book join price in _context.Price on booke.Book_Id equals price.Book.Book_Id where booke.Book_Id == bookId select new BookDetailsDto {Summary = booke.Summary, ISBN = booke.ISBN ,Author = booke.Author, BookId = booke.Book_Id, BookName = booke.Name, Price = price.ItemPrice, Publisher = booke.Publisher, Genre = booke.Genre, BookCondition = price.Condition, BookType = booke.Type, Quantity = price.Quantity, FrontUrl = booke.FrontUrl, BackUrl = booke.BackUrl, LeftUrl = booke.LeftUrl, RightUrl = booke.RightUrl }).ToList();
+
             if (book.Count > 0)
             {
                 return book[0];
@@ -59,9 +63,7 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.InventoryImplementa
       
         }
 
-        /*
-         *  function to add details to the Book table
-         */
+        // Add details to the Book table
         public void SaveBook(Book book)
         {
             _logger.LogInformation("Posting details to Books table");
@@ -69,9 +71,7 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.InventoryImplementa
             _context.SaveChanges();
         }
 
-        /*
-         *  function to add details to the Price table
-         */
+        // Add details to the Price table
         public void SavePrice(Price price)
         {
             _logger.LogInformation("Posting details to Price table");
@@ -79,10 +79,7 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.InventoryImplementa
             _context.SaveChanges();
         }
 
-        /*
-         *  function to add  details to the Publisher table
-         */
-
+        // Add  details to the Publisher table
         public bool AddPublishers(Publisher publishers)
         {
             _logger.LogInformation("Posting details to the Publisher table");
@@ -96,9 +93,7 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.InventoryImplementa
             return false;
         }
 
-        /*
-         *  function to add  details to the Genres table
-         */
+        // Add  details to the Genres table
         public bool AddGenres(Genre genres)
         {
             _logger.LogInformation("Posting details to the Genres table");
@@ -112,9 +107,7 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.InventoryImplementa
             return false;
         }
 
-        /*
-         *  function to add  details to the Types table
-         */
+        // Add details to the Types table
         public bool AddBookTypes(Models.Books.Type booktype)
         {
             _logger.LogInformation("Posting details to the Types table");
@@ -130,9 +123,7 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.InventoryImplementa
             return false;
         }
 
-        /*
-         *  function to add  details to the Conditions table
-         */
+        // Add details to the Conditions table
         public bool AddBookConditions(Condition bookCondition)
         {
             _logger.LogInformation("Posting details to the Conditions table");
@@ -145,8 +136,8 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.InventoryImplementa
                 _context.SaveChanges();
                 return true;
             }
-            return false;
 
+            return false;
         }
 
         public void EditPublisher(string oldPublisherName , string newPublisherName)
@@ -162,7 +153,6 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.InventoryImplementa
                     _context.SaveChanges();
                     transaction.Commit();
                 }
-
             }
             catch (DbUpdateConcurrencyException ex)
             {
@@ -172,7 +162,6 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.InventoryImplementa
             {
                 _logger.LogError(ex, "Error");
             }
-
         }
 
         public void EditGenre(string oldGenre, string newGenre)
@@ -180,14 +169,13 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.InventoryImplementa
             _logger.LogInformation("Posting details to the Conditions table");
             try
             {
-                var GenreName = _context.Genre.Where(x => x.Name == oldGenre).ToList();
+                var genreName = _context.Genre.Where(x => x.Name == oldGenre).ToList();
                 using (var transaction = _context.Database.BeginTransaction())
                 {
-                    GenreName[0].Name = newGenre;
+                    genreName[0].Name = newGenre;
                     _context.SaveChanges();
                 }
             }
-
             catch (DbUpdateConcurrencyException ex)
             {
                 _logger.LogError(ex, "DBConcurrency Error");
@@ -196,7 +184,6 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.InventoryImplementa
             {
                 _logger.LogError(ex, "Error");
             }
-
         }
 
         public void EditCondition(string oldCondition, string newCondition)
@@ -211,7 +198,6 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.InventoryImplementa
                     _context.SaveChanges();
                 }
             }
-
             catch (DbUpdateConcurrencyException ex)
             {
                 _logger.LogError(ex, "DBConcurrency Error");
@@ -220,7 +206,6 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.InventoryImplementa
             {
                 _logger.LogError(ex, "Error");
             }
-
         }
 
         public void EditType(string oldType, string newType)
@@ -235,7 +220,6 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.InventoryImplementa
                     _context.SaveChanges();
                 }
             }
-
             catch (DbUpdateConcurrencyException ex)
             {
                 _logger.LogError(ex, "DBConcurrency Error");
@@ -244,63 +228,62 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.InventoryImplementa
             {
                 _logger.LogError(ex, "Error");
             }
-
-
         }
 
-        /*
-         *  function to fetch all publisher details for dynamic display in the drop down list 
-         */
-        public List<BobsBookstore.Models.Books.Publisher> GetAllPublishers()
+        // Fetch all publisher details for dynamic display in the drop down list 
+        public List<Publisher> GetAllPublishers()
         {
             var publishers = _context.Publisher.ToList();
             return publishers;
         }
 
 
-        /*
-        *  function to fetch all Genres details for dynamic display in the drop down list 
-        */
-        public List<BobsBookstore.Models.Books.Genre> GetGenres()
+        // Fetch all Genres details for dynamic display in the drop down list 
+        public List<Genre> GetGenres()
         {
-
             var genres = _context.Genre.ToList();
             return genres;
         }
 
-        /*
-        *  function to fetch all Types details for dynamic display in the drop down list 
-        */
-        public List<BobsBookstore.Models.Books.Type> GetTypes()
+        // Fetch all Types details for dynamic display in the drop down list 
+        public List<Models.Books.Type> GetTypes()
         {
-
             var typelist = _context.Type.ToList();
             return typelist;
         }
 
-        /*
-        *  function to fetch all Conditions for dynamic display in the drop down list 
-        */
+        // Fetch all Conditions for dynamic display in the drop down list 
         public List<Condition> GetConditions()
         {
-
             var conditions = _context.Condition.ToList();
             return conditions;
         }
         
-         /*
-         *  function to fetch Book details given its BookId and Condition t 
-         */
+        // Fetch Book details given its BookId and Condition 
         public BookDetailsDto GetBookDetails(long bookId, long priceId)
         {
+            var booker = (from booke in _context.Book 
+                          join price in _context.Price on booke.Book_Id equals price.Book.Book_Id 
+                          where booke.Book_Id == bookId && price.Price_Id == priceId 
+                          select new BookDetailsDto 
+                          { 
+                              BookName = booke.Name, 
+                              Price = price.ItemPrice, 
+                              Publisher = booke.Publisher, 
+                              Genre = booke.Genre, 
+                              BookCondition = price.Condition, 
+                              BookType = booke.Type, 
+                              Quantity = price.Quantity, 
+                              FrontUrl = booke.FrontUrl, 
+                              BackUrl = booke.BackUrl, 
+                              LeftUrl = booke.LeftUrl, 
+                              RightUrl = booke.RightUrl 
+                          }).ToList();
 
-            var booker = (from booke in _context.Book join price in _context.Price on booke.Book_Id equals price.Book.Book_Id where booke.Book_Id == bookId && price.Price_Id == priceId select new BookDetailsDto { BookName = booke.Name, Price = price.ItemPrice, Publisher = booke.Publisher, Genre = booke.Genre, BookCondition = price.Condition, BookType = booke.Type, Quantity = price.Quantity, FrontUrl = booke.FrontUrl, BackUrl = booke.BackUrl, LeftUrl = booke.LeftUrl, RightUrl = booke.RightUrl }).ToList();
             return booker[0];
         }
 
-        /*
-        *  function to fetch all process form inputs and add details to the database 
-        */
+        // Fetch all process form inputs and add details to the database 
         public bool AddToTables(BooksDto booksDto)
         {
             _logger.LogInformation("Processing and Posting data to tables and cloud ");
@@ -328,51 +311,66 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.InventoryImplementa
                     rightUrl = _rekognitionNPollyRepository.UploadtoS3(booksDto.RightSidePhoto, booksDto.BookId, booksDto.BookCondition).Result;
                 }
 
-                if (_rekognitionNPollyRepository.IsContentViolation(frontUrl) == true || _rekognitionNPollyRepository.IsContentViolation(backUrl) == true || _rekognitionNPollyRepository.IsContentViolation(leftUrl) == true || _rekognitionNPollyRepository.IsContentViolation(rightUrl) == true)
+                if (_rekognitionNPollyRepository.IsContentViolation(frontUrl) 
+                    || _rekognitionNPollyRepository.IsContentViolation(backUrl) 
+                    || _rekognitionNPollyRepository.IsContentViolation(leftUrl) 
+                    || _rekognitionNPollyRepository.IsContentViolation(rightUrl))
                 {
                     return false;
                 }
 
                 if (booksDto.Summary != null)
                 {
-                    audioBookUrl = _rekognitionNPollyRepository.GenerateAudioSummary(booksDto.BookName, booksDto.Summary, ConstantsData.TextToSpeechLanguageCode, VoiceId.Emma);
+                    audioBookUrl = _rekognitionNPollyRepository.GenerateAudioSummary(booksDto.BookName, booksDto.Summary, Constants.TextToSpeechLanguageCode, VoiceId.Emma);
                 }
 
-                Book book = new Book();
-                Price price = new Price();
+                var book = new Book();
+                var price = new Price();
 
                 var publisherData = _context.Publisher.Where(publisher => publisher.Name == booksDto.PublisherName).FirstOrDefault();
                 if (publisherData == null)
                 {
-                    publisherData = new Publisher();
-                    publisherData.Name = booksDto.PublisherName;
+                    publisherData = new Publisher
+                    {
+                        Name = booksDto.PublisherName
+                    };
                     _publisherRepository.Add(publisherData);
                     _publisherRepository.Save();
                 }
+
                 var genreData = _context.Genre.Where(genre => genre.Name == booksDto.Genre).FirstOrDefault();
                 if (genreData == null)
                 {
-                    genreData = new Genre();
-                    genreData.Name = booksDto.Genre;
+                    genreData = new Genre
+                    {
+                        Name = booksDto.Genre
+                    };
                     _genreRepository.Add(genreData);
                     _genreRepository.Save();
                 }
+
                 var typeData = _typeRepository.Get(type => type.TypeName == booksDto.BookType).FirstOrDefault();
                 if (typeData == null)
                 {
-                    typeData = new Models.Books.Type();
-                    typeData.TypeName = booksDto.BookType;
+                    typeData = new Models.Books.Type
+                    {
+                        TypeName = booksDto.BookType
+                    };
                     _typeRepository.Add(typeData);
                     _typeRepository.Save();
                 }
+
                 var conditionData = _context.Condition.Where(condition => condition.ConditionName == booksDto.BookCondition).FirstOrDefault();
                 if (conditionData == null)
                 {
-                    conditionData = new Condition();
-                    conditionData.ConditionName = booksDto.PublisherName;
+                    conditionData = new Condition
+                    {
+                        ConditionName = booksDto.PublisherName
+                    };
                     _conditionRepository.Add(conditionData);
                     _conditionRepository.Save();
                 }
+
                 book.Name = booksDto.BookName;
                 book.Type = typeData;
                 book.Genre = genreData;
@@ -400,17 +398,14 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.InventoryImplementa
                     SaveBook(book);
                     SavePrice(price);
                 }
-
                 else
                 {
                     price.Book = books[0];
                     var prices = _context.Price.Where(p => p.Condition == price.Condition && p.Book.Name == book.Name).ToList();
                     if (prices.Count == 0)
                     {
-
                         SavePrice(price);
                     }
-
                     else
                     {
                         var output = _context.Price.Where(p => p.Condition == price.Condition && p.Book.Name == book.Name).ToList();
@@ -418,7 +413,6 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.InventoryImplementa
                         output[0].ItemPrice = booksDto.Price;
                         _context.SaveChanges();
                     }
-
                 }
             }
             catch(Exception e)
@@ -435,11 +429,28 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.InventoryImplementa
                            .Include(price => price.Book);
             return query;
         }
-       
 
         public IEnumerable<BookDetailsDto> GetDetails(long bookId)
         {
-            var booker = (from booke in _context.Book join price in _context.Price on booke.Book_Id equals price.Book.Book_Id where booke.Book_Id == bookId select new BookDetailsDto { BookId = booke.Book_Id, BookName = booke.Name, Price = price.ItemPrice, Publisher = booke.Publisher, Genre = booke.Genre, BookCondition = price.Condition, BookType = booke.Type, Quantity = price.Quantity, FrontUrl = booke.FrontUrl, BackUrl = booke.BackUrl, LeftUrl = booke.LeftUrl, RightUrl = booke.RightUrl }).ToList();
+            var booker = (from booke in _context.Book 
+                          join price in _context.Price on booke.Book_Id equals price.Book.Book_Id 
+                          where booke.Book_Id == bookId 
+                          select new BookDetailsDto 
+                          { 
+                              BookId = booke.Book_Id, 
+                              BookName = booke.Name, 
+                              Price = price.ItemPrice, 
+                              Publisher = booke.Publisher, 
+                              Genre = booke.Genre, 
+                              BookCondition = price.Condition, 
+                              BookType = booke.Type, 
+                              Quantity = price.Quantity, 
+                              FrontUrl = booke.FrontUrl, 
+                              BackUrl = booke.BackUrl, 
+                              LeftUrl = booke.LeftUrl, 
+                              RightUrl = booke.RightUrl 
+                          }).ToList();
+
             return booker;
         }
 
@@ -447,15 +458,15 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.InventoryImplementa
         {
             List<Price> books = null;
 
-            List<string> BookIds = new List<string>();
-            List<FullBookDto> finalBooksList = new List<FullBookDto>();
+            var bookIds = new List<string>();
+            var finalBooksList = new List<FullBookDto>();
 
             books = query.ToList();
             foreach (var book in books)
             {
-                if (!BookIds.Contains(book.Book.Name))
+                if (!bookIds.Contains(book.Book.Name))
                 {
-                    BookIds.Add(book.Book.Name);
+                    bookIds.Add(book.Book.Name);
                     finalBooksList.Add(new FullBookDto { LowestPrice = (int)book.ItemPrice, TotalQuantity = book.Quantity, Price = book });
                 }
                 else
@@ -464,7 +475,6 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.InventoryImplementa
                     fullBook.TotalQuantity += book.Quantity;
                     fullBook.LowestPrice = (fullBook.LowestPrice > (int)book.ItemPrice) ? (int)book.ItemPrice : fullBook.LowestPrice;
                 }
-
             }
 
             return finalBooksList;
@@ -507,30 +517,30 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.InventoryImplementa
                 var bookList = (ascDesc.Contains("asc")) ? finalBooksList.AsQueryable().OrderBy(_sortBy) : finalBooksList.AsQueryable().OrderByDescending(_sortBy);
 
                 return bookList.ToList();
-
             }
         }
 
         private SearchBookDto RetrieveDto(string ascDesc, string style, string filterValue, string searchString, int pageNum, int totalPages, int[] pages, List<FullBookDto> books)
         {
-            SearchBookDto viewModel = new SearchBookDto();
-
-            viewModel.Searchby = filterValue;
-            viewModel.Searchfilter = searchString;
-            viewModel.Books = books;
-            viewModel.Pages = pages;
-            viewModel.HasPreviousPages = (pageNum > 1);
-            viewModel.CurrentPage = pageNum;
-            viewModel.HasNextPages = (pageNum < totalPages);
-            viewModel.Ascdesc = ascDesc;
-            viewModel.ViewStyle = style;
+            var viewModel = new SearchBookDto
+            {
+                Searchby = filterValue,
+                Searchfilter = searchString,
+                Books = books,
+                Pages = pages,
+                HasPreviousPages = (pageNum > 1),
+                CurrentPage = pageNum,
+                HasNextPages = (pageNum < totalPages),
+                Ascdesc = ascDesc,
+                ViewStyle = style
+            };
 
             return viewModel;
         }
 
         private SearchBookDto RetrieveFilterDto(List<FullBookDto> filterQuery, string ascDesc, string style, int totalPages, int pageNum, string filterValue, string searchString)
         {
-            SearchBookDto viewModel = new SearchBookDto();
+            var viewModel = new SearchBookDto();
 
             var books = filterQuery
                             .Skip((pageNum - 1) * _booksPerPage)
@@ -542,12 +552,10 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.InventoryImplementa
             var searchBookDto = RetrieveDto(ascDesc, style, filterValue, searchString, pageNum, totalPages, pages, books);
 
             return searchBookDto;
-
         }
 
         public SearchBookDto GetAllBooks(int pageNum, string style, string sortBy, string ascDesc)
         {
-
             var query = (IQueryable<Price>)_context.Price;
 
             query = query.Include(PriceIncludes);
@@ -558,22 +566,18 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.InventoryImplementa
 
             int totalPages = _searchRepo.GetTotalPages(finalBooksList.Count(), _booksPerPage);
 
-
-            SearchBookDto viewModel = new SearchBookDto();
+            var viewModel = new SearchBookDto();
 
             viewModel = RetrieveFilterDto(finalBooksList, ascDesc, style, totalPages, pageNum, "", "");
 
             return viewModel;
-
         }
 
         public SearchBookDto SearchBooks(string searchBy, string searchFilter, string style, string sortBy, int pageNum, string ascDesc)
         {
-
             searchBy = " " + searchBy;
 
             var parameterExpression = Expression.Parameter(System.Type.GetType("BobsBookstore.Models.Books.Price"), "order");
-
 
             var expression = _searchRepo.ReturnExpression(parameterExpression, searchBy, searchFilter);
 
@@ -601,19 +605,36 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.InventoryImplementa
 
             return searchBookDto;
         }
+
         public List<string> GetFormatsOfTheSelectedBook(string bookName)
         {
             _logger.LogInformation("Fetching all possible formats of the given book");
 
-            List<string> types = new List<string>();
-            var book = (from booke in _context.Book join price in _context.Price on booke.Book_Id equals price.Book.Book_Id where booke.Name ==  bookName select new BookDetailsDto { BookId = booke.Book_Id, BookName = booke.Name, Price = price.ItemPrice, Publisher = booke.Publisher, Genre = booke.Genre, BookCondition = price.Condition, BookType = booke.Type, Quantity = price.Quantity, FrontUrl = booke.FrontUrl, BackUrl = booke.BackUrl, LeftUrl = booke.LeftUrl, RightUrl = booke.RightUrl }).ToList();
+            var types = new List<string>();
+            var book = (from booke in _context.Book 
+                        join price in _context.Price on booke.Book_Id equals price.Book.Book_Id 
+                        where booke.Name == bookName 
+                        select new BookDetailsDto 
+                        { 
+                            BookId = booke.Book_Id, 
+                            BookName = booke.Name, 
+                            Price = price.ItemPrice, 
+                            Publisher = booke.Publisher, 
+                            Genre = booke.Genre, 
+                            BookCondition = price.Condition, 
+                            BookType = booke.Type, 
+                            Quantity = price.Quantity, 
+                            FrontUrl = booke.FrontUrl, 
+                            BackUrl = booke.BackUrl, 
+                            LeftUrl = booke.LeftUrl, 
+                            RightUrl = booke.RightUrl 
+                        }).ToList();
 
             foreach (var i in book)
             {
                 if (!types.Contains(i.BookType.TypeName))
                 {
                     types.Add(i.BookType.TypeName);
-
                 }
             }
 
@@ -624,15 +645,31 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.InventoryImplementa
         {
             _logger.LogInformation("Fetching all possible conditions of the given book");
 
-            List<string> conditions = new List<string>();
-            var book = (from booke in _context.Book join price in _context.Price on booke.Book_Id equals price.Book.Book_Id where booke.Name == bookName select new BookDetailsDto { BookId = booke.Book_Id, BookName = booke.Name, Price = price.ItemPrice, Publisher = booke.Publisher, Genre = booke.Genre, BookCondition = price.Condition, BookType = booke.Type, Quantity = price.Quantity, FrontUrl = booke.FrontUrl, BackUrl = booke.BackUrl, LeftUrl = booke.LeftUrl, RightUrl = booke.RightUrl }).ToList();
+            var conditions = new List<string>();
+            var book = (from booke in _context.Book 
+                        join price in _context.Price on booke.Book_Id equals price.Book.Book_Id 
+                        where booke.Name == bookName 
+                        select new BookDetailsDto 
+                        { 
+                            BookId = booke.Book_Id, 
+                            BookName = booke.Name, 
+                            Price = price.ItemPrice, 
+                            Publisher = booke.Publisher, 
+                            Genre = booke.Genre, 
+                            BookCondition = price.Condition, 
+                            BookType = booke.Type, 
+                            Quantity = price.Quantity, 
+                            FrontUrl = booke.FrontUrl, 
+                            BackUrl = booke.BackUrl, 
+                            LeftUrl = booke.LeftUrl, 
+                            RightUrl = booke.RightUrl 
+                        }).ToList();
 
             foreach (var i in book)
             {
                 if (!conditions.Contains(i.BookCondition.ConditionName))
                 {
                     conditions.Add(i.BookCondition.ConditionName);
-
                 }
             }
 
@@ -643,45 +680,119 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.InventoryImplementa
         {
             _logger.LogInformation("Fetching all possible books based on type and condition chosen");
 
-
             if (!string.IsNullOrEmpty(conditionChosen) && !string.IsNullOrEmpty(type))
             {
-                var book = (from booke in _context.Book join price in _context.Price on booke.Book_Id equals price.Book.Book_Id where booke.Name == bookName && booke.Type.TypeName == type && price.Condition.ConditionName == conditionChosen select new BookDetailsDto { Author = booke.Author ,BookId = booke.Book_Id, BookName = booke.Name, Price = price.ItemPrice, Publisher = booke.Publisher, Genre = booke.Genre, BookCondition = price.Condition, BookType = booke.Type, Quantity = price.Quantity, FrontUrl = booke.FrontUrl, BackUrl = booke.BackUrl, LeftUrl = booke.LeftUrl, RightUrl = booke.RightUrl }).ToList();
+                var book = (from booke in _context.Book 
+                            join price in _context.Price on booke.Book_Id equals price.Book.Book_Id 
+                            where booke.Name == bookName 
+                                    && booke.Type.TypeName == type 
+                                    && price.Condition.ConditionName == conditionChosen 
+                            select new BookDetailsDto 
+                            { 
+                                Author = booke.Author,
+                                BookId = booke.Book_Id, 
+                                BookName = booke.Name, 
+                                Price = price.ItemPrice, 
+                                Publisher = booke.Publisher, 
+                                Genre = booke.Genre, 
+                                BookCondition = price.Condition, 
+                                BookType = booke.Type, 
+                                Quantity = price.Quantity, 
+                                FrontUrl = booke.FrontUrl, 
+                                BackUrl = booke.BackUrl, 
+                                LeftUrl = booke.LeftUrl, 
+                                RightUrl = booke.RightUrl 
+                            }).ToList();
+                
                 return book;
             }
 
             if (!string.IsNullOrEmpty(conditionChosen))
             {
-                var book = (from booke in _context.Book join price in _context.Price on booke.Book_Id equals price.Book.Book_Id where booke.Name == bookName && price.Condition.ConditionName == conditionChosen select new BookDetailsDto { BookId = booke.Book_Id, BookName = booke.Name, Price = price.ItemPrice, Publisher = booke.Publisher, Genre = booke.Genre, BookCondition = price.Condition, BookType = booke.Type, Quantity = price.Quantity, FrontUrl = booke.FrontUrl, BackUrl = booke.BackUrl, LeftUrl = booke.LeftUrl, RightUrl = booke.RightUrl ,Author = booke.Author }).ToList();
+                var book = (from booke in _context.Book 
+                            join price in _context.Price on booke.Book_Id equals price.Book.Book_Id 
+                            where booke.Name == bookName 
+                                && price.Condition.ConditionName == conditionChosen 
+                            select new BookDetailsDto 
+                            { 
+                                BookId = booke.Book_Id, 
+                                BookName = booke.Name, 
+                                Price = price.ItemPrice, 
+                                Publisher = booke.Publisher, 
+                                Genre = booke.Genre, 
+                                BookCondition = price.Condition, 
+                                BookType = booke.Type, 
+                                Quantity = price.Quantity, 
+                                FrontUrl = booke.FrontUrl, 
+                                BackUrl = booke.BackUrl, 
+                                LeftUrl = booke.LeftUrl, 
+                                RightUrl = booke.RightUrl,
+                                Author = booke.Author 
+                            }).ToList();
+                
                 return book;
             }
 
             if (!string.IsNullOrEmpty(type))
             {
-                var book = (from booke in _context.Book join price in _context.Price on booke.Book_Id equals price.Book.Book_Id where booke.Name == bookName && price.Condition.ConditionName == conditionChosen select new BookDetailsDto { BookId = booke.Book_Id, BookName = booke.Name, Price = price.ItemPrice, Publisher = booke.Publisher, Genre = booke.Genre, BookCondition = price.Condition, BookType = booke.Type, Quantity = price.Quantity, FrontUrl = booke.FrontUrl, BackUrl = booke.BackUrl, LeftUrl = booke.LeftUrl, RightUrl = booke.RightUrl , Author = booke.Author}).ToList();
+                var book = (from booke in _context.Book 
+                            join price in _context.Price on booke.Book_Id equals price.Book.Book_Id 
+                            where booke.Name == bookName 
+                                && price.Condition.ConditionName == conditionChosen 
+                            select new BookDetailsDto 
+                            { 
+                                BookId = booke.Book_Id, 
+                                BookName = booke.Name, 
+                                Price = price.ItemPrice, 
+                                Publisher = booke.Publisher, 
+                                Genre = booke.Genre, 
+                                BookCondition = price.Condition, 
+                                BookType = booke.Type, 
+                                Quantity = price.Quantity, 
+                                FrontUrl = booke.FrontUrl, 
+                                BackUrl = booke.BackUrl, 
+                                LeftUrl = booke.LeftUrl, 
+                                RightUrl = booke.RightUrl, 
+                                Author = booke.Author
+                            }).ToList();
+                
                 return book;
             }
 
-            var booker = (from booke in _context.Book join price in _context.Price on booke.Book_Id equals price.Book.Book_Id where booke.Name == bookName select new BookDetailsDto { BookId = booke.Book_Id, BookName = booke.Name, Price = price.ItemPrice, Publisher = booke.Publisher, Genre = booke.Genre, BookCondition = price.Condition, BookType = booke.Type, Quantity = price.Quantity, FrontUrl = booke.FrontUrl, BackUrl = booke.BackUrl, LeftUrl = booke.LeftUrl, RightUrl = booke.RightUrl , Author = booke.Author}).ToList();
+            var booker = (from booke in _context.Book 
+                          join price in _context.Price on booke.Book_Id equals price.Book.Book_Id 
+                          where booke.Name == bookName 
+                          select new BookDetailsDto 
+                          { 
+                              BookId = booke.Book_Id, 
+                              BookName = booke.Name, 
+                              Price = price.ItemPrice, 
+                              Publisher = booke.Publisher, 
+                              Genre = booke.Genre, 
+                              BookCondition = price.Condition, 
+                              BookType = booke.Type, 
+                              Quantity = price.Quantity, 
+                              FrontUrl = booke.FrontUrl, 
+                              BackUrl = booke.BackUrl, 
+                              LeftUrl = booke.LeftUrl, 
+                              RightUrl = booke.RightUrl, 
+                              Author = booke.Author
+                          }).ToList();
+            
             return booker;
-    
         }
 
-        /*
-        *  function to fetch all calculate the dashboard statistics 
-        */
-
+        // Fetch and calculate dashboard statistics 
         private List<Dictionary<string, int>> topStatsForOrders(int numberOfDetails)
         {
             _logger.LogInformation("calculating Top stats for orders");
 
-            Dictionary<string, int> genre_stats = new Dictionary<string, int>();
-            Dictionary<string, int> publisher_stats = new Dictionary<string, int>();
-            Dictionary<string, int> condition_stats = new Dictionary<string, int>();
-            Dictionary<string, int> bookname_stats = new Dictionary<string, int>();
-            Dictionary<string, int> type_stats = new Dictionary<string, int>();
-            List<Dictionary<string, int>> topStats = new List<Dictionary<string, int>>();
-
+            var genre_stats = new Dictionary<string, int>();
+            var publisher_stats = new Dictionary<string, int>();
+            var condition_stats = new Dictionary<string, int>();
+            var bookname_stats = new Dictionary<string, int>();
+            var type_stats = new Dictionary<string, int>();
+            var topStats = new List<Dictionary<string, int>>();
 
             var list = _context.OrderDetail
                         .Include(o => o.Book)
@@ -700,7 +811,6 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.InventoryImplementa
                 {
                     genre_stats.Add(detail.Book.Genre.Name, 1);
                 }
-
                 else
                 {
                     var count = genre_stats.GetValueOrDefault(detail.Book.Genre.Name);
@@ -711,7 +821,6 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.InventoryImplementa
                 {
                     publisher_stats.Add(detail.Book.Publisher.Name, 1);
                 }
-
                 else
                 {
                     var count = publisher_stats.GetValueOrDefault(detail.Book.Publisher.Name);
@@ -722,7 +831,6 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.InventoryImplementa
                 {
                     bookname_stats.Add(detail.Book.Name, 1);
                 }
-
                 else
                 {
                     var count = bookname_stats.GetValueOrDefault(detail.Book.Name);
@@ -733,7 +841,6 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.InventoryImplementa
                 {
                     type_stats.Add(detail.Book.Type.TypeName, 1);
                 }
-
                 else
                 {
                     var count = type_stats.GetValueOrDefault(detail.Book.Type.TypeName);
@@ -772,16 +879,14 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.InventoryImplementa
             return topStats;
         }
 
-
         private Dictionary<string, int>  InventoryStats()
         {
             _logger.LogInformation("calculating Inventory stats");
 
             int totalMerchandiseValue = 0;
             int totalBooksInventory = 0;
-            int total_titles = 0;
 
-            Dictionary<string, int> count_stats = new Dictionary<string, int>();
+            var count_stats = new Dictionary<string, int>();
 
             try
             {
@@ -792,7 +897,7 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.InventoryImplementa
                     totalMerchandiseValue = totalMerchandiseValue + (int)i.ItemPrice * i.Quantity;
                 }
 
-                total_titles = _context.Book.ToList().Count();
+                var total_titles = _context.Book.ToList().Count();
 
                 count_stats["total_titles"] = total_titles;
                 count_stats["total_books"] = totalBooksInventory;
@@ -801,9 +906,7 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.InventoryImplementa
                 count_stats["total_publishers"] = GetAllPublishers().Count();
                 count_stats["total_types"] = GetTypes().Count();
                 count_stats["total_conditions"] = GetConditions().Count();
-
             }
-
             catch
             {
                 Console.WriteLine("Error in Fetching Inventory Stats");
@@ -818,41 +921,34 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.InventoryImplementa
             decimal total_sales_value = 0;
             int total_quantity_sold = 0;
 
-            Dictionary<string, int> count_stats = new Dictionary<string, int>();
+            var count_stats = new Dictionary<string, int>();
             
-                var delivered = _context.Order.Where(x => x.OrderStatus.Status == ConstantsData.OrderStatusDelivered).ToList().Count();
-                var justplaced = _context.Order.Where(x => x.OrderStatus.Status == ConstantsData.OrderStatusJustPlaced).ToList().Count();
-                var enroute = _context.Order.Where(x => x.OrderStatus.Status == ConstantsData.OrderStatusEnRoute).ToList().Count();
-                var pending = _context.Order.Where(x => x.OrderStatus.Status == ConstantsData.OrderStatusPending).ToList().Count();
-                var ordersplaced = delivered + justplaced + enroute + pending;
+            var delivered = _context.Order.Where(x => x.OrderStatus.Status == Constants.OrderStatusDelivered).ToList().Count();
+            var justplaced = _context.Order.Where(x => x.OrderStatus.Status == Constants.OrderStatusJustPlaced).ToList().Count();
+            var enroute = _context.Order.Where(x => x.OrderStatus.Status == Constants.OrderStatusEnRoute).ToList().Count();
+            var pending = _context.Order.Where(x => x.OrderStatus.Status == Constants.OrderStatusPending).ToList().Count();
+            var ordersplaced = delivered + justplaced + enroute + pending;
 
-                var orderdetailsList = _context.OrderDetail.ToList();
-                foreach (var i in orderdetailsList)
-                {
-                    total_quantity_sold = total_quantity_sold + i.Quantity;
-                    total_sales_value = total_sales_value + i.OrderDetailPrice * i.Quantity;
-                }
+            var orderdetailsList = _context.OrderDetail.ToList();
+            foreach (var i in orderdetailsList)
+            {
+                total_quantity_sold = total_quantity_sold + i.Quantity;
+                total_sales_value = total_sales_value + i.OrderDetailPrice * i.Quantity;
+            }
 
-           
             count_stats["Orders_placed"] = ordersplaced;
-            count_stats[ConstantsData.OrderStatusDelivered] = delivered;
-            count_stats[ConstantsData.OrderStatusEnRoute] = enroute;
-            count_stats[ConstantsData.OrderStatusPending] = pending;
-            count_stats[ConstantsData.OrderStatusJustPlaced] = justplaced;
+            count_stats[Constants.OrderStatusDelivered] = delivered;
+            count_stats[Constants.OrderStatusEnRoute] = enroute;
+            count_stats[Constants.OrderStatusPending] = pending;
+            count_stats[Constants.OrderStatusJustPlaced] = justplaced;
             count_stats["total_books_sold"] = total_quantity_sold;
             count_stats["total_sales"] = (int)total_sales_value;
 
-
-            
-
-           
-                Console.WriteLine("Error in Fetching Order Stats");
-
-            
+            Console.WriteLine("Error in Fetching Order Stats");
 
             return count_stats;
-
         }
+
         public List<Dictionary<string,int>> DashBoard(int numberOfDetails)
         {
             _logger.LogInformation("Packing together dashboard results ");
@@ -867,21 +963,36 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.InventoryImplementa
             return topfive;
         }
 
-        /*
-        *  function to update details of an existing book
-        */
+        // Update details of an existing book
         public BookDetailsDto UpdateDetails(int id, string condition)
         {
             _logger.LogInformation("Fetching data to pre-populate edit page ");
 
-            var list = (from booke in _context.Book join price in _context.Price on booke.Book_Id equals price.Book.Book_Id where booke.Book_Id == id && price.Condition.ConditionName == condition select new BookDetailsDto {Author = booke.Author, Active = price.Active, BookId = booke.Book_Id, BookName = booke.Name, Price = price.ItemPrice, Publisher = booke.Publisher, Genre = booke.Genre, BookCondition = price.Condition, BookType = booke.Type, Quantity = price.Quantity, FrontUrl = booke.FrontUrl, BackUrl = booke.BackUrl, LeftUrl = booke.LeftUrl, RightUrl = booke.RightUrl }).ToList();
+            var list = (from booke in _context.Book 
+                        join price in _context.Price on booke.Book_Id equals price.Book.Book_Id 
+                        where booke.Book_Id == id && price.Condition.ConditionName == condition 
+                        select new BookDetailsDto 
+                        {
+                            Author = booke.Author, 
+                            Active = price.Active, 
+                            BookId = booke.Book_Id, 
+                            BookName = booke.Name, 
+                            Price = price.ItemPrice, 
+                            Publisher = booke.Publisher, 
+                            Genre = booke.Genre, 
+                            BookCondition = price.Condition, 
+                            BookType = booke.Type, 
+                            Quantity = price.Quantity, 
+                            FrontUrl = booke.FrontUrl, 
+                            BackUrl = booke.BackUrl, 
+                            LeftUrl = booke.LeftUrl, 
+                            RightUrl = booke.RightUrl 
+                        }).ToList();
 
             return list[0];
         }
 
-        /*
-        *  function to update details of an existing book
-        */
+        // Update details of an existing book
         public void PushDetails(BookDetailsDto bookdetailsDto)
         {
             _logger.LogInformation("Pushing edited details to database");
@@ -898,7 +1009,6 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.InventoryImplementa
                 {
                     bookdetailsDto.BackUrl = _rekognitionNPollyRepository.UploadtoS3(bookdetailsDto.BackPhoto, bookdetailsDto.BookId, bookdetailsDto.BookCondition.ConditionName).Result;
                 }
-
 
                 if (bookdetailsDto.LeftSidePhoto != null)
                 {
@@ -927,7 +1037,6 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.InventoryImplementa
 
                 }
             }
-
             catch (DbUpdateConcurrencyException ex)
             {
                 _logger.LogError(ex, "DBConcurrency Error");
@@ -938,24 +1047,37 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.InventoryImplementa
             }
         }
 
-        /*
-        *  function to display autosuggestions that enhances search functionality
-        */
+        // Display autosuggestions that enhances search functionality
         public List<string> autosuggest(string input)
         {
             _logger.LogInformation("Preparing autosuggestions");
 
-            List<string> names = new List<string>();
+            var names = new List<string>();
 
-           var booker = (from booke in _context.Book join price in _context.Price on booke.Book_Id equals price.Book.Book_Id where booke.Name.ToLower().Contains(input.ToLower()) select new BookDetailsDto { BookId = booke.Book_Id, BookName = booke.Name, Price = price.ItemPrice, Publisher = booke.Publisher, Genre = booke.Genre, BookCondition = price.Condition, BookType = booke.Type, Quantity = price.Quantity, FrontUrl = booke.FrontUrl, BackUrl = booke.BackUrl, LeftUrl = booke.LeftUrl, RightUrl = booke.RightUrl }).ToList();
-
+            var booker = (from booke in _context.Book 
+                          join price in _context.Price on booke.Book_Id equals price.Book.Book_Id 
+                          where booke.Name.ToLower().Contains(input.ToLower()) 
+                          select new BookDetailsDto 
+                          { 
+                              BookId = booke.Book_Id, 
+                              BookName = booke.Name, 
+                              Price = price.ItemPrice, 
+                              Publisher = booke.Publisher, 
+                              Genre = booke.Genre, 
+                              BookCondition = price.Condition, 
+                              BookType = booke.Type, 
+                              Quantity = price.Quantity, 
+                              FrontUrl = booke.FrontUrl, 
+                              BackUrl = booke.BackUrl, 
+                              LeftUrl = booke.LeftUrl, 
+                              RightUrl = booke.RightUrl 
+                          }).ToList();
 
             foreach (var i in booker)
             {
                 if (!names.Contains(i.BookName))
                 {
                     names.Add(i.BookName);
-
                 }
             }
          
@@ -990,38 +1112,29 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.InventoryImplementa
                 }
             }
 
-
             return names;
         }
 
-
-
-
         public List<string> ScreenInventory()
         {
-            List <string> BookList = new List<string>();
+            var bookList = new List<string>();
             var query = _context.Price
-                                       .Include(price => price.Condition)
-                                       .Include(price => price.Book)
-                                       .Include(p => p.Book.Publisher)
-                                       .Include(p => p.Book.Genre)
-                                       .Include(p => p.Book.Type).ToList();
+                            .Include(price => price.Condition)
+                            .Include(price => price.Book)
+                            .Include(p => p.Book.Publisher)
+                            .Include(p => p.Book.Genre)
+                            .Include(p => p.Book.Type).ToList();
+
             foreach(var i in query)
             {
                 if (i.Quantity <= 5)
                 {
                     var detail = i.Book.Name + "*" + i.Book.Publisher.Name + "*" + i.Book.Type.TypeName + "*" + i.Condition.ConditionName + "*" + i.Quantity;
-                    BookList.Add(detail);
+                    bookList.Add(detail);
                 }
             }
 
-            return BookList;
+            return bookList;
         }
-
     }
-
-
 }
-
-
-

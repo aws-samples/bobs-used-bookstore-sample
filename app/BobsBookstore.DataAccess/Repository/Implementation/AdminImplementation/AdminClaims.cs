@@ -7,7 +7,7 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.AdminImplementation
     {
        public AdminUser GetAdminClaims(IEnumerable<System.Security.Claims.Claim> Claims)
         {
-            AdminUser ad = new AdminUser();
+            var ad = new AdminUser();
             foreach(var claim in Claims)
             {
                 string type = claim.Type;
@@ -22,7 +22,6 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.AdminImplementation
                         break;
                     default: break;
                 }
-               
             }
 
             return ad;

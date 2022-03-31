@@ -1,10 +1,10 @@
-﻿using BobsBookstore.DataAccess.Data;
-using BobsBookstore.DataAccess.Repository.Interface;
-using Microsoft.EntityFrameworkCore;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore;
+using BobsBookstore.DataAccess.Data;
+using BobsBookstore.DataAccess.Repository.Interface;
 
 namespace BobsBookstore.DataAccess.Repository.Implementation
 {
@@ -27,7 +27,6 @@ namespace BobsBookstore.DataAccess.Repository.Implementation
         {
             return DatabaseContext.Set<TModel>().Find(id);
         }
-
 
         public TModel Get(string id)
         {
@@ -52,13 +51,11 @@ namespace BobsBookstore.DataAccess.Repository.Implementation
         public void Update(TModel entity)
         {
             DatabaseContext.Entry(entity).State = EntityState.Modified;
-
         }
 
-        public IEnumerable<TModel> Get(
-            Expression<Func<TModel, bool>> filter = null,
-            Func<IQueryable<TModel>, IOrderedQueryable<TModel>> orderBy = null,
-            string includeProperties = "")
+        public IEnumerable<TModel> Get(Expression<Func<TModel, bool>> filter = null,
+                                       Func<IQueryable<TModel>, IOrderedQueryable<TModel>> orderBy = null,
+                                       string includeProperties = "")
         {
             IQueryable<TModel> query = dbSet;
 
@@ -87,7 +84,5 @@ namespace BobsBookstore.DataAccess.Repository.Implementation
         {
             DatabaseContext.SaveChanges();
         }
-
-       
     }
 }

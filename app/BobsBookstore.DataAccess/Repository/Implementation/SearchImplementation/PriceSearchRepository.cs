@@ -36,7 +36,6 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.SearchImplementatio
                  .ThenInclude(book => book.Publisher);
             
                 return price;
-                
         }
     }
 }

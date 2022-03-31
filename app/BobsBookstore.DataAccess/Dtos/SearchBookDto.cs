@@ -25,6 +25,5 @@ namespace BobsBookstore.DataAccess.Dtos
         public string SortBy { get; set; }
 
         public string Ascdesc { get; set; }
-
     }
 }

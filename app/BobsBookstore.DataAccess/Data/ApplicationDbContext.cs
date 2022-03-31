@@ -1,12 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.IO;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design;
+using Microsoft.Extensions.Configuration;
 using BobsBookstore.Models.Books;
 using BobsBookstore.Models.Carts;
 using BobsBookstore.Models.Customers;
 using BobsBookstore.Models.Orders;
-using Microsoft.EntityFrameworkCore.Design;
-using Microsoft.Extensions.Configuration;
-using System.IO;
-
 
 namespace BobsBookstore.DataAccess.Data
 {
@@ -20,7 +19,6 @@ namespace BobsBookstore.DataAccess.Data
              : base(options)
         {
         }
-
 
         public DbSet<Address> Address { get; set; }
         public DbSet<Book> Book { get; set; }
@@ -45,16 +43,12 @@ namespace BobsBookstore.DataAccess.Data
             modelBuilder.Entity<ResaleStatus>().HasData(new ResaleStatus { ResaleStatus_Id = 3, Status = "Rejected" });
             modelBuilder.Entity<ResaleStatus>().HasData(new ResaleStatus { ResaleStatus_Id = 4, Status = "Shipment Receipt Confirmed" });
             modelBuilder.Entity<ResaleStatus>().HasData(new ResaleStatus { ResaleStatus_Id = 5, Status = "Payment Completed" });
-            
 
             modelBuilder.Entity<OrderStatus>().HasData(new OrderStatus { OrderStatus_Id = 1, Status = "Just Placed", Position=1 });
             modelBuilder.Entity<OrderStatus>().HasData(new OrderStatus { OrderStatus_Id = 2, Status = "En Route", Position = 2 });
             modelBuilder.Entity<OrderStatus>().HasData(new OrderStatus { OrderStatus_Id = 3, Status = "Pending", Position = 3 });
             modelBuilder.Entity<OrderStatus>().HasData(new OrderStatus { OrderStatus_Id = 4, Status = "Delivered", Position = 4 });
-
-
         }
-
     }
 
     public class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<ApplicationDbContext>

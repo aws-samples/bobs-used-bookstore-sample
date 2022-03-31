@@ -26,7 +26,6 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.OrderImplementation
             return query;
         }
 
-
         public IDbContextTransaction BeginTransaction()
         {
             var transaction = _context.Database.BeginTransaction();
@@ -38,7 +37,6 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.OrderImplementation
         {
             await transaction.CommitAsync();
         }
-
 
         public async Task ContextSaveChanges()
         {
@@ -57,6 +55,5 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.OrderImplementation
         {
             return query.Where(lambda);
         }
-
     }
 }

@@ -1,5 +1,5 @@
-﻿using BobsBookstore.Models.Customers;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
+using BobsBookstore.Models.Customers;
 
 namespace BobsBookstore.Models.Carts
 {
@@ -7,7 +7,9 @@ namespace BobsBookstore.Models.Carts
     {
         [Key]
         public string Cart_Id { get; set; }
+
         public Customer Customer { get; set; }
+        
         public string IP { get; set; }
     }
 }

@@ -1,8 +1,7 @@
-﻿using BobsBookstore.Models.Books;
-using System;
+﻿using System;
 using System.Linq;
 using System.Linq.Expressions;
-
+using BobsBookstore.Models.Books;
 
 namespace BobsBookstore.DataAccess.Repository.Interface.InventoryInterface
 {
@@ -26,8 +25,5 @@ namespace BobsBookstore.DataAccess.Repository.Interface.InventoryInterface
 
 
         IQueryable<Condition> ReturnFilterConditionQuery(IQueryable<Condition> query, Expression<Func<Condition, bool>> lambda);
-
-        
-
     }
 }

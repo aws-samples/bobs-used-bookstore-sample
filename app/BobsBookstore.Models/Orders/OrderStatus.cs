@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-
 namespace BobsBookstore.Models.Orders
 {
     public class OrderStatus

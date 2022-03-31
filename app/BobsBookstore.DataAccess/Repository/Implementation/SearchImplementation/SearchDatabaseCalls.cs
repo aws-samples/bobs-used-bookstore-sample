@@ -6,7 +6,6 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.SearchImplementatio
 {
     public class SearchDatabaseCalls: ISearchDatabaseCalls
     {
-
         private ApplicationDbContext _context;
 
         public SearchDatabaseCalls(ApplicationDbContext context)

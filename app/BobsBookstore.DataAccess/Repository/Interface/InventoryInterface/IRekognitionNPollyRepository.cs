@@ -1,17 +1,13 @@
-﻿using Amazon.Polly;
+﻿using System.IO;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using SixLabors.ImageSharp.Formats;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
+using Amazon.Polly;
 
 namespace BobsBookstore.DataAccess.Repository.Interface.Implementations
 {
     public interface IRekognitionNPollyRepository
     {
-
         public Task<bool> IsBook(string bucket, string key);
 
         public  Task<bool> IsImageSafe(string bucket, string key);
@@ -25,6 +21,5 @@ namespace BobsBookstore.DataAccess.Repository.Interface.Implementations
         public string GenerateAudioSummary(string BookName, string Summary, string targetLanguageCode, VoiceId voice);
 
         public  Task<string> UploadtoS3(IFormFile file, long BookId, string Condition);
-
     }
 }

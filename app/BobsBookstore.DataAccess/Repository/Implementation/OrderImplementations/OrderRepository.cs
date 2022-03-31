@@ -11,20 +11,15 @@ using BobsBookstore.DataAccess.Dtos;
 
 namespace BobsBookstore.DataAccess.Repository.Implementation.OrderImplementations
 {
-
+    // Order Repository contains all functions associated with Order Model
     public class OrderRepository : IOrderRepository
     {
-        /*
-         * Order Repository contains all functions associated with Order Model
-         */
-
         private readonly int _ordersPerPage = 20;
         private readonly string[] OrderIncludes = { "Customer", "Address", "OrderStatus"};
         private ISearchRepository _searchRepo;
         private IOrderDatabaseCalls _orderDbCalls;
         private IExpressionFunction _expFunc;
 
-        // Set up connection to Database 
         public OrderRepository(ISearchRepository searchRepo, IOrderDatabaseCalls orderDbCalls, IExpressionFunction expFunc)
         {
             _searchRepo = searchRepo;
@@ -32,9 +27,7 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.OrderImplementation
             _expFunc = expFunc;
         }
 
-
-
-        // Find Single Order by the Order Id
+        // Find single order by the Order Id
         public Order FindOrderById(long id)
         {
             string filterValue = "Order_Id";
@@ -50,37 +43,34 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.OrderImplementation
 
                 order = query.First();
             }
-            catch (InvalidOperationException ex)
+            catch
             {
                 order = null;
             }
-
-
 
             return order;
         }
 
         private ManageOrderDto RetrieveDto(string filterValue, string searchString, int pageNum, int totalPages, int[] pages, List<Order> order)
         {
-            var manageOrderDto = new ManageOrderDto();
-
-            manageOrderDto.SearchString = searchString;
-            manageOrderDto.FilterValue = filterValue;
-            manageOrderDto.Orders = order;
-            manageOrderDto.Pages = pages;
-            manageOrderDto.HasPreviousPages = (pageNum > 1);
-            manageOrderDto.CurrentPage = pageNum;
-            manageOrderDto.HasNextPages = (pageNum < totalPages);
+            var manageOrderDto = new ManageOrderDto
+            {
+                SearchString = searchString,
+                FilterValue = filterValue,
+                Orders = order,
+                Pages = pages,
+                HasPreviousPages = (pageNum > 1),
+                CurrentPage = pageNum,
+                HasNextPages = (pageNum < totalPages)
+            };
 
             return manageOrderDto;
         }
 
-
-        // Find All the Orders in the Table
+        // Find all the orders in the table
         public ManageOrderDto GetAllOrders(int pageNum)
         {
-
-            ManageOrderDto viewModel = new ManageOrderDto();
+            var viewModel = new ManageOrderDto();
 
             var orderBase = _orderDbCalls.GetBaseQuery("BobsBookstore.Models.Orders.Order");
 
@@ -93,10 +83,8 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.OrderImplementation
             return viewModel;
         }
 
-
         private ManageOrderDto RetrieveFilterDto(IQueryable<Order> filterQuery, int totalPages, int pageNum, string filterValue, string searchString)
         {
-
             var orders = filterQuery
                             .OrderBy(order => order.OrderStatus.Position)
                             .ThenBy(order => order.DeliveryDate)
@@ -111,25 +99,21 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.OrderImplementation
             return manageOrderDto;
         }
 
-
-
         public ManageOrderDto FilterList(string filterValue, string searchString, int pageNum)
         {
-
             var parameterExpression = _expFunc.ReturnParameterExpression(typeof(Order), "Order");
 
             var expression = _searchRepo.ReturnExpression(parameterExpression, filterValue, searchString);
 
-            Expression<Func<Order, bool>> lambda = _expFunc.ReturnLambdaExpression<Order>(expression, parameterExpression);
+            var lambda = _expFunc.ReturnLambdaExpression<Order>(expression, parameterExpression);
 
             if (lambda == null)
             {
                 int[] pages = Enumerable.Range(1, 1).ToArray();
 
-
                 return RetrieveDto("", "", 1, 1, pages, null);
-
             }
+
             var orderBase = _orderDbCalls.GetBaseQuery("BobsBookstore.Models.Orders.Order");
 
             var query = _orderDbCalls.ReturnBaseQuery<Order>(orderBase, OrderIncludes);
@@ -140,15 +124,13 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.OrderImplementation
 
             var manageOrderDto = RetrieveFilterDto(filterQuery, totalPages, pageNum, filterValue, searchString);
             return manageOrderDto;
-
         }
-
 
         public IQueryable<Order> FilterOrder(string filterValue, string searchString, string inBetween, string operand, string negate)
         {
             string tableName = "Order";
 
-            Expression<Func<Order, bool>> lambda = _expFunc.ReturnLambdaExpression<Order>(tableName, filterValue, searchString, inBetween, operand, negate);
+            var lambda = _expFunc.ReturnLambdaExpression<Order>(tableName, filterValue, searchString, inBetween, operand, negate);
 
             var orderBase = _orderDbCalls.GetBaseQuery("BobsBookstore.Models.Orders.Order");
 
@@ -158,6 +140,5 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.OrderImplementation
 
             return filterQuery;
         }
-
     }
 }

@@ -10,29 +10,22 @@ using BobsBookstore.DataAccess.Repository.Interface.SearchImplementations;
 
 namespace BobsBookstore.DataAccess.Repository.Implementation.OrderImplementations
 {
+    // Order Status Repository contains all functions associated with OrderStatus Model
     public class OrderStatusRepository : IOrderStatusRepository
     {
-        /*
-         * Order Status Repository contains all functions associated with OrderStatus Model
-         */
-
         private IOrderDatabaseCalls _orderDbCalls;
         private IExpressionFunction _expFunc;
         private const string OrderStatusJustPlaced = "Just Placed";
 
-
-        // Set up Database Connection
         public OrderStatusRepository(IOrderDatabaseCalls orderDbCalls, IExpressionFunction expFunc)
         {
-
             _orderDbCalls = orderDbCalls;
             _expFunc = expFunc;
         }
 
-        // Return a Singel Order Status Instance by Order Status Id
+        // Return a single order status instance by Order Status Id
         public OrderStatus FindOrderStatusById(long id)
         {
-
             string filterValue = "OrderStatus_Id";
             string searchString = "" + id;
             string inBetween = "";
@@ -55,7 +48,6 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.OrderImplementation
             string negate = "false";
 
             var query = FilterOrderStatus(filterValue, searchString, inBetween, operand, negate);
-
 
             var orderStatus = query.FirstOrDefault();
             return orderStatus;
@@ -89,7 +81,6 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.OrderImplementation
                 await _orderDbCalls.ContextSaveChanges();
 
                 return order;
-                    
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -106,10 +97,9 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.OrderImplementation
 
         public IQueryable<OrderStatus> FilterOrderStatus(string filterValue, string searchString, string inBetween, string operand, string negate)
         {
-
             string tableName = "OrderStatus";
 
-            Expression<Func<OrderStatus, bool>> lambda = _expFunc.ReturnLambdaExpression<OrderStatus>(tableName, filterValue, searchString, inBetween, operand, negate);
+            var lambda = _expFunc.ReturnLambdaExpression<OrderStatus>(tableName, filterValue, searchString, inBetween, operand, negate);
 
             var orderStatusBase = _orderDbCalls.GetBaseQuery("BobsBookstore.Models.Orders.OrderStatus");
 
