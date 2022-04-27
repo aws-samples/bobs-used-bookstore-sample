@@ -1,10 +1,9 @@
-using BookstoreBackend;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using NLog;
 
-namespace DIAndLoggingTestApp
+namespace BookstoreBackend
 {
     public class Program
     {
@@ -38,7 +37,7 @@ namespace DIAndLoggingTestApp
              logging.ClearProviders();
              logging.SetMinimumLevel(Microsoft.Extensions.Logging.LogLevel.Trace);
          })
-         .UseNLog();  
+         .UseNLog();
          */
         // NLog: Setup NLog for Dependency injection
     }
