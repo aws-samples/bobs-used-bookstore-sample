@@ -1,13 +1,13 @@
-﻿@model BookstoreBackend.ViewModel.FetchBooksViewModel
+﻿@using BookstoreBackend.ViewModel.ManageInventory
+@model BookstoreBackend.ViewModel.FetchBooksViewModel
 
 @{
     var types = (List<string>)ViewData["Types"];
     var status = (string)ViewData["status"];
     var conditions = (List<string>)ViewData["Conditions"];
-}
-@{
+
     var Genre = Model.Genre.ToUpper();
-    var books = (IEnumerable<BookstoreBackend.ViewModel.ManageInventory.BookDetailsViewModel>)ViewData["Books"];
+    var books = (IEnumerable<BookDetailsViewModel>)ViewData["Books"];
 
     var Author = Model.Author.ToUpper();
     var BookName = Model.BookName.ToUpper();
@@ -21,7 +21,7 @@
 </style>
 
 <div class="overview-wrap">
-    <h1 class="title-1 text-center font-weight-light" style="margin-bottom: 45px;">Book Details</h>
+    <h1 class="title-1 text-center font-weight-light" style="margin-bottom: 45px;">Book Details</h1>
 </div>
 <!-- Page Content -->
 <div class="container">
@@ -30,7 +30,7 @@
             <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
                 <div class="carousel-inner">
                     <div class="carousel-item active">
-                        @if (String.IsNullOrEmpty(@Model.FrontUrl))
+                        @if (string.IsNullOrEmpty(Model.FrontUrl))
                         {
                             <img class="img-thumbnail" style="width:100%;height:100%" src="https://dtdt6j0vhq1rq.cloudfront.net/default0Kind of New.jpg" alt="Ft slide">
                         }
@@ -40,7 +40,7 @@
                         }
                     </div>
                     <div class="carousel-item">
-                        @if (String.IsNullOrEmpty(@Model.BackUrl))
+                        @if (string.IsNullOrEmpty(Model.BackUrl))
                         {
                             <img class="img-thumbnail" style="width:100%;height:100%" src="https://dtdt6j0vhq1rq.cloudfront.net/default0Kind of New.jpg" alt="Second slide">
                         }
@@ -50,8 +50,8 @@
                         }
                     </div>
                     <div class="carousel-item">
-                        
-                        @if (string.IsNullOrEmpty(@Model.LeftUrl))
+
+                        @if (string.IsNullOrEmpty(Model.LeftUrl))
                         {
                             <img class="img-thumbnail" style="width:100%;height:100%" src="https://dtdt6j0vhq1rq.cloudfront.net/default0Kind of New.jpg" alt="Third slide">
                         }
@@ -70,7 +70,7 @@
                 <span class="carousel-control-next-icon" aria-hidden="true"></span>
                 <span class="main-text sr-only">Next</span>
             </a>
-            @if (!String.IsNullOrEmpty(@fetch_status))
+            @if (!string.IsNullOrEmpty(fetch_status))
             {
                 <h4 class="main text font-weight-light" style="margin-top:10% ;margin-left:5%">@fetch_status</h4>
             }
@@ -103,20 +103,17 @@
                 </div>
             </div>
 
-
-
             <p class="main-text" style="margin-left:12%;margin-top:3%">
                 @Model.Summary
             </p>
 
-
-            @{ var param = new Dictionary<string, string>
-                                                                                                                     {
-                        {"BookName",Model.BookName + ""},
-                        {"type",Model.Type + ""},
-                        {"condition_chosen", Model.Condition + "" }
-
-                     };
+            @{
+                var param = new Dictionary<string, string>
+                {
+                    { "BookName", $"{Model.BookName}" },
+                    { "type", $"{Model.Type}" },
+                    { "condition_chosen", $"{Model.Condition}" }
+                };
             }
             <form asp-controller="Inventory" asp-action="BookDetails" asp-all-route-data="param" style="padding-bottom: 0px;" method="post">
                 <div class="row justify-content-center">
@@ -139,7 +136,7 @@
                         </select>
                     </div>
                 </div>
-                <div class="row justify-content-center" >
+                <div class="row justify-content-center">
                     <button type="submit" class="main-text btn  btn-lg text-white text-center" style="background-color: #7D53DE;width: 40%;margin-top: 4%;font-size: 1rem">Show Book List</button>
                 </div>
             </form>
@@ -151,23 +148,15 @@
             </form>
         </div>
     </div>
-
 </div>
-
-
-
 
 @if (status == "List" && books != null)
 {
     <hr class="mt-2 mb-5">
     <div class="container">
         <div class="row" style="margin-left:2%">
-
-
             <div class="col-md-12">
                 <div class="table-responsive">
-
-
                     <table id="mytable" class="table table-bordred table-striped">
                         <thead>
                         <th>Price</th>
@@ -178,40 +167,32 @@
                         <th>Edit</th>
                         </thead>
                         <tbody>
-                            <form method="post" style="padding-bottom: 0px;">
-                                @foreach (var m in books)
-                                {
-                                    <tr>
-                                        <td>@m.Price</td>
-                                        <td>@m.Quantity</td>
-                                        <td>@m.Publisher.Name</td>
-                                        <td>@m.BookType.TypeName</td>
-                                        <td>@m.BookCondition.ConditionName</td>
-                                        <td>
-                                            @{
-                                                var parm = new Dictionary<string, string>
-                                                                                                                                                                                                                                                                               {
-
-                                                {"Condition", m.BookCondition.ConditionName + ""}
-
-                                           };
-                                            }
-                                            <button type="submit" name="BookId" value="@m.BookId" asp-controller="Inventory" asp-action="UpdateDetails" asp-all-route-data="parm" class="btn btn-outline-secondary rounded">Edit</button>
-
-                                        </td>
-                                    </tr>
-                                }
-                            </form>
+                        <form method="post" style="padding-bottom: 0px;">
+                            @foreach (var m in books)
+                            {
+                                <tr>
+                                    <td>@m.Price</td>
+                                    <td>@m.Quantity</td>
+                                    <td>@m.Publisher.Name</td>
+                                    <td>@m.BookType.TypeName</td>
+                                    <td>@m.BookCondition.ConditionName</td>
+                                    <td>
+                                        @{
+                                            var parm = new Dictionary<string, string>
+                                            {
+                                                { "Condition", $"{m.BookCondition.ConditionName}" }
+                                            };
+                                        }
+                                        <button type="submit" name="BookId" value="@m.BookId" asp-controller="Inventory" asp-action="UpdateDetails" asp-all-route-data="parm" class="btn btn-outline-secondary rounded">Edit</button>
+                                    </td>
+                                </tr>
+                            }
+                        </form>
                         </tbody>
-
                     </table>
-
                     <div class="clearfix"></div>
                 </div>
-
             </div>
         </div>
     </div>
-
 }
-

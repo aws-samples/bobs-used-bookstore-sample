@@ -1,16 +1,18 @@
 ﻿@model BookstoreFrontend.Models.ViewModels.OrderDisplayModel
 
-@{ ViewData["Title"] = "Details";
-                Layout = "~/Views/Shared/_Layout.cshtml"; }
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
 <head>
     <meta charset="UTF-8">
     <title>Bob's Book Store</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <link rel="stylesheet" href="/css/bootstrap.min.css">
 
-<link rel="stylesheet" href="/css/googlefont.css">
+    <link rel="stylesheet" href="/css/googlefont.css">
     <link rel="stylesheet" href="/css/font-awesome.min.css">
-    
+
     <link rel="stylesheet" href="/css/styles.css">
 
 </head>
@@ -19,40 +21,45 @@
 <div class="container mt-1">
     <h5>Status: @Model.OrderDetail.OrderStatus.Status</h5>
 
-    @if (String.IsNullOrEmpty(Model.OrderDetail.DeliveryDate))
+    @if (string.IsNullOrEmpty(Model.OrderDetail.DeliveryDate))
     {
-<h5>Delivery Date: Unknown</h5> }
-            else
-            {
-<h5>Delivery Date: @Model.OrderDetail.DeliveryDate</h5>}
+        <h5>Delivery Date: Unknown</h5>
+    }
+    else
+    {
+        <h5>Delivery Date: @Model.OrderDetail.DeliveryDate</h5>
+    }
     <h5>Total cost: $@(Model.OrderDetail.Subtotal + Model.OrderDetail.Tax)</h5>
 </div>
 <div class="container mt-5">
     <h2>Your Order:</h2>
     <table class="table table-hover mt-5">
         <thead>
-            <tr>
-                <th cope="col">Cover</th>
-                <th scope="col">Title</th>
-                <th scope="col">Quantity</th>
-                <th scope="col">Price</th>
-            </tr>
+        <tr>
+            <th cope="col">Cover</th>
+            <th scope="col">Title</th>
+            <th scope="col">Quantity</th>
+            <th scope="col">Price</th>
+        </tr>
         </thead>
         <tbody>
-            @foreach (var book in Model.OrderBookDetails)
-            {
-<tr>
-    <td><img src="@book.Book.FrontUrl" height="80" width="50" /></td>
-    <td>
-        <a asp-controller="Search" asp-action="Detail" asp-route-id="@book.Book.Book_Id">
-            @book.Book.Name
-        </a>
-    </td>
-    <td>@book.Quantity</td>
-    <td>$@book.OrderDetailPrice</td>
-</tr>            }
+        @foreach (var book in Model.OrderBookDetails)
+        {
+            <tr>
+                <td>
+                    <img src="@book.Book.FrontUrl" height="80" width="50"/>
+                </td>
+                <td>
+                    <a asp-controller="Search" asp-action="Detail" asp-route-id="@book.Book.Book_Id">
+                        @book.Book.Name
+                    </a>
+                </td>
+                <td>@book.Quantity</td>
+                <td>$@book.OrderDetailPrice</td>
+            </tr>
+        }
         </tbody>
 
     </table>
 </div>
-<br />
+<br/>

@@ -78,11 +78,12 @@
 
 </style>
 
-<div   class="mb-2">
+<div class="mb-2">
     <table id="key"r>
         <tr class="keyRows">
-            <td><div class="box boxRed">
-                    
+            <td>
+                <div class="box boxRed">
+
                 </div>
                 <span>
                     Delayed Orders
@@ -90,12 +91,11 @@
             </td>
             <td>
                 <div class="box boxYellow"></div>
-                <span> Upcoming Orders</span>
+                <span>Upcoming Orders</span>
             </td>
         </tr>
     </table>
 </div>
-
 
 <div class="card mb-3 border-dark shadow">
     <div class="card-body">
@@ -103,57 +103,68 @@
             <table class="orderT box-shadow table_font table table-hover table-striped  h-auto">
 
                 <thead class="thead-light">
-                    <tr>
-                        <th scope="col">Order_ID</th>
-                        <th scope="col">Customer_ID</th>
-                        <th scope="col">CustomerName</th>
+                <tr>
+                    <th scope="col">Order_ID</th>
+                    <th scope="col">Customer_ID</th>
+                    <th scope="col">CustomerName</th>
 
-                        <th scope="col"><a href="@Url.Action("WelcomePage","Home" ,new {sortByValue = ViewBag.SortPrice })">Price @ViewBag.PriceArrow</a></th>
-                        <th scope="col"><a href="@Url.Action("WelcomePage", "Home", new {sortByValue = ViewBag.SortDate })">Delivery Date @ViewBag.DateArrow</a></th>
-                        <th scope="col"><a href="@Url.Action("WelcomePage", "Home", new {sortByValue = ViewBag.SortStatus })">Status @ViewBag.StatusArrow</a></th>
-                        <th scope="col"> Action</th>
+                    <th scope="col">
+                        <a href="@Url.Action("WelcomePage", "Home", new { sortByValue = ViewBag.SortPrice })">Price @ViewBag.PriceArrow</a>
+                    </th>
+                    <th scope="col">
+                        <a href="@Url.Action("WelcomePage", "Home", new { sortByValue = ViewBag.SortDate })">Delivery Date @ViewBag.DateArrow</a>
+                    </th>
+                    <th scope="col">
+                        <a href="@Url.Action("WelcomePage", "Home", new { sortByValue = ViewBag.SortStatus })">Status @ViewBag.StatusArrow</a>
+                    </th>
+                    <th scope="col"> Action</th>
 
-                    </tr>
+                </tr>
                 </thead>
                 <tbody>
-                    @if (updates.ImpOrders.Count == 0)
+                @if (updates.ImpOrders.Count == 0)
+                {
+                    <tr>
+                        <td colspan="7" rowspan="4" style="text-align:center;">
+                            <span>
+                                <h4>No Updates Currently</h4>
+                            </span>
+                        </td>
+
+                    </tr>
+                }
+                else
+                {
+                    @foreach (var order in updates.ImpOrders)
                     {
-                        <tr>
-                            <td colspan="7" rowspan="4" style="text-align:center;"><span><h4>No Updates Currently</h4></span></td>
+                        var param = new Dictionary<string, string>
+                        {
+                            { "orderId", $"{order.Order.Order_Id}" }
+                        };
+                        var status = order.Order.OrderStatus.OrderStatus_Id;
+
+                        <tr class="">
+                            <td>
+                                @order.Order.Order_Id
+                                <div class="dot @(order.Severity == 2 ? "dotRed" : "dotYellow")">
+
+                                </div>
+
+                            </td>
+                            <td>@order.Order.Customer.Customer_Id</td>
+                            <td>@order.Order.Customer.FirstName @order.Order.Customer.LastName</td>
+                            <td>$@(order.Order.Subtotal + order.Order.Tax)</td>
+                            <td> @DateTime.Parse(order.Order.DeliveryDate).ToString("MM/dd/yyyy")</td>
+                            <td>@order.Order.OrderStatus.Status</td>
+                            <td>
+                                <a class="card-link" asp-controller="Orders" asp-action="ProcessOrders" asp-all-route-data="param">View Details</a>
+                            </td>
 
                         </tr>
                     }
-                    else
-                    {
-                        @foreach (var order in updates.ImpOrders)
-                        {
-                            var param = new Dictionary<string, string>
-                            {
-                                {"orderId",order.Order.Order_Id + ""}
-                            };
-                            var status = order.Order.OrderStatus.OrderStatus_Id;
-
-                            <tr class="">
-                                <td>
-                                    @order.Order.Order_Id 
-                                    <div class="dot @((order.Severity == 2) ? "dotRed" : "dotYellow" )">
-
-                                    </div>
-                                
-                                </td>
-                                <td>@order.Order.Customer.Customer_Id</td>
-                                <td>@order.Order.Customer.FirstName  @order.Order.Customer.LastName</td>
-                                <td>$@(order.Order.Subtotal + order.Order.Tax)</td>
-                                <td> @DateTime.Parse(order.Order.DeliveryDate).ToString("MM/dd/yyyy")</td>
-                                <td>@order.Order.OrderStatus.Status</td>
-                                <td><a class="card-link" asp-controller="Orders" asp-action="ProcessOrders" asp-all-route-data="param">View Details</a></td>
-                                
-                            </tr>
-                        }
-                    }
+                }
                 </tbody>
             </table>
         </div>
-
     </div>
 </div>

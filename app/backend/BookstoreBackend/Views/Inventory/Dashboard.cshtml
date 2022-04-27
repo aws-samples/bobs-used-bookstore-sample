@@ -1,10 +1,8 @@
 ﻿@{
-
     var orders_genre = (Dictionary<string, int>)ViewData["orders_genre"];
     var orders_type = (Dictionary<string, int>)ViewData["orders_type"];
     var orders_publisher = (Dictionary<string, int>)ViewData["orders_publisher"];
     var orders_name = (Dictionary<string, int>)ViewData["orders_name"];
-
 
     var inventory_stats = (List<int>)ViewData["Inventory"];
 
@@ -24,13 +22,9 @@
     var justplaced = order_stats[4];
     var total_books_sold = order_stats[4];
     var total_sales = order_stats[6];
-
-
-
 }
 
 <style>
-
     .website-text {
         font-family: 'Arvo', serif;
         color: black;
@@ -48,34 +42,32 @@
         <h3 class="col-12 website-text text-center">Inventory Dashboard</h3>
     </div>
     <div class="row d-flex justify-content-center">
-        <partial name="./Partials/_BookCardsStats" view-data="ViewData" />
-
+        <partial name="./Partials/_BookCardsStats" view-data="ViewData"/>
     </div>
 
-
     <div class="row" style="margin-top:35px;">
-        <partial name="./Partials/_OrderStatsGraph" view-data="ViewData" />
+        <partial name="./Partials/_OrderStatsGraph" view-data="ViewData"/>
     </div>
 
     <div class="row" style="margin-top:35px;">
         <div class="col-lg-4 col-md-4 col-sm-3">
             <h5 class="website-text text-center">Top 5 Genres</h5>
-            <partial name="./Partials/_GenreGraph" view-data="ViewData" />
+            <partial name="./Partials/_GenreGraph" view-data="ViewData"/>
         </div>
 
         <div class="col-lg-4 col-md-4 col-sm-3">
             <h5 class="website-text text-center">Top 2 Types</h5>
-            <partial name="./Partials/_TypeGraph" view-data="ViewData" />
+            <partial name="./Partials/_TypeGraph" view-data="ViewData"/>
         </div>
 
         <div class="col-lg-4 col-md-4 col-sm-3">
             <h5 class="website-text text-center">Top 5 Publishers</h5>
-            <partial name="./Partials/_PublisherGraph" view-data="ViewData" />
+            <partial name="./Partials/_PublisherGraph" view-data="ViewData"/>
         </div>
 
         <div class="col-lg-4 col-md-4 col-sm-3" style="margin-top:25px;">
             <h5 class="website-text text-center">Top 5 Book Titles</h5>
-            <partial name="./Partials/_BookNameGraph" view-data="ViewData" />
+            <partial name="./Partials/_BookNameGraph" view-data="ViewData"/>
         </div>
     </div>
 </div>

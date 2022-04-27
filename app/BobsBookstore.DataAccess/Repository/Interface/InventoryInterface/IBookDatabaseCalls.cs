@@ -24,6 +24,7 @@ namespace BobsBookstore.DataAccess.Repository.Interface.InventoryInterface
         IQueryable<Condition> ReturnBaseConditionQuery(IQueryable query, string[] includes);
 
 
-        IQueryable<Condition> ReturnFilterConditionQuery(IQueryable<Condition> query, Expression<Func<Condition, bool>> lambda);
+        IQueryable<Condition> ReturnFilterConditionQuery(IQueryable<Condition> query,
+            Expression<Func<Condition, bool>> lambda);
     }
 }

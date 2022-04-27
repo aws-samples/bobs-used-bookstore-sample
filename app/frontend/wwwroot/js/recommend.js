@@ -21,8 +21,6 @@
     barChart(bar, data); //画柱状图
 
 
-
-
     var pie = document.getElementById("pie"),
         datasets = {
             colors: ["blue", "grey", "black", "red", "green"], //颜色
@@ -33,7 +31,6 @@
             radius: 100 //半径
         };
     pieChart(pie, datasets); //画饼状图
-
 
 
     var line = document.getElementById("line"),
@@ -85,8 +82,6 @@
     //curveChart();//绘制曲线
 
 
-
-
     var bg = document.getElementById("curve")
     linedata = {
         labels: ["1月", "2月", "3月", "4月", "5月", "6月", "7月"],//标签
@@ -112,6 +107,7 @@
 function compare(value1, value2) {
     return value2 - value1;
 }
+
 /*柱状图
  * elem:要操作的画布元素
  * data:所需格式的数据*/
@@ -129,7 +125,7 @@ function barChart(elem, data) {
             bheight = myheight - bDistance * 2, //边框高度
             values = data.dataSets[0].values, //绘图的值
             sortValues = values.slice(0), //基于当前数组中的一个或多个项创建一个新数组（解决了该数组排序原数组也被排序的问题）
-            serialValues = new Array(); //用于存储序列化后的值
+            serialValues = []; //用于存储序列化后的值
         sortValues.sort(compare);
         if (sortValues[0] > bheight) {
             (function () {
@@ -166,6 +162,7 @@ function barChart(elem, data) {
         ctx.fillText(data.dataSets[2].ytitle, mywidth - bDistance, myheight - bDistance + 15); //y轴代表什么
     }
 }
+
 //求和，计算百分比（画饼图时需要）
 
 function sumFunc(data) {
@@ -175,6 +172,7 @@ function sumFunc(data) {
     }
     return sum;
 }
+
 /*饼图
  * elem:要操作的画布元素
  * data:所需格式的数据*/
@@ -218,6 +216,7 @@ function pieChart(elem, data) {
         }
     }
 }
+
 /*绘制折线
  elem:操作的元素
  data：所需格式数据*/
@@ -271,7 +270,7 @@ function lineChart(elem, data) {
 
         //获取画图数据的最大值用于序列换数据
         var maxValue = 0,
-            cData = new Array();
+            cData = [];
         for (var i = 0; i < len; i++) {
             if (values[i] > maxValue) {
                 maxValue = values[i];
@@ -310,7 +309,7 @@ function lineChart(elem, data) {
         ctx.fill();
         //绘制坐标圆形对应的值
         ctx.beginPath();
-        ctx.fillStyle = data.txtSet.txtColor;; //文本颜色
+        ctx.fillStyle = data.txtSet.txtColor; //文本颜色
         for (var i = 0; i < len; i++) {
             var circleX = gridWidth / 2 + gridWidth * i,
                 circleY = actualHeight - cData[i];
@@ -342,6 +341,7 @@ function curveChart() {
 
     }
 }
+
 /* 绘制背景
  * elem:要操作的元素
  * data:所需格式的数据*/
@@ -401,7 +401,7 @@ function setBg(elem, data) {
         //绘制竖轴文字
         //判断最大值是否大于行高，确定每行的数值
         var maxValue = 0,
-            newValues = new Array(),
+            newValues = [],
             j = 0;
         for (var i = 0; i < cols; i++) {
             if (datas[i] > maxValue) {
@@ -433,7 +433,7 @@ function setBg(elem, data) {
 
         //画图
         //绘制折线
-        ctx.strokeStyle = data.ctxSets.lineColor;;
+        ctx.strokeStyle = data.ctxSets.lineColor;
         ctx.beginPath();
         var pointX = pgWidth / 2 + startX,
             pointY = startY + gHeight - newValues[0];
@@ -446,7 +446,7 @@ function setBg(elem, data) {
         ctx.stroke();
         //绘制坐标圆形
         ctx.beginPath();
-        ctx.fillStyle = data.ctxSets.circleColor;; //圆点的颜色
+        ctx.fillStyle = data.ctxSets.circleColor; //圆点的颜色
         for (var i = 0; i < cols; i++) {
             var circleX = pgWidth / 2 + startX + pgWidth * i,
                 circleY = startY + gHeight - newValues[i];

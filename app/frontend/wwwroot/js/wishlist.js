@@ -1,13 +1,14 @@
 ﻿var fruits = document.getElementsByName('fruits');
 var numbers = document.getElementsByClassName("numbers");
 
-var list = new Array();
+var list = [];
 for (var i = 0; i < fruits.length; i++) {
     fruits[i].onclick = count;
 }
 for (var i = 0; i < numbers.length; i++) {
     numbers[i].onclick = count;
 }
+
 function count() {
     var totalprice = 0;
     for (var i = 0; i < fruits.length; i++) {
@@ -18,6 +19,7 @@ function count() {
     }
     document.getElementById('totalprice').innerHTML = totalprice;
 }
+
 function selectall() {
     var sports = document.getElementsByName("fruits");
     for (i = 0; i < sports.length; i++) {
@@ -25,8 +27,9 @@ function selectall() {
         if (sportname.checked == true) {
             sportname.checked = false
 
+        } else {
+            sportname.checked = true;
         }
-        else { sportname.checked = true; }
 
     }
 }

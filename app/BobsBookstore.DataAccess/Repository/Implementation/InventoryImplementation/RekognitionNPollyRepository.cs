@@ -1,38 +1,38 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using System.IO;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Logging;
+using System.Threading.Tasks;
+using Amazon.Polly;
+using Amazon.Polly.Model;
 using Amazon.Rekognition;
 using Amazon.Rekognition.Model;
 using Amazon.S3;
 using Amazon.S3.Transfer;
-using Amazon.Polly;
-using SixLabors.ImageSharp.Processing;
+using BobsBookstore.DataAccess.Data;
+using BobsBookstore.DataAccess.Repository.Interface.Implementations;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using SixLabors.ImageSharp.Formats;
 using SixLabors.ImageSharp.Formats.Gif;
 using SixLabors.ImageSharp.Formats.Jpeg;
 using SixLabors.ImageSharp.Formats.Png;
-using BobsBookstore.DataAccess.Data;
-using BobsBookstore.DataAccess.Repository.Interface.Implementations;
-using Microsoft.Extensions.Configuration;
+using SixLabors.ImageSharp.Processing;
+using S3Object = Amazon.Rekognition.Model.S3Object;
 
 namespace BobsBookstore.DataAccess.Repository.Implementation.InventoryImplementation
 {
     public class RekognitionNPollyRepository : IRekognitionNPollyRepository
     {
-        IAmazonS3 _s3Client { get; set; }
-        IAmazonRekognition _rekognitionClient { get; set; }
-        IAmazonPolly _pollyClient { get; set; }
-
         private readonly ILogger<RekognitionNPollyRepository> _logger;
+        private readonly IConfiguration _configuration;
         public ApplicationDbContext _context;
         private IWebHostEnvironment _env;
-        private IConfiguration _configuration;
 
-        public RekognitionNPollyRepository(IConfiguration configuration, ApplicationDbContext context, IWebHostEnvironment env , IAmazonS3 s3Client , IAmazonRekognition rekognitionClient, IAmazonPolly pollyClient , ILogger<RekognitionNPollyRepository> logger)
+        public RekognitionNPollyRepository(IConfiguration configuration, ApplicationDbContext context,
+            IWebHostEnvironment env, IAmazonS3 s3Client, IAmazonRekognition rekognitionClient, IAmazonPolly pollyClient,
+            ILogger<RekognitionNPollyRepository> logger)
         {
             _context = context;
             _env = env;
@@ -43,24 +43,28 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.InventoryImplementa
             _configuration = configuration;
         }
 
+        private IAmazonS3 _s3Client { get; }
+        private IAmazonRekognition _rekognitionClient { get; }
+        private IAmazonPolly _pollyClient { get; }
+
         /*
         *  function to  process  and push user uploaded book cover pictures to S3 bucket 
         */
-        public async Task<string> UploadtoS3(IFormFile file , long BookId , string Condition)
+        public async Task<string> UploadtoS3(IFormFile file, long BookId, string Condition)
         {
             _logger.LogInformation("Uploading Picture to S3 Bucket");
 
             var split = file.FileName.Split(".");
-            string filename = split[0] + BookId.ToString() + Condition + "."+split[1];
+            var filename = split[0] + BookId + Condition + "." + split[1];
             //var dir = _env.ContentRootPath;
             var dir = Path.GetTempPath();
-            string url = "";
+            var url = "";
             var bucketName = _configuration["AWS:BucketName"];
 
-            HashSet<string> _validImageExtensions = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
-        {
-            "jpg", "jpeg", "png", "gif"
-        };
+            var _validImageExtensions = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+            {
+                "jpg", "jpeg", "png", "gif"
+            };
 
             var fileExt = Path.GetExtension(file.FileName).TrimStart('.');
 
@@ -79,28 +83,22 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.InventoryImplementa
                 fileTransferUtility.Upload(combine, bucketName);
 
 
-                bool check = await IsImageSafe(bucketName, filename);
+                var check = await IsImageSafe(bucketName, filename);
                 if (check)
                 {
-                    
-                        url = String.Concat(_configuration["AWS:CloudFrontDomain"],"/", filename);
-                        File.SetAttributes(Path.Combine(dir, filename), FileAttributes.Normal);
-                        File.Delete(Path.Combine(dir, filename));
+                    url = string.Concat(_configuration["AWS:CloudFrontDomain"], "/", filename);
+                    File.SetAttributes(Path.Combine(dir, filename), FileAttributes.Normal);
+                    File.Delete(Path.Combine(dir, filename));
 
-                        return url;
-
-                    
+                    return url;
                 }
-                else
+
                 {
-
+                    return "PolicyViolation";
                 }
-                {
-                    return $"PolicyViolation";
-                }
-
             }
-            return $"InvalidFileType";
+
+            return "InvalidFileType";
         }
 
 
@@ -111,46 +109,36 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.InventoryImplementa
         public async Task<bool> IsBook(string bucket, string key)
         {
             _logger.LogInformation("Checking if uploaded picture is of a Book");
-            HashSet<string> validlabels = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
-        {
-            "Book", "Paper", "Magazine", "Newspaper" ,"Storybook" ,"Textbook" , "Novel" ,"Flyer" ,"Text" ,"Poster" , "Brochure" ,"Advertisment"
-        };
-
-            DetectLabelsRequest detectlabelsRequest = new DetectLabelsRequest()
+            var validlabels = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
             {
-                Image = new Amazon.Rekognition.Model.Image
+                "Book", "Paper", "Magazine", "Newspaper", "Storybook", "Textbook", "Novel", "Flyer", "Text", "Poster",
+                "Brochure", "Advertisment"
+            };
+
+            var detectlabelsRequest = new DetectLabelsRequest
+            {
+                Image = new Image
                 {
-                    S3Object = new Amazon.Rekognition.Model.S3Object
+                    S3Object = new S3Object
                     {
                         Name = key,
                         Bucket = bucket
-                    },
+                    }
                 },
                 MaxLabels = 8,
                 MinConfidence = 75F
             };
 
-            int c = 0;
-            DetectLabelsResponse detectLabelsResponse = await _rekognitionClient.DetectLabelsAsync(detectlabelsRequest);
-            foreach (Label label in detectLabelsResponse.Labels)
+            var c = 0;
+            var detectLabelsResponse = await _rekognitionClient.DetectLabelsAsync(detectlabelsRequest);
+            foreach (var label in detectLabelsResponse.Labels)
                 if (validlabels.Contains(label.Name) && label.Confidence >= 70)
-                {
-
                     c++;
 
-                }
-
             if (c >= 1)
-            {
-
                 return true;
-            }
 
-            else
-            {
-                return false;
-            }
-
+            return false;
         }
 
         /*
@@ -161,9 +149,9 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.InventoryImplementa
             _logger.LogInformation("Content Moderation : Checks for profanity");
             var response = await _rekognitionClient.DetectModerationLabelsAsync(new DetectModerationLabelsRequest
             {
-                Image = new Amazon.Rekognition.Model.Image
+                Image = new Image
                 {
-                    S3Object = new Amazon.Rekognition.Model.S3Object
+                    S3Object = new S3Object
                     {
                         Bucket = bucket,
                         Name = key
@@ -172,28 +160,17 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.InventoryImplementa
             });
 
             if (response.ModerationLabels.Count > 0)
-            {
                 return false;
-            }
 
-            else
-            {
-                return true;
-            }
+            return true;
         }
 
         public bool IsContentViolation(string input)
         {
-
             if (input == "NotABook" || input == "PolicyViolation" || input == "InvalidFileType")
-            {
                 return true;
-            }
 
-            else
-            {
-                return false;
-            }
+            return false;
         }
 
         /*
@@ -205,18 +182,16 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.InventoryImplementa
             // create new memory stream.
             Stream result = new MemoryStream();
             // create new image variable
-           var img = SixLabors.ImageSharp.Image.Load(file.OpenReadStream());
-               // change size of image
+            var img = SixLabors.ImageSharp.Image.Load(file.OpenReadStream());
+            // change size of image
             /*img.Mutate(x => x.Resize(ConstantsData.ResizeWidth, ConstantsData.ResizeHeight));*/
             img.Mutate(x => x.Resize(0, Constants.ResizeHeight));
             //get the extension encoder
-            IImageEncoder encoder = selectEncoder(fileExt);
+            var encoder = selectEncoder(fileExt);
             img.Save(result, encoder);
             result.Position = 0;
 
             return result;
-
-
         }
 
         /*
@@ -241,12 +216,10 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.InventoryImplementa
                 case "gif":
                     encoder = new GifEncoder();
                     break;
-                default:
-                    break;
             }
+
             return encoder;
         }
-
 
 
         /*
@@ -258,28 +231,23 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.InventoryImplementa
             _logger.LogInformation("Converting text to speech");
             using (_pollyClient)
             {
-                var request = new Amazon.Polly.Model.SynthesizeSpeechRequest();
+                var request = new SynthesizeSpeechRequest();
                 request.LanguageCode = targetLanguageCode;
                 request.Text = Summary;
                 request.OutputFormat = OutputFormat.Mp3;
                 request.VoiceId = voice;
                 var response = _pollyClient.SynthesizeSpeechAsync(request).GetAwaiter().GetResult();
 
-                string outputFileName = $".\\{BookName}-{targetLanguageCode}.mp3";
+                var outputFileName = $".\\{BookName}-{targetLanguageCode}.mp3";
 
-                FileStream output = File.Open(outputFileName, FileMode.Create);
+                var output = File.Open(outputFileName, FileMode.Create);
                 response.AudioStream.CopyTo(output);
                 output.Close();
                 var fileTransferUtility = new TransferUtility(_s3Client);
-                fileTransferUtility.UploadAsync(outputFileName,bucketName);
-                var url = String.Concat(_configuration["AWS:CloudFrontDomain"],"/", BookName);
+                fileTransferUtility.UploadAsync(outputFileName, bucketName);
+                var url = string.Concat(_configuration["AWS:CloudFrontDomain"], "/", BookName);
                 return url;
             }
         }
-
-
-
-
-
     }
 }

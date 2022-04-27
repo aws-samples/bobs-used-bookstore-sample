@@ -7,5 +7,3 @@
         public bool ShowRequestId => !string.IsNullOrEmpty(RequestId);
     }
 }
-
-

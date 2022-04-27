@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(document).ready(function () {
 
     // basic line echarts init
 
@@ -6,60 +6,60 @@ $(document).ready(function() {
     var chartOne = echarts.init(chartOneDom);
 
     var chartOneOption = {
-        color: ['#FF518A','#A768F3'],
+        color: ['#FF518A', '#A768F3'],
 
-        tooltip : {
+        tooltip: {
             trigger: 'axis'
         },
         legend: {
-            data:['Max','Min']
+            data: ['Max', 'Min']
         },
 
-        calculable : true,
-        xAxis : [
+        calculable: true,
+        xAxis: [
             {
-                type : 'category',
-                boundaryGap : false,
-                data: ['Sat','Sun','Mon','Tue','Wed','Thu','Fri']
+                type: 'category',
+                boundaryGap: false,
+                data: ['Sat', 'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri']
             }
         ],
-        yAxis : [
+        yAxis: [
             {
-                type : 'value',
-                axisLabel : {
+                type: 'value',
+                axisLabel: {
                     formatter: '{value} °C'
                 }
             }
         ],
-        series : [
+        series: [
             {
-                name:'Max',
-                type:'line',
-                data:[11, 11, 15, 13, 12, 13, 10],
-                markPoint : {
-                    data : [
-                        {type : 'max', name: 'Max'},
-                        {type : 'min', name: 'Min'}
+                name: 'Max',
+                type: 'line',
+                data: [11, 11, 15, 13, 12, 13, 10],
+                markPoint: {
+                    data: [
+                        {type: 'max', name: 'Max'},
+                        {type: 'min', name: 'Min'}
                     ]
                 },
-                markLine : {
-                    data : [
-                        {type : 'average', name: 'Average'}
+                markLine: {
+                    data: [
+                        {type: 'average', name: 'Average'}
                     ]
                 }
             },
             {
-                name:'Min',
-                type:'line',
-                data:[1, -2, 2, 5, 3, 2, 0],
-                markPoint : {
-                    data : [
-                        {name : 'Min of Week', value : -2, xAxis: 1, yAxis: -1.5}
+                name: 'Min',
+                type: 'line',
+                data: [1, -2, 2, 5, 3, 2, 0],
+                markPoint: {
+                    data: [
+                        {name: 'Min of Week', value: -2, xAxis: 1, yAxis: -1.5}
                     ]
                 },
-                markLine : {
-                    data : [
-                        {type : 'average', name : 'Average'}
+                markLine: {
+                    data: [
+                        {type: 'average', name: 'Average'}
                     ]
                 }
             }
@@ -79,49 +79,49 @@ $(document).ready(function() {
     var app = {};
     option = null;
     option = {
-        color: ['#eac459','#FF518A', '#34bfa3' ],
+        color: ['#eac459', '#FF518A', '#34bfa3'],
 
-        tooltip : {
+        tooltip: {
             trigger: 'axis'
         },
         legend: {
-            data:['Preorder','Sale','Deal']
+            data: ['Preorder', 'Sale', 'Deal']
         },
 
-        calculable : true,
-        xAxis : [
+        calculable: true,
+        xAxis: [
             {
-                type : 'category',
-                boundaryGap : false,
-                data : ['Mon','Tue','Wed','Thu','Fri','Sat','Sun']
+                type: 'category',
+                boundaryGap: false,
+                data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
             }
         ],
-        yAxis : [
+        yAxis: [
             {
-                type : 'value'
+                type: 'value'
             }
         ],
-        series : [
+        series: [
             {
-                name:'Deal',
-                type:'line',
-                smooth:true,
+                name: 'Deal',
+                type: 'line',
+                smooth: true,
                 itemStyle: {normal: {areaStyle: {type: 'default'}}},
-                data:[10, 12, 21, 54, 260, 830, 710]
+                data: [10, 12, 21, 54, 260, 830, 710]
             },
             {
-                name:'Sale',
-                type:'line',
-                smooth:true,
+                name: 'Sale',
+                type: 'line',
+                smooth: true,
                 itemStyle: {normal: {areaStyle: {type: 'default'}}},
-                data:[30, 182, 434, 791, 390, 30, 10]
+                data: [30, 182, 434, 791, 390, 30, 10]
             },
             {
-                name:'Preorder',
-                type:'line',
-                smooth:true,
+                name: 'Preorder',
+                type: 'line',
+                smooth: true,
                 itemStyle: {normal: {areaStyle: {type: 'default'}}},
-                data:[1320, 1132, 601, 234, 120, 90, 20]
+                data: [1320, 1132, 601, 234, 120, 90, 20]
             }
         ]
     };
@@ -140,55 +140,55 @@ $(document).ready(function() {
     var app = {};
     option = null;
     option = {
-        color: ['#A768F3','#36a2f5'],
-        tooltip : {
+        color: ['#A768F3', '#36a2f5'],
+        tooltip: {
             trigger: 'axis'
         },
         legend: {
-            data:['Sale','Market']
+            data: ['Sale', 'Market']
         },
-        calculable : true,
-        xAxis : [
+        calculable: true,
+        xAxis: [
             {
-                type : 'category',
-                data : ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
+                type: 'category',
+                data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
             }
         ],
-        yAxis : [
+        yAxis: [
             {
-                type : 'value'
+                type: 'value'
             }
         ],
-        series : [
+        series: [
             {
-                name:'Sale',
-                type:'bar',
-                data:[2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 32.6, 20.0, 6.4, 3.3],
-                markPoint : {
-                    data : [
-                        {type : 'max', name: 'Max'},
-                        {type : 'min', name: 'Min'}
+                name: 'Sale',
+                type: 'bar',
+                data: [2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 32.6, 20.0, 6.4, 3.3],
+                markPoint: {
+                    data: [
+                        {type: 'max', name: 'Max'},
+                        {type: 'min', name: 'Min'}
                     ]
                 },
-                markLine : {
-                    data : [
-                        {type : 'average', name: 'Average'}
+                markLine: {
+                    data: [
+                        {type: 'average', name: 'Average'}
                     ]
                 }
             },
             {
-                name:'Market',
-                type:'bar',
-                data:[2.6, 5.9, 9.0, 26.4, 28.7, 70.7, 175.6, 182.2, 48.7, 18.8, 6.0, 2.3],
-                markPoint : {
-                    data : [
-                        {name : 'Max', value : 182.2, xAxis: 7, yAxis: 183, symbolSize:18},
-                        {name : 'Min', value : 2.3, xAxis: 11, yAxis: 3}
+                name: 'Market',
+                type: 'bar',
+                data: [2.6, 5.9, 9.0, 26.4, 28.7, 70.7, 175.6, 182.2, 48.7, 18.8, 6.0, 2.3],
+                markPoint: {
+                    data: [
+                        {name: 'Max', value: 182.2, xAxis: 7, yAxis: 183, symbolSize: 18},
+                        {name: 'Min', value: 2.3, xAxis: 11, yAxis: 3}
                     ]
                 },
-                markLine : {
-                    data : [
-                        {type : 'average', name : 'Average'}
+                markLine: {
+                    data: [
+                        {type: 'average', name: 'Average'}
                     ]
                 }
             }
@@ -208,51 +208,55 @@ $(document).ready(function() {
     var app = {};
     option = null;
     option = {
-        color: ['#36a2f5','#FF518A', '#34bfa3' ],
-        tooltip : {
+        color: ['#36a2f5', '#FF518A', '#34bfa3'],
+        tooltip: {
             trigger: 'axis'
         },
         legend: {
-            data:['Profit', 'Out', 'In']
+            data: ['Profit', 'Out', 'In']
         },
-        calculable : true,
-        xAxis : [
+        calculable: true,
+        xAxis: [
             {
-                type : 'value'
+                type: 'value'
             }
         ],
-        yAxis : [
+        yAxis: [
             {
-                type : 'category',
-                axisTick : {show: false},
-                data : ['Mon','Tue','Wed','Thu','Fri','Sat','Sun']
+                type: 'category',
+                axisTick: {show: false},
+                data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
             }
         ],
-        series : [
+        series: [
             {
-                name:'Profit',
-                type:'bar',
-                itemStyle : { normal: {label : {show: true, position: 'inside'}}},
-                data:[200, 170, 240, 244, 200, 220, 210]
+                name: 'Profit',
+                type: 'bar',
+                itemStyle: {normal: {label: {show: true, position: 'inside'}}},
+                data: [200, 170, 240, 244, 200, 220, 210]
             },
             {
-                name:'In',
-                type:'bar',
+                name: 'In',
+                type: 'bar',
                 stack: 'Total',
-                barWidth : 5,
-                itemStyle: {normal: {
-                    label : {show: true}
-                }},
-                data:[320, 302, 341, 374, 390, 450, 420]
+                barWidth: 5,
+                itemStyle: {
+                    normal: {
+                        label: {show: true}
+                    }
+                },
+                data: [320, 302, 341, 374, 390, 450, 420]
             },
             {
-                name:'Out',
-                type:'bar',
+                name: 'Out',
+                type: 'bar',
                 stack: 'Total',
-                itemStyle: {normal: {
-                    label : {show: true, position: 'left'}
-                }},
-                data:[-120, -132, -101, -134, -190, -230, -210]
+                itemStyle: {
+                    normal: {
+                        label: {show: true, position: 'left'}
+                    }
+                },
+                data: [-120, -132, -101, -134, -190, -230, -210]
             }
         ]
     };
@@ -270,29 +274,29 @@ $(document).ready(function() {
     var app = {};
     option = null;
     option = {
-        color: ['#A768F3','#eac459', '#36a2f5','#34bfa3', '#FF518A' ],
-        tooltip : {
+        color: ['#A768F3', '#eac459', '#36a2f5', '#34bfa3', '#FF518A'],
+        tooltip: {
             trigger: 'item',
             formatter: '{a} <br/>{b} : {c} ({d}%)'
         },
         legend: {
-            orient : 'vertical',
-            x : 'left',
-            data:['Direct','Mail','Affiliate','AD','Search']
+            orient: 'vertical',
+            x: 'left',
+            data: ['Direct', 'Mail', 'Affiliate', 'AD', 'Search']
         },
-        calculable : true,
-        series : [
+        calculable: true,
+        series: [
             {
-                name:'Source',
-                type:'pie',
-                radius : '55%',
+                name: 'Source',
+                type: 'pie',
+                radius: '55%',
                 center: ['50%', '60%'],
-                data:[
-                    {value:335, name:'Direct'},
-                    {value:310, name:'Mail'},
-                    {value:234, name:'Affiliate'},
-                    {value:135, name:'AD'},
-                    {value:1548, name:'Search'}
+                data: [
+                    {value: 335, name: 'Direct'},
+                    {value: 310, name: 'Mail'},
+                    {value: 234, name: 'Affiliate'},
+                    {value: 135, name: 'AD'},
+                    {value: 1548, name: 'Search'}
                 ]
             }
         ]
@@ -310,23 +314,23 @@ $(document).ready(function() {
     var app = {};
     option = null;
     option = {
-        color: ['#62549a','#4aa9e9', '#ff6c60','#eac459', '#25c3b2', '#6BB18C', '#EBCB94', '#EF9688', '#043D5D', '#B8959B' ],
-        tooltip : {
+        color: ['#62549a', '#4aa9e9', '#ff6c60', '#eac459', '#25c3b2', '#6BB18C', '#EBCB94', '#EF9688', '#043D5D', '#B8959B'],
+        tooltip: {
             trigger: 'item',
             formatter: '{a} <br/>{b} : {c} ({d}%)'
         },
         legend: {
-            orient : 'vertical',
-            x : 'left',
-            data:['Direct','AD','Search','Mail','Affiliate','Video','Baidu','Google','Bing','Other']
+            orient: 'vertical',
+            x: 'left',
+            data: ['Direct', 'AD', 'Search', 'Mail', 'Affiliate', 'Video', 'Baidu', 'Google', 'Bing', 'Other']
         },
-        calculable : false,
-        series : [
+        calculable: false,
+        series: [
             {
-                name:'Source',
-                type:'pie',
+                name: 'Source',
+                type: 'pie',
                 selectedMode: 'single',
-                radius : [0, 50],
+                radius: [0, 50],
 
                 // for funnel
                 x: '20%',
@@ -334,26 +338,26 @@ $(document).ready(function() {
                 funnelAlign: 'right',
                 max: 1548,
 
-                itemStyle : {
-                    normal : {
-                        label : {
-                            position : 'inner'
+                itemStyle: {
+                    normal: {
+                        label: {
+                            position: 'inner'
                         },
-                        labelLine : {
-                            show : false
+                        labelLine: {
+                            show: false
                         }
                     }
                 },
-                data:[
-                    {value:335, name:'Direct'},
-                    {value:679, name:'AD'},
-                    {value:1548, name:'Search', selected:true}
+                data: [
+                    {value: 335, name: 'Direct'},
+                    {value: 679, name: 'AD'},
+                    {value: 1548, name: 'Search', selected: true}
                 ]
             },
             {
-                name:'Source',
-                type:'pie',
-                radius : [80, 100],
+                name: 'Source',
+                type: 'pie',
+                radius: [80, 100],
 
                 // for funnel
                 x: '60%',
@@ -361,15 +365,15 @@ $(document).ready(function() {
                 funnelAlign: 'left',
                 max: 1048,
 
-                data:[
-                    {value:335, name:'Direct'},
-                    {value:310, name:'Mail'},
-                    {value:234, name:'Affiliate'},
-                    {value:135, name:'Video'},
-                    {value:1048, name:'Baidu'},
-                    {value:251, name:'Google'},
-                    {value:147, name:'Bing'},
-                    {value:102, name:'Other'}
+                data: [
+                    {value: 335, name: 'Direct'},
+                    {value: 310, name: 'Mail'},
+                    {value: 234, name: 'Affiliate'},
+                    {value: 135, name: 'Video'},
+                    {value: 1048, name: 'Baidu'},
+                    {value: 251, name: 'Google'},
+                    {value: 147, name: 'Bing'},
+                    {value: 102, name: 'Other'}
                 ]
             }
         ]
@@ -388,28 +392,28 @@ $(document).ready(function() {
     var app = {};
     option = null;
     option = {
-        color: ['#FF518A','#eac459', '#36a2f5','#34bfa3', '#A768F3'],
-        tooltip : {
+        color: ['#FF518A', '#eac459', '#36a2f5', '#34bfa3', '#A768F3'],
+        tooltip: {
             trigger: 'item',
             formatter: '{a} <br/>{b} : {c} ({d}%)'
         },
         legend: {
-            orient : 'vertical',
-            x : 'left',
-            data:['Direct','Mail','Affiliate','AD','Search']
+            orient: 'vertical',
+            x: 'left',
+            data: ['Direct', 'Mail', 'Affiliate', 'AD', 'Search']
         },
-        calculable : true,
-        series : [
+        calculable: true,
+        series: [
             {
-                name:'Source',
-                type:'pie',
-                radius : ['50%', '70%'],
-                data:[
-                    {value:335, name:'Direct'},
-                    {value:310, name:'Mail'},
-                    {value:234, name:'Affiliate'},
-                    {value:135, name:'AD'},
-                    {value:1548, name:'Search'}
+                name: 'Source',
+                type: 'pie',
+                radius: ['50%', '70%'],
+                data: [
+                    {value: 335, name: 'Direct'},
+                    {value: 310, name: 'Mail'},
+                    {value: 234, name: 'Affiliate'},
+                    {value: 135, name: 'AD'},
+                    {value: 1548, name: 'Search'}
                 ]
             }
         ]
@@ -428,35 +432,35 @@ $(document).ready(function() {
     var app = {};
     option = null;
     option = {
-        color: ['#FF518A','#36a2f5'],
-        tooltip : {
+        color: ['#FF518A', '#36a2f5'],
+        tooltip: {
             trigger: 'axis'
         },
         legend: {
-            data:['Female','Male']
+            data: ['Female', 'Male']
         },
-        xAxis : [
+        xAxis: [
             {
-                type : 'value',
-                scale:true,
-                axisLabel : {
+                type: 'value',
+                scale: true,
+                axisLabel: {
                     formatter: '{value} cm'
                 }
             }
         ],
-        yAxis : [
+        yAxis: [
             {
-                type : 'value',
-                scale:true,
-                axisLabel : {
+                type: 'value',
+                scale: true,
+                axisLabel: {
                     formatter: '{value} kg'
                 }
             }
         ],
-        series : [
+        series: [
             {
-                name:'Female',
-                type:'scatter',
+                name: 'Female',
+                type: 'scatter',
                 data: [[161.2, 51.6], [167.5, 59.0], [159.5, 49.2], [157.0, 63.0], [155.8, 53.6],
                     [170.0, 59.0], [159.1, 47.6], [166.0, 69.8], [176.2, 66.8], [160.2, 75.2],
                     [172.5, 55.2], [170.9, 54.2], [172.9, 62.5], [153.4, 42.0], [160.0, 50.0],
@@ -510,21 +514,21 @@ $(document).ready(function() {
                     [169.5, 67.3], [160.0, 75.5], [172.7, 68.2], [162.6, 61.4], [157.5, 76.8],
                     [176.5, 71.8], [164.4, 55.5], [160.7, 48.6], [174.0, 66.4], [163.8, 67.3]
                 ],
-                markPoint : {
-                    data : [
-                        {type : 'max', name: 'Max'},
-                        {type : 'min', name: 'Min'}
+                markPoint: {
+                    data: [
+                        {type: 'max', name: 'Max'},
+                        {type: 'min', name: 'Min'}
                     ]
                 },
-                markLine : {
-                    data : [
-                        {type : 'average', name: 'Average'}
+                markLine: {
+                    data: [
+                        {type: 'average', name: 'Average'}
                     ]
                 }
             },
             {
-                name:'Male',
-                type:'scatter',
+                name: 'Male',
+                type: 'scatter',
                 data: [[174.0, 65.6], [175.3, 71.8], [193.5, 80.7], [186.5, 72.6], [187.2, 78.8],
                     [181.5, 74.8], [184.0, 86.4], [184.5, 78.4], [175.0, 62.0], [184.0, 81.6],
                     [180.0, 76.6], [177.8, 83.6], [192.0, 90.0], [176.0, 74.6], [174.0, 71.0],
@@ -576,15 +580,15 @@ $(document).ready(function() {
                     [170.2, 62.3], [177.8, 82.7], [179.1, 79.1], [190.5, 98.2], [177.8, 84.1],
                     [180.3, 83.2], [180.3, 83.2]
                 ],
-                markPoint : {
-                    data : [
-                        {type : 'max', name: 'Max'},
-                        {type : 'min', name: 'Min'}
+                markPoint: {
+                    data: [
+                        {type: 'max', name: 'Max'},
+                        {type: 'min', name: 'Min'}
                     ]
                 },
-                markLine : {
-                    data : [
-                        {type : 'average', name: 'Average'}
+                markLine: {
+                    data: [
+                        {type: 'average', name: 'Average'}
                     ]
                 }
             }
@@ -603,41 +607,41 @@ $(document).ready(function() {
     var app = {};
     option = null;
     option = {
-        color: ['#FF518A','#A768F3'],
-        tooltip : {
+        color: ['#FF518A', '#A768F3'],
+        tooltip: {
             trigger: 'axis'
         },
         legend: {
-            orient : 'vertical',
-            x : 'left',
-            y : 0,
-            data:['Allocated Budget','Actual Spending']
+            orient: 'vertical',
+            x: 'left',
+            y: 0,
+            data: ['Allocated Budget', 'Actual Spending']
         },
-        polar : [
+        polar: [
             {
-                indicator : [
-                    { text: 'Sales', max: 6000},
-                    { text: 'Administration', max: 16000},
-                    { text: 'Information Techology', max: 30000},
-                    { text: 'Customer Support', max: 38000},
-                    { text: 'Development', max: 52000},
-                    { text: 'Marketing', max: 25000}
+                indicator: [
+                    {text: 'Sales', max: 6000},
+                    {text: 'Administration', max: 16000},
+                    {text: 'Information Techology', max: 30000},
+                    {text: 'Customer Support', max: 38000},
+                    {text: 'Development', max: 52000},
+                    {text: 'Marketing', max: 25000}
                 ]
             }
         ],
-        calculable : true,
-        series : [
+        calculable: true,
+        series: [
             {
                 name: 'Budget vs spending',
                 type: 'radar',
-                data : [
+                data: [
                     {
-                        value : [4300, 10000, 28000, 35000, 50000, 19000],
-                        name : 'Allocated Budget'
+                        value: [4300, 10000, 28000, 35000, 50000, 19000],
+                        name: 'Allocated Budget'
                     },
                     {
-                        value : [5000, 14000, 28000, 31000, 42000, 21000],
-                        name : 'Actual Spending'
+                        value: [5000, 14000, 28000, 31000, 42000, 21000],
+                        name: 'Actual Spending'
                     }
                 ]
             }
@@ -657,16 +661,16 @@ $(document).ready(function() {
     var app = {};
     option = null;
     option = {
-        color: ['#62549a','#4aa9e9', '#ff6c60'],
-        tooltip : {
+        color: ['#62549a', '#4aa9e9', '#ff6c60'],
+        tooltip: {
             formatter: '{a} <br/>{b} : {c}%'
         },
-        series : [
+        series: [
             {
-                name:'Task',
-                type:'gauge',
-                detail : {formatter:'{value}%'},
-                data:[{value: 50, name: 'Finished'}]
+                name: 'Task',
+                type: 'gauge',
+                detail: {formatter: '{value}%'},
+                data: [{value: 50, name: 'Finished'}]
             }
         ]
     };
@@ -679,7 +683,7 @@ $(document).ready(function() {
      * Resize chart on window resize
      * @return {void}
      */
-    window.onresize = function() {
+    window.onresize = function () {
         chartOne.resize();
         myChart.resize();
         rainChart.resize();

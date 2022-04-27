@@ -1,9 +1,8 @@
-using System;
+using BookstoreBackend;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using NLog.Web;
+using NLog;
 
 namespace DIAndLoggingTestApp
 {
@@ -17,38 +16,30 @@ namespace DIAndLoggingTestApp
                 //logger.Debug("init main");
                 CreateHostBuilder(args).Build().Run();
             }
-            catch
-            {
-                //NLog: catch setup errors
-                //logger.Error(exception, "Stopped program because of exception");
-                throw;
-            }
             finally
             {
                 // Ensure to flush and stop internal timers/threads before application-exit (Avoid segmentation fault on Linux)
-                NLog.LogManager.Shutdown();
+                LogManager.Shutdown();
             }
         }
 
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-           .ConfigureAppConfiguration((context, builder) =>
-           {
-
-               builder.AddSystemsManager("/BobsUsedBookAdminStore/");
-               builder.AddSystemsManager("/bookstoredb/");
-
-
-           })
-                .ConfigureWebHostDefaults(webBuilder =>
+        public static IHostBuilder CreateHostBuilder(string[] args)
+        {
+            return Host.CreateDefaultBuilder(args)
+                .ConfigureAppConfiguration((context, builder) =>
                 {
-                    webBuilder.UseStartup<BookstoreBackend.Startup>();
-                });
-               /* .ConfigureLogging(logging =>
-                {
-                    logging.ClearProviders();
-                    logging.SetMinimumLevel(Microsoft.Extensions.Logging.LogLevel.Trace);
+                    builder.AddSystemsManager("/BobsUsedBookAdminStore/");
+                    builder.AddSystemsManager("/bookstoredb/");
                 })
-                .UseNLog();  */  // NLog: Setup NLog for Dependency injection
+                .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); });
+        }
+        /* .ConfigureLogging(logging =>
+        {
+             logging.ClearProviders();
+             logging.SetMinimumLevel(Microsoft.Extensions.Logging.LogLevel.Trace);
+         })
+         .UseNLog();  
+         */
+        // NLog: Setup NLog for Dependency injection
     }
 }

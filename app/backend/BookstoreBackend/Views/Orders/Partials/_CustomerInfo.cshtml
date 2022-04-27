@@ -1,8 +1,6 @@
 ﻿@model  BookstoreBackend.ViewModel.ManageOrders.PartialOrderViewModel;
-    
 
-
-    <style>
+<style>
         .card-custom {
             border-radius: 3rem;
             border-color: black;
@@ -36,13 +34,13 @@
         }
     </style>
 
-    <div class="card card-custom shadow" >
-        <div class="card-custom-header text-center website-text">
-            Customer Info
-        </div>
-        <ul class="list-group list-group-flush">
-            <li class="card-custom-li-item  website-text">Customer Id: @Model.Order.Customer.Customer_Id</li>
-            <li class="card-custom-li-item  website-text">Customer Name: @Model.Order.Customer.FirstName @Model.Order.Customer.LastName</li>
-            <li class="card-custom-li-item card-custom-li-last-item website-text">Email: @Model.Order.Customer.Email</li>
-        </ul>
+<div class="card card-custom shadow">
+    <div class="card-custom-header text-center website-text">
+        Customer Info
     </div>
+    <ul class="list-group list-group-flush">
+        <li class="card-custom-li-item  website-text">Customer Id: @Model.Order.Customer.Customer_Id</li>
+        <li class="card-custom-li-item  website-text">Customer Name: @Model.Order.Customer.FirstName @Model.Order.Customer.LastName</li>
+        <li class="card-custom-li-item card-custom-li-last-item website-text">Email: @Model.Order.Customer.Email</li>
+    </ul>
+</div>

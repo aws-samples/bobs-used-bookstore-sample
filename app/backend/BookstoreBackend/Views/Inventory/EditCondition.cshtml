@@ -1,13 +1,12 @@
-﻿@model BookstoreBackend.ViewModel.ManageInventory.EditViewModel
+﻿@using BobsBookstore.Models.Books
+@model BookstoreBackend.ViewModel.ManageInventory.EditViewModel
 
 @{
     var status = (string)ViewData["Status"];
-    var conditions = (List<BobsBookstore.Models.Books.Condition>)ViewData["Conditions"];
+    var conditions = (List<Condition>)ViewData["Conditions"];
 }
 
-
 <style>
-
     .form {
         position: relative;
         z-index: 1;
@@ -108,7 +107,7 @@
             </div>
             <div class="modal-body">
                 <div>
-                    <li class="main-text">@status</li>
+                    <span class="main-text">@status</span>
                 </div>
             </div>
             <div class="modal-footer">
@@ -120,21 +119,16 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
-@if (!String.IsNullOrEmpty(status))
+@if (!string.IsNullOrEmpty(status))
 {
-
     <script type="text/javascript">
+        $(
+            function () {
+                $('#Modal').modal('show');
 
-            $(
-                function () {
-                    $('#Modal').modal('show');
-
-                });
-
-
+            }
+        );
     </script>
-
-
 }
 
 <form asp-controller="Inventory" asp-action="EditCondition" method="post">
@@ -143,7 +137,7 @@
             <h1 class="main-text title-1 text-center font-weight-light" style="margin-bottom:5%; margin-top:1%">
                 EDIT CONDITION DETAILS
             </h1>
-            <select asp-for="Actual" style="margin-bottom:5%; width:40%;height:20%" class="list text-lg-center font-weight-light" id="list" onchange="LoadtText();">
+            <select asp-for="Actual" style="margin-bottom:5%; width:40%;height:20%" class="list text-lg-center font-weight-light" id="list" onchange="LoadText();">
                 <option selected value="Hey">SELECT THE GENRE</option>
                 @foreach (var condition in conditions)
                 {
@@ -153,7 +147,6 @@
             <button type="button" class="main-text btn btn-primary" data-toggle="modal" data-target="#exampleModal">SUBMIT</button>
         </div>
     </div>
-
 
     <!-- Modal -->
     <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -167,7 +160,7 @@
                 </div>
 
                 <div class="modal-body">
-                    <input type="text" id="name" name="name" asp-for="Edited" />
+                    <input type="text" id="name" name="name" asp-for="Edited"/>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -183,7 +176,7 @@
 
 <script type="text/javascript">
     var text;
-    function LoadtText() {
+    function LoadText() {
         text = document.getElementById('list').value;
         console.log(text);
         $('#actual').val()
@@ -195,13 +188,7 @@
     $(document).ready(function () {
         $('#exampleModal').on('shown.bs.modal', function () {
             var metrics_key = $('.list').val();
-            // Now you have the key and label in variables.
-
-            // Write the key into the textfield.
             $('#exampleModal input[name="name"]').val(metrics_key);
-            // Change the HTML of an element to the label.
-            console.log("Hey");
         })
     });
 </script>
-

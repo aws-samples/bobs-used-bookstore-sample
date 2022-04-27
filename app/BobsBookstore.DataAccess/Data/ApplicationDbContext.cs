@@ -1,22 +1,22 @@
 ﻿using System.IO;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Design;
-using Microsoft.Extensions.Configuration;
 using BobsBookstore.Models.Books;
 using BobsBookstore.Models.Carts;
 using BobsBookstore.Models.Customers;
 using BobsBookstore.Models.Orders;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design;
+using Microsoft.Extensions.Configuration;
 
 namespace BobsBookstore.DataAccess.Data
 {
-    public class ApplicationDbContext: DbContext
+    public class ApplicationDbContext : DbContext
     {
         public ApplicationDbContext()
         {
         }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-             : base(options)
+            : base(options)
         {
         }
 
@@ -38,16 +38,24 @@ namespace BobsBookstore.DataAccess.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<ResaleStatus>().HasData(new ResaleStatus { ResaleStatus_Id = 1, Status = "Pending Approval" });
-            modelBuilder.Entity<ResaleStatus>().HasData(new ResaleStatus { ResaleStatus_Id = 2, Status = "Approved/Awaiting Shipment from Customer" });
+            modelBuilder.Entity<ResaleStatus>().HasData(new ResaleStatus
+                { ResaleStatus_Id = 1, Status = "Pending Approval" });
+            modelBuilder.Entity<ResaleStatus>().HasData(new ResaleStatus
+                { ResaleStatus_Id = 2, Status = "Approved/Awaiting Shipment from Customer" });
             modelBuilder.Entity<ResaleStatus>().HasData(new ResaleStatus { ResaleStatus_Id = 3, Status = "Rejected" });
-            modelBuilder.Entity<ResaleStatus>().HasData(new ResaleStatus { ResaleStatus_Id = 4, Status = "Shipment Receipt Confirmed" });
-            modelBuilder.Entity<ResaleStatus>().HasData(new ResaleStatus { ResaleStatus_Id = 5, Status = "Payment Completed" });
+            modelBuilder.Entity<ResaleStatus>().HasData(new ResaleStatus
+                { ResaleStatus_Id = 4, Status = "Shipment Receipt Confirmed" });
+            modelBuilder.Entity<ResaleStatus>().HasData(new ResaleStatus
+                { ResaleStatus_Id = 5, Status = "Payment Completed" });
 
-            modelBuilder.Entity<OrderStatus>().HasData(new OrderStatus { OrderStatus_Id = 1, Status = "Just Placed", Position=1 });
-            modelBuilder.Entity<OrderStatus>().HasData(new OrderStatus { OrderStatus_Id = 2, Status = "En Route", Position = 2 });
-            modelBuilder.Entity<OrderStatus>().HasData(new OrderStatus { OrderStatus_Id = 3, Status = "Pending", Position = 3 });
-            modelBuilder.Entity<OrderStatus>().HasData(new OrderStatus { OrderStatus_Id = 4, Status = "Delivered", Position = 4 });
+            modelBuilder.Entity<OrderStatus>().HasData(new OrderStatus
+                { OrderStatus_Id = 1, Status = "Just Placed", Position = 1 });
+            modelBuilder.Entity<OrderStatus>().HasData(new OrderStatus
+                { OrderStatus_Id = 2, Status = "En Route", Position = 2 });
+            modelBuilder.Entity<OrderStatus>().HasData(new OrderStatus
+                { OrderStatus_Id = 3, Status = "Pending", Position = 3 });
+            modelBuilder.Entity<OrderStatus>().HasData(new OrderStatus
+                { OrderStatus_Id = 4, Status = "Delivered", Position = 4 });
         }
     }
 
@@ -55,14 +63,14 @@ namespace BobsBookstore.DataAccess.Data
     {
         public ApplicationDbContext CreateDbContext(string[] args)
         {
-            IConfigurationRoot configuration = new ConfigurationBuilder()
+            var configuration = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile(@Directory.GetCurrentDirectory() + "/../frontend/appsettings.json")
+                .AddJsonFile(Directory.GetCurrentDirectory() + "/../frontend/appsettings.json")
                 .Build();
             var builder = new DbContextOptionsBuilder<ApplicationDbContext>();
             var connectionString = configuration.GetConnectionString("BobBookstoreContextConnection");
             builder.UseSqlServer(connectionString, b => b.MigrationsAssembly("BobsBookstore.Migrations"));
-            
+
             return new ApplicationDbContext(builder.Options);
         }
     }

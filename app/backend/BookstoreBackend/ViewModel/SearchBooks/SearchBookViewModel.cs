@@ -25,6 +25,5 @@ namespace BookstoreBackend.ViewModel.SearchBooks
         public string SortBy { get; set; }
 
         public string Ascdesc { get; set; }
-
     }
 }

@@ -1,29 +1,32 @@
 ﻿using Amazon;
-using Amazon.Rekognition.Model.Internal.MarshallTransformations;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace BookstoreBackend
 {
     public class Constants
     {
         public const int TotalResults = 8;
-        public const string ErrorStatusYes = "Yes";
-        public const string GenreExistsStatus = "Given Genre already exists in the database";
-        public const string TypeExistsStatus = "Given Format already exists in the database";
-        public const string ConditionExistsStatus = "Given Condition already exists in the database";
-        public const string PublisherExistsStatus = "Given Publisher already exists in the database";
+        public const int BooksPerPage = 15;
+        public const int ResizeWidth = 200;
+        public const int ResizeHeight = 200;
 
-        public const string AddPublisherMessage = "Please Enter the details of the publisher you wish to add to the database";
-        public const string AddGenreMessage = "Please Enter the details of the Genre you wish to add to the database";
-        public const string AddConditionsMessage = "Please Enter the details of the Condition you wish to add to the database";
-        public const string AddTypeMessage = "Please Enter the details of the Format you wish to add to the database";
+        public const string ErrorStatusYes = "Yes";
+        public const string GenreExistsStatus = "Given genre already exists in the database";
+        public const string TypeExistsStatus = "Given format already exists in the database";
+        public const string ConditionExistsStatus = "Given condition already exists in the database";
+        public const string PublisherExistsStatus = "Given publisher already exists in the database";
+
+        public const string AddPublisherMessage =
+            "Please enter the details of the publisher you wish to add to the database";
+
+        public const string AddGenreMessage = "Please enter the details of the Genre you wish to add to the database";
+
+        public const string AddConditionsMessage =
+            "Please enter the details of the condition you wish to add to the database";
+
+        public const string AddTypeMessage = "Please enter the details of the format you wish to add to the database";
 
         public const string BookDetailsStatusDetails = "details";
         public const string BookDetailsStatusList = "List";
-        public const int BooksPerPage = 15;
         public const string TextToSpeechLanguageCode = "fr-CA";
         public const string OrderStatusDelivered = "Delivered";
         public const string OrderStatusJustPlaced = "Just Placed";
@@ -36,15 +39,17 @@ namespace BookstoreBackend
         public const string SortByAuthorPhrase = "Author";
         public const string LambdaExpressionType = "shared_code.Models.Book.Price";
         public const string LambdaExpressionPhrase = "OrderDetailPrice";
-        public RegionEndpoint BucketRegion = RegionEndpoint.USWest2;
-        public const int ResizeWidth = 200;
-        public const int ResizeHeight = 200;
-        public const string CombinationErrorStatus = "Sorry , We don't currently have any relevant results for the given Combination";
+
+        public const string CombinationErrorStatus =
+            "Sorry, we don't currently have any relevant results for the given combination";
+
         public const string BoBsEmailAddress = "";
         public const string ResaleStatusPending = "Pending Approval";
         public const string ResaleStatusApproved = "Approved/Awaiting Shipment from Customer";
         public const string ResaleStatusRejected = "Rejected";
         public const string ResaleStatusReceived = "Shipment Receipt Confirmed";
         public const string ResaleStatusPaymentCompleted = "Payment Completed";
+
+        public RegionEndpoint BucketRegion = RegionEndpoint.USWest2;
     }
 }

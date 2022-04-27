@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(document).ready(function () {
 
     $('#calendar-list').fullCalendar({
         header: {
@@ -10,8 +10,8 @@ $(document).ready(function() {
         // customize the button names,
         // otherwise they'd all just say "list"
         views: {
-            listDay: { buttonText: 'list day' },
-            listWeek: { buttonText: 'list week' }
+            listDay: {buttonText: 'list day'},
+            listWeek: {buttonText: 'list week'}
         },
 
         defaultView: 'listWeek',

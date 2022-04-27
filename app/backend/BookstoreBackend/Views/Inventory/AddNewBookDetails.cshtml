@@ -1,14 +1,16 @@
-﻿@model BookstoreBackend.ViewModel.ManageInventory.BooksViewModel
+﻿@using Type = BobsBookstore.Models.Books.Type
+@using BobsBookstore.Models.Books
+@model BookstoreBackend.ViewModel.ManageInventory.BooksViewModel
 @{
     ViewData["Title"] = "Checkout";
-    var types = (List<BobsBookstore.Models.Books.Type>)ViewData["Types"];
-    var publishers = (List<BobsBookstore.Models.Books.Publisher>)ViewData["Publishers"];
-    var genres = (List<BobsBookstore.Models.Books.Genre>)ViewData["Genres"];
-    var conditions = (List<BobsBookstore.Models.Books.Condition>)ViewData["Conditions"];
+    var types = (List<Type>)ViewData["Types"];
+    var publishers = (List<Publisher>)ViewData["Publishers"];
+    var genres = (List<Genre>)ViewData["Genres"];
+    var conditions = (List<Condition>)ViewData["Conditions"];
     var errorstatus = (string)ViewData["ErrorStatus"];
     var error = (string)ViewData["Error"];
-
 }
+
 <style>
     .main-text 
     {
@@ -16,51 +18,51 @@
     }
 </style>
 
-
 <div>
     <div>
         <div>
-            <h1 class ="text-center"style="margin-top:35px">
-                <span class="title-1 text-center font-weight-light"  style="margin-bottom: 45px; font-family : 'Lucida Handwriting'">Fill in the book details</span>
+            <h1 class="text-center"style="margin-top:35px">
+                <span class="title-1 text-center font-weight-light" style="margin-bottom: 45px; font-family : 'Lucida Handwriting'">Fill in the book details</span>
             </h1>
             @if (errorstatus == "Yes")
             {
                 <div>
-                    <li class="main-text"> "Please re-upload the photos as they violate one or more of our content policies "</li>
-                    <li class="main-text">"1) Photo must be  of type .jpg or .png or .gif"</li>
-                    <li class="main-text">"2) Photo content must not contain profanity"</li>
-                    <li class="main-text">"3) Photo must be that of a book"</li>
+                    <span class="main-text"> "Please re-upload the photos as they violate one or more of our content policies "</span>
+                    <ol>
+                        <li class="main-text">"Photo must be of type .jpg or .png or .gif"</li>
+                        <li class="main-text">"Photo content must not contain profanity"</li>
+                        <li class="main-text">"Photo must be that of a book"</li>
+                    </ol>
                 </div>
-
             }
         </div>
-        <form enctype="multipart/form-data" asp-controller="Inventory" asp-action="AddNewBookDetails" method="post" style="padding-bottom: 0px;">
+        <form enctype="multipart/form-data" asp-controller="Inventory" asp-action="EditBookDetails" method="post" style="padding-bottom: 0px;">
             <div asp-validation-summary="All"></div>
             <div class="panel-body">
                 <div class="form-group">
                     <label class="main-text form-check-label text-secondary" asp-for="BookName">Book Name</label>
-                    <input class="main-text form-control bg-light text-dark" asp-for="BookName" required />
+                    <input class="main-text form-control bg-light text-dark" asp-for="BookName" required/>
                 </div>
                 <div class="form-group">
                     <label class="main-text form-check-label" asp-for="ISBN">ISBN</label>
-                    <input class="main-text form-control bg-light text-dark" asp-for="ISBN" required />
+                    <input class="main-text form-control bg-light text-dark" asp-for="ISBN" required/>
                 </div>
                 <div class="form-group">
                     <label class="main-text form-check-label text-secondary" asp-for="Author">Author</label>
-                    <input class="main-text form-control bg-light text-dark" asp-for="Author" required />
+                    <input class="main-text form-control bg-light text-dark" asp-for="Author" required/>
                 </div>
                 <div class="container">
                     <div class="row">
                         <div class="col-sm">
                             <div class="form-group">
                                 <label class="main-text form-check-label" asp-for="price">Price</label>
-                                <input class="main-text form-control bg-light text-dark" asp-for="price" required />
+                                <input class="main-text form-control bg-light text-dark" asp-for="price" required/>
                             </div>
                         </div>
                         <div class="col-sm">
                             <div class="form-group">
                                 <label class="main-text form-check-label" asp-for="Quantity">Quantity</label>
-                                <input class="main-text form-control bg-light text-dark" asp-for="Quantity" required />
+                                <input class="main-text form-control bg-light text-dark" asp-for="Quantity" required/>
                             </div>
                         </div>
                     </div>
@@ -125,7 +127,6 @@
                                 <a class="main-text" asp-action="AddBookTypes" asp-controller="Inventory">Click here if you don't find the Condition in the list above</a>
                             </div>
                         </div>
-
                     </div>
                 </div>
                 <div class="form-group row">
@@ -172,10 +173,5 @@
                 </div>
             </div>
         </form>
-
     </div>
 </div>
-
-
-
-

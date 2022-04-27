@@ -1,9 +1,8 @@
 ﻿using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Routing;
 
 namespace BookstoreBackend.Controllers
-{ 
+{
     public class ErrorController : Controller
     {
         [Route("/Error/Index/{code:int}")]

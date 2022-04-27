@@ -5,12 +5,12 @@ namespace BobsBookstore.Models.Books
 {
     public class Genre
     {
-        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long Genre_Id { get; set; }
 
         public string Name { get; set; }
 
-        [Timestamp]
-        public byte[] RowVersion { get; set; }
+        [Timestamp] public byte[] RowVersion { get; set; }
     }
 }

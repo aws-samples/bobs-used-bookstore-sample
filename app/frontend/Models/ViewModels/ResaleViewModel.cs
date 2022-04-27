@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace BookstoreFrontend.Models.ViewModels
+﻿namespace BookstoreFrontend.Models.ViewModels
 {
     public class ResaleViewModel
     {
@@ -16,6 +11,5 @@ namespace BookstoreFrontend.Models.ViewModels
         public string TypeName { get; set; }
         public decimal BookPrice { get; set; }
         public string ConditionName { get; set; }
-
     }
 }

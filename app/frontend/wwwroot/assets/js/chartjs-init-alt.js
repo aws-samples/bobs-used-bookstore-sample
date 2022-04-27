@@ -1,5 +1,3 @@
-
-
 var ctx = document.getElementById('myChart-light').getContext('2d');
 var chart = new Chart(ctx, {
     // The type of chart we want to create
@@ -12,7 +10,7 @@ var chart = new Chart(ctx, {
             label: "My First dataset",
             backgroundColor: 'rgba(167,104,243,.2)',
             borderColor: 'rgba(167,104,243,1)',
-            data: [0, 20, 9, 25, 15, 25,18]
+            data: [0, 20, 9, 25, 15, 25, 18]
         }]
 
 
@@ -47,7 +45,6 @@ var chart = new Chart(ctx, {
         }
     }
 });
-
 
 
 var ctx = document.getElementById('myChart-tow-light').getContext('2d');
@@ -154,8 +151,6 @@ var myChart = new Chart(ctx, {
 
     }
 });
-
-
 
 
 var ctx = document.getElementById('myChart4-light').getContext('2d');

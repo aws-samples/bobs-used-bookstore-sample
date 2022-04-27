@@ -17,26 +17,26 @@ var data7_2 = [
     [6000000, 125],
     [7000000, 50]
 ];
-$(function() {
+$(function () {
     $.plot($("#multi-sates #multi-states-container"), [{
-        data: data7_1,
-        label: "Page View",
-        lines: {
-            fill: false
-        }
-    }, {
-        data: data7_2,
-        label: "Online User",
+            data: data7_1,
+            label: "Page View",
+            lines: {
+                fill: false
+            }
+        }, {
+            data: data7_2,
+            label: "Online User",
 
-        points: {
-            show: true
-        },
-        lines: {
-            show: true
-        },
-        yaxis: 2
-    }
-    ],
+            points: {
+                show: true
+            },
+            lines: {
+                show: true
+            },
+            yaxis: 2
+        }
+        ],
         {
             series: {
                 lines: {
@@ -82,25 +82,27 @@ $(function() {
 
 //Realtime Statistics
 
-$(function() {
+$(function () {
     var data1 = [];
     var totalPoints = 300;
+
     function GetData() {
-    data1.shift();
-    while (data1.length < totalPoints) {
-    var prev = data1.length > 0 ? data1[data1.length - 1] : 50;
-    var y = prev + Math.random() * 10 - 5;
-    y = y < 0 ? 0 : (y > 100 ? 100 : y);
-    data1.push(y);
+        data1.shift();
+        while (data1.length < totalPoints) {
+            var prev = data1.length > 0 ? data1[data1.length - 1] : 50;
+            var y = prev + Math.random() * 10 - 5;
+            y = y < 0 ? 0 : (y > 100 ? 100 : y);
+            data1.push(y);
+        }
+        var result = [];
+        for (var i = 0; i < data1.length; ++i) {
+            result.push([i, data1[i]])
+        }
+        return result;
     }
-var result = [];
-for (var i = 0; i < data1.length; ++i) {
-    result.push([i, data1[i]])
-    }
-return result;
-}
-var updateInterval = 100;
-var plot = $.plot($("#real-time #real-time-container"), [
+
+    var updateInterval = 100;
+    var plot = $.plot($("#real-time #real-time-container"), [
         GetData()], {
         series: {
             lines: {
@@ -130,18 +132,20 @@ var plot = $.plot($("#real-time #real-time-container"), [
             defaultTheme: false
         }
     });
+
     function update() {
         plot.setData([GetData()]);
         plot.draw();
         setTimeout(update, updateInterval);
     }
+
     update();
 });
 
 
 // combine chart
 
-$(function() {
+$(function () {
     var data24Hours = [
         [0, 201],
         [1, 520],
@@ -298,16 +302,17 @@ $(function() {
         }
     };
     var plot = $.plot($("#combine-chart #combine-chart-container"),
-            data, options);
+        data, options);
 });
 
 // Multi Option Statistics
 
-$(function() {
+$(function () {
     var data1 = GenerateSeries(0);
     var data2 = GenerateSeries(100);
     var data3 = GenerateSeries(200);
     var dataset = [data1, data2, data3];
+
     function GenerateSeries(added) {
         var data = [];
         var start = 100 + added;
@@ -320,6 +325,7 @@ $(function() {
         }
         return data;
     }
+
     var options = {
         series: {
             stack: true,
@@ -341,35 +347,37 @@ $(function() {
         }
     };
     var plot;
+
     function ToggleSeries() {
         var d = [];
-        $("#toggle-chart input[type='checkbox']").each(function() {
-    if ($(this).is(":checked")) {
-    var seqence = $(this).attr("id").replace("cbdata", "");
-    d.push({
-    label: "data" + seqence,
-    data: dataset[seqence - 1]
-    });
-}
-});
-options.series.lines = {};
-options.series.bars = {};
-$("#toggle-chart input[type='radio']").each(function() {
-    if ($(this).is(":checked")) {
-    if ($(this).val() == "line") {
-    options.series.lines = {
-    fill: true
-    };
-} else {
-    options.series.bars = {
-        show: true
-    };
-}
-}
-});
-$.plot($("#toggle-chart #toggle-chart-container"), d, options);
+        $("#toggle-chart input[type='checkbox']").each(function () {
+            if ($(this).is(":checked")) {
+                var seqence = $(this).attr("id").replace("cbdata", "");
+                d.push({
+                    label: "data" + seqence,
+                    data: dataset[seqence - 1]
+                });
+            }
+        });
+        options.series.lines = {};
+        options.series.bars = {};
+        $("#toggle-chart input[type='radio']").each(function () {
+            if ($(this).is(":checked")) {
+                if ($(this).val() == "line") {
+                    options.series.lines = {
+                        fill: true
+                    };
+                } else {
+                    options.series.bars = {
+                        show: true
+                    };
+                }
+            }
+        });
+        $.plot($("#toggle-chart #toggle-chart-container"), d, options);
     }
-    $("#toggle-chart input").change(function() {
+
+    $("#toggle-chart input").change(function () {
         ToggleSeries();
     });
     ToggleSeries();
@@ -378,7 +386,7 @@ $.plot($("#toggle-chart #toggle-chart-container"), d, options);
 
 // pie chart
 
-$(function() {
+$(function () {
     var data = [{
         label: "Paid Signup",
         data: 55
@@ -413,7 +421,7 @@ $(function() {
 
 // donut chart
 
-$(function() {
+$(function () {
     var data = [{
         label: "Direct Sales",
         data: 25
@@ -446,7 +454,7 @@ $(function() {
             hoverable: true,
             clickable: true
         },
-        colors: ["#A768F3", "#36a2f5", "#34bfa3","#eac459","#FF518A"],
+        colors: ["#A768F3", "#36a2f5", "#34bfa3", "#eac459", "#FF518A"],
         tooltip: true,
         tooltipOpts: {
             defaultTheme: false

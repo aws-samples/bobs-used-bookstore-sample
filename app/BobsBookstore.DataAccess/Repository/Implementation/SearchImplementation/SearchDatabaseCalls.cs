@@ -4,9 +4,9 @@ using BobsBookstore.DataAccess.Repository.Interface.SearchImplementations;
 
 namespace BobsBookstore.DataAccess.Repository.Implementation.SearchImplementation
 {
-    public class SearchDatabaseCalls: ISearchDatabaseCalls
+    public class SearchDatabaseCalls : ISearchDatabaseCalls
     {
-        private ApplicationDbContext _context;
+        private readonly ApplicationDbContext _context;
 
         public SearchDatabaseCalls(ApplicationDbContext context)
         {

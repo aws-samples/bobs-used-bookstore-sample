@@ -1,14 +1,18 @@
-﻿using BookstoreBackend.ViewModel.ManageInventory;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using BookstoreBackend.ViewModel.ManageInventory;
 
 namespace BookstoreBackend.ViewModel
 {
     public class FetchBooksViewModel
     {
         public string BookName { get; set; }
+
         public string Publisher { get; set; }
+
         public string BookType { get; set; }
+
         public string Genre { get; set; }
+
         public string Condition { get; set; }
 
         public IEnumerable<BookDetailsViewModel> Books { get; set; }
@@ -29,16 +33,14 @@ namespace BookstoreBackend.ViewModel
 
         public string ViewStyle { get; set; }
 
-        public string Type {get;set;}
+        public string Type { get; set; }
 
         public string ConditionChosen { get; set; }
-
 
         public string Author { get; set; }
 
         public string Summary { get; set; }
 
         public string ISBN { get; set; }
-
     }
 }

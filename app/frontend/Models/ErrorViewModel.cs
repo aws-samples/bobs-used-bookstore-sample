@@ -1,5 +1,3 @@
-using System;
-
 namespace BobsBookstore.Models
 {
     public class ErrorViewModel

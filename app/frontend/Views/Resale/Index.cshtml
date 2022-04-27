@@ -12,99 +12,100 @@
     <title>log in</title>
     <link href="/css/sb-admin-2.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/css/bootstrap.min.css">
-<link rel="stylesheet" href="/css/googlefont.css">
+    <link rel="stylesheet" href="/css/googlefont.css">
     <link rel="stylesheet" href="/css/font-awesome.min.css">
-    
+
     <link rel="stylesheet" href="/css/styles.css">
 </head>
 
 <body>
 
+<div>
     <div>
         <div>
-            <div>
-                <h1>
-                    Resale Books
-                </h1>
+            <h1>
+                Resale Books
+            </h1>
 
-            </div>
-    
-            <div class="col-12 text-right">
-                <form asp-controller="Resale" asp-action="Create" method="get">
-
-                    <button class="btn" name="id" type="submit">Resell Book</button>
-                </form>
-            </div>
-
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>
-                            Book Name
-                        </th>
-                        <th>
-                            Author
-                        </th>
-                        <th>
-                            Genre
-                        </th>
-                        <th>
-                            Publisher
-                        </th>
-                        <th>
-                            Book Type
-                        </th>
-                        <th>
-                            ISBN
-                        </th>
-                        <th>
-                            Condition
-                        </th>
-                        <th>
-                            Book Price
-                        </th>
-                        <th>
-                            Status
-                        </th>
-
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in Model)
-                    {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.BookName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Author)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.GenreName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PublisherName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TypeName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ISBN)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ConditionName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.BookPrice)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ResaleStatus.Status)
-            </td>
-
-        </tr>}
-                </tbody>
-            </table>
         </div>
+
+        <div class="col-12 text-right">
+            <form asp-controller="Resale" asp-action="Create" method="get">
+
+                <button class="btn" name="id" type="submit">Resell Book</button>
+            </form>
+        </div>
+
+        <table class="table">
+            <thead>
+            <tr>
+                <th>
+                    Book Name
+                </th>
+                <th>
+                    Author
+                </th>
+                <th>
+                    Genre
+                </th>
+                <th>
+                    Publisher
+                </th>
+                <th>
+                    Book Type
+                </th>
+                <th>
+                    ISBN
+                </th>
+                <th>
+                    Condition
+                </th>
+                <th>
+                    Book Price
+                </th>
+                <th>
+                    Status
+                </th>
+
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.BookName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Author)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.GenreName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PublisherName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TypeName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ISBN)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ConditionName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.BookPrice)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ResaleStatus.Status)
+                    </td>
+
+                </tr>
+            }
+            </tbody>
+        </table>
     </div>
+</div>
 </body>
 </html>

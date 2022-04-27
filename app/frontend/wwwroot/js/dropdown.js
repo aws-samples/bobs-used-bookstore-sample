@@ -7,6 +7,7 @@
     $(section_id).val(newitem);
     $("#" + a.parentNode.id).css("display", "none");
 }
+
 $(document).ready(function () {
     $(".dropdown").change(function () {
         var item = $(this).find("option:selected");
@@ -14,8 +15,7 @@ $(document).ready(function () {
         var div_id = "#" + this.nextElementSibling.id
         if (text == 'Others') {
             $(div_id).css("display", "block"); //display the add new dialog
-        }
-        else {
+        } else {
             $(div_id).css("display", "none");
         }
 

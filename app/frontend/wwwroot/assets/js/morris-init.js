@@ -1,4 +1,3 @@
-
 // area chart
 
 Morris.Area({
@@ -7,7 +6,7 @@ Morris.Area({
     gridEnabled: false,
     gridLineColor: '#e5ebf8',
     axes: true,
-    fillOpacity:.7,
+    fillOpacity: .7,
     data: [
         {period: '2015 Q1', iphone: 2666, ipad: null, itouch: 2647},
         {period: '2015 Q2', iphone: 15278, ipad: 4294, itouch: 2441},
@@ -20,7 +19,7 @@ Morris.Area({
         {period: '2017 Q1', iphone: 10687, ipad: 4460, itouch: 2028},
         {period: '2017 Q2', iphone: 8432, ipad: 5713, itouch: 1791}
     ],
-    lineColors:['#FF518A','#FFEA80','#36a2f5'],
+    lineColors: ['#FF518A', '#FFEA80', '#36a2f5'],
     xkey: 'period',
     ykeys: ['iphone', 'ipad', 'itouch'],
     labels: ['iPhone', 'iPad', 'iPod Touch'],
@@ -29,7 +28,6 @@ Morris.Area({
     hideHover: 'auto'
 
 });
-
 
 
 // bar chart
@@ -46,7 +44,7 @@ Morris.Bar({
     ykeys: ['y', 'z', 'a'],
     labels: ['Y', 'Z', 'A'],
     gridLineColor: '#e5ebf8',
-    barColors:['#36a2f5','#A768F3','#eac459']
+    barColors: ['#36a2f5', '#A768F3', '#eac459']
 
 });
 
@@ -73,7 +71,7 @@ Morris.Line({
     ykeys: ['value'],
     labels: ['value'],
     gridLineColor: '#e5ebf8',
-    lineColors:['#FF518A'],
+    lineColors: ['#FF518A'],
     parseTime: false,
     lineWidth: 1
 });
@@ -95,7 +93,7 @@ Morris.Area({
     ykeys: ['y', 'z'],
     labels: ['Y', 'Z'],
     gridLineColor: '#e5ebf8',
-    lineColors:['#eac459','#A768F3'],
+    lineColors: ['#eac459', '#A768F3'],
     pointSize: 4,
     lineWidth: 1
 
@@ -107,18 +105,20 @@ Morris.Area({
 Morris.Donut({
     element: 'donut-chart',
     data: [
-        {value: 60, label: 'Apple', formatted: 'at least 55%' },
-        {value: 25, label: 'Orange', formatted: 'approx. 25%' },
-        {value: 5, label: 'Banana', formatted: 'approx. 10%' },
-        {value: 10, label: 'Long title chart', formatted: 'at most 10%' }
+        {value: 60, label: 'Apple', formatted: 'at least 55%'},
+        {value: 25, label: 'Orange', formatted: 'approx. 25%'},
+        {value: 5, label: 'Banana', formatted: 'approx. 10%'},
+        {value: 10, label: 'Long title chart', formatted: 'at most 10%'}
     ],
     backgroundColor: '#fff',
     labelColor: '#53505F',
     gridLineColor: '#e5ebf8',
     colors: [
-        '#A768F3','#36a2f5','#34bfa3','#eac459'
+        '#A768F3', '#36a2f5', '#34bfa3', '#eac459'
     ],
-    formatter: function (x, data) { return data.formatted; }
+    formatter: function (x, data) {
+        return data.formatted;
+    }
 });
 
 

@@ -1,21 +1,22 @@
 ﻿using System.Collections.Generic;
-using BobsBookstore.Models.Books;
 using BobsBookstore.DataAccess.Dtos;
+using BobsBookstore.Models.Books;
 
 namespace BobsBookstore.DataAccess.Repository.Interface.InventoryInterface
 {
     public interface IInventory
     {
-        public SearchBookDto SearchBooks(string searchBy, string searchFilter, string style, string sortBy, int pageNum, string ascDesc);
+        public SearchBookDto SearchBooks(string searchBy, string searchFilter, string style, string sortBy, int pageNum,
+            string ascDesc);
 
-        public void SaveBook(Book book );
+        public void SaveBook(Book book);
 
         public SearchBookDto GetAllBooks(int pageNum, string style, string sortBy, string ascDesc);
 
         public BookDetailsDto GetBookByID(long bookId);
 
         public void SavePrice(Price price);
-      
+
         public bool AddPublishers(Publisher publishers);
 
         public bool AddGenres(Genre genres);

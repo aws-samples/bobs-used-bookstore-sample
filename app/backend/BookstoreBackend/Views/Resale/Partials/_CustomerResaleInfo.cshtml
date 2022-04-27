@@ -1,44 +1,44 @@
 ﻿@model  BobsBookstore.Models.Customers.Customer;
-    
-    <style>
-        .card-custom {
-            border-radius: 3rem;
-            border-color: black;
-            background-color: white;
-        }
 
-        .card-custom-header {
-            border-top-left-radius: 3rem;
-            border-top-right-radius: 3rem;
-            background-color: white;
-            padding: .75rem 1.25rem;
-            border-bottom: 1px solid rgba(0,0,0,.125);
-        }
+<style>
+    .card-custom {
+        border-radius: 3rem;
+        border-color: black;
+        background-color: white;
+    }
 
-        .website-text {
-            font-family: 'Arvo',serif
-        }
+    .card-custom-header {
+        border-top-left-radius: 3rem;
+        border-top-right-radius: 3rem;
+        background-color: white;
+        padding: .75rem 1.25rem;
+        border-bottom: 1px solid rgba(0,0,0,.125);
+    }
 
-        .card-custom-li-last-item {
-            border-bottom-left-radius: 3rem;
-            border-bottom-right-radius: 3rem;
-            padding-bottom: 1rem;
-        }
+    .website-text {
+        font-family: 'Arvo',serif
+    }
 
-        .card-custom-li-item {
-            display: block;
-            border-top: 1px solid rgba(0,0,0,.125);
-            display: block;
-            padding: .75rem 1.25rem;
-        }
-    </style>
+    .card-custom-li-last-item {
+        border-bottom-left-radius: 3rem;
+        border-bottom-right-radius: 3rem;
+        padding-bottom: 1rem;
+    }
 
-    <div class="card card-custom shadow" >
-        <div class="card-custom-header text-center website-text">
-            Customer Info
-        </div>
-        <ul class="list-group list-group-flush">
-            <li class="card-custom-li-item  website-text">Customer Name: @Model.FirstName @Model.LastName</li>
-            <li class="card-custom-li-item card-custom-li-last-item website-text">Email: @Model.Email</li>
-        </ul>
+    .card-custom-li-item {
+        display: block;
+        border-top: 1px solid rgba(0,0,0,.125);
+        display: block;
+        padding: .75rem 1.25rem;
+    }
+</style>
+
+<div class="card card-custom shadow">
+    <div class="card-custom-header text-center website-text">
+        Customer Info
     </div>
+    <ul class="list-group list-group-flush">
+        <li class="card-custom-li-item  website-text">Customer Name: @Model.FirstName @Model.LastName</li>
+        <li class="card-custom-li-item card-custom-li-last-item website-text">Email: @Model.Email</li>
+    </ul>
+</div>

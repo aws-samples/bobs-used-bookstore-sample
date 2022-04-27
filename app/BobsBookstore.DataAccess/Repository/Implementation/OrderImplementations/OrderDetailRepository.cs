@@ -2,30 +2,32 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Linq.Expressions;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using BobsBookstore.Models.Orders;
 using BobsBookstore.DataAccess.Repository.Interface.OrdersInterface;
 using BobsBookstore.DataAccess.Repository.Interface.SearchImplementations;
+using BobsBookstore.Models.Orders;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace BobsBookstore.DataAccess.Repository.Implementation.OrderImplementations
 {
     // Repository with all the functions assoicated with the Order Detail Model
     public class OrderDetailRepository : IOrderDetailRepository
     {
-        private readonly string[] OrderDetailIncludes = { "Book", "Book.Genre", "Book.Publisher","Book.Type","Price","Price.Condition" };
+        private readonly ILogger<OrderDetailRepository> _logger;
         private readonly IOrderRepository _orderRepo;
         private readonly IOrderStatusRepository _orderStatusRepo;
-        private IOrderDatabaseCalls _orderDbCalls;
-        private IExpressionFunction _expFunc;
-        private readonly ILogger<OrderDetailRepository> _logger;
 
-        public OrderDetailRepository(ILogger<OrderDetailRepository> logger, 
-                                     IOrderRepository ordeRepo, 
-                                     IOrderStatusRepository orderStatusRepo,
-                                     IOrderDatabaseCalls orderDbCalls, 
-                                     IExpressionFunction expFunc)
+        private readonly string[] OrderDetailIncludes =
+            { "Book", "Book.Genre", "Book.Publisher", "Book.Type", "Price", "Price.Condition" };
+
+        private readonly IExpressionFunction _expFunc;
+        private readonly IOrderDatabaseCalls _orderDbCalls;
+
+        public OrderDetailRepository(ILogger<OrderDetailRepository> logger,
+            IOrderRepository ordeRepo,
+            IOrderStatusRepository orderStatusRepo,
+            IOrderDatabaseCalls orderDbCalls,
+            IExpressionFunction expFunc)
         {
             _orderRepo = ordeRepo;
             _orderStatusRepo = orderStatusRepo;
@@ -36,11 +38,11 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.OrderImplementation
 
         public async Task<int> FindOrderDetailsRemovedCountAsync(long id)
         {
-            string filterValue = "Order.Order_Id IsRemoved";
-            string searchString = "" + id + "&&true";
-            string inBetween = "And";
-            string operand = "== ==";
-            string negate = "false false";
+            var filterValue = "Order.Order_Id IsRemoved";
+            var searchString = "" + id + "&&true";
+            var inBetween = "And";
+            var operand = "== ==";
+            var negate = "false false";
 
             var query = FilterOrderDetail(filterValue, searchString, inBetween, operand, negate);
 
@@ -61,10 +63,9 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.OrderImplementation
                 using (var transaction = _orderDbCalls.BeginTransaction())
                 {
                     foreach (var detail in orderDetails)
-                    {
                         if (detail.IsRemoved != true)
                         {
-                            order.Subtotal -= (detail.Quantity * detail.OrderDetailPrice);
+                            order.Subtotal -= detail.Quantity * detail.OrderDetailPrice;
                             order.Tax -= detail.Quantity * detail.OrderDetailPrice * (decimal).1;
 
                             await _orderDbCalls.ContextSaveChanges();
@@ -74,7 +75,6 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.OrderImplementation
 
                             await _orderDbCalls.ContextSaveChanges();
                         }
-                    }
 
                     order.OrderStatus = orderStatus;
 
@@ -84,7 +84,6 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.OrderImplementation
 
                     return order;
                 }
-
             }
             catch (DbUpdateConcurrencyException ex)
             {
@@ -97,8 +96,8 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.OrderImplementation
                 return null;
             }
         }
-        
-        public async Task<Dictionary<string,string>> MakeOrderDetailInactive(long id, long orderId, int quantity) 
+
+        public async Task<Dictionary<string, string>> MakeOrderDetailInactive(long id, long orderId, int quantity)
         {
             try
             {
@@ -110,14 +109,13 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.OrderImplementation
 
                 var origOrder = _orderRepo.FindOrderById(orderId);
 
-                if (origOrderDetail.IsRemoved == true || origOrder.OrderStatus.Position > pending.Position) return null;
+                if (origOrderDetail.IsRemoved || origOrder.OrderStatus.Position > pending.Position) return null;
 
-                using(var transaction = _orderDbCalls.BeginTransaction())
+                using (var transaction = _orderDbCalls.BeginTransaction())
                 {
+                    origOrder.Subtotal -= moneyOwe;
 
-                    origOrder.Subtotal -= (moneyOwe);
-
-                    origOrder.Tax -= (moneyOwe * (decimal).10);
+                    origOrder.Tax -= moneyOwe * (decimal).10;
 
                     await _orderDbCalls.ContextSaveChanges();
 
@@ -131,15 +129,15 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.OrderImplementation
                     await _orderDbCalls.TransactionCommitChanges(transaction);
                     var emailInfo = new Dictionary<string, string>
                     {
-                        { "bookName",origOrderDetail.Book.Name },
-                        { "bookCondition",origOrderDetail.Price.Condition.ConditionName },
-                        { "customerFirstName",origOrder.Customer.FirstName },
-                        { "customerEmail",origOrder.Customer.Email }
+                        { "bookName", origOrderDetail.Book.Name },
+                        { "bookCondition", origOrderDetail.Price.Condition.ConditionName },
+                        { "customerFirstName", origOrder.Customer.FirstName },
+                        { "customerEmail", origOrder.Customer.Email }
                     };
                     return emailInfo;
                 }
             }
-            catch(DbUpdateConcurrencyException ex)
+            catch (DbUpdateConcurrencyException ex)
             {
                 _logger.LogError(ex, "DBConcurrency Error");
                 return null;
@@ -149,17 +147,16 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.OrderImplementation
                 _logger.LogError(ex, "Error");
                 return null;
             }
-
         }
 
         // Finds one instance of Order Detail Model by Order Detail Id
         public async Task<OrderDetail> FindOrderDetailById(long id)
         {
-            string filterValue = "OrderDetail_Id";
-            string searchString = "" + id;
-            string inBetween = "";
-            string operand = "==";
-            string negate = "false";
+            var filterValue = "OrderDetail_Id";
+            var searchString = "" + id;
+            var inBetween = "";
+            var operand = "==";
+            var negate = "false";
 
             var query = FilterOrderDetail(filterValue, searchString, inBetween, operand, negate);
 
@@ -171,11 +168,11 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.OrderImplementation
         // Finds a List of Order Details by the assoicated Order Id
         public async Task<List<OrderDetail>> FindOrderDetailByOrderId(long orderId)
         {
-            string filterValue = "Order.Order_Id";
-            string searchString = "" + orderId;
-            string inBetween = "";
-            string operand = "==";
-            string negate = "false";
+            var filterValue = "Order.Order_Id";
+            var searchString = "" + orderId;
+            var inBetween = "";
+            var operand = "==";
+            var negate = "false";
 
             var query = FilterOrderDetail(filterValue, searchString, inBetween, operand, negate);
 
@@ -184,11 +181,13 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.OrderImplementation
             return orderDetail;
         }
 
-        public IQueryable<OrderDetail> FilterOrderDetail(string filterValue, string searchString, string inBetween, string operand, string negate)
+        public IQueryable<OrderDetail> FilterOrderDetail(string filterValue, string searchString, string inBetween,
+            string operand, string negate)
         {
-            string tableName = "OrderDetail";
+            var tableName = "OrderDetail";
 
-            var lambda = _expFunc.ReturnLambdaExpression<OrderDetail>(tableName, filterValue, searchString, inBetween, operand, negate);
+            var lambda = _expFunc.ReturnLambdaExpression<OrderDetail>(tableName, filterValue, searchString, inBetween,
+                operand, negate);
 
             var orderDetailBase = _orderDbCalls.GetBaseQuery("BobsBookstore.Models.Orders.OrderDetail");
 

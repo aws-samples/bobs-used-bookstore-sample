@@ -6,7 +6,8 @@ namespace BobsBookstore.Models.Books
 {
     public class Price
     {
-        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long Price_Id { get; set; }
 
         public Book Book { get; set; }
@@ -15,7 +16,6 @@ namespace BobsBookstore.Models.Books
 
         [RegularExpression(@"^\d+\.\d{0,2}$")]
         [Range(0, 9999999999999999.99)]
-
         [Column(TypeName = "decimal(18,2)")]
         public decimal ItemPrice { get; set; }
 
@@ -28,7 +28,6 @@ namespace BobsBookstore.Models.Books
 
         public bool Active { get; set; }
 
-        [Timestamp]
-        public byte[] RowVersion { get; set; }
+        [Timestamp] public byte[] RowVersion { get; set; }
     }
 }

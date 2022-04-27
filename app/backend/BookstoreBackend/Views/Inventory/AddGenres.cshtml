@@ -1,14 +1,10 @@
 ﻿@model BobsBookstore.Models.Books.Genre
 
-
 @{
     var status = (string)ViewData["Status"];
 }
 
 <style>
-
-
-
     .form {
         position: relative;
         z-index: 1;
@@ -105,7 +101,7 @@
             </div>
             <div class="modal-body">
                 <div>
-                    <li class="main-text">@status</li>
+                    <div class="main-text">@status</div>
                 </div>
             </div>
             <div class="modal-footer">
@@ -117,20 +113,15 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
-
 @if (status.Contains("already"))
 {
     <script type="text/javascript">
-
         $(
             function () {
                 $('#exampleModal').modal('show');
-
-            });
-
-
+            }
+        );
     </script>
-
 }
 
 <div class="login-page">
@@ -140,11 +131,10 @@
             <h1 class="main-text title-1 text-center font-weight-light" style="margin-bottom:10%; margin-top:1%">
                 ADD NEW GENRE
             </h1>
-            <input class="main-text" asp-for="Name" style="margin-top:1%;height:3%" type="text" placeholder="GENRE NAME" required />
+            <input class="main-text" asp-for="Name" style="margin-top:1%;height:3%" type="text" placeholder="GENRE NAME" required/>
             <button type="main-text submit">SUBMIT</button>
             <h4 hidden class="main-text message">@ViewData["Status"]</h4>
             <a asp-controller="Inventory" asp-action="EditGenre">Edit Genres</a>
         </form>
     </div>
 </div>
-

@@ -7,7 +7,7 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.SearchImplementatio
 {
     public class ExpressionFunction : IExpressionFunction
     {
-        private ISearchDatabaseCalls _searchDbCalls;
+        private readonly ISearchDatabaseCalls _searchDbCalls;
 
         public ExpressionFunction(ISearchDatabaseCalls searchDatabaseCalls)
         {
@@ -21,7 +21,78 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.SearchImplementatio
             return parameterExpression;
         }
 
-        private BinaryExpression PerformArtithmeticExpresion(string operand, Expression property, ConstantExpression constant)
+        public BinaryExpression ReturnExpression(string filterValue, string tableName,
+            ParameterExpression parameterExpression, string searchString, string inBetween, string operand,
+            string negate)
+        {
+            var listOfFilters = filterValue.Split(' ');
+            var isFirst = true;
+
+
+            BinaryExpression expression = null;
+            var inBetweenCount = 0;
+            var splitInBetweenVal = inBetween.Split(' ');
+
+            var splitSearchString = searchString.Split("&&");
+            var splitOperand = operand.Split(' ');
+            var splitNegate = negate.Split(' ');
+
+            for (var i = 0; i < listOfFilters.Length; i++)
+            {
+                BinaryExpression exp2 = null;
+
+                if (!listOfFilters[i].Contains("."))
+                    exp2 = GenerateDynamicLambdaFunctionObjectProperty(parameterExpression, tableName, listOfFilters[i],
+                        splitSearchString[i], splitOperand[i], splitNegate[i]);
+                else
+                    exp2 = GenerateDynamicLambdaFunctionSubObjectProperty(parameterExpression,
+                        listOfFilters[i].Split("."), splitSearchString[i], splitOperand[i], splitNegate[i]);
+
+                if (exp2 == null) continue;
+                if (isFirst)
+                {
+                    if (splitNegate[i] == "false") expression = exp2;
+                    else expression = Expression.Or(Expression.Not(exp2), Expression.Not(exp2));
+                    isFirst = false;
+                }
+                else
+                {
+                    if (splitNegate[i] == "false")
+                        expression = splitInBetweenVal[inBetweenCount] == "And"
+                            ? Expression.And(expression, exp2)
+                            : Expression.Or(expression, exp2);
+                    else
+                        expression = splitInBetweenVal[inBetweenCount] == "And"
+                            ? Expression.And(expression, Expression.Not(exp2))
+                            : Expression.Or(expression, Expression.Not(exp2));
+
+                    inBetweenCount += 1;
+                    isFirst = false;
+                }
+            }
+
+
+            return expression;
+        }
+
+        public Expression<Func<T, bool>> ReturnLambdaExpression<T>(string tableName, string filterValue,
+            string searchString, string inBetween, string operand, string negate)
+        {
+            var parameterExpression = ReturnParameterExpression(typeof(T), tableName);
+            var expression = ReturnExpression(filterValue, tableName, parameterExpression, searchString, inBetween,
+                operand, negate);
+
+            return Expression.Lambda<Func<T, bool>>(expression, parameterExpression);
+        }
+
+        public Expression<Func<T, bool>> ReturnLambdaExpression<T>(BinaryExpression expression,
+            ParameterExpression parameterExpression)
+        {
+            return Expression.Lambda<Func<T, bool>>(expression, parameterExpression);
+        }
+
+        private BinaryExpression PerformArtithmeticExpresion(string operand, Expression property,
+            ConstantExpression constant)
         {
             if (operand.Equals(">")) return Expression.GreaterThan(property, constant);
             if (operand.Equals("==")) return Expression.Equal(property, constant);
@@ -32,28 +103,27 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.SearchImplementatio
         }
 
 
-        private BinaryExpression GenerateExpressionSubObject(ParameterExpression parameterExpression, string[] splitFilter, string type, string subSearch, string operand, string negate)
+        private BinaryExpression GenerateExpressionSubObject(ParameterExpression parameterExpression,
+            string[] splitFilter, string type, string subSearch, string operand, string negate)
         {
             var converter = TypeDescriptor.GetConverter(Type.GetType(type));
 
             var value = converter.ConvertFrom(subSearch);
             ConstantExpression constant = null;
-            
+
             constant = Expression.Constant(value);
 
             Expression property2 = parameterExpression;
 
-            foreach (var member in splitFilter)
-            {
-                property2 = Expression.PropertyOrField(property2, member);
-            }
+            foreach (var member in splitFilter) property2 = Expression.PropertyOrField(property2, member);
 
             var exp = PerformArtithmeticExpresion(operand, property2, constant);
 
             return exp;
         }
-            
-        private BinaryExpression GenerateDynamicLambdaFunctionSubObjectProperty(ParameterExpression parameterExpression, string[] splitFilter, string searchString, string operand, string negate)
+
+        private BinaryExpression GenerateDynamicLambdaFunctionSubObjectProperty(ParameterExpression parameterExpression,
+            string[] splitFilter, string searchString, string operand, string negate)
         {
             var table = _searchDbCalls.GetTable(splitFilter[0]);
 
@@ -63,13 +133,15 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.SearchImplementatio
 
             var type = col.Type.FullName;
 
-            var result = GenerateExpressionSubObject(parameterExpression, splitFilter, type, searchString, operand, negate);
+            var result =
+                GenerateExpressionSubObject(parameterExpression, splitFilter, type, searchString, operand, negate);
 
             return result;
         }
 
-        
-        private BinaryExpression GenerateExpressionObject(MemberExpression property, string type, string subSearch, string operand, string negate)
+
+        private BinaryExpression GenerateExpressionObject(MemberExpression property, string type, string subSearch,
+            string operand, string negate)
         {
             var converter = TypeDescriptor.GetConverter(Type.GetType(type));
 
@@ -82,7 +154,9 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.SearchImplementatio
 
             return exp;
         }
-        private BinaryExpression GenerateDynamicLambdaFunctionObjectProperty(ParameterExpression parameterExpression, string tableName, string filterCat, string searchString, string operand, string negate)
+
+        private BinaryExpression GenerateDynamicLambdaFunctionObjectProperty(ParameterExpression parameterExpression,
+            string tableName, string filterCat, string searchString, string operand, string negate)
         {
             var property = Expression.Property(parameterExpression, filterCat);
 
@@ -100,80 +174,6 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.SearchImplementatio
             var result = GenerateExpressionObject(property, type, searchString, operand, negate);
 
             return result;
-        }
-
-        public BinaryExpression ReturnExpression(string filterValue, string tableName, ParameterExpression parameterExpression, string searchString, string inBetween, string operand, string negate)
-        {
-            string[] listOfFilters = filterValue.Split(' ');
-            bool isFirst = true;
-
-
-            
-            BinaryExpression expression = null;
-            int inBetweenCount = 0;
-            string[] splitInBetweenVal = inBetween.Split(' ');
-
-            string[] splitSearchString = searchString.Split("&&");
-            string[] splitOperand = operand.Split(' ');
-            string[] splitNegate = negate.Split(' ');
-
-            for (int i = 0; i < listOfFilters.Length; i++)
-            {
-
-                BinaryExpression exp2 = null;
-
-                if (!listOfFilters[i].Contains("."))
-                {
-                    exp2 = GenerateDynamicLambdaFunctionObjectProperty(parameterExpression, tableName, listOfFilters[i], splitSearchString[i],splitOperand[i],splitNegate[i]);
-                }
-                else
-                {
-
-                    exp2 = GenerateDynamicLambdaFunctionSubObjectProperty(parameterExpression,listOfFilters[i].Split("."), splitSearchString[i], splitOperand[i], splitNegate[i]);
-
-
-                }
-
-                if (exp2 == null)
-                {
-                    continue;
-                }
-                if (isFirst)
-                {
-                    if (splitNegate[i] == "false") expression = exp2;
-                    else expression = Expression.Or(Expression.Not(exp2), Expression.Not(exp2));
-                    isFirst = false;
-
-
-                }
-                else
-                {
-                    if(splitNegate[i] == "false") expression = (splitInBetweenVal[inBetweenCount] == "And") ? Expression.And(expression, exp2) : Expression.Or(expression, exp2);
-                    else expression = (splitInBetweenVal[inBetweenCount] == "And") ? Expression.And(expression, Expression.Not(exp2)) : Expression.Or(expression, Expression.Not(exp2));
-
-                    inBetweenCount += 1;
-                    isFirst = false;
-                }
-
-
-
-            }
-
-
-            return expression;
-        }
-
-        public Expression<Func<T, bool>> ReturnLambdaExpression<T>(string tableName, string filterValue, string searchString, string inBetween, string operand, string negate)
-        {
-            var parameterExpression = ReturnParameterExpression(typeof(T), tableName);
-            var expression = ReturnExpression(filterValue, tableName, parameterExpression, searchString, inBetween, operand, negate);
-
-            return Expression.Lambda<Func<T, bool>>(expression, parameterExpression);
-        }
-
-        public Expression<Func<T,bool>> ReturnLambdaExpression<T>(BinaryExpression expression,ParameterExpression parameterExpression)
-        {
-            return Expression.Lambda<Func<T, bool>>(expression, parameterExpression);
         }
     }
 }

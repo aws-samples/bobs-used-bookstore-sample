@@ -4,8 +4,7 @@ namespace BobsBookstore.Models.Customers
 {
     public class Address
     {
-        [Key]
-        public long Address_Id { get; set; }
+        [Key] public long Address_Id { get; set; }
 
         public bool IsPrimary { get; set; }
 

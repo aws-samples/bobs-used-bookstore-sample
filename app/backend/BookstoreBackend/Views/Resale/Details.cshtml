@@ -44,12 +44,12 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj" crossorigin="anonymous"></script>
 
 <div class="container">
-
-
     <div class="row">
         <div class="col-3 text-left">
             <a asp-controller="Resale" asp-action="Index" class="btn shadow manage-order-button website-text">
-                <svg class="bi bi-chevron-left" width="24" height="24" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z" /></svg>
+                <svg class="bi bi-chevron-left" width="24" height="24" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
+                </svg>
                 Manage Orders
             </a>
         </div>
@@ -58,51 +58,43 @@
         </div>
         @if (Model.ResaleStatus.Status == Constants.ResaleStatusPending)
         {
-    <div class="col-1 text-right">
-        <form asp-controller="Resale" asp-action="ApproveResale" method="get">
+            <div class="col-1 text-right">
+                <form asp-controller="Resale" asp-action="ApproveResale" method="get">
+                    <button class="btn shadow manage-order-button website-text" name="id" value="@Model.Resale_Id" type="submit">Approve</button>
+                </form>
+            </div>
 
-            <button class="btn shadow manage-order-button website-text" name="id" value="@Model.Resale_Id" type="submit">Approve</button>
-        </form>
-    </div>
-
-                    <div class="col-1 text-right">
-                        <form asp-controller="Resale" asp-action="RejectResale" method="get">
-
-                            <button class="btn shadow manage-order-button website-text" name="id" value="@Model.Resale_Id" type="submit">Reject</button>
-                        </form>
-                    </div>}
+            <div class="col-1 text-right">
+                <form asp-controller="Resale" asp-action="RejectResale" method="get">
+                    <button class="btn shadow manage-order-button website-text" name="id" value="@Model.Resale_Id" type="submit">Reject</button>
+                </form>
+            </div>
+        }
         @if (Model.ResaleStatus.Status == Constants.ResaleStatusApproved)
         {
-    <div class="col-3 text-right">
-        <form asp-controller="Resale" asp-action="AddResaleBookDetails" method="get">
+            <div class="col-3 text-right">
+                <form asp-controller="Resale" asp-action="AddResaleBookDetails" method="get">
 
-            <button class="btn shadow manage-order-button website-text" name="id" value="@Model.Resale_Id" type="submit">Confirm Shipment</button>
-        </form>
-    </div>}
+                    <button class="btn shadow manage-order-button website-text" name="id" value="@Model.Resale_Id" type="submit">Confirm Shipment</button>
+                </form>
+            </div>
+        }
         @if (Model.ResaleStatus.Status == Constants.ResaleStatusReceived)
         {
-    <button class="btn btn-primary shadow manage-order-button website-text" data-toggle="modal" data-target="#exampleModal" name="id" value="@Model.Resale_Id" type="submit">Make Payment</button>}
+            <button class="btn btn-primary shadow manage-order-button website-text" data-toggle="modal" data-target="#exampleModal" name="id" value="@Model.Resale_Id" type="submit">Make Payment</button>
+        }
     </div>
 
-
-
     <div class="row" style="margin-top:35px">
-
         <div class="col-3">
-            <partial name="./Partials/_BookInfo" model="Model" />
+            <partial name="./Partials/_BookInfo" model="Model"/>
         </div>
 
         <div class="col-5">
-            <partial name="./Partials/_CustomerResaleInfo" model="customerInfo" />
+            <partial name="./Partials/_CustomerResaleInfo" model="customerInfo"/>
         </div>
-
-
     </div>
-
-
-
 </div>
-
 
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -115,17 +107,17 @@
                 </button>
             </div>
             <div class="modal-body website-text">
-                Amount :$ @Model.BookPrice </br>
-                Customer Name: @Model.Customer.FirstName @Model.Customer.LastName 
+                Amount :$ @Model.BookPrice <br/>
+                Customer Name: @Model.Customer.FirstName @Model.Customer.LastName
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn shadow manage-order-button website-text" data-dismiss="modal">Close</button>
                 <div class="col-3 text-right">
                     <form asp-controller="Resale" asp-action="PaymentDone" method="get">
-
                         <button class="btn shadow manage-order-button website-text" name="id" value="@Model.Resale_Id" type="submit">Confirm</button>
                     </form>
                 </div>
+            </div>
         </div>
     </div>
 </div>

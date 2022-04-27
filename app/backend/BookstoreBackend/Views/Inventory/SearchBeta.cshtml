@@ -5,20 +5,16 @@
         var publishers = (List<BobsBookstore.Models.Books.Publisher>)ViewData["Publishers"];
         var genres = (List<BobsBookstore.Models.Books.Genre>)ViewData["Genres"];
         var conditions = (List<BobsBookstore.Models.Books.Condition>)ViewData["Conditions"];
- }
+}
+
 @{
     var count = Model.PageNumber;
     var viewstyle = Model.ViewStyle;
-
-
 }
 <style>
-
-    .table-hover tbody tr:hover td, .table-hover tbody tr:hover th 
+    .table-hover tbody tr:hover td, .table-hover tbody tr:hover th
     {
         background-color: #e8e4f2;
-        
-        
     }
 
     .btn-outline-secondary
@@ -27,7 +23,6 @@
         border-color :#ffffff;
         border-radius : .5rem;
         background-color :#7D53DE;
-        
     }
 
     .text {
@@ -45,8 +40,11 @@
     .main-text {
         font-family: 'Arvo', serif
     }
-</style>
 
+    p.author {
+        font-family: 'Arvo', serif
+    }
+</style>
 
 <div class="container">
     <div class="text-center">
@@ -127,7 +125,6 @@
         </div>
         @if (count != 0)
         {
-
             <div class="col">
                 <div class="row">
                     @if (viewstyle == "Grid")
@@ -136,8 +133,8 @@
                         {
                             var param = new Dictionary<string, string>
                             { 
-                                {"BookId",book.Price.Book.Book_Id + ""}
-                             };
+                                { "BookId", $"{book.Price.Book.Book_Id}" }
+                            };
 
                             <div class="col-12 col-md-6 col-lg-4">
                                 <div class="card">
@@ -145,109 +142,95 @@
                                         {
                                             <img class="card-img-top" src="@book.Price.Book.FrontUrl" alt="Card image cap"> 
                                         }
-
                                         else if (!String.IsNullOrEmpty(@book.Price.Book.BackUrl))
                                         {
                                             <img class="card-img-top" src="@book.Price.Book.BackUrl" alt="Card image cap">
                                         }
-
                                         else if (!String.IsNullOrEmpty(@book.Price.Book.LeftUrl))
                                         {
                                             <img class="card-img-top" src="@book.Price.Book.LeftUrl" alt="Card image cap">
                                         }
-
                                         else if (!String.IsNullOrEmpty(@book.Price.Book.RightUrl))
                                         {
                                             <img class="card-img-top" src="@book.Price.Book.RightUrl" alt="Card image cap">
                                         }
-
                                         else
                                         {
-                                            <img style="width:100%;height:100%" img-fluid" src="https://dtdt6j0vhq1rq.cloudfront.net/default0Kind of New.jpg" alt="Ft slide">
+                                            <img style="width:100%;height:100%" img-fluid src="https://dtdt6j0vhq1rq.cloudfront.net/default0Kind of New.jpg" alt="Ft slide">
                                         }
                                         <div class="main-text card-body">
                                             <h4 class="card-title text-center">
                                                 <a asp-controller="Inventory" asp-action="BookDetails" asp-all-route-data="param" style="text-emphasis-color: #FC4A1A">@book.Price.Book.Name</a>
                                             </h4>
-                                            <p class="main-text card-text  text-center" style="  font-style:'arovo', serif">@book.Price.Book.Author</p>
-                                        
+                                            <p class="main-text card-text text-center author">@book.Price.Book.Author</p>
                                         </div>
                                  </div>
                             </div>
                         }
                     }
-
                     else
                     {
+                        //table-striped
+                        var ascdesc = "asc";
+                        if (!string.IsNullOrEmpty(Model.Ascdesc))
+                            ascdesc = (Model.Ascdesc.Contains("asc")) ? "desc" : "asc";
 
-                        //table-striped                    
-                     
-                            var ascdesc = "";
-                            if (!string.IsNullOrEmpty(Model.Ascdesc)) ascdesc = (Model.Ascdesc.Contains("asc")) ? "desc" : "asc";
-                            else ascdesc = "asc";
-                       
                         <table id="mytable" class="table table-hover "> 
                             <thead>
                             <th>               
                                 @{
-                                    
-
-                                    var SortBy = new Dictionary<string, string>
-                                                                        {
+                                    var sortBooksBy = new Dictionary<string, string>
+                                    {
                                         {"searchfilter",Model.SearchFilter},
                                         {"searchby",Model.SearchBy},
                                         {"SortBy","Price.Book.Name"},
                                         {"pageNum",Model.CurrentPage+""},
                                         {"style",Model.ViewStyle},
                                         {"ascdesc",ascdesc}
-                                        };
-                                                                <a class="main-text text font-weight-light" asp-controller="Inventory" asp-action="SearchBeta" asp-all-route-data="SortBy">BookName @((ascdesc.Contains("asc")) ? "▼": "▲")</a>
+                                    };
+                                    <a class="main-text text font-weight-light" asp-controller="Inventory" asp-action="SearchBeta" asp-all-route-data="sortBooksBy">BookName @((ascdesc.Contains("asc")) ? "▼": "▲")</a>
                                 }
                             </th>
                             <th>                                
                                 @{
-                                    var Sort = new Dictionary<string, string>
-                                                                            {
+                                    var sortAuthorsBy = new Dictionary<string, string>
+                                    {
                                         {"searchfilter",Model.SearchFilter},
                                         {"searchby",Model.SearchBy},
                                         {"SortBy","Price.Book.Author"},
                                         {"pageNum",Model.CurrentPage+""},
                                         {"style",Model.ViewStyle},
                                         {"ascdesc",ascdesc}
-
-                                        };
-
-                                                                <a class="main-text text font-weight-light" asp-controller="Inventory" asp-action="SearchBeta" asp-all-route-data="Sort">Author @((ascdesc.Contains("asc")) ? "▼": "▲")</a>
+                                    };
+                                    <a class="main-text text font-weight-light" asp-controller="Inventory" asp-action="SearchBeta" asp-all-route-data="sortAuthorsBy">Author @((ascdesc.Contains("asc")) ? "▼": "▲")</a>
                                 }
                             </th>
                             <th>
                                 @{
-                                    var sort = new Dictionary<string, string>
-                                                                            {
+                                    var sortPricesBy = new Dictionary<string, string>
+                                    {
                                         {"searchfilter",Model.SearchFilter},
                                         {"searchby",Model.SearchBy},
                                         {"SortBy","LowestPrice"},
                                         {"pageNum",Model.CurrentPage+""},
                                         {"style",Model.ViewStyle},
                                         {"ascdesc",ascdesc}
-                                        };
-
-                                                                <a class="main-text text font-weight-light" asp-controller="Inventory" asp-action="SearchBeta" asp-all-route-data="sort"> Price @((ascdesc.Contains("asc")) ? "▼": "▲")</a>
+                                    };
+                                    <a class="main-text text font-weight-light" asp-controller="Inventory" asp-action="SearchBeta" asp-all-route-data="sortPricesBy"> Price @((ascdesc.Contains("asc")) ? "▼": "▲")</a>
                                 }
                             </th>
                             <th>                               
                                 @{
-                                    var sortby = new Dictionary<string, string>
-                                                                            {
+                                    var sortQuantityBy = new Dictionary<string, string>
+                                    {
                                         {"searchfilter",Model.SearchFilter},
                                         {"searchby",Model.SearchBy},
                                         {"SortBy","TotalQuantity"},
                                         {"pageNum",Model.CurrentPage+""},
                                         {"style",Model.ViewStyle},
                                         {"ascdesc",ascdesc}
-                                        };
-
-                                                                <a class="main-text text font-weight-light" asp-controller="Inventory" asp-action="SearchBeta" asp-all-route-data="sortby"> Quantity @((ascdesc.Contains("asc")) ? "▼": "▲")</a>
+                                    };
+                                    <a class="main-text text font-weight-light" asp-controller="Inventory" asp-action="SearchBeta" asp-all-route-data="sortQuantityBy"> Quantity @((ascdesc.Contains("asc")) ? "▼": "▲")</a>
                                 }
                             </th>
                             </thead>
@@ -255,9 +238,9 @@
                                 @foreach (var book in Model.Books)
                                 {
                                     var param = new Dictionary<string, string>
-                                                                                                                                          {
-                                                {"BookId",book.Price.Book.Book_Id + ""}
-                                                              };
+                                    {
+                                        { "BookId", $"{book.Price.Book.Book_Id}" }
+                                    };
                                     <tr>
                                         @{ 
                                             var price = (int)book.LowestPrice;
@@ -271,24 +254,20 @@
                                         </td>
                                     </tr>
                                 }
-
                             </tbody>
                         </table>
-
-
                     }
                 </div>
             </div>
         }
         else
-        { <h3 class="text-center font-weight-light text-primary">Sorry , Could'nt find any relevant books. Try again !!</h3>
-
+        {
+            <h3 class="text-center font-weight-light text-primary">Sorry, could not find any relevant books. Try again !!</h3>
         }
     </div>
 </div>
 <div class="row d-flex justify-content-lg-center">
     <div class="row d-flex justify-content-center" style="margin-top:35px;">
-
         <partial name="./Partials/_Pagination" model="Model" />
     </div>
 </div>

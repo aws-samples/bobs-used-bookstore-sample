@@ -14,9 +14,7 @@
     var SummaryPlaceHolder = "DESCRIPTION";
     var pageHeader = "ADDING BOOK TO INVENTORY";
     var check = (string)ViewData["check"];
-
 }
-
 
 @if (!string.IsNullOrEmpty(adding_varint))
 {
@@ -27,8 +25,6 @@
     ISBNPlaceHolder = (string)ViewData["ISBN"].ToString();
     SummaryPlaceHolder = (string)ViewData["Summary"];
     pageHeader = "ADD NEW VARIANT OF THE BOOK";
-
-
 }
 
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -42,10 +38,12 @@
             </div>
             <div class="modal-body">
                 <div>
-                    <li class="main-text"> "Please re-upload the photos as they violate one or more of our content policies "</li>
-                    <li class="main-text">"1) Photo must be  of type .jpg or .png or .gif"</li>
-                    <li class="main-text">"2) Photo content must not contain profanity"</li>
-                    <li class="main-text">"3) Photo must be that of a book"</li>
+                    <span class="main-text"> "Please re-upload the photos as they violate one or more of our content policies "</span>
+                    <ol>
+                        <li class="main-text">"Photo must be of type .jpg or .png or .gif"</li>
+                        <li class="main-text">"Photo content must not contain profanity"</li>
+                        <li class="main-text">"Photo must be that of a book"</li>
+                    </ol>
                 </div>
             </div>
             <div class="modal-footer">
@@ -57,37 +55,33 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
-
 @if (errorstatus == "Yes")
 {
     <script type="text/javascript">
-
         $(
             function () {
                 $('#exampleModal').modal('show');
-
-            });
-
-
+            }
+        );
     </script>
-
 }
+
 <body class="form-v4">
     <div class="page-content" style="margin-left : 20% ; margin-right : 20%">
         <div class="form-v4-content">
 
             <div class="form-left">
                 <div class="overview-wrap">
-                    <h1 class="title-1 text-center font-weight-light" style="margin-bottom: 45px;">@pageHeader</h>
+                    <h1 class="title-1 text-center font-weight-light" style="margin-bottom: 45px;">@pageHeader</h1>
                 </div>              
             </div>
-            @{var param = new Dictionary<string, string>
-                                {
+            @{
+                var param = new Dictionary<string, string>
+                {
                     {"Author", AuthorPlaceHolder},
                     {"ISBN",ISBNPlaceHolder },
                     {"Summary", SummaryPlaceHolder}
-
-                    };
+                };
             }
             <form class="form-detail" enctype="multipart/form-data" asp-controller="Inventory" asp-action="EditBookDetails" asp-all-route-data="param" method="post" style="padding-bottom: 0px;">
                 <div asp-validation-summary="All"></div>
@@ -99,21 +93,20 @@
                                 <div class="row-sm-12">
                                     @if (BookNamePlaceHolder == "BOOK NAME")
                                     {
-                        <input class="main-text form-control bg-light text-dark" asp-for="BookName" placeholder="@BookNamePlaceHolder" required /> }
+                                        <input class="main-text form-control bg-light text-dark" asp-for="BookName" placeholder="@BookNamePlaceHolder" required /> }
                                     else
                                     {
-                        <input class="main-text form-control bg-light text-dark" asp-for="BookName" readonly placeholder="@BookNamePlaceHolder" required />}
+                                        <input class="main-text form-control bg-light text-dark" asp-for="BookName" readonly placeholder="@BookNamePlaceHolder" required />}
                                 </div>
                                 <div class="row-sm-12">
                                     @if (AuthorPlaceHolder == "AUTHOR")
                                     {
-                        <input class="main-text form-control bg-light text-dark" asp-for="Author" placeholder="@AuthorPlaceHolder" required /> }
+                                        <input class="main-text form-control bg-light text-dark" asp-for="Author" placeholder="@AuthorPlaceHolder" required /> }
                                     else
                                     {
-                        <input class="main-text form-control bg-light text-dark" asp-for="Author" readonly placeholder="@AuthorPlaceHolder" required />}
+                                        <input class="main-text form-control bg-light text-dark" asp-for="Author" readonly placeholder="@AuthorPlaceHolder" required />}
                                 </div>
                                 <div class="row-sm-12">
-
                                     <input class="main-text form-control bg-light text-dark" asp-for="ISBN" placeholder="@ISBNPlaceHolder" required />
                                 </div>
                                 <div class="row">
@@ -135,9 +128,10 @@
                                             <option value="">Select the Publisher</option>
                                             @foreach (var publisher in publishers)
                                             {
-                                <option value="@publisher.Name">@publisher.Name</option>}
+                                                <option value="@publisher.Name">@publisher.Name</option>
+                                            }
                                         </select>
-                                        <a class="main-text text-center" asp-action="AddPublishers" asp-controller="Inventory">Don't Find in the List ? Add New Publisher</a>
+                                        <a class="main-text text-center" asp-action="AddPublishers" asp-controller="Inventory">Didn't find in the list ? Add New Publisher</a>
                                     </div>
                                 </div>
                                 <div class="row-sm-6">
@@ -146,9 +140,10 @@
                                             <option value="">Select the Genre</option>
                                             @foreach (var genre in genres)
                                             {
-                                <option value="@genre.Name">@genre.Name</option>}
+                                                <option value="@genre.Name">@genre.Name</option>
+                                            }
                                         </select>
-                                        <a class="main-text text-center" asp-action="AddGenres" asp-controller="Inventory">Don't Find in the List ? Add New Genre</a>
+                                        <a class="main-text text-center" asp-action="AddGenres" asp-controller="Inventory">Didn't find in the list ? Add New Genre</a>
                                     </div>
                                 </div>
                                 <div class="row-sm-6">
@@ -157,10 +152,10 @@
                                             <option value="">Select the Book Type</option>
                                             @foreach (var type in types)
                                             {
-                                <option value="@type.TypeName">@type.TypeName</option>}
-
+                                                <option value="@type.TypeName">@type.TypeName</option>
+                                            }
                                         </select>
-                                        <a class="main-text text-center" asp-action="AddBookTypes" asp-controller="Inventory">Don't Find in the List ? Add New BookType</a>
+                                        <a class="main-text text-center" asp-action="AddBookTypes" asp-controller="Inventory">Didn't find in the list ? Add New BookType</a>
                                     </div>
                                 </div>
                                 <div class="row-sm-6">
@@ -169,16 +164,18 @@
                                             <option value="">Select the Book Condition</option>
                                             @foreach (var condition in conditions)
                                             {
-                                <option value="@condition.ConditionName">@condition.ConditionName</option>}
-
+                                                <option value="@condition.ConditionName">@condition.ConditionName</option>
+                                            }
                                         </select>
-                                        <a class="main-text text-center" asp-action="AddBookConditions" asp-controller="Inventory">Don't Find in the List ? Add New Condition</a>
+                                        <a class="main-text text-center" asp-action="AddBookConditions" asp-controller="Inventory">Didn't find in the list ? Add New Condition</a>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <br /> <br />
+                        <br />
+                        <br />
+
                         <div class="form-group row justify-content-center">
                             <label asp-for="FrontPhoto" class="main-text col-sm-2 col-form-label">FRONT PICTURE</label>
                             <div class="col-sm-10">
@@ -215,12 +212,16 @@
                                 </div>
                             </div>
                         </div>
+
                         <br />
+
                         <div class="form-group text-center ">
                             <button class="main-text btn text-white font-weight-bold" style="width:20% ;background-color: #7D53DE" type="submit">SUBMIT</button>
                         </div>
                     </div>
-                    @section Scripts {
+                </div>
+
+                @section Scripts {
                         <script>
                             $(document).ready(function () {
                                 $('.custom-file-input').on("change", function () {
@@ -285,4 +286,3 @@
         font-family: 'Arvo', serif
     }
 </style>
-

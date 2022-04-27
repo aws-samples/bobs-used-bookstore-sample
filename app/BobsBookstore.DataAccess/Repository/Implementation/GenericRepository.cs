@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using Microsoft.EntityFrameworkCore;
 using BobsBookstore.DataAccess.Data;
 using BobsBookstore.DataAccess.Repository.Interface;
+using Microsoft.EntityFrameworkCore;
 
 namespace BobsBookstore.DataAccess.Repository.Implementation
 {
@@ -18,6 +18,7 @@ namespace BobsBookstore.DataAccess.Repository.Implementation
             DatabaseContext = context;
             dbSet = context.Set<TModel>();
         }
+
         public void Add(TModel entity)
         {
             DatabaseContext.Set<TModel>().Add(entity);
@@ -37,10 +38,8 @@ namespace BobsBookstore.DataAccess.Repository.Implementation
         {
             IQueryable<TModel> query = DatabaseContext.Set<TModel>();
             foreach (var includeProperty in includeProperties.Split
-               (new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
-            {
+                         (new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                 query = query.Include(includeProperty);
-            }
             return query.ToList();
         }
 
@@ -48,36 +47,27 @@ namespace BobsBookstore.DataAccess.Repository.Implementation
         {
             DatabaseContext.Set<TModel>().Remove(entity);
         }
+
         public void Update(TModel entity)
         {
             DatabaseContext.Entry(entity).State = EntityState.Modified;
         }
 
         public IEnumerable<TModel> Get(Expression<Func<TModel, bool>> filter = null,
-                                       Func<IQueryable<TModel>, IOrderedQueryable<TModel>> orderBy = null,
-                                       string includeProperties = "")
+            Func<IQueryable<TModel>, IOrderedQueryable<TModel>> orderBy = null,
+            string includeProperties = "")
         {
             IQueryable<TModel> query = dbSet;
 
-            if (filter != null)
-            {
-                query = query.Where(filter);
-            }
+            if (filter != null) query = query.Where(filter);
 
             foreach (var includeProperty in includeProperties.Split
-                (new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
-            {
+                         (new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                 query = query.Include(includeProperty);
-            }
 
             if (orderBy != null)
-            {
                 return orderBy(query).ToList();
-            }
-            else
-            {
-                return query.ToList();
-            }
+            return query.ToList();
         }
 
         public void Save()

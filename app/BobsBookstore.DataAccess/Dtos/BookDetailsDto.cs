@@ -1,6 +1,6 @@
 ﻿using System;
-using Microsoft.AspNetCore.Http;
 using BobsBookstore.Models.Books;
+using Microsoft.AspNetCore.Http;
 using Type = BobsBookstore.Models.Books.Type;
 
 namespace BobsBookstore.DataAccess.Dtos
@@ -36,11 +36,11 @@ namespace BobsBookstore.DataAccess.Dtos
         public IFormFile FrontPhoto { get; set; }
 
         public IFormFile BackPhoto { get; set; }
-        
+
         public IFormFile RearPhoto { get; set; }
-        
+
         public IFormFile LeftSidePhoto { get; set; }
-        
+
         public IFormFile RightSidePhoto { get; set; }
 
         public string UpdatedBy { get; set; }

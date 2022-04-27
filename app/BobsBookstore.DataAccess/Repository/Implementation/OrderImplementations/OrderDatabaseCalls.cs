@@ -2,17 +2,16 @@
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore.Storage;
-using BookstoreBackend.Database;
 using BobsBookstore.DataAccess.Data;
 using BobsBookstore.DataAccess.Repository.Interface.OrdersInterface;
+using BookstoreBackend.Database;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace BobsBookstore.DataAccess.Repository.Implementation.OrderImplementations
 {
     public class OrderDatabaseCalls : IOrderDatabaseCalls
     {
-
-        private ApplicationDbContext _context;
+        private readonly ApplicationDbContext _context;
 
         public OrderDatabaseCalls(ApplicationDbContext context)
         {

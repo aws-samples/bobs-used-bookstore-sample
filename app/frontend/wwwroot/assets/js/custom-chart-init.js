@@ -15,34 +15,36 @@
                 title: 'Web Visits',
                 prevTotalDataPoints: 4000,
                 dataPoints: [
-                    { 'date': '2017-01-01T17:00:00.000Z', 'value': 570 },
-                    { 'date': '2017-01-05T17:00:00.000Z', 'value': 525 },
-                    { 'date': '2017-01-10T17:00:00.000Z', 'value': 560 },
-                    { 'date': '2017-01-15T17:00:00.000Z', 'value': 550 },
-                    { 'date': '2017-01-20T17:00:00.000Z', 'value': 555 },
-                    { 'date': '2017-01-25T17:00:00.000Z', 'value': 780 },
-                    { 'date': '2017-01-29T17:00:00.000Z', 'value': 560 },
-                    { 'date': '2017-01-30T17:00:00.000Z', 'value': 560 },
+                    {'date': '2017-01-01T17:00:00.000Z', 'value': 570},
+                    {'date': '2017-01-05T17:00:00.000Z', 'value': 525},
+                    {'date': '2017-01-10T17:00:00.000Z', 'value': 560},
+                    {'date': '2017-01-15T17:00:00.000Z', 'value': 550},
+                    {'date': '2017-01-20T17:00:00.000Z', 'value': 555},
+                    {'date': '2017-01-25T17:00:00.000Z', 'value': 780},
+                    {'date': '2017-01-29T17:00:00.000Z', 'value': 560},
+                    {'date': '2017-01-30T17:00:00.000Z', 'value': 560},
                 ],
             },
             fileDownload: {
                 title: 'File Downloads',
                 prevTotalDataPoints: 1300,
                 dataPoints: [
-                    { 'date': '2017-01-01T17:00:00.000Z', 'value': 110 },
-                    { 'date': '2017-01-05T17:00:00.000Z', 'value': 130 },
-                    { 'date': '2017-01-10T17:00:00.000Z', 'value': 105 },
-                    { 'date': '2017-01-15T17:00:00.000Z', 'value': 215 },
-                    { 'date': '2017-01-20T17:00:00.000Z', 'value': 85 },
-                    { 'date': '2017-01-25T17:00:00.000Z', 'value': 120 },
-                    { 'date': '2017-01-29T17:00:00.000Z', 'value': 135 },
-                    { 'date': '2017-01-30T17:00:00.000Z', 'value': 110 },
+                    {'date': '2017-01-01T17:00:00.000Z', 'value': 110},
+                    {'date': '2017-01-05T17:00:00.000Z', 'value': 130},
+                    {'date': '2017-01-10T17:00:00.000Z', 'value': 105},
+                    {'date': '2017-01-15T17:00:00.000Z', 'value': 215},
+                    {'date': '2017-01-20T17:00:00.000Z', 'value': 85},
+                    {'date': '2017-01-25T17:00:00.000Z', 'value': 120},
+                    {'date': '2017-01-29T17:00:00.000Z', 'value': 135},
+                    {'date': '2017-01-30T17:00:00.000Z', 'value': 110},
                 ],
             }
         };
 
         _.each(chartData, function (e) {
-            e.value = _.reduce(e.dataPoints, function (p, f) { return p + f.value; }, 0);
+            e.value = _.reduce(e.dataPoints, function (p, f) {
+                return p + f.value;
+            }, 0);
             e.percentage = (e.value - e.prevTotalDataPoints) / e.prevTotalDataPoints * 100;
             e.status = (e.value > e.prevTotalDataPoints) ? 'up' : 'down';
         });
@@ -77,13 +79,13 @@
             scaleLineColor: 'rgba(255,255,255,0.1)',
             scaleGridLineColor: "rgba(255,255,255,0.1)",
             scaleGridLineWidth: 1,
-            customTooltips: function(tooltip) {
+            customTooltips: function (tooltip) {
                 var tooltipEl = $('.aws-tooltip'),
                     whichChart = $("[data-btn-chart].aws-active").attr('data-btn-chart'),
                     currentData, text;
 
                 if (!tooltip) {
-                    tooltipEl.css({ opacity: 0 });
+                    tooltipEl.css({opacity: 0});
                     return;
                 }
 
@@ -160,7 +162,7 @@
 
         self.run = function () {
             //chartLine = new Chart(chartContext).Line(chartSchema, chartConfig);
-           // updateBlockInfo(chartDataInitial, true);
+            // updateBlockInfo(chartDataInitial, true);
         };
 
         self.registerEvent = function () {

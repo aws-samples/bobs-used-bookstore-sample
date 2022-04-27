@@ -1,19 +1,18 @@
 ﻿@page
-@using Microsoft.AspNetCore.Identity
-@using Amazon.Extensions.CognitoAuthentication
 
 @inject SignInManager<CognitoUser> SignInManager
 @inject UserManager<CognitoUser> UserManager
 
+@using Amazon.AspNetCore.Identity.Cognito
+@using Amazon.Extensions.CognitoAuthentication
 @model IndexModel
 @{
     ViewData["Title"] = "Profile";
     ViewData["ActivePage"] = ManageNavPages.Index;
 }
-@{ 
+@{
     var user = await UserManager.GetUserAsync(User);
 }
-
 
 
 <html lang="en">
@@ -31,34 +30,34 @@
     <link href="/css/sb-admin-2.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/css/bootstrap.min.css">
 
-<link rel="stylesheet" href="/css/googlefont.css">
+    <link rel="stylesheet" href="/css/googlefont.css">
     <link rel="stylesheet" href="/css/font-awesome.min.css">
-    
+
     <link rel="stylesheet" href="/css/styles.css">
     <link rel="stylesheet" href="/css/custom-style.css">
 
 </head>
 
 <body>
-    <h2>Hello @user.Attributes[Amazon.AspNetCore.Identity.Cognito.CognitoAttribute.GivenName.AttributeName]!</h2>
-    <div class="container bg-cover">
-        <div class="row justify-content-center">
-            <div class="col-4 text-center">
-                <h4>Username</h4><br />
-                @UserManager.GetUserName(User)<br /><br />
-                <h4>Email address</h4><br />
-                @user.Attributes[Amazon.AspNetCore.Identity.Cognito.CognitoAttribute.Email.AttributeName]
-            </div>
-            <div class="col-4 text-center">
-                <h4>Manage your account</h4><br />
-               
-                <partial name="_ManageNav" />
-            </div>
+<h2>Hello @user.Attributes[CognitoAttribute.GivenName.AttributeName]!</h2>
+<div class="container bg-cover">
+    <div class="row justify-content-center">
+        <div class="col-4 text-center">
+            <h4>Username</h4><br/>
+            @UserManager.GetUserName(User)<br/><br/>
+            <h4>Email address</h4><br/>
+            @user.Attributes[CognitoAttribute.Email.AttributeName]
+        </div>
+        <div class="col-4 text-center">
+            <h4>Manage your account</h4><br/>
+
+            <partial name="_ManageNav"/>
         </div>
     </div>
+</div>
 </body>
 </html>
 
 @section Scripts {
-    <partial name="_ValidationScriptsPartial" />
+    <partial name="_ValidationScriptsPartial"/>
 }

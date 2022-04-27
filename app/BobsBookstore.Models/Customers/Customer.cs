@@ -5,8 +5,7 @@ namespace BobsBookstore.Models.Customers
 {
     public class Customer
     {
-        [Key]
-        public string Customer_Id { get; set; }
+        [Key] public string Customer_Id { get; set; }
 
         public string Username { get; set; }
 

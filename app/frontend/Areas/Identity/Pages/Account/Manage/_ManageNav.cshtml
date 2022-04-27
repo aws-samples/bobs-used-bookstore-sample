@@ -1,6 +1,4 @@
-﻿@using Microsoft.AspNetCore.Identity
-@using Amazon.Extensions.CognitoAuthentication
-
+﻿@using Amazon.Extensions.CognitoAuthentication
 @inject SignInManager<CognitoUser> SignInManager
 @inject UserManager<CognitoUser> UserManager
 
@@ -9,12 +7,20 @@
 @{
     var hasExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).Any();
 }
-    <ul class="nav nav-pills flex-column">
+<ul class="nav nav-pills flex-column">
 
-        
-        <li class="nav-item"><a asp-area="Identity" asp-page="/Account/Manage/ManageAccount" style="white-space:nowrap">Manage Profile</a></li>
-        <li class="nav-item"><a asp-area="Identity" asp-page="/Account/ResetPassword" style="white-space:nowrap">Reset Password</a></li>
-        <li class="nav-item"><a asp-area="" asp-controller="Addresses" asp-action="Index" style="white-space:nowrap">Manage Address</a></li>
-        <li class="nav-item"><a asp-area="" asp-controller="Orders" asp-action="Index">Order</a></li>
-            
-    </ul>
+
+    <li class="nav-item">
+        <a asp-area="Identity" asp-page="/Account/Manage/ManageAccount" style="white-space:nowrap">Manage Profile</a>
+    </li>
+    <li class="nav-item">
+        <a asp-area="Identity" asp-page="/Account/ResetPassword" style="white-space:nowrap">Reset Password</a>
+    </li>
+    <li class="nav-item">
+        <a asp-area="" asp-controller="Addresses" asp-action="Index" style="white-space:nowrap">Manage Address</a>
+    </li>
+    <li class="nav-item">
+        <a asp-area="" asp-controller="Orders" asp-action="Index">Order</a>
+    </li>
+
+</ul>

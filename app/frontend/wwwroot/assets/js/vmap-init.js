@@ -16,7 +16,7 @@ $('#world-map').vectorMap({
     focusOn: {
         x: 5,
         y: 1,
-        scale:.85
+        scale: .85
     },
     zoomOnScroll: false,
     zoomMin: 0.65,

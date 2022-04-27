@@ -14,6 +14,5 @@
 
         public int Quantity { get; set; }
         public long PriceId { get; set; }
-
     }
 }

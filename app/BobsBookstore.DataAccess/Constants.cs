@@ -7,8 +7,6 @@ public abstract class Constants
     public const int ResizeWidth = 200;
     public const int ResizeHeight = 200;
 
-    public RegionEndpoint BucketRegion = RegionEndpoint.USWest2;
-
     public const string BookDetailsStatusList = "List";
     public const string TextToSpeechLanguageCode = "fr-CA";
     public const string OrderStatusDelivered = "Delivered";
@@ -25,5 +23,6 @@ public abstract class Constants
     public const string ResaleStatusPending = "Pending Approval";
     public const string ResaleStatusApproved = "Approved/Awaiting Shipment";
     public const string ResaleStatusRejected = "Rejected";
+
+    public RegionEndpoint BucketRegion = RegionEndpoint.USWest2;
 }
-    

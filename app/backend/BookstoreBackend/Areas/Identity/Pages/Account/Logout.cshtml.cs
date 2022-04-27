@@ -1,18 +1,18 @@
-﻿using Amazon.Extensions.CognitoAuthentication;
+﻿using System.Threading.Tasks;
+using Amazon.Extensions.CognitoAuthentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
-using System.Threading.Tasks;
 
 namespace BookstoreBackend.Areas.Identity.Pages.Account
 {
     [AllowAnonymous]
     public class LogoutModel : PageModel
     {
-        private readonly SignInManager<CognitoUser> _signInManager;
         private readonly ILogger<LogoutModel> _logger;
+        private readonly SignInManager<CognitoUser> _signInManager;
 
         public LogoutModel(SignInManager<CognitoUser> signInManager, ILogger<LogoutModel> logger)
         {
@@ -29,13 +29,8 @@ namespace BookstoreBackend.Areas.Identity.Pages.Account
             await _signInManager.SignOutAsync();
             _logger.LogInformation("User logged out.");
             if (returnUrl != null)
-            {
                 return LocalRedirect(returnUrl);
-            }
-            else
-            {
-                return Page();
-            }
+            return Page();
         }
     }
 }

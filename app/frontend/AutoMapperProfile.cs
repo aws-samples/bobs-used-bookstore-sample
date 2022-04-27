@@ -9,7 +9,6 @@ namespace BookstoreFrontend
         public AutoMapperProfile()
         {
             CreateMap<ResaleViewModel, Resale>();
-
         }
     }
 }

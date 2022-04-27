@@ -1,6 +1,7 @@
 ﻿using System;
 using BobsBookstore.Models.Books;
 using Microsoft.AspNetCore.Http;
+using Type = BobsBookstore.Models.Books.Type;
 
 namespace BookstoreBackend.ViewModel.ManageInventory
 {
@@ -14,7 +15,7 @@ namespace BookstoreBackend.ViewModel.ManageInventory
 
         public Condition BookCondition { get; set; }
 
-        public BobsBookstore.Models.Books.Type BookType { get; set; }
+        public Type BookType { get; set; }
 
         public double Price { get; set; }
 
@@ -33,9 +34,13 @@ namespace BookstoreBackend.ViewModel.ManageInventory
         public string BookNameSearchParameter { get; set; }
 
         public IFormFile FrontPhoto { get; set; }
+
         public IFormFile BackPhoto { get; set; }
+
         public IFormFile RearPhoto { get; set; }
+
         public IFormFile LeftSidePhoto { get; set; }
+
         public IFormFile RightSidePhoto { get; set; }
 
         public string UpdatedBy { get; set; }

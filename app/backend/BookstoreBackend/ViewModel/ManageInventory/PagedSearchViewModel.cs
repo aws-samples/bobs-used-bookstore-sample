@@ -4,7 +4,6 @@ namespace BookstoreBackend.ViewModel.ManageInventory
 {
     public class PagedSearchViewModel
     {
-
         public string Searchby { get; set; }
 
         public string Searchfilter { get; set; }

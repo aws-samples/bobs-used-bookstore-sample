@@ -22,17 +22,9 @@ namespace BookstoreBackend.Areas.Identity.Pages.Account
             _userManager = userManager as CognitoUserManager<CognitoUser>;
         }
 
-        [BindProperty]
-        public InputModel Input { get; set; }
+        [BindProperty] public InputModel Input { get; set; }
 
         public string ReturnUrl { get; set; }
-
-        public class InputModel
-        {
-            [Required]
-            [Display(Name = "Code")]
-            public string Code { get; set; }
-        }
 
         public void OnGet(string returnUrl = null)
         {
@@ -47,24 +39,21 @@ namespace BookstoreBackend.Areas.Identity.Pages.Account
                 var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name).Value;
 
                 var user = await _userManager.FindByIdAsync(userId);
-                if (user == null)
-                {
-                    return NotFound($"Unable to load user with ID '{userId}'.");
-                }
+                if (user == null) return NotFound($"Unable to load user with ID '{userId}'.");
 
                 var result = await _userManager.ConfirmSignUpAsync(user, Input.Code, true);
                 if (!result.Succeeded)
-                {
                     throw new InvalidOperationException($"Error confirming account for user with ID '{userId}':");
-                }
-                else
-                {
-                    return returnUrl != null ? LocalRedirect(returnUrl) : Page() as IActionResult;
-                }
+                return returnUrl != null ? LocalRedirect(returnUrl) : Page();
             }
 
             // If we got this far, something failed, redisplay form
             return Page();
+        }
+
+        public class InputModel
+        {
+            [Required] [Display(Name = "Code")] public string Code { get; set; }
         }
     }
 }

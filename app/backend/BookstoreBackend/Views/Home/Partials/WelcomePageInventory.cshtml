@@ -2,26 +2,24 @@
 @*Includes the quick links for editing book details*@
 <div class="card-deck">
     <div class="card bg-light mb-3 text-center">
-      
+
         <div class="card-body">
             <h5 class="card-title">Add Publisher</h5>
             <p class="card-text"> @Html.ActionLink("New Publisher", "AddPublishers", "Inventory", null, new { @class = "btn-group-sm btn btn-outline-light btn btn-primary" })</p>
         </div>
     </div>
     <div class="card bg-light mb-3 text-center">
-        
+
         <div class="card-body">
             <h5 class="card-title">Add Book</h5>
             <p class="card-text"> @Html.ActionLink("New Book", "EditBookDetails", "Inventory", null, new { @class = "btn-group-sm btn btn-outline-light btn btn-primary" })</p>
-
         </div>
     </div>
     <div class="card bg-light mb-3 text-center">
-       
+
         <div class="card-body">
             <h5 class="card-title">Add Genre</h5>
             <p class="card-text"> @Html.ActionLink("New Genre", "AddGenres", "Inventory", null, new { @class = "btn-group-sm btn btn-outline-light btn btn-primary" })</p>
-
         </div>
     </div>
 </div>

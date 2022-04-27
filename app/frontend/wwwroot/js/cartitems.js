@@ -12,6 +12,7 @@ document.getElementById('totalprice').innerHTML = totalprice;
 for (var i = 0; i < numbers.length; i++) {
     numbers[i].onclick = count;
 }
+
 function count() {
     var totalprice = 0;
     for (var i = 0; i < fruits.length; i++) {

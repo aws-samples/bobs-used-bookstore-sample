@@ -1,14 +1,10 @@
 ﻿@model BobsBookstore.Models.Books.Type
 
-
 @{
     var status = (string)ViewData["Status"];
 }
 
 <style>
-
-
-
     .form {
         position: relative;
         z-index: 1;
@@ -94,7 +90,6 @@
     }
 </style>
 
-
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -106,7 +101,7 @@
             </div>
             <div class="modal-body">
                 <div>
-                    <li class="main-text">@status</li>
+                    <div class="main-text">@status</div>
                 </div>
             </div>
             <div class="modal-footer">
@@ -118,20 +113,15 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
-
 @if (status.Contains("already"))
 {
     <script type="text/javascript">
-
         $(
             function () {
                 $('#exampleModal').modal('show');
 
             });
-
-
     </script>
-
 }
 
 <div class="login-page">
@@ -139,10 +129,11 @@
         <form class="login-form" enctype="multipart/form-data" asp-controller="Inventory" asp-action="AddBookTypes" method="post" style="padding-bottom: 0px;">
             <div asp-validation-summary="All"></div>
             <h1 class="main-text title-1 text-center font-weight-light" style="margin-bottom:10%; margin-top:1%">
-                ADD NEW FORMAT</h1>
-                <input class="main-text" asp-for="TypeName" style="margin-top:1%;height:3%" type="text" required placeholder="FORMAT NAME" />
-                <button class="main-text" type="submit">SUBMIT</button>
-                <a asp-controller="Inventory" asp-action="EditType">Edit Types</a>
+                ADD NEW FORMAT
+            </h1>
+            <input class="main-text" asp-for="TypeName" style="margin-top:1%;height:3%" type="text" required placeholder="FORMAT NAME"/>
+            <button class="main-text" type="submit">SUBMIT</button>
+            <a asp-controller="Inventory" asp-action="EditType">Edit Types</a>
         </form>
     </div>
 </div>

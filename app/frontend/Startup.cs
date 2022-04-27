@@ -1,27 +1,28 @@
+using System;
+using System.Text.Json;
+using Amazon.Extensions.NETCore.Setup;
+using Amazon.Polly;
+using Amazon.Rekognition;
+using Amazon.S3;
+using Amazon.SecretsManager;
+using Amazon.SecretsManager.Model;
+using BobsBookstore.DataAccess.Data;
+using BobsBookstore.DataAccess.Repository.Implementation;
+using BobsBookstore.DataAccess.Repository.Implementation.InventoryImplementation;
+using BobsBookstore.DataAccess.Repository.Implementation.SearchImplementation;
+using BobsBookstore.DataAccess.Repository.Interface;
+using BobsBookstore.DataAccess.Repository.Interface.Implementations;
+using BobsBookstore.DataAccess.Repository.Interface.InventoryInterface;
+using BobsBookstore.DataAccess.Repository.Interface.SearchImplementations;
+using BobsBookstore.Models.AdminUser;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using BobsBookstore.DataAccess.Data;
-using BobsBookstore.DataAccess.Repository.Interface;
-using BobsBookstore.DataAccess.Repository.Implementation;
-using BobsBookstore.DataAccess.Repository.Interface.SearchImplementations;
-using BobsBookstore.DataAccess.Repository.Implementation.SearchImplementation;
-using Amazon.Extensions.NETCore.Setup;
-using System;
-using Amazon.S3;
-using Amazon.Polly;
-using Amazon.SecretsManager;
-using Amazon.SecretsManager.Model;
-using BobsBookstore.Models.AdminUser;
-using System.Text.Json;
-using Microsoft.Data.SqlClient;
-using BobsBookstore.DataAccess.Repository.Interface.InventoryInterface;
-using BobsBookstore.DataAccess.Repository.Implementation.InventoryImplementation;
-using BobsBookstore.DataAccess.Repository.Interface.Implementations;
 
 namespace BobBookstore
 {
@@ -31,7 +32,6 @@ namespace BobBookstore
         {
             Configuration = configuration;
             var config = (Configuration as IConfigurationRoot).GetDebugView();
-
         }
 
         public IConfiguration Configuration { get; }
@@ -46,10 +46,10 @@ namespace BobBookstore
             services.AddRazorPages();
             var connectionString = GetConnectionString(awsOptions);
             services.AddDbContext<ApplicationDbContext>(options =>
-            options.UseSqlServer(connectionString));
+                options.UseSqlServer(connectionString));
             services.AddAWSService<IAmazonS3>();
             services.AddAWSService<IAmazonPolly>();
-            services.AddAWSService<Amazon.Rekognition.IAmazonRekognition>();
+            services.AddAWSService<IAmazonRekognition>();
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             services.AddTransient<IBookSearch, BookSearchRepository>();
             services.AddTransient<IPriceSearch, PriceSearchRepository>();
@@ -60,12 +60,10 @@ namespace BobBookstore
             services.AddAutoMapper(typeof(Startup));
 
 
-
-
             //new part
             services.AddSession();
             services.AddSingleton<IHttpContextAccessor,
-            HttpContextAccessor>();
+                HttpContextAccessor>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -81,6 +79,7 @@ namespace BobBookstore
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
             //new part
             app.UseSession();
             app.UseHttpsRedirection();
@@ -94,8 +93,8 @@ namespace BobBookstore
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    "default",
+                    "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
             });
         }
@@ -133,15 +132,16 @@ namespace BobBookstore
             }
             catch (AmazonSecretsManagerException e)
             {
-                Console.WriteLine($"Failed to read secret {Configuration.GetValue<string>("DbSecretsParameterName")}, error {e.Message}, inner {e.InnerException.Message}");
+                Console.WriteLine(
+                    $"Failed to read secret {Configuration.GetValue<string>("DbSecretsParameterName")}, error {e.Message}, inner {e.InnerException.Message}");
                 throw;
             }
             catch (JsonException e)
             {
-                Console.WriteLine($"Failed to parse content for secret {Configuration.GetValue<string>("DbSecretsParameterName")}, error {e.Message}");
+                Console.WriteLine(
+                    $"Failed to parse content for secret {Configuration.GetValue<string>("DbSecretsParameterName")}, error {e.Message}");
                 throw;
             }
         }
-
     }
 }

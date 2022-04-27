@@ -6,9 +6,11 @@
     caption-side: top;
     text-align: center;
 }
-a.tableSort{
-    color:inherit;
+
+a.tableSort {
+    color: inherit;
 }
+
 tab-custom {
     position: relative;
     z-index: 1;
@@ -17,12 +19,12 @@ tab-custom {
     background-color: #2B3A67;
     border: 0;
     border-radius: 0.25rem;
-    box-shadow: 0 5px 11px 0 rgba(0,0,0,0.18), 0 4px 15px 0 rgba(0,0,0,0.15);
+    box-shadow: 0 5px 11px 0 rgba(0, 0, 0, 0.18), 0 4px 15px 0 rgba(0, 0, 0, 0.15);
 }
 
 
-.font_format a:active{
-    color:red;
+.font_format a:active {
+    color: red;
 }
 
 .nav-tabs .nav-link.active {
@@ -48,7 +50,7 @@ tab-custom {
 
 .login-button {
     font-weight: normal;
-    font-family: 'Arvo',serif;
+    font-family: 'Arvo', serif;
     padding: .6em;
     border-top-left-radius: 12rem;
     border-bottom-left-radius: 12rem;

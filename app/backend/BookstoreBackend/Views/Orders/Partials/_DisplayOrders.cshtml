@@ -1,9 +1,9 @@
 ﻿@model List<BobsBookstore.Models.Orders.Order>;
 
-@{ 
+@{
     var orders = Model;
 }
-    <style>
+<style>
         .filter-pill {
             padding: .6em;
         }
@@ -56,7 +56,7 @@
             font-family: courier, sans;
         }
     </style>
-@if ((orders == null) || (!orders.Any()))
+@if (orders == null || !orders.Any())
 {
     <div class="text-center col-12">
         <h2 class="website-text">No Results Returned</h2>
@@ -67,17 +67,15 @@ else
 {
     @foreach (var order in orders)
     {
-
         var param = new Dictionary<string, string>
         {
-            {"orderId",order.Order_Id + ""}
-         };
-
+            { "orderId", $"{order.Order_Id}" }
+        };
 
         <div class="col-lg-3 col-md-4 col-sm-6" style="margin-top:20px;">
             <div class="card shadow order-info-card">
 
-                <div class="order-info-card-header" >
+                <div class="order-info-card-header">
                     <div class="col-12 order-info-card-header-text website-text">
                         Order Info
                     </div>
@@ -87,7 +85,7 @@ else
                                 →
                             </div>
                         </a>
-                        
+
                     </div>
                 </div>
                 <div class="card-body">
@@ -96,8 +94,8 @@ else
                         @*                        <span class="filter-pill-tag badge badge-pill text-white website-text">@order.OrderStatus.Status</span>*@
                     </div>
                     <p class="card-text website-text">Customer ID: @order.Customer.Customer_Id</p>
-                    <p class="card-text website-text">Customer Name: @( order.Customer.FirstName == null || order.Customer.LastName == null ? "Error Missing" : (order.Customer.FirstName + " " + order.Customer.LastName) )</p>
-                    <p class="card-text website-text">Expected Delivery Date: @( order.DeliveryDate == null ? "Pending Confirmation" : DateTime.Parse(order.DeliveryDate).ToString("MM/dd/yyyy")) </p>
+                    <p class="card-text website-text">Customer Name: @(order.Customer.FirstName == null || order.Customer.LastName == null ? "Error Missing" : order.Customer.FirstName + " " + order.Customer.LastName)</p>
+                    <p class="card-text website-text">Expected Delivery Date: @(order.DeliveryDate == null ? "Pending Confirmation" : DateTime.Parse(order.DeliveryDate).ToString("MM/dd/yyyy")) </p>
                 </div>
             </div>
         </div>

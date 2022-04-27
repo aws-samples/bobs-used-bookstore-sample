@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using BobsBookstore.DataAccess.Dtos;
+using BobsBookstore.Models.Books;
+using BookstoreBackend.ViewModel;
 using BookstoreBackend.ViewModel.ManageInventory;
 using BookstoreBackend.ViewModel.ManageOrders;
-using BookstoreBackend.ViewModel;
-using BookstoreBackend.ViewModel.SearchBooks;
 using BookstoreBackend.ViewModel.ResaleBooks;
-using BobsBookstore.Models.Books;
+using BookstoreBackend.ViewModel.SearchBooks;
 
 namespace BookstoreBackend
 {
@@ -33,8 +29,6 @@ namespace BookstoreBackend
                 .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.BookPrice))
                 .ForMember(dest => dest.BookCondition, opt => opt.MapFrom(src => src.ConditionName))
                 .ForMember(dest => dest.BookType, opt => opt.MapFrom(src => src.TypeName));
-
-
         }
     }
 }

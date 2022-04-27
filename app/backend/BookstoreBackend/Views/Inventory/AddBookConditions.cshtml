@@ -1,14 +1,10 @@
 ﻿@model BobsBookstore.Models.Books.Condition
 
-
 @{
     var status = (string)ViewData["Status"];
 }
 
 <style>
-
-
-
     .form {
         position: relative;
         z-index: 1;
@@ -105,7 +101,7 @@
             </div>
             <div class="modal-body">
                 <div>
-                    <li class="main-text">@status</li>
+                    <div class="main-text">@status</div>
                 </div>
             </div>
             <div class="modal-footer">
@@ -117,20 +113,15 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
-
 @if (status.Contains("already"))
 {
     <script type="text/javascript">
-
         $(
             function () {
                 $('#exampleModal').modal('show');
-
-            });
-
-
+            }
+        );
     </script>
-
 }
 
 <div class="login-page" style="margin-left:5%; height:60%">
@@ -138,10 +129,11 @@
         <form class="login-form" enctype="multipart/form-data" asp-controller="Inventory" asp-action="AddBookConditions" method="post" style="padding-bottom: 0px;">
             <div asp-validation-summary="All"></div>
             <h1 class="main-text title-1 text-center font-weight-light" style="margin-bottom:10%; margin-top:1%">
-                ADD NEW CONDITION</h1>
-                <input class="main-text" asp-for="ConditionName" style="margin-top:1%;height:3%" type="text" required placeholder="CONDITION NAME" />
-                <button class="main-text" type="submit">SUBMIT</button>
-                <a asp-controller="Inventory" asp-action="EditCondition">Edit Conditions</a>
-</form>
+                ADD NEW CONDITION
+            </h1>
+            <input class="main-text" asp-for="ConditionName" style="margin-top:1%;height:3%" type="text" required placeholder="CONDITION NAME"/>
+            <button class="main-text" type="submit">SUBMIT</button>
+            <a asp-controller="Inventory" asp-action="EditCondition">Edit Conditions</a>
+        </form>
     </div>
 </div>

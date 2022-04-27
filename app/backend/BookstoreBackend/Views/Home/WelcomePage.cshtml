@@ -5,7 +5,7 @@
 }
 
 <head>
-    <link rel="stylesheet" href="/css/welcomepage.css" />
+    <link rel="stylesheet" href="/css/welcomepage.css"/>
 </head>
 
 <div class="container-fluid" style="font-family: 'Arvo', sans-serif;">
@@ -30,24 +30,16 @@
         </li>
     </ul>
 
-
-        <div class="tab-content" id="tabContent">
-            <div class="tab-pane fade show active" id="order" role="tabpanel" aria-labelledby="order-tab">
-                <partial name="~/Views/Home/Partials/ImportantOrders.cshtml" model="updates" />
-            </div>
-            <div class="tab-pane fade" id="book" role="tabpanel" aria-labelledby="book-tab">
-                <partial name="~/Views/Home/Partials/LastUpdated.cshtml" model="updates" />
-            </div>
-            <div class="tab-pane fade" id="global" role="tabpanel" aria-labelledby="global-tab">
-                <partial name="~/Views/Home/Partials/GlobalBookUpdates.cshtml" model="updates" />
-            </div>
+    <div class="tab-content" id="tabContent">
+        <div class="tab-pane fade show active" id="order" role="tabpanel" aria-labelledby="order-tab">
+            <partial name="~/Views/Home/Partials/ImportantOrders.cshtml" model="updates"/>
         </div>
+        <div class="tab-pane fade" id="book" role="tabpanel" aria-labelledby="book-tab">
+            <partial name="~/Views/Home/Partials/LastUpdated.cshtml" model="updates"/>
+        </div>
+        <div class="tab-pane fade" id="global" role="tabpanel" aria-labelledby="global-tab">
+            <partial name="~/Views/Home/Partials/GlobalBookUpdates.cshtml" model="updates"/>
+        </div>
+    </div>
 </div>
-
-
-<br />
-
-
-
-
-
+<br/>

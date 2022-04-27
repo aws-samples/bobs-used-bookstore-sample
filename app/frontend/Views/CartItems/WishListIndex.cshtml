@@ -9,72 +9,72 @@
     ViewData["Title"] = "WishListIndex";
 }
 
-    <head>
-        <meta charset="UTF-8">
-        <title>>Book Store</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <meta name="theme-color" content="#03a6f3">
-        <link rel="stylesheet" href="/css/bootstrap.min.css">
+<head>
+    <meta charset="UTF-8">
+    <title>>Book Store</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="theme-color" content="#03a6f3">
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
 
     <link rel="stylesheet" href="/css/googlefont.css">
-        <link rel="stylesheet" href="/css/font-awesome.min.css">
-        
-        <link rel="stylesheet" href="/css/styles.css">
-        <link rel="stylesheet" href="/css/custom-style.css">
-        <script src="/js/wishlist.js" defer></script>
-    </head>
+    <link rel="stylesheet" href="/css/font-awesome.min.css">
 
-    <body>
-        <h1>Wish List</h1> <br/>
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/custom-style.css">
+    <script src="/js/wishlist.js" defer></script>
+</head>
 
-        
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>
-                        Cover
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(Model => Model.BookName)
-                    </th>
-                    <th>
-                        <input type="checkbox" name="selectall" value="choose" onclick="selectall();count()" />choose all &nbsp;@Html.DisplayNameFor(Model => Model.Prices)
-                    </th>
+<body>
+<h1>Wish List</h1> <br/>
 
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                @using (Html.BeginForm(new { action = "AllMoveToCart" }))
-                {
-                    @foreach (var item in Model)
-                    {
-                        <tr>
-                            <td>
-                                <img src="@Html.DisplayFor(modelitem => item.Url)" />
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelitem => item.BookName)
-                            </td>
 
-                            <td>
+<table class="table">
+    <thead>
+    <tr>
+        <th>
+            Cover
+        </th>
+        <th>
+            @Html.DisplayNameFor(Model => Model.BookName)
+        </th>
+        <th>
+            <input type="checkbox" name="selectall" value="choose" onclick="selectall();count()"/>choose all &nbsp;@Html.DisplayNameFor(Model => Model.Prices)
+        </th>
 
-                                <input type="checkbox" name="fruits" value="@Html.DisplayFor(modelitem => item.CartItem_Id)"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$@Html.DisplayFor(modelitem => item.Prices)&nbsp;&nbsp;
-                            </td>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    @using (Html.BeginForm(new { action = "AllMoveToCart" }))
+    {
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    <img src="@Html.DisplayFor(modelitem => item.Url)"/>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelitem => item.BookName)
+                </td>
 
-                            <td>
+                <td>
 
-                                <a asp-action="Delete" asp-route-id="@item.CartItem_Id">Remove</a>
-                            </td>
-                            <td>
+                    <input type="checkbox" name="fruits" value="@Html.DisplayFor(modelitem => item.CartItem_Id)"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$@Html.DisplayFor(modelitem => item.Prices)&nbsp;&nbsp;
+                </td>
 
-                                <a asp-action="MoveToCart" asp-route-id="@item.CartItem_Id">Move to cart</a>
-                            </td>
-                        </tr>
-                    }
-                    <input type="submit" class="btn" value="Move to cart" />
-                }
-            </tbody>
-        </table>
-        <br />
-    </body>
+                <td>
+
+                    <a asp-action="Delete" asp-route-id="@item.CartItem_Id">Remove</a>
+                </td>
+                <td>
+
+                    <a asp-action="MoveToCart" asp-route-id="@item.CartItem_Id">Move to cart</a>
+                </td>
+            </tr>
+        }
+        <input type="submit" class="btn" value="Move to cart"/>
+    }
+    </tbody>
+</table>
+<br/>
+</body>

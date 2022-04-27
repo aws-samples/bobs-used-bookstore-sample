@@ -11,12 +11,13 @@ namespace BobsBookstore.DataAccess.Repository.Interface.OrdersInterface
 
         Task<int> FindOrderDetailsRemovedCountAsync(long id);
 
-        Task<Dictionary<string,string>> MakeOrderDetailInactive(long id,long orderId, int quantity);
+        Task<Dictionary<string, string>> MakeOrderDetailInactive(long id, long orderId, int quantity);
 
         Task<OrderDetail> FindOrderDetailById(long id);
 
         Task<List<OrderDetail>> FindOrderDetailByOrderId(long orderId);
 
-        IQueryable<OrderDetail> FilterOrderDetail(string filterValue, string searchString, string inBetween, string operand, string negate);
+        IQueryable<OrderDetail> FilterOrderDetail(string filterValue, string searchString, string inBetween,
+            string operand, string negate);
     }
 }

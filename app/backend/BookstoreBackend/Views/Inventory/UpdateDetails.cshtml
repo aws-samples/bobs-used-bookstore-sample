@@ -1,70 +1,70 @@
 ﻿@model BookstoreBackend.ViewModel.ManageInventory.BookDetailsViewModel
+
 @{
     ViewData["Title"] = "Checkout";
     var errorstatus = (string)ViewData["ErrorStatus"];
     var error = (string)ViewData["Error"];
-
 }
 
-    
-<div  style="margin-left : 20% ; margin-right : 20%">
+<div style="margin-left : 20% ; margin-right : 20%">
     <div class="form-detail">
         <div>
-            <h1 class =" text-center"style="margin-top:35px">
-                <span class="title-1 text-center font-weight-light"  style="margin-bottom: 45px;">UPDATE BOOK DETAILS</span>
+            <h1 class=" text-center"style="margin-top:35px">
+                <span class="title-1 text-center font-weight-light" style="margin-bottom: 45px;">UPDATE BOOK DETAILS</span>
             </h1>
             @if (errorstatus == "Yes")
             {
                 <div>
-                    <li class="main-text"> "Please re-upload the photos as they violate one or more of our content policies "</li>
-                    <li class="main-text">"1) Photo must be  of type .jpg or .png or .gif"</li>
-                    <li class="main-text">"2) Photo content must not contain profanity"</li>
-                    <li class="main-text">"3) Photo must be that of a book"</li>
+                    <span class="main-text"> "Please re-upload the photos as they violate one or more of our content policies "</span>
+                    <ol>
+                        <li class="main-text">"Photo must be of type .jpg or .png or .gif"</li>
+                        <li class="main-text">"Photo content must not contain profanity"</li>
+                        <li class="main-text">"Photo must be that of a book"</li>
+                    </ol>
                 </div>
-
             }
         </div>
         <form enctype="multipart/form-data" asp-controller="Inventory" asp-action="SubmitChanges" method="post" style="padding-bottom: 0px;">
             <div asp-validation-summary="All"></div>
             <div class="panel-body">
                 <div class="form-group">
-                    <input class="main-text form-control bg-light text-dark" asp-for=" BookId" hidden required placeholder="@Model.BookId" readonly />
+                    <input class="main-text form-control bg-light text-dark" asp-for="BookId" hidden required placeholder="@Model.BookId" readonly/>
                 </div>
                 <div class="form-group">
-                    <input class="main-text form-control bg-light text-dark" asp-for="BookCondition" hidden required placeholder="@Model.BookCondition" readonly />
+                    <input class="main-text form-control bg-light text-dark" asp-for="BookCondition" hidden required placeholder="@Model.BookCondition" readonly/>
                 </div>
                 <div class="form-group">
                     <label class="main-text form-check-label text-secondary">BOOKNAME</label>
-                    <input class="main-text form-control bg-light text-dark" asp-for=" BookName" required placeholder="@Model.Publisher.Name" readonly />
+                    <input class="main-text form-control bg-light text-dark" asp-for="BookName" required placeholder="@Model.Publisher.Name" readonly/>
                 </div>
                 <div class="form-group">
                     <label class="main-text form-check-label text-secondary">PUBLISHER</label>
-                    <input class="main-text form-control bg-light text-dark" asp-for=" Publisher.Name" required placeholder="@Model.Publisher.Name" readonly />
+                    <input class="main-text form-control bg-light text-dark" asp-for="Publisher.Name" required placeholder="@Model.Publisher.Name" readonly/>
                 </div>
                 <div class="form-group">
                     <label class="main-text form-check-label text-secondary">GENRE</label>
-                    <input class="main-text form-control bg-light text-dark" asp-for=" Genre.Name" required placeholder="@Model.Genre.Name" readonly />
+                    <input class="main-text form-control bg-light text-dark" asp-for="Genre.Name" required placeholder="@Model.Genre.Name" readonly/>
                 </div>
                 <div class="form-group">
                     <label class="main-text form-check-label text-secondary">CONDITION</label>
-                    <input class="main-text form-control bg-light text-dark" asp-for="BookCondition.ConditionName" required placeholder="@Model.BookCondition.ConditionName" readonly />
+                    <input class="main-text form-control bg-light text-dark" asp-for="BookCondition.ConditionName" required placeholder="@Model.BookCondition.ConditionName" readonly/>
                 </div>
                 <div class="form-group">
                     <label class="main-text form-check-label text-secondary">FORMAT</label>
-                    <input class="main-text form-control bg-light text-dark" asp-for="BookType.TypeName" required placeholder="@Model.BookType.TypeName" readonly />
+                    <input class="main-text form-control bg-light text-dark" asp-for="BookType.TypeName" required placeholder="@Model.BookType.TypeName" readonly/>
                 </div>
                 <div class="container">
                     <div class="row">
                         <div class="col-sm-4">
                             <div class="form-group">
                                 <label class="main-text form-check-label" asp-for="Price">PRICE</label>
-                                <input class="main-text form-control bg-light text-dark" asp-for="Price" placeholder="@Model.Price" required />
+                                <input class="main-text form-control bg-light text-dark" asp-for="Price" placeholder="@Model.Price" required/>
                             </div>
                         </div>
                         <div class="col-sm-4">
                             <div class="form-group">
                                 <label class="main-text form-check-label" asp-for="Quantity">QUANTITY</label>
-                                <input class="main-text form-control bg-light text-dark" asp-for="Quantity" placeholder="@Model.Quantity" required />
+                                <input class="main-text form-control bg-light text-dark" asp-for="Quantity" placeholder="@Model.Quantity" required/>
                             </div>
                         </div>
                         <div class="col-sm-4">
@@ -72,21 +72,21 @@
                                 <select style="margin-top:7%" class="main-text custom-select title-1 text-center font-weight-light " id="inputGroupSelect01" asp-for="Active">
                                     <option selected value="true">ACTIVE</option>
                                     <option value="false">INACTIVE</option>
-                                </select>                    
+                                </select>
                             </div>
                         </div>
                     </div>
                 </div>
-                
+
                 <!-- Page Content -->
                 <div class="container">
                     <div class="text-center">
-                    <h3 class="main-text font-weight-light text-center text-lg-left mt-4 mb-0">COVER PICTURES GALLERY</h3>
+                        <h3 class="main-text font-weight-light text-center text-lg-left mt-4 mb-0">COVER PICTURES GALLERY</h3>
                     </div>
                     <hr class="mt-2 mb-5">
 
                     <div class="row text-center text-lg-left">
-                        @if (!String.IsNullOrEmpty(Model.FrontUrl))
+                        @if (!string.IsNullOrEmpty(Model.FrontUrl))
                         {
                             <div class="col-lg-3 col-md-4 col-6">
                                 <a href="#" class="d-block mb-4 h-100">
@@ -95,7 +95,7 @@
                                 </a>
                             </div>
                         }
-                        @if (!String.IsNullOrEmpty(Model.BackUrl))
+                        @if (!string.IsNullOrEmpty(Model.BackUrl))
                         {
                             <div class="col-lg-3 col-md-4 col-6">
                                 <a href="#" class="d-block mb-4 h-100">
@@ -104,7 +104,7 @@
                                 </a>
                             </div>
                         }
-                        @if (!String.IsNullOrEmpty(Model.LeftUrl))
+                        @if (!string.IsNullOrEmpty(Model.LeftUrl))
                         {
                             <div class="col-lg-3 col-md-4 col-6">
                                 <a href="#" class="d-block mb-4 h-100">
@@ -113,7 +113,7 @@
                                 </a>
                             </div>
                         }
-                        @if (!String.IsNullOrEmpty(Model.RightUrl))
+                        @if (!string.IsNullOrEmpty(Model.RightUrl))
                         {
                             <div class="col-lg-3 col-md-4 col-6">
                                 <a href="#" class="d-block mb-4 h-100">
@@ -127,7 +127,7 @@
                 </div>
 
                 <div class="container">
-                    <input  asp-for="@Model.FrontUrl" hidden class="main-text form-control custom-file-input">
+                    <input asp-for="@Model.FrontUrl" hidden class="main-text form-control custom-file-input">
                     <input asp-for="@Model.BackUrl" hidden class="main-text form-control custom-file-input">
                     <input asp-for="@Model.LeftUrl" hidden class="main-text form-control custom-file-input">
                     <input asp-for="@Model.RightUrl" hidden class="main-text form-control custom-file-input">
@@ -171,23 +171,23 @@
                     <div class="form-group text-center">
                         <button class="main-text btn btn-outline-primary" type="submit">Submit</button>
                     </div>
+
                     @section Scripts {
                         <script>
-            $(document).ready(function () {
-                $('.custom-file-input').on("change", function () {
-                    var fileName = $(this).val().split("\\").pop();
-                    $(this).next('.custom-file-label').html(fileName);
-                });
-            });
+                            $(document).ready(function () {
+                            $('.custom-file-input').on("change", function () {
+                                var fileName = $(this).val().split("\\").pop();
+                                $(this).next('.custom-file-label').html(fileName);
+                            });
+                        });
                         </script>
                     }
+
                 </div>
             </div>
         </form>
-
     </div>
 </div>
-
 
 <style>
     .form-detail input {
@@ -239,4 +239,3 @@
         font-family: 'Arvo', serif
     }
 </style>
-

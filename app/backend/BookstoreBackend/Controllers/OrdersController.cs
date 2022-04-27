@@ -1,34 +1,36 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using System.Text.RegularExpressions;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authorization;
+using System.Threading.Tasks;
+using AutoMapper;
 using BobsBookstore.DataAccess.Repository.Interface.OrdersInterface;
+using BookstoreBackend.Notifications.NotificationsInterface;
 using BookstoreBackend.ViewModel.ManageOrders;
 using BookstoreBackend.ViewModel.ProcessOrders;
-using BookstoreBackend.Notifications.NotificationsInterface;
-using BobsBookstore.DataAccess.Dtos;
-using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace BookstoreBackend.Controllers
 {
     [Authorize]
     public class OrdersController : Controller
     {
-        private IOrderDetailRepository _orderDetail;
-        private IOrderRepository _order;
-        private IOrderStatusRepository _orderStatus;
-        private INotifications _emailSender;
+        private readonly INotifications _emailSender;
         private readonly IMapper _mapper;
+        private readonly IOrderRepository _order;
+        private readonly IOrderDetailRepository _orderDetail;
+        private readonly IOrderStatusRepository _orderStatus;
 
-
-
-        public OrdersController() { }
+        public OrdersController()
+        {
+        }
 
         [ActivatorUtilitiesConstructor]
-        public OrdersController(IMapper mapper, IOrderDetailRepository orderDetail, IOrderRepository order, IOrderStatusRepository orderStatus, INotifications emailSender)
+        public OrdersController(IMapper mapper,
+            IOrderDetailRepository orderDetail,
+            IOrderRepository order,
+            IOrderStatusRepository orderStatus,
+            INotifications emailSender)
         {
             _orderDetail = orderDetail;
             _order = order;
@@ -36,17 +38,13 @@ namespace BookstoreBackend.Controllers
             _emailSender = emailSender;
             _mapper = mapper;
         }
-       
-        public async Task<IActionResult> EditOrderDetailAsync(long orderId, long orderDetailId,string quantity,int maxQuant,bool isLast)
+
+        public async Task<IActionResult> EditOrderDetailAsync(long orderId, long orderDetailId, string quantity,
+            int maxQuant, bool isLast)
         {
+            var res = int.TryParse(quantity, out var quant);
 
-            int quant;
-            bool res;
-            long status = 0;
-            
-            res = int.TryParse(quantity,out quant);
-
-            string errorMessage = "";
+            var errorMessage = "";
 
             if (res)
             {
@@ -59,48 +57,47 @@ namespace BookstoreBackend.Controllers
                 var emailInfo = await _orderDetail.MakeOrderDetailInactive(orderDetailId, orderId, quant);
                 if (emailInfo != null)
                 {
-                    
                     if (isLast)
                     {
                         var cancelled = _orderStatus.FindOrderStatusByName("Cancelled");
                         var order = _order.FindOrderById(orderId);
-                        status = cancelled.OrderStatus_Id;
-                        return RedirectToAction("UpdateOrderStatus", new { orderId, status, oldStatus = order.OrderStatus.OrderStatus_Id });
+                        var status = cancelled.OrderStatus_Id;
+                        return RedirectToAction("UpdateOrderStatus",
+                            new { orderId, status, oldStatus = order.OrderStatus.OrderStatus_Id });
                     }
-                    else
-                    {
-                        _emailSender.SendItemRemovalEmail(emailInfo["bookName"], emailInfo["bookCondition"], emailInfo["customerFirstName"], emailInfo["customerEmail"]);
-                    }
+
+                    _emailSender.SendItemRemovalEmail(emailInfo["bookName"], emailInfo["bookCondition"],
+                        emailInfo["customerFirstName"], emailInfo["customerEmail"]);
                 }
                 else
                 {
                     errorMessage = "Error Occurred: When trying to remove item. Please try again";
                 }
-
             }
             else
             {
                 errorMessage = " Error Occurred: Quantity must be a integer";
             }
 
-            return RedirectToAction("ProcessOrders", new {orderId, errorMessage });
+            return RedirectToAction("ProcessOrders", new { orderId, errorMessage });
         }
+
         public IActionResult Index(string filterValue, string filterValueText, string searchString, int pageNum)
         {
             if (pageNum == 0) pageNum++;
 
-            if ((String.IsNullOrEmpty(searchString) && String.IsNullOrEmpty(filterValue)))
+            if (string.IsNullOrEmpty(searchString) && string.IsNullOrEmpty(filterValue))
             {
                 var orders = _order.GetAllOrders(pageNum);
                 var manageOrderViewModel = _mapper.Map<ManageOrderViewModel>(orders);
                 return View(manageOrderViewModel);
             }
-            else if (!String.IsNullOrEmpty(searchString) && !String.IsNullOrEmpty(filterValue))
+
+            if (!string.IsNullOrEmpty(searchString) && !string.IsNullOrEmpty(filterValue))
             {
                 searchString = Regex.Replace(searchString, @"\s+", " ");
 
                 var orders = _order.FilterList(filterValue, searchString, pageNum);
-
 
                 filterValueText = filterValueText.Replace("Filter By: ", "");
                 orders.FilterValueText = filterValueText;
@@ -109,9 +106,9 @@ namespace BookstoreBackend.Controllers
             }
             else
             {
-                ManageOrderViewModel manageOrderViewModel = new ManageOrderViewModel();
+                var manageOrderViewModel = new ManageOrderViewModel();
 
-                int[] pages = Enumerable.Range(1, 1).ToArray();
+                var pages = Enumerable.Range(1, 1).ToArray();
 
                 filterValueText = filterValueText.Replace("Filter By: ", "");
 
@@ -127,10 +124,10 @@ namespace BookstoreBackend.Controllers
             }
         }
 
-        public async Task<IActionResult> UpdateOrderStatusAsync(long orderId,long status, long oldStatus)
+        public async Task<IActionResult> UpdateOrderStatusAsync(long orderId, long status, long oldStatus)
         {
             var order = _order.FindOrderById(orderId);
-            string errorMessage = "";
+            var errorMessage = "";
             var cancelled = _orderStatus.FindOrderStatusByName("Cancelled");
             var newStatus = _orderStatus.FindOrderStatusById(status);
 
@@ -145,27 +142,17 @@ namespace BookstoreBackend.Controllers
                 errorMessage = "Error Occurred: This is already the order status of the order";
                 return RedirectToAction("ProcessOrders", new { orderId, errorMessage });
             }
-            
-           
-            if(status == cancelled.OrderStatus_Id)
-            {
-                order = await _orderDetail.CancelOrder(orderId);
-            }
-            else
-            {
-                order = await _orderStatus.UpdateOrderStatus(order, status);
-            }    
-            
-            if(order != null)
-            {
-                _emailSender.SendOrderStatusUpdateEmail(order.OrderStatus.Status, order.Order_Id, order.Customer.FirstName, order.Customer.Email);
 
-            }
+            if (status == cancelled.OrderStatus_Id)
+                order = await _orderDetail.CancelOrder(orderId);
             else
-            {
+                order = await _orderStatus.UpdateOrderStatus(order, status);
+
+            if (order != null)
+                _emailSender.SendOrderStatusUpdateEmail(order.OrderStatus.Status, order.Order_Id,
+                    order.Customer.FirstName, order.Customer.Email);
+            else
                 errorMessage = "Error Occured: Couldn't updated order status please try again";
-            }
-    
 
             return RedirectToAction("ProcessOrders", new { orderId, errorMessage });
         }
@@ -175,38 +162,30 @@ namespace BookstoreBackend.Controllers
             return View();
         }
 
-
         public async Task<IActionResult> ProcessOrders(long orderId, string errorMessage)
         {
- 
-            if(string.IsNullOrEmpty(orderId.ToString()))
-            {
+            if (string.IsNullOrEmpty(orderId.ToString()))
                 return RedirectToAction("Error");
-            }
-            else
+
+            var orderStatus = _orderStatus.GetOrderStatuses();
+            var order = _order.FindOrderById(orderId);
+            var orderDetails = await _orderDetail.FindOrderDetailByOrderId(orderId);
+
+            var fullOrder = new PartialOrderViewModel
             {
-            
-                var orderStatus = _orderStatus.GetOrderStatuses();
+                Order = order,
+                OrderDetails = orderDetails,
+                ItemsRemoved = await _orderDetail.FindOrderDetailsRemovedCountAsync(orderId)
+            };
 
-                var order = _order.FindOrderById(orderId);
+            var viewModel = new ProcessOrderViewModel
+            {
+                Statuses = orderStatus,
+                FullOrder = fullOrder,
+                ErrorMessage = string.IsNullOrEmpty(errorMessage) ? "" : errorMessage
+            };
 
-
-                var orderDetails = await _orderDetail.FindOrderDetailByOrderId(orderId);
-
-                ProcessOrderViewModel viewModel = new ProcessOrderViewModel();
-
-                PartialOrderViewModel fullOrder = new PartialOrderViewModel();
-
-                fullOrder.Order = order;
-                fullOrder.OrderDetails = orderDetails;
-                fullOrder.ItemsRemoved = await _orderDetail.FindOrderDetailsRemovedCountAsync(orderId);
-
-                viewModel.Statuses = orderStatus;
-                viewModel.FullOrder = fullOrder;
-                viewModel.ErrorMessage = string.IsNullOrEmpty(errorMessage) ? "" : errorMessage;
-
-                return View(viewModel);
-            }
+            return View(viewModel);
         }
     }
 }

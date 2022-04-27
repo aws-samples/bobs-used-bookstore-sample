@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Linq;
 using System.Linq.Expressions;
-using BookstoreBackend.Database;
-using BobsBookstore.Models.Books;
 using BobsBookstore.DataAccess.Data;
 using BobsBookstore.DataAccess.Repository.Interface.InventoryInterface;
+using BobsBookstore.Models.Books;
+using BookstoreBackend.Database;
 
 namespace BobsBookstore.DataAccess.Repository.Implementation.InventoryImplementation
 {
     public class BookDatabaseCalls : IBookDatabaseCalls
     {
-        private ApplicationDbContext _context;
+        private readonly ApplicationDbContext _context;
 
         public BookDatabaseCalls(ApplicationDbContext context)
         {
@@ -56,7 +56,8 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.InventoryImplementa
             return result;
         }
 
-        public IQueryable<Condition> ReturnFilterConditionQuery(IQueryable<Condition> query, Expression<Func<Condition, bool>> lambda)
+        public IQueryable<Condition> ReturnFilterConditionQuery(IQueryable<Condition> query,
+            Expression<Func<Condition, bool>> lambda)
         {
             return query.Where(lambda);
         }

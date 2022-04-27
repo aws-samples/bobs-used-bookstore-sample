@@ -5,7 +5,8 @@ namespace BobsBookstore.Models.Books
 {
     public class Book
     {
-        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long Book_Id { get; set; }
 
         public string Author { get; set; }
@@ -32,7 +33,6 @@ namespace BobsBookstore.Models.Books
 
         public string Summary { get; set; }
 
-        [Timestamp]
-        public byte[] RowVersion { get; set; }
+        [Timestamp] public byte[] RowVersion { get; set; }
     }
 }
