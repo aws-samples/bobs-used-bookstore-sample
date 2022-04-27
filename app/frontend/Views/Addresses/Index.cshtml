@@ -6,31 +6,24 @@
 <html lang="en">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-
-
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>log in</title>
+    <title>Log in</title>
 
     <link href="/css/sb-admin-2.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/css/bootstrap.min.css">
-
     <link rel="stylesheet" href="/css/googlefont.css">
     <link rel="stylesheet" href="/css/font-awesome.min.css">
-
     <link rel="stylesheet" href="/css/styles.css">
-
-
 </head>
 
 <body>
 <h1>Your Addresses</h1>
 <div class="col-md-12 text-right">
     <form asp-controller="Addresses" asp-action="Create" method="get">
-
         <button class="btn" type="submit">Create New Address</button>
     </form>
 </div>
@@ -45,8 +38,6 @@
             <div class="card o-hidden border-0 my-5">
                 <div class="card-body p-0">
                     <!-- Nested Row within Card Body -->
-
-
                     <table class="table">
                         <thead>
                         <tr>
@@ -102,8 +93,7 @@
                                         @Html.DisplayFor(modelItem => item.ZipCode)
                                     </td>
                                     <td>
-                                        <a id="PrimeryAddressEdit" asp-area="Identity" asp-page="/Account/Manage/PrimeryAddressEdit">Edit</a>
-
+                                        <a id="PrimaryAddressEdit" asp-area="Identity" asp-page="/Account/Manage/PrimaryAddressEdit">Edit</a>
                                     </td>
                                 </tr>
                             }

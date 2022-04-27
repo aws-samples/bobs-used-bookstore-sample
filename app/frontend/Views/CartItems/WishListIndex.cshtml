@@ -1,9 +1,4 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
-@model IEnumerable<BobsBookstore.Models.ViewModels.CartViewModel>
+﻿@model IEnumerable<BobsBookstoreFrontend.Models.ViewModels.CartViewModel>
 
 @{
     ViewData["Title"] = "WishListIndex";
@@ -25,8 +20,9 @@
 </head>
 
 <body>
-<h1>Wish List</h1> <br/>
+<h1>Wish List</h1>
 
+<br/>
 
 <table class="table">
     <thead>
@@ -58,16 +54,13 @@
                 </td>
 
                 <td>
-
                     <input type="checkbox" name="fruits" value="@Html.DisplayFor(modelitem => item.CartItem_Id)"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$@Html.DisplayFor(modelitem => item.Prices)&nbsp;&nbsp;
                 </td>
 
                 <td>
-
                     <a asp-action="Delete" asp-route-id="@item.CartItem_Id">Remove</a>
                 </td>
                 <td>
-
                     <a asp-action="MoveToCart" asp-route-id="@item.CartItem_Id">Move to cart</a>
                 </td>
             </tr>

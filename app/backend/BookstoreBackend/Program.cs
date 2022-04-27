@@ -22,7 +22,7 @@ namespace BookstoreBackend
             }
         }
 
-        public static IHostBuilder CreateHostBuilder(string[] args)
+        private static IHostBuilder CreateHostBuilder(string[] args)
         {
             return Host.CreateDefaultBuilder(args)
                 .ConfigureAppConfiguration((context, builder) =>
@@ -30,7 +30,10 @@ namespace BookstoreBackend
                     builder.AddSystemsManager("/BobsUsedBookAdminStore/");
                     builder.AddSystemsManager("/bookstoredb/");
                 })
-                .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); });
+                .ConfigureWebHostDefaults(webBuilder =>
+                {
+                    webBuilder.UseStartup<Startup>();
+                });
         }
         /* .ConfigureLogging(logging =>
         {

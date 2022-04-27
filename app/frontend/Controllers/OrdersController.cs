@@ -1,33 +1,33 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Amazon.AspNetCore.Identity.Cognito;
 using Amazon.Extensions.CognitoAuthentication;
 using BobsBookstore.DataAccess.Data;
 using BobsBookstore.DataAccess.Repository.Interface;
 using BobsBookstore.Models.Orders;
 using BookstoreFrontend.Models.ViewModels;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 
-/*using BookstoreBackend.Database;
-*/
-namespace BobBookstore.Controllers
+namespace BookstoreFrontend.Controllers
 {
     public class OrdersController : Controller
     {
         private readonly ApplicationDbContext _context;
         private readonly IGenericRepository<OrderDetail> _orderDetailRepository;
         private readonly IGenericRepository<Order> _orderRepository;
-        private readonly SignInManager<CognitoUser> _SignInManager;
+        private readonly SignInManager<CognitoUser> _signInManager;
         private readonly UserManager<CognitoUser> _userManager;
 
 
         public OrdersController(IGenericRepository<Order> orderRepository,
-            IGenericRepository<OrderDetail> orderDetailRepository, ApplicationDbContext context,
-            SignInManager<CognitoUser> SignInManager, UserManager<CognitoUser> userManager)
+                                IGenericRepository<OrderDetail> orderDetailRepository,
+                                ApplicationDbContext context,
+                                SignInManager<CognitoUser> signInManager,
+                                UserManager<CognitoUser> userManager)
         {
             _context = context;
-            _SignInManager = SignInManager;
+            _signInManager = signInManager;
             _userManager = userManager;
             _orderRepository = orderRepository;
             _orderDetailRepository = orderDetailRepository;
@@ -35,7 +35,7 @@ namespace BobBookstore.Controllers
 
         public async Task<IActionResult> Index()
         {
-            if (_SignInManager.IsSignedIn(User))
+            if (_signInManager.IsSignedIn(User))
             {
                 var user = await _userManager.GetUserAsync(User);
                 var customer_id = user.Attributes[CognitoAttribute.Sub.AttributeName];
@@ -51,7 +51,7 @@ namespace BobBookstore.Controllers
 
         public async Task<IActionResult> Detail(long id)
         {
-            if (_SignInManager.IsSignedIn(User))
+            if (_signInManager.IsSignedIn(User))
             {
                 var user = await _userManager.GetUserAsync(User);
                 var customer_id = user.Attributes[CognitoAttribute.Sub.AttributeName];
@@ -69,7 +69,6 @@ namespace BobBookstore.Controllers
 
             return NotFound("You must be signed in.");
         }
-
 
         public async Task<IActionResult> Delete(long id)
         {

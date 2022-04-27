@@ -1,9 +1,4 @@
-﻿@using BobsBookstore.Models.ViewModels
-@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
+﻿@using BookstoreFrontend.Models.ViewModels
 @{
     decimal totalprice = 0;
     foreach (var item in ViewData["order"] as List<OrderDetailViewModel>)
@@ -11,7 +6,6 @@
         totalprice += item.Price * item.Quantity;
     }
 }
-
 
 <head>
     <meta charset="UTF-8">
@@ -25,7 +19,7 @@
 
     <link rel="stylesheet" href="/css/styles.css">
     <style>
-            
+
             .time-horizontal {
                 list-style-type: none;
                 border-top: 4px solid #2282ca;
@@ -79,12 +73,10 @@
 
 <br/><br/>
 <div class="container" style="text-align: center">
-
     <ul class="time-horizontal">
         <li style="color:red"><b></b>Cart</li>
         <li style="color:red"><b></b>Choose Address</li>
         <li style="color:red"><b></b>Finish</li>
-
     </ul>
 </div>
 <br/><br/>
@@ -118,16 +110,16 @@
             </td>
 
             <td>
-
-            $@item.Price
+                $@item.Price
+            </td>
 
             <td>
-
                 @item.Quantity
             </td>
-            <td>$@total</td>
 
-
+            <td>
+                $@total
+            </td>
         </tr>
     }
     </tbody>

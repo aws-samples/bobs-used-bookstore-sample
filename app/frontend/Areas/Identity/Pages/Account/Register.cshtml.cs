@@ -8,15 +8,15 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 
-namespace BobBookstore.Areas.Identity.Pages.Account
+namespace BookstoreFrontend.Areas.Identity.Pages.Account
 {
     [AllowAnonymous]
     public class RegisterModel : PageModel
     {
-        private readonly ILogger<RegisterModel> _logger;
-        private readonly CognitoUserPool _pool;
         private readonly SignInManager<CognitoUser> _signInManager;
         private readonly CognitoUserManager<CognitoUser> _userManager;
+        private readonly ILogger<RegisterModel> _logger;
+        private readonly CognitoUserPool _pool;
 
         public RegisterModel(
             UserManager<CognitoUser> userManager,
@@ -30,9 +30,40 @@ namespace BobBookstore.Areas.Identity.Pages.Account
             _pool = pool;
         }
 
-        [BindProperty] public InputModel Input { get; set; }
+        [BindProperty]
+        public InputModel Input { get; set; }
 
         public string ReturnUrl { get; set; }
+
+        public class InputModel
+        {
+            [Required]
+            [EmailAddress]
+            [Display(Name = "Email")]
+            public string Email { get; set; }
+
+            [Required]
+            [Display(Name = "Username")]
+            public string UserName { get; set; }
+
+            [Required]
+            [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+            [DataType(DataType.Password)]
+            [Display(Name = "Password")]
+            public string Password { get; set; }
+
+            [DataType(DataType.Password)]
+            [Display(Name = "Confirm password")]
+            [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+            public string ConfirmPassword { get; set; }
+
+            [Required]
+            [Display(Name = "First name")]
+            public string FirstName { get; set; }
+            [Required]
+            [Display(Name = "Last name")]
+            public string LastName { get; set; }
+        }
 
         public void OnGet(string returnUrl = null)
         {
@@ -62,61 +93,30 @@ namespace BobBookstore.Areas.Identity.Pages.Account
                 user.Attributes.Add(CognitoAttribute.GivenName.AttributeName, Input.FirstName);
                 //check if the email has been used
                 var existuser = await _userManager.FindByEmailAsync(Input.Email);
-                if (existuser != null)
+                if (existuser!=null)
                 {
                     ModelState.AddModelError(string.Empty, "E-mail address has been used");
                     return Page();
                 }
-
                 //creat account
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");
 
-                    await _signInManager.SignInAsync(user, false);
+                    await _signInManager.SignInAsync(user, isPersistent: false);
 
-
+                    
                     return RedirectToPage("./ConfirmAccount");
                 }
-
-                foreach (var error in result.Errors) ModelState.AddModelError(string.Empty, error.Description);
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, error.Description);
+                }
             }
 
             // If we got this far, something failed, redisplay form
             return Page();
-        }
-
-        public class InputModel
-        {
-            [Required]
-            [EmailAddress]
-            [Display(Name = "Email")]
-            public string Email { get; set; }
-
-            [Required]
-            [Display(Name = "Username")]
-            public string UserName { get; set; }
-
-            [Required]
-            [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.",
-                MinimumLength = 6)]
-            [DataType(DataType.Password)]
-            [Display(Name = "Password")]
-            public string Password { get; set; }
-
-            [DataType(DataType.Password)]
-            [Display(Name = "Confirm password")]
-            [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
-            public string ConfirmPassword { get; set; }
-
-            [Required]
-            [Display(Name = "First name")]
-            public string FirstName { get; set; }
-
-            [Required]
-            [Display(Name = "Last name")]
-            public string LastName { get; set; }
         }
     }
 }

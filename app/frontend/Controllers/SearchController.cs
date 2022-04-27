@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using X.PagedList;
 using BobsBookstore.DataAccess.Repository.Interface;
 using BobsBookstore.DataAccess.Repository.Interface.SearchImplementations;
 using BobsBookstore.Models.Books;
 using BobsBookstore.Models.Carts;
-using BobsBookstore.Models.ViewModels;
-using Microsoft.AspNetCore.Mvc;
-using X.PagedList;
+using BookstoreFrontend.Models.ViewModels;
 
-namespace BobBookstore.Controllers
+namespace BobBookstoreFrontend.Controllers
 {
     public class SearchController : Controller
     {
@@ -21,10 +21,13 @@ namespace BobBookstore.Controllers
         private readonly IGenericRepository<Price> _priceRepository;
         private readonly IPriceSearch _priceSearch;
 
-        public SearchController(IBookSearch bookSearch, IPriceSearch priceSearch,
-            IGenericRepository<Condition> conditionRepository, IGenericRepository<CartItem> cartItemRepository,
-            IGenericRepository<Cart> cartRepository, IGenericRepository<Price> priceRepository,
-            IGenericRepository<Book> bookRepository)
+        public SearchController(IBookSearch bookSearch,
+                                IPriceSearch priceSearch,
+                                IGenericRepository<Condition> conditionRepository,
+                                IGenericRepository<CartItem> cartItemRepository,
+                                IGenericRepository<Cart> cartRepository,
+                                IGenericRepository<Price> priceRepository,
+                                IGenericRepository<Book> bookRepository)
         {
             _priceRepository = priceRepository;
             _bookRepository = bookRepository;
@@ -39,9 +42,10 @@ namespace BobBookstore.Controllers
         // SortBy - value to sort results by
         // searchString - user's search query
         // page - page for results
-        public async Task<IActionResult> Index(string SortBy, string searchString, int? page)
+        public async Task<IActionResult> Index(string sortBy, string searchString, int? page)
         {
-            if (!string.IsNullOrEmpty(SortBy)) ViewBag.CurrentSort = SortBy;
+            if (!string.IsNullOrEmpty(sortBy))
+                ViewBag.CurrentSort = sortBy;
 
             if (string.IsNullOrEmpty(searchString))
             {
@@ -139,7 +143,8 @@ namespace BobBookstore.Controllers
         // Load book details page
         public async Task<IActionResult> DetailAsync(long id, string sortBy)
         {
-            if (!string.IsNullOrEmpty(sortBy)) ViewBag.CurrentSort = sortBy;
+            if (!string.IsNullOrEmpty(sortBy))
+                ViewBag.CurrentSort = sortBy;
             ViewBag.id = id;
 
             var prices = _priceRepository.Get(p => p.Book.Book_Id == id && p.Active && p.Quantity > 0,
@@ -190,13 +195,17 @@ namespace BobBookstore.Controllers
             var price = _priceRepository.Get(priceid);
             var cartId = HttpContext.Request.Cookies["CartId"];
             var cart = _cartRepository.Get(Convert.ToString(cartId));
-            var gu_id = Guid.NewGuid();
             var cartItem = new CartItem
-                { Book = book, Price = price, Cart = cart, WantToBuy = true, CartItem_Id = gu_id.ToString() };
+            {
+                Book = book,
+                Price = price,
+                Cart = cart,
+                WantToBuy = true,
+                CartItem_Id = Guid.NewGuid().ToString()
+            };
 
             _cartItemRepository.Add(cartItem);
             _cartItemRepository.Save();
-            var stringBookid = Convert.ToString(bookid);
             return RedirectToAction("Detail", "Search", new { id = bookid });
         }
 
@@ -206,8 +215,7 @@ namespace BobBookstore.Controllers
             var price = _priceRepository.Get(priceid);
             var cartId = HttpContext.Request.Cookies["CartId"];
             var cart = _cartRepository.Get(Convert.ToString(cartId));
-            var gu_id = Guid.NewGuid();
-            var cartItem = new CartItem { Book = book, Price = price, Cart = cart, CartItem_Id = gu_id.ToString() };
+            var cartItem = new CartItem { Book = book, Price = price, Cart = cart, CartItem_Id = Guid.NewGuid().ToString() };
 
             _cartItemRepository.Add(cartItem);
             _cartItemRepository.Save();

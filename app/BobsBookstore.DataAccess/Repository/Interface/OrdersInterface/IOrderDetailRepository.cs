@@ -13,9 +13,9 @@ namespace BobsBookstore.DataAccess.Repository.Interface.OrdersInterface
 
         Task<Dictionary<string, string>> MakeOrderDetailInactive(long id, long orderId, int quantity);
 
-        Task<OrderDetail> FindOrderDetailById(long id);
+        Task<OrderDetail> FindOrderDetailByIdAsync(long id);
 
-        Task<List<OrderDetail>> FindOrderDetailByOrderId(long orderId);
+        Task<List<OrderDetail>> FindOrderDetailByOrderIdAsync(long orderId);
 
         IQueryable<OrderDetail> FilterOrderDetail(string filterValue, string searchString, string inBetween,
             string operand, string negate);

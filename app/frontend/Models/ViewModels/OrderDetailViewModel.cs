@@ -1,4 +1,4 @@
-﻿namespace BobsBookstore.Models.ViewModels
+﻿namespace BookstoreFrontend.Models.ViewModels
 {
     public class OrderDetailViewModel
     {

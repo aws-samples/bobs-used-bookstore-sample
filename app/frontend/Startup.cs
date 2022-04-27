@@ -24,7 +24,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace BobBookstore
+namespace BookstoreFrontend
 {
     public class Startup
     {
@@ -40,30 +40,33 @@ namespace BobBookstore
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+
             var awsOptions = Configuration.GetAWSOptions();
             services.AddDefaultAWSOptions(awsOptions);
+
             services.AddCognitoIdentity();
             services.AddRazorPages();
+
             var connectionString = GetConnectionString(awsOptions);
-            services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(connectionString));
+            services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString));
+
             services.AddAWSService<IAmazonS3>();
             services.AddAWSService<IAmazonPolly>();
             services.AddAWSService<IAmazonRekognition>();
+
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+
             services.AddTransient<IBookSearch, BookSearchRepository>();
             services.AddTransient<IPriceSearch, PriceSearchRepository>();
             services.AddTransient<IInventory, Inventory>();
             services.AddTransient<IRekognitionNPollyRepository, RekognitionNPollyRepository>();
             services.AddTransient<ISearchRepository, SearchRepository>();
             services.AddTransient<ISearchDatabaseCalls, SearchDatabaseCalls>();
+
             services.AddAutoMapper(typeof(Startup));
 
-
-            //new part
             services.AddSession();
-            services.AddSingleton<IHttpContextAccessor,
-                HttpContextAccessor>();
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -80,7 +83,6 @@ namespace BobBookstore
                 app.UseHsts();
             }
 
-            //new part
             app.UseSession();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
@@ -101,7 +103,7 @@ namespace BobBookstore
 
         private string GetConnectionString(AWSOptions awsOptions)
         {
-            var connString = Configuration.GetConnectionString("BobBookstoreContextConnection");
+            var connString = Configuration.GetConnectionString("BobsBookstoreContextConnection");
             try
             {
                 Console.WriteLine("Non-development mode, building connection string for SQL Server");

@@ -1,15 +1,16 @@
-﻿using BobBookstore.Areas.Identity;
+﻿using BookstoreFrontend.Areas.Identity;
 using Microsoft.AspNetCore.Hosting;
 
 [assembly: HostingStartup(typeof(IdentityHostingStartup))]
-
-namespace BobBookstore.Areas.Identity
+namespace BookstoreFrontend.Areas.Identity
 {
     public class IdentityHostingStartup : IHostingStartup
     {
         public void Configure(IWebHostBuilder builder)
         {
-            builder.ConfigureServices((context, services) => { });
+            builder.ConfigureServices((context, services) => {
+                
+            });
         }
     }
 }

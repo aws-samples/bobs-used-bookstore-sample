@@ -6,13 +6,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 
-namespace BobBookstore.Areas.Identity.Pages.Account
+namespace BookstoreFrontend.Areas.Identity.Pages.Account
 {
     [AllowAnonymous]
     public class LogoutModel : PageModel
     {
-        private readonly ILogger<LogoutModel> _logger;
         private readonly SignInManager<CognitoUser> _signInManager;
+        private readonly ILogger<LogoutModel> _logger;
 
         public LogoutModel(SignInManager<CognitoUser> signInManager, ILogger<LogoutModel> logger)
         {
@@ -29,8 +29,13 @@ namespace BobBookstore.Areas.Identity.Pages.Account
             await _signInManager.SignOutAsync();
             _logger.LogInformation("User logged out.");
             if (returnUrl != null)
+            {
                 return LocalRedirect(returnUrl);
-            return Page();
+            }
+            else
+            {
+                return Page();
+            }
         }
     }
 }

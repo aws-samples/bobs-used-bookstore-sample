@@ -14,7 +14,6 @@
     <link rel="stylesheet" href="/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css/googlefont.css">
     <link rel="stylesheet" href="/css/font-awesome.min.css">
-
     <link rel="stylesheet" href="/css/styles.css">
 </head>
 
@@ -26,12 +25,10 @@
             <h1>
                 Resale Books
             </h1>
-
         </div>
 
         <div class="col-12 text-right">
             <form asp-controller="Resale" asp-action="Create" method="get">
-
                 <button class="btn" name="id" type="submit">Resell Book</button>
             </form>
         </div>
@@ -66,7 +63,6 @@
                 <th>
                     Status
                 </th>
-
             </tr>
             </thead>
             <tbody>
@@ -100,7 +96,6 @@
                     <td>
                         @Html.DisplayFor(modelItem => item.ResaleStatus.Status)
                     </td>
-
                 </tr>
             }
             </tbody>

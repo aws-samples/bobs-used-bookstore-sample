@@ -46,7 +46,7 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.OrderImplementation
 
             var query = FilterOrderDetail(filterValue, searchString, inBetween, operand, negate);
 
-            var num = query.Count();
+            var num = await query.CountAsync();
 
             return num;
         }
@@ -57,7 +57,7 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.OrderImplementation
             {
                 var orderStatus = _orderStatusRepo.FindOrderStatusByName("Cancelled");
 
-                var orderDetails = await FindOrderDetailByOrderId(id);
+                var orderDetails = await FindOrderDetailByOrderIdAsync(id);
                 var order = _orderRepo.FindOrderById(id);
 
                 using (var transaction = _orderDbCalls.BeginTransaction())
@@ -101,7 +101,7 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.OrderImplementation
         {
             try
             {
-                var origOrderDetail = await FindOrderDetailById(id);
+                var origOrderDetail = await FindOrderDetailByIdAsync(id);
 
                 var moneyOwe = origOrderDetail.OrderDetailPrice * origOrderDetail.Quantity;
 
@@ -150,7 +150,7 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.OrderImplementation
         }
 
         // Finds one instance of Order Detail Model by Order Detail Id
-        public async Task<OrderDetail> FindOrderDetailById(long id)
+        public async Task<OrderDetail> FindOrderDetailByIdAsync(long id)
         {
             var filterValue = "OrderDetail_Id";
             var searchString = "" + id;
@@ -160,13 +160,13 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.OrderImplementation
 
             var query = FilterOrderDetail(filterValue, searchString, inBetween, operand, negate);
 
-            var orderDetail = query.First();
+            var orderDetail = await query.FirstAsync();
 
             return orderDetail;
         }
 
-        // Finds a List of Order Details by the assoicated Order Id
-        public async Task<List<OrderDetail>> FindOrderDetailByOrderId(long orderId)
+        // Finds a List of Order Details by the associated Order Id
+        public async Task<List<OrderDetail>> FindOrderDetailByOrderIdAsync(long orderId)
         {
             var filterValue = "Order.Order_Id";
             var searchString = "" + orderId;
@@ -176,7 +176,7 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.OrderImplementation
 
             var query = FilterOrderDetail(filterValue, searchString, inBetween, operand, negate);
 
-            var orderDetail = query.ToList();
+            var orderDetail = await query.ToListAsync();
 
             return orderDetail;
         }

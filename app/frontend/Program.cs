@@ -1,8 +1,9 @@
+using BobBookstore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 
-namespace BobBookstore
+namespace BookstoreFrontend
 {
     public class Program
     {
@@ -11,7 +12,7 @@ namespace BobBookstore
             CreateHostBuilder(args).Build().Run();
         }
 
-        public static IHostBuilder CreateHostBuilder(string[] args)
+        private static IHostBuilder CreateHostBuilder(string[] args)
         {
             return Host.CreateDefaultBuilder(args)
                 .ConfigureAppConfiguration((context, builder) =>
@@ -21,8 +22,7 @@ namespace BobBookstore
                 })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder
-                        .UseStartup<Startup>();
+                    webBuilder.UseStartup<Startup>();
                 });
         }
     }

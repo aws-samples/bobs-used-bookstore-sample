@@ -1,16 +1,16 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using AutoMapper;
 using Amazon.AspNetCore.Identity.Cognito;
 using Amazon.Extensions.CognitoAuthentication;
-using AutoMapper;
 using BobsBookstore.DataAccess.Data;
 using BobsBookstore.DataAccess.Repository.Interface;
 using BobsBookstore.DataAccess.Repository.Interface.InventoryInterface;
 using BobsBookstore.Models.Books;
 using BobsBookstore.Models.Customers;
 using BookstoreFrontend.Models.ViewModels;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 
 namespace BookstoreFrontend.Controllers
 {
@@ -23,17 +23,20 @@ namespace BookstoreFrontend.Controllers
         private readonly IMapper _mapper;
         private readonly IGenericRepository<Resale> _resaleRepository;
         private readonly IGenericRepository<ResaleStatus> _resaleStatusRepository;
-        private readonly SignInManager<CognitoUser> _SignInManager;
+        private readonly SignInManager<CognitoUser> _signInManager;
         private readonly UserManager<CognitoUser> _userManager;
 
 
         public ResaleController(IMapper mapper, IInventory inventory,
-            IGenericRepository<ResaleStatus> resaleStatusRepository, IGenericRepository<Resale> resaleRepository,
-            IGenericRepository<Customer> customerRepository, ApplicationDbContext context,
-            SignInManager<CognitoUser> SignInManager, UserManager<CognitoUser> userManager)
+                                IGenericRepository<ResaleStatus> resaleStatusRepository,
+                                IGenericRepository<Resale> resaleRepository,
+                                IGenericRepository<Customer> customerRepository,
+                                ApplicationDbContext context,
+                                SignInManager<CognitoUser> signInManager,
+                                UserManager<CognitoUser> userManager)
         {
             _context = context;
-            _SignInManager = SignInManager;
+            _signInManager = signInManager;
             _userManager = userManager;
             _customerRepository = customerRepository;
             _resaleRepository = resaleRepository;
@@ -46,8 +49,9 @@ namespace BookstoreFrontend.Controllers
         {
             var user = await _userManager.GetUserAsync(User);
             var id = user.Attributes[CognitoAttribute.Sub.AttributeName];
-            var resaleBooks = _resaleRepository.Get(c => c.Customer.Customer_Id == id,
-                includeProperties: "Customer,ResaleStatus");
+            var resaleBooks
+                = _resaleRepository.Get(c => c.Customer.Customer_Id == id,
+                                        includeProperties: "Customer,ResaleStatus");
             return View(resaleBooks);
         }
 
@@ -71,8 +75,8 @@ namespace BookstoreFrontend.Controllers
                 var customer = _customerRepository.Get(id);
                 var resale = _mapper.Map<Resale>(resaleViewModel);
                 resale.Customer = customer;
-                resale.ResaleStatus =
-                    _resaleStatusRepository.Get(c => c.Status == ResaleStatusPending).FirstOrDefault();
+                resale.ResaleStatus
+                    = _resaleStatusRepository.Get(c => c.Status == ResaleStatusPending).FirstOrDefault();
                 _resaleRepository.Add(resale);
                 _resaleRepository.Save();
                 return RedirectToAction(nameof(Index));

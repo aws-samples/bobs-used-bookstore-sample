@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace BobBookstore.Controllers
+namespace BookstoreFrontend.Controllers
 {
     public class AddressesController : Controller
     {
@@ -17,21 +17,21 @@ namespace BobBookstore.Controllers
 
         private readonly ApplicationDbContext _context;
         private readonly IGenericRepository<Customer> _customerRepository;
-        private readonly SignInManager<CognitoUser> _SignInManager;
+        private readonly SignInManager<CognitoUser> _signInManager;
         private readonly UserManager<CognitoUser> _userManager;
 
-
         public AddressesController(IGenericRepository<Address> addressRepository,
-            IGenericRepository<Customer> customerRepository, ApplicationDbContext context,
-            SignInManager<CognitoUser> SignInManager, UserManager<CognitoUser> userManager)
+                                   IGenericRepository<Customer> customerRepository,
+                                   ApplicationDbContext context,
+                                   SignInManager<CognitoUser> signInManager,
+                                   UserManager<CognitoUser> userManager)
         {
             _context = context;
-            _SignInManager = SignInManager;
+            _signInManager = signInManager;
             _userManager = userManager;
             _customerRepository = customerRepository;
             _addressRepository = addressRepository;
         }
-
 
         public async Task<IActionResult> Index()
         {
@@ -43,17 +43,14 @@ namespace BobBookstore.Controllers
             return View(temp);
         }
 
-        //creat address
         public IActionResult Create()
         {
             return View();
         }
 
-
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(
-            [Bind("Address_Id,AddressLine1,AddressLine2,City,State,Country,ZipCode")] Address address)
+        public async Task<IActionResult> Create([Bind("Address_Id,AddressLine1,AddressLine2,City,State,Country,ZipCode")] Address address)
         {
             if (ModelState.IsValid)
             {
@@ -71,23 +68,24 @@ namespace BobBookstore.Controllers
             return View(address);
         }
 
-        //edit address
-        public async Task<IActionResult> Edit(long? id)
+        public IActionResult Edit(long? id)
         {
-            if (id == null) return NotFound();
+            if (id == null)
+                return NotFound();
 
             var address = _addressRepository.Get(id);
-            if (address == null) return NotFound();
+            if (address == null)
+                return NotFound();
+
             return View(address);
         }
 
-
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(long id,
-            [Bind("Address_Id,AddressLine1,AddressLine2,City,State,Country,ZipCode")] Address address)
+        public IActionResult Edit(long id, [Bind("Address_Id,AddressLine1,AddressLine2,City,State,Country,ZipCode")] Address address)
         {
-            if (id != address.Address_Id) return NotFound();
+            if (id != address.Address_Id)
+                return NotFound();
 
             if (ModelState.IsValid)
             {
@@ -109,17 +107,17 @@ namespace BobBookstore.Controllers
             return View(address);
         }
 
-        //delete address
         public IActionResult Delete(long? id)
         {
-            if (id == null) return NotFound();
+            if (id == null)
+                return NotFound();
 
             var address = _addressRepository.Get(id);
-            if (address == null) return NotFound();
+            if (address == null)
+                return NotFound();
 
             return View(address);
         }
-
 
         [HttpPost]
         [ActionName("Delete")]
@@ -139,11 +137,16 @@ namespace BobBookstore.Controllers
             var user = await _userManager.GetUserAsync(User);
             var customer_id = user.Attributes[CognitoAttribute.Sub.AttributeName];
             var customer = _customerRepository.Get(customer_id);
-            var addresses = from c in _context.Address
-                where c.Customer == customer && c.IsPrimary == true
-                select c;
-            foreach (var item in addresses) item.IsPrimary = false;
-            //change to prime
+            var addresses
+                = from c in _context.Address
+                  where c.Customer == customer && c.IsPrimary == true
+                  select c;
+            foreach (var item in addresses)
+            {
+                item.IsPrimary = false;
+            }
+
+            // change to prime
             var address = await _context.Address.FindAsync(id);
             address.IsPrimary = true;
             await _context.SaveChangesAsync();

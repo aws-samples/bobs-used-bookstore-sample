@@ -1,9 +1,4 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
-@using BobsBookstore.Models.ViewModels
+﻿@using BookstoreFrontend.Models.ViewModels
 @model IEnumerable<BobsBookstore.Models.Customers.Address>
 @*@model Tuple<IEnumerable<BobsBookstore.Models.Customers.Address>,IEnumerable<BobsBookstore.Models.Orders.OrderDetail>>*@
 @*@model Tuple<IEnumerable<BobsBookstore.Models.Customers.Address>, IEnumerable<BobsBookstore.Models.Customers.Address>>*@
@@ -58,7 +53,6 @@
 
         </th>
         <th>
-
             Address Line 1
         </th>
         <th>
@@ -109,8 +103,7 @@
                         @Html.DisplayFor(modelItem => item.ZipCode)
                     </td>
                     <td>
-                        <a id="PrimeryAddressEdit" asp-area="Identity" asp-page="/Account/Manage/PrimeryAddressEdit">Edit</a> |
-
+                        <a id="PrimaryAddressEdit" asp-area="Identity" asp-page="/Account/Manage/PrimaryAddressEdit">Edit</a> |
                     </td>
                 </tr>
             }
@@ -154,7 +147,7 @@
 </table>
 <div>
     <p style="text-align: center">
-        <a asp-action="AddAddressAtChechout">add address</a>
+        <a asp-action="AddAddressAtCheckout">Add address</a>
     </p>
 </div>
 <table class="table">
@@ -186,16 +179,16 @@
             </td>
 
             <td>
-
-            $@item.Price
+                $@item.Price
+            </td>
 
             <td>
-
                 @item.Quantity
             </td>
-            <td>$@total</td>
 
-
+            <td>
+                $@total
+            </td>
         </tr>
     }
     </tbody>

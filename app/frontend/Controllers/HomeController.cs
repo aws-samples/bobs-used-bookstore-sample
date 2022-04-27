@@ -9,12 +9,13 @@ using BobsBookstore.DataAccess.Repository.Interface;
 using BobsBookstore.Models;
 using BobsBookstore.Models.Carts;
 using BobsBookstore.Models.Customers;
+using BookstoreFrontend.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-namespace BobBookstore.Controllers
+namespace BookstoreFrontend.Controllers
 {
     public class HomeController : Controller
     {
@@ -25,19 +26,22 @@ namespace BobBookstore.Controllers
         private readonly IGenericRepository<Customer> _customerRepository;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ILogger<HomeController> _logger;
-        private readonly SignInManager<CognitoUser> _SignInManager;
+        private readonly SignInManager<CognitoUser> _signInManager;
         private readonly UserManager<CognitoUser> _userManager;
 
-
         public HomeController(IGenericRepository<CartItem> cartItemRepository,
-            IGenericRepository<Customer> customerRepository, IGenericRepository<Cart> cartRepository,
-            ILogger<HomeController> logger, IHttpContextAccessor httpContextAccessor, ApplicationDbContext context,
-            SignInManager<CognitoUser> SignInManager, UserManager<CognitoUser> userManager)
+                              IGenericRepository<Customer> customerRepository,
+                              IGenericRepository<Cart> cartRepository,
+                              ILogger<HomeController> logger,
+                              IHttpContextAccessor httpContextAccessor,
+                              ApplicationDbContext context,
+                              SignInManager<CognitoUser> signInManager,
+                              UserManager<CognitoUser> userManager)
         {
             _logger = logger;
             _httpContextAccessor = httpContextAccessor;
             _context = context;
-            _SignInManager = SignInManager;
+            _signInManager = signInManager;
             _userManager = userManager;
             _cartRepository = cartRepository;
             _cartItemRepository = cartItemRepository;
@@ -47,28 +51,26 @@ namespace BobBookstore.Controllers
         public async Task<IActionResult> Index()
         {
             string ip;
-            if (_SignInManager.IsSignedIn(User))
+            if (_signInManager.IsSignedIn(User))
             {
-                //get customer
+                // get customer
                 var user = await _userManager.GetUserAsync(User);
                 var currentCustomer = _customerRepository.Get(user.Attributes[CognitoAttribute.Sub.AttributeName]);
-                //get cart
+                // get cart
                 var cart = _cartRepository.Get(s => s.Customer == currentCustomer).FirstOrDefault();
 
-                //put cartid in cookie
+                // put cartid in cookie
                 if (!HttpContext.Request.Cookies.ContainsKey("CartId"))
                 {
-                    var options = new CookieOptions();
-
-                    HttpContext.Response.Cookies.Append("CartId", Convert.ToString(cart.Cart_Id));
+                    HttpContext.Response.Cookies.Append("CartId", cart.Cart_Id);
                 }
                 else
                 {
                     HttpContext.Response.Cookies.Delete("CartId");
-                    HttpContext.Response.Cookies.Append("CartId", Convert.ToString(cart.Cart_Id));
+                    HttpContext.Response.Cookies.Append("CartId", cart.Cart_Id);
                 }
 
-                //put cart item in user cart
+                // put cart item in user cart
                 var cartItem = _cartItemRepository.Get(c => c.Cart == cart && c.WantToBuy == true);
 
                 foreach (var item in cartItem)
@@ -79,19 +81,15 @@ namespace BobBookstore.Controllers
 
                 _cartItemRepository.Save();
             }
-
             else
             {
                 if (!HttpContext.Request.Cookies.ContainsKey("CartIp"))
                 {
-                    var options = new CookieOptions();
-                    var gu_id = Guid.NewGuid();
-                    ip = gu_id.ToString();
-                    HttpContext.Response.Cookies.Append("CartIp", gu_id.ToString());
-                    var gu_id1 = Guid.NewGuid();
-                    var id = gu_id1.ToString();
-                    var IP = new Cart { IP = ip, Cart_Id = id };
-                    _cartRepository.Add(IP);
+                    ip = Guid.NewGuid().ToString();
+                    HttpContext.Response.Cookies.Append("CartIp", ip);
+                    var id = Guid.NewGuid().ToString();
+                    var cartInfo = new Cart { IP = ip, Cart_Id = id };
+                    _cartRepository.Add(cartInfo);
                     _cartRepository.Save();
                 }
                 else
@@ -99,27 +97,24 @@ namespace BobBookstore.Controllers
                     ip = HttpContext.Request.Cookies["CartIp"];
                 }
 
-                //put cart id in cookie
+                // put cart id in cookie
                 var currentCart = _cartRepository.Get(s => s.IP == ip).FirstOrDefault();
                 if (currentCart == null)
                 {
-                    var gu_id1 = Guid.NewGuid();
-                    var id = gu_id1.ToString();
+                    var id = Guid.NewGuid().ToString();
                     currentCart = new Cart { IP = ip, Cart_Id = id };
                     _cartRepository.Add(currentCart);
                     _cartRepository.Save();
                 }
 
-
                 if (!HttpContext.Request.Cookies.ContainsKey("CartId"))
                 {
-                    var options = new CookieOptions();
-                    HttpContext.Response.Cookies.Append("CartId", Convert.ToString(currentCart.Cart_Id));
+                    HttpContext.Response.Cookies.Append("CartId", currentCart.Cart_Id);
                 }
                 else
                 {
                     HttpContext.Response.Cookies.Delete("CartId");
-                    HttpContext.Response.Cookies.Append("CartId", Convert.ToString(currentCart.Cart_Id));
+                    HttpContext.Response.Cookies.Append("CartId", currentCart.Cart_Id);
                 }
             }
 

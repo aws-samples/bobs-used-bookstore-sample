@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace BobBookstore.Controllers
+namespace BookstoreFrontend.Controllers
 {
     public class RecommendController : Controller
     {

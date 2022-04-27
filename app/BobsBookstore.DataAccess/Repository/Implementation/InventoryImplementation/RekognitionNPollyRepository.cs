@@ -174,28 +174,25 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.InventoryImplementa
         }
 
         /*
-       *  function to  resize uploaded book cover pictures bwfore being pushed to S3 bucket 
+       *  function to  resize uploaded book cover pictures before being pushed to S3 bucket 
        */
         public async Task<Stream> ResizeImage(IFormFile file, string fileExt)
         {
             _logger.LogInformation("Resizing Image");
-            // create new memory stream.
             Stream result = new MemoryStream();
-            // create new image variable
-            var img = SixLabors.ImageSharp.Image.Load(file.OpenReadStream());
+            var img = await SixLabors.ImageSharp.Image.LoadAsync(file.OpenReadStream());
             // change size of image
             /*img.Mutate(x => x.Resize(ConstantsData.ResizeWidth, ConstantsData.ResizeHeight));*/
             img.Mutate(x => x.Resize(0, Constants.ResizeHeight));
-            //get the extension encoder
             var encoder = selectEncoder(fileExt);
-            img.Save(result, encoder);
+            await img.SaveAsync(result, encoder);
             result.Position = 0;
 
             return result;
         }
 
         /*
-       *  function to  encode the uplaoded images   
+       *  function to  encode the uploaded images   
        */
         public IImageEncoder selectEncoder(string extension)
         {

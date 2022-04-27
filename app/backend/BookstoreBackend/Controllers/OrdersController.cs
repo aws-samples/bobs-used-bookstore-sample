@@ -169,7 +169,7 @@ namespace BookstoreBackend.Controllers
 
             var orderStatus = _orderStatus.GetOrderStatuses();
             var order = _order.FindOrderById(orderId);
-            var orderDetails = await _orderDetail.FindOrderDetailByOrderId(orderId);
+            var orderDetails = await _orderDetail.FindOrderDetailByOrderIdAsync(orderId);
 
             var fullOrder = new PartialOrderViewModel
             {

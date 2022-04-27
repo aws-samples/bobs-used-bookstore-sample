@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using BobsBookstore.Models.Books;
 
-namespace BobsBookstore.Models.ViewModels
+namespace BookstoreFrontend.Models.ViewModels
 {
     public class BookViewModel
     {

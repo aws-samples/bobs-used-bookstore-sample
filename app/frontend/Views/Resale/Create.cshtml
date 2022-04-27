@@ -13,7 +13,6 @@
     types.Add(otherType);
     var otherCondition = new BobsBookstore.Models.Books.Condition { ConditionName = "Others" };
     conditions.Add(otherCondition);
-
 }
 
 <head>
@@ -49,7 +48,6 @@
                     <span asp-validation-for="Author" class="text-danger"></span>
                 </div>
 
-
                 <div class="form-row">
                     <div class="form-group col-md-6">
                         <label class="main-text form-check-label" asp-for="ISBN">ISBN</label>
@@ -60,7 +58,7 @@
                         <label class="main-text form-check-label">Publisher Name</label>
                         @Html.DropDownListFor(model => model.PublisherName, new SelectList(publishers, "Name", "Name"), "Please select", new { id = "othersOptionPublisher", @class = "form-control dropdown", required = "required" })
                         <div id="div_content_publisher" style="display:none">
-                            </br>
+                            <br/>
                             <input class="form-control otherAddPublisherText" asp-for="PublisherName" id="txtNewPublisher" type="text"/>
                             <input class=" btn otherAddButton" id="btnAddNewPublisher" onClick="buttonFn(this)" type="button" value="Add">
                         </div>
@@ -74,10 +72,9 @@
                         <span asp-validation-for="BookPrice" class="text-danger"></span>
                     </div>
                     <div class="form-group col-md-6">
-                        <label class="main-text form-check-label">Book Condition</label></br>
+                        <label class="main-text form-check-label">Book Condition</label><br/>
                         @Html.DropDownListFor(model => model.ConditionName, new SelectList(conditions, "ConditionName", "ConditionName"), "Please select", new { id = "othersOptionCondition", @class = "form-control dropdown", required = "required" })
                         <div id="div_content_condition" style="display:none">
-                            </br>
                             <input class="form-control otherAddText" asp-for="ConditionName" id="txtNewCondition" type="text"/>
                             <input class="btn otherAddButton" id="btnAddNewCondition" type="button" onClick="buttonFn(this)" value="Add"/>
                         </div>
@@ -86,19 +83,19 @@
 
                 <div class="form-row">
                     <div class="form-group col-md-6">
-                        <label class="main-text form-check-label">Book Type</label></br>
+                        <label class="main-text form-check-label">Book Type</label><br/>
                         @Html.DropDownListFor(model => model.TypeName, new SelectList(types, "TypeName", "TypeName"), "Please select", new { id = "othersOptionType", @class = "form-control dropdown", required = "required" })
                         <div id="div_content_type" style="display:none">
-                            </br>
+                            <br/>
                             <input class="form-control otherAddText" asp-for="TypeName" id="txtNewType" type="text"/>
                             <input class="btn otherAddButton" id="btnAddNewType" type="button" onClick="buttonFn(this)" value="Add"/>
                         </div>
                     </div>
                     <div class="form-group col-md-6">
-                        <label class="main-text form-check-label">Book Genre</label></br>
+                        <label class="main-text form-check-label">Book Genre</label><br/>
                         @Html.DropDownListFor(model => model.GenreName, new SelectList(genre, "Name", "Name"), "Please select", new { id = "othersOptionGenre", @class = "form-control dropdown", required = "required" })
                         <div id="div_content_genre" style="display:none">
-                            </br>
+                            <br/>
                             <input class="form-control otherAddText" asp-for="GenreName" id="txtNewGenre" type="text"/>
                             <input class="btn btn-sm otherAddButton" id="btnAddNewGenre" type="button" onClick="buttonFn(this)" value="Add"/>
                         </div>
@@ -110,7 +107,5 @@
                 </div>
             </form>
         </div>
-
-
     </div>
 </div>

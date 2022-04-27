@@ -13,15 +13,15 @@ namespace BookstoreBackend.Controllers
     public class HomeController : Controller
     {
         private readonly ICustomAdminPage _customAdmin;
-        private readonly SignInManager<CognitoUser> _SignInManager;
+        private readonly SignInManager<CognitoUser> _signInManager;
         private readonly UserManager<CognitoUser> _userManager;
-        private readonly string adminUsername;
 
-        public HomeController(ICustomAdminPage customAdmin, SignInManager<CognitoUser> SignInManager,
-            UserManager<CognitoUser> userManager)
+        public HomeController(ICustomAdminPage customAdmin, 
+                              SignInManager<CognitoUser> signInManager,
+                              UserManager<CognitoUser> userManager)
         {
             _customAdmin = customAdmin;
-            _SignInManager = SignInManager;
+            _signInManager = signInManager;
             _userManager = userManager;
         }
 
