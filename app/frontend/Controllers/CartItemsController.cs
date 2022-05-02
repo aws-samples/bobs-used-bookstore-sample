@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -29,7 +28,6 @@ namespace BookstoreFrontend.Controllers
         private readonly IGenericRepository<Order> _orderRepository;
         private readonly IGenericRepository<OrderStatus> _orderStatusRepository;
         private readonly IGenericRepository<Price> _priceRepository;
-        private readonly SignInManager<CognitoUser> _signInManager;
         private readonly UserManager<CognitoUser> _userManager;
 
         public CartItemsController(IGenericRepository<Address> addressRepository,
@@ -41,11 +39,9 @@ namespace BookstoreFrontend.Controllers
                                    IGenericRepository<OrderStatus> orderStatusRepository,
                                    IGenericRepository<CartItem> cartItemRepository,
                                    ApplicationDbContext context,
-                                   SignInManager<CognitoUser> signInManager,
                                    UserManager<CognitoUser> userManager)
         {
             _context = context;
-            _signInManager = signInManager;
             _userManager = userManager;
             _cartItemRepository = cartItemRepository;
             _orderStatusRepository = orderStatusRepository;
@@ -169,8 +165,6 @@ namespace BookstoreFrontend.Controllers
             var orderId = recentOrder.Order_Id;
             if (!HttpContext.Request.Cookies.ContainsKey("OrderId"))
             {
-                var options = new CookieOptions();
-
                 HttpContext.Response.Cookies.Append("OrderId", Convert.ToString(orderId));
             }
             else
@@ -252,9 +246,9 @@ namespace BookstoreFrontend.Controllers
             return View();
         }
 
-        public IActionResult ConfirmOrderAddress(string addressID, long orderId)
+        public IActionResult ConfirmOrderAddress(string addressId, long orderId)
         {
-            var address = _addressRepository.Get(Convert.ToInt64(addressID));
+            var address = _addressRepository.Get(Convert.ToInt64(addressId));
             var order = _orderRepository.Get(orderId);
             order.Address = address;
             _orderRepository.Update(order);
@@ -343,7 +337,7 @@ namespace BookstoreFrontend.Controllers
                 .Get(c => c.CartItem_Id == id, includeProperties: "Cart,Cart.Customer")
                 .FirstOrDefault();
 
-            if (cartItem.Cart.Customer.Customer_Id != userId)
+            if (cartItem?.Cart.Customer.Customer_Id != userId)
                 return RedirectToAction(nameof(Error));
 
             var trueDelete = _cartItemRepository.Get(id);
@@ -356,11 +350,6 @@ namespace BookstoreFrontend.Controllers
         public IActionResult Error()
         {
             return View();
-        }
-
-        private bool CartItemExists(string id)
-        {
-            return _context.CartItem.Any(e => e.CartItem_Id == id);
         }
     }
 }

@@ -19,7 +19,6 @@ namespace BookstoreFrontend.Controllers
         private readonly SignInManager<CognitoUser> _signInManager;
         private readonly UserManager<CognitoUser> _userManager;
 
-
         public OrdersController(IGenericRepository<Order> orderRepository,
                                 IGenericRepository<OrderDetail> orderDetailRepository,
                                 ApplicationDbContext context,
@@ -38,9 +37,9 @@ namespace BookstoreFrontend.Controllers
             if (_signInManager.IsSignedIn(User))
             {
                 var user = await _userManager.GetUserAsync(User);
-                var customer_id = user.Attributes[CognitoAttribute.Sub.AttributeName];
+                var customerId = user.Attributes[CognitoAttribute.Sub.AttributeName];
 
-                var orders = _orderRepository.Get(o => o.Customer.Customer_Id == customer_id,
+                var orders = _orderRepository.Get(o => o.Customer.Customer_Id == customerId,
                     includeProperties: "OrderStatus,Customer");
 
                 return View(orders);
@@ -60,9 +59,11 @@ namespace BookstoreFrontend.Controllers
                 var order = _orderRepository.Get(o => o.Customer.Customer_Id == customer_id && o.Order_Id == id,
                     includeProperties: "OrderStatus");
 
-                var viewModel = new OrderDisplayModel();
-                viewModel.OrderBookDetails = orderDetails;
-                viewModel.OrderDetail = order.FirstOrDefault();
+                var viewModel = new OrderDisplayModel
+                {
+                    OrderBookDetails = orderDetails,
+                    OrderDetail = order.FirstOrDefault()
+                };
 
                 return View(viewModel);
             }

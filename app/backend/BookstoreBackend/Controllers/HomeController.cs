@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Amazon.Extensions.CognitoAuthentication;
 using BobsBookstore.DataAccess.Repository.Interface.WelcomePageInterface;
 using BookstoreBackend.ViewModel.UpdateBooks;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 
 namespace BookstoreBackend.Controllers
 {
@@ -47,10 +47,10 @@ namespace BookstoreBackend.Controllers
             ViewBag.DateArrow = "▲";
             ViewBag.StatusArrow = "▲";
             // get the date range from the user
-            var dateMinRange = 0;
-            var dateMaxRange = 5;
+            const int dateMinRange = 0;
+            const int dateMaxRange = 5;
 
-            //Get books updated by current user
+            // get books updated by current user
             var userBooks = _customAdmin.GetUserUpdatedBooks(adminUsername);
             bookUpdates.UserBooks = userBooks.Result;
             // get recent books updated globally
@@ -58,17 +58,27 @@ namespace BookstoreBackend.Controllers
             // get important orders
             bookUpdates.ImpOrders = _customAdmin.GetImportantOrders(dateMaxRange, dateMinRange).Result;
             if (bookUpdates.UserBooks == null || bookUpdates.NotUserBooks == null || bookUpdates.ImpOrders == null)
-                throw new ArgumentNullException("The LatestUpdates View model cannot have a null value", "bookupdates");
+                throw new Exception("The book updates model contains null collections");
 
             if (orderByMethods.Contains(sortByValue))
             {
-                // assigns ViewBag.Sort with the opposite value of sortByValue
-                if (sortByValue == "OrderDetailPrice" || sortByValue == "price_desc")
-                    ViewBag.SortPrice = sortByValue == "OrderDetailPrice" ? "price_desc" : "OrderDetailPrice";
-                else if (sortByValue == "date" || sortByValue == "date_desc")
-                    ViewBag.SortDate = sortByValue == "date" ? "date_desc" : "date";
-                else if (sortByValue == "status" || sortByValue == "status_desc")
-                    ViewBag.SortDate = sortByValue == "status" ? "status_desc" : "status";
+                switch (sortByValue)
+                {
+                    // assigns ViewBag.Sort with the opposite value of sortByValue
+                    case "OrderDetailPrice":
+                    case "price_desc":
+                        ViewBag.SortPrice = sortByValue == "OrderDetailPrice" ? "price_desc" : "OrderDetailPrice";
+                        break;
+                    case "date":
+                    case "date_desc":
+                        ViewBag.SortDate = sortByValue == "date" ? "date_desc" : "date";
+                        break;
+                    case "status":
+                    case "status_desc":
+                        ViewBag.SortDate = sortByValue == "status" ? "status_desc" : "status";
+                        break;
+                }
+                
                 //to change the arrow on the html anchors based on asc or desc
                 if (ViewBag.SortPrice == "OrderDetailPrice")
                     ViewBag.PriceArrow = "▲";

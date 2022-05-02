@@ -2,8 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Amazon.Extensions.CognitoAuthentication;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using AutoMapper;
+using Amazon.Extensions.CognitoAuthentication;
 using BobsBookstore.DataAccess.Data;
 using BobsBookstore.DataAccess.Dtos;
 using BobsBookstore.DataAccess.Repository.Interface;
@@ -13,9 +16,6 @@ using BookstoreBackend.Notifications.NotificationsInterface;
 using BookstoreBackend.ViewModel;
 using BookstoreBackend.ViewModel.ManageInventory;
 using BookstoreBackend.ViewModel.SearchBooks;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using Type = BobsBookstore.Models.Books.Type;
 
 namespace BookstoreBackend.Controllers
@@ -50,12 +50,12 @@ namespace BookstoreBackend.Controllers
         }
 
         [HttpGet]
-        public IActionResult EditBookDetails(string bookName)
+        public async Task<IActionResult> EditBookDetails(string bookName)
         {
             _logger.LogInformation("Loading : Add New Book View");
             try
             {
-                var user = _userManager.GetUserAsync(User).Result;
+                var user = await _userManager.GetUserAsync(User);
                 ViewData["user"] = user.Username;
             }
             catch (Exception e)
@@ -63,7 +63,6 @@ namespace BookstoreBackend.Controllers
                 _logger.LogError(e, "Error in authentication @ Adding a new Book");
             }
 
-            var time = DateTime.Now.ToUniversalTime();
             try
             {
                 if (!string.IsNullOrEmpty(bookName))
@@ -94,10 +93,10 @@ namespace BookstoreBackend.Controllers
         }
 
         [HttpPost] //Post Data from forms to tables
-        public IActionResult EditBookDetails(BooksViewModel bookview)
+        public async Task<IActionResult> EditBookDetails(BooksViewModel bookview)
         {
             _logger.LogInformation("Posting new book details from form to Database ");
-            var user = _userManager.GetUserAsync(User).Result;
+            var user = await _userManager.GetUserAsync(User);
             bookview.UpdatedBy = user.Username;
             bookview.UpdatedOn = DateTime.Now.ToUniversalTime();
             bookview.Active = true;

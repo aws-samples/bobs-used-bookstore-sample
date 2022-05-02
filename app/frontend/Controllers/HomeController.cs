@@ -2,18 +2,17 @@
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using Amazon.AspNetCore.Identity.Cognito;
-using Amazon.Extensions.CognitoAuthentication;
-using BobsBookstore.DataAccess.Data;
-using BobsBookstore.DataAccess.Repository.Interface;
-using BobsBookstore.Models;
-using BobsBookstore.Models.Carts;
-using BobsBookstore.Models.Customers;
-using BookstoreFrontend.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Amazon.AspNetCore.Identity.Cognito;
+using Amazon.Extensions.CognitoAuthentication;
+using BobsBookstore.DataAccess.Data;
+using BobsBookstore.DataAccess.Repository.Interface;
+using BobsBookstore.Models.Carts;
+using BobsBookstore.Models.Customers;
+using BookstoreFrontend.Models;
 
 namespace BookstoreFrontend.Controllers
 {
@@ -128,12 +127,12 @@ namespace BookstoreFrontend.Controllers
 
         public IActionResult Search()
         {
-            return View();
+            return RedirectToAction("Index", "Search");
         }
 
         public IActionResult Cart()
         {
-            return View();
+            return RedirectToAction("Index", "CartItems");
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
