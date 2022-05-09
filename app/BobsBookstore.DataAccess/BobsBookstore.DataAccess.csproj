@@ -5,32 +5,31 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Amazon.S3" Version="0.21.5"/>
-        <PackageReference Include="AWSSDK.Polly" Version="3.7.1.15"/>
-        <PackageReference Include="AWSSDK.Rekognition" Version="3.7.1.21"/>
-        <PackageReference Include="AWSSDK.S3" Version="3.7.1.5"/>
-        <PackageReference Include="AWSSDK.SecretsManager" Version="3.7.1.4"/>
-        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.8"/>
+        <PackageReference Include="AWSSDK.Polly" Version="3.7.1.15" />
+        <PackageReference Include="AWSSDK.Rekognition" Version="3.7.1.21" />
+        <PackageReference Include="AWSSDK.S3" Version="3.7.1.5" />
+        <PackageReference Include="AWSSDK.SecretsManager" Version="3.7.1.4" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.8" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.8">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.8"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.8" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.8">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Microsoft.Extensions.Configuration" Version="5.0.0"/>
-        <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="5.0.0"/>
-        <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="5.0.2"/>
-        <PackageReference Include="NLog.Web.AspNetCore" Version="4.13.0"/>
-        <PackageReference Include="SixLabors.ImageSharp" Version="1.0.3"/>
-        <PackageReference Include="System.Linq.Dynamic.Core" Version="1.2.11"/>
-        <PackageReference Include="System.Linq.Expressions" Version="4.3.0"/>
+        <PackageReference Include="Microsoft.Extensions.Configuration" Version="5.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="5.0.0" />
+        <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="5.0.2" />
+        <PackageReference Include="NLog.Web.AspNetCore" Version="4.13.0" />
+        <PackageReference Include="SixLabors.ImageSharp" Version="1.0.3" />
+        <PackageReference Include="System.Linq.Dynamic.Core" Version="1.2.11" />
+        <PackageReference Include="System.Linq.Expressions" Version="4.3.0" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\BobsBookstore.Models\BobsBookstore.Models.csproj"/>
+        <ProjectReference Include="..\BobsBookstore.Models\BobsBookstore.Models.csproj" />
     </ItemGroup>
 
 </Project>
