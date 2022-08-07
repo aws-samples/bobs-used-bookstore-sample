@@ -1,0 +1,27 @@
+﻿.error-template {
+    padding: 40px 15px;
+    text-align: center;
+}
+
+.error-actions {
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+    .error-actions .btn {
+        margin-right: 10px;
+    }
+.errbutton {
+    font-weight: normal;
+        
+    padding: .6em;
+    border-top-left-radius: 12rem;
+    border-bottom-left-radius: 12rem;
+    border-top-right-radius: 12rem;
+    border-bottom-right-radius: 12rem;
+    background-color: #7D53DE;
+    min-width: 10rem
+}
+.err-text {
+    font-family: 'Arvo',serif;
+}

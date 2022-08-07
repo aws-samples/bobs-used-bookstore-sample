@@ -11,29 +11,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>@ViewData["Title"] - Bob's Used Bookstore</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
-    <link rel="stylesheet" href="~/css/site.css"/>
+    <link rel="stylesheet" href="/css/Shared/site.css"/>
     <link href="https://fonts.googleapis.com/css2?family=Arvo&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="~/css/welcomepage.css"/>
-    <link rel="stylesheet" href="~/css/ErrorPages.css"/>
+    <link rel="stylesheet" href="/css/home/welcomepage.css"/>
+    <link rel="stylesheet" href="/css/Error/index.css"/>
+    <link rel="stylesheet" href="/css/Shared/layout.css"/>
 </head>
 <body>
 
-    <style>
-        .main-color-text {
-            font-family: 'Arvo', sans-serif;
-            color: black;
-            padding: .5rem;
-            display: block;
-        }
-
-            .main-color-text:hover {
-                color: #7D53DE;
-            }
-
-        .nav-background-color {
-            background-color: white;
-        }
-    </style>
 
     <header>
         <nav class="navbar navbar-expand-lg navbar-toggleable-sm navbar-dark  nav-background-color  box-shadow mb-3">
@@ -99,8 +84,6 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @RenderSection("Scripts", false)
-    <script>
-        document.getElementById("year").innerHTML = new Date().getFullYear();
-    </script>
+    <script src="~/js/Shared/layout.js"></script>
 </body>
 </html>

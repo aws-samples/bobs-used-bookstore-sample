@@ -1,5 +1,4 @@
-﻿using BOBS_Backend.Database;
-using BOBS_Backend.Models.Book;
+﻿using BobsBookstore.DataAccess.Data;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -13,13 +12,14 @@ namespace Bobs_Backend.Test.Repository
     {
         // to avoid redundant calls;
         private bool disposedValue = false;
-        public DatabaseContext CreateInMemoryContext()
+        public ApplicationDbContext CreateInMemoryContext()
         {
             string newDatabaseName = "BobsBookstoreDatabase_" + DateTime.Now.ToFileTimeUtc();  
-            var options = new DbContextOptionsBuilder<DatabaseContext>()
+
+            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
             .UseInMemoryDatabase(databaseName: newDatabaseName)
             .Options;
-            var context = new DatabaseContext(options);
+            var context = new ApplicationDbContext(options);
             if (context != null)
             {
                 context.Database.EnsureDeleted();

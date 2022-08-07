@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Amazon.Extensions.CognitoAuthentication;
 using BobsBookstore.DataAccess.Repository.Interface.WelcomePageInterface;
 using BookstoreBackend.ViewModel.UpdateBooks;
+using Microsoft.Extensions.Logging;
+using System.Resources;
 
 namespace BookstoreBackend.Controllers
 {
@@ -15,23 +17,28 @@ namespace BookstoreBackend.Controllers
         private readonly ICustomAdminPage _customAdmin;
         private readonly SignInManager<CognitoUser> _signInManager;
         private readonly UserManager<CognitoUser> _userManager;
-
+        private readonly ILogger<HomeController> _logger;
+        private const string resxFile = @".\Resources.resx";
+        private string warningMsg = Resource.ResourceManager.GetString("OrderDetailPriceCol"); 
         public HomeController(ICustomAdminPage customAdmin, 
                               SignInManager<CognitoUser> signInManager,
-                              UserManager<CognitoUser> userManager)
+                              UserManager<CognitoUser> userManager, ILogger<HomeController> logger)
         {
             _customAdmin = customAdmin;
             _signInManager = signInManager;
             _userManager = userManager;
+            _logger = logger;
         }
 
         public IActionResult Index()
         {
+            _logger.LogInformation("In the view");
             return View();
         }
 
         public async Task<IActionResult> WelcomePageAsync(string sortByValue)
         {
+            _logger.LogInformation("In the welcome page");
             var user = await _userManager.GetUserAsync(User);
             var adminUsername = user.Username;
 
@@ -57,6 +64,8 @@ namespace BookstoreBackend.Controllers
             bookUpdates.NotUserBooks = _customAdmin.OtherUpdatedBooks(adminUsername).Result;
             // get important orders
             bookUpdates.ImpOrders = _customAdmin.GetImportantOrders(dateMaxRange, dateMinRange).Result;
+            _logger.LogInformation(bookUpdates.ToString());
+
             if (bookUpdates.UserBooks == null || bookUpdates.NotUserBooks == null || bookUpdates.ImpOrders == null)
                 throw new Exception("The book updates model contains null collections");
 
@@ -96,7 +105,7 @@ namespace BookstoreBackend.Controllers
                 bookUpdates.ImpOrders = _customAdmin.SortTable(bookUpdates.ImpOrders, sortByValue);
                 return View(bookUpdates);
             }
-
+            _logger.LogInformation(bookUpdates.ToString());
             return View(bookUpdates);
         }
 

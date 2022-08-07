@@ -7,49 +7,19 @@
         var conditions = (List<BobsBookstore.Models.Books.Condition>)ViewData["Conditions"];
 }
 
-@{
+@{  
     var count = Model.PageNumber;
     var viewstyle = Model.ViewStyle;
 }
-<style>
-    .table-hover tbody tr:hover td, .table-hover tbody tr:hover th
-    {
-        background-color: #e8e4f2;
-    }
 
-    .btn-outline-secondary
-    {
-        color : #ffffff;
-        border-color :#ffffff;
-        border-radius : .5rem;
-        background-color :#7D53DE;
-    }
-
-    .text {
-        color: #7D53DE;
-        font-family: 'Arvo', serif
-    }
-
-    .website-text {
-        font-family: 'Arvo', serif;
-    }
-    .container h2 h3 h4 h5 p {
-        font-family: 'Arvo', serif
-    }
-
-    .main-text {
-        font-family: 'Arvo', serif
-    }
-
-    p.author {
-        font-family: 'Arvo', serif
-    }
-</style>
+<head>
+    <link rel="stylesheet" href="/css/Inventory/searchbeta.css"/>
+</head>
 
 <div class="container">
     <div class="text-center">
         <h1 class="text-center" style="margin-top:35px">
-            <span class="title-1 text-center font-weight-light" style="margin-bottom: 45px">Search Books</span>
+            <span class="title-1 text-center font-weight-light" style="margin-bottom: 45px">@Resource.SearchBooksMessage</span>
         </h1>
     </div>
     <div class="row" style="margin:15px;">
@@ -57,31 +27,25 @@
 
             <form enctype="multipart/form-data" class="input-group mb-3" asp-controller="Inventory" asp-action="SearchBeta" method="get" style="padding-bottom: 0px;">
                 <select class="main-text col-2 custom-select title-1 text-center font-weight-light " id="inputGroupSelect01" asp-for="SearchBy">
-                    <option selected value="">Filter By</option>
-                    <option value="Book.Name">Book Name</option>
-                    <option value="Book.Publisher.Name">Publisher</option>
-                    <option value="Book.Genre.Name">Genre</option>
-                    <option value="Condition.ConditionName">Condition</option>
-                    <option value="Book.Type.TypeName">Type</option>
+                    <option selected value="">@Resource.FilterByLabel</option>
+                    <option value="Book.Name">@Resource.BookNameLabel</option>
+                    <option value="Book.Publisher.Name">@Resource.PublisherLabel</option>
+                    <option value="Book.Genre.Name">@Resource.GenreLabel</option>
+                    <option value="Condition.ConditionName">@Resource.ConditionLabel</option>
+                    <option value="Book.Type.TypeName">@Resource.TypeLabel</option>
                 </select>
-                <input id="tags" type="text" asp-page-handler="@Model.SearchBy" asp-for="SearchFilter" placeholder="Please , Enter the search query" class=" main-text form-control bg-light text-dark font-weight-light" aria-label="Text input with dropdown button">
+                <input id="tags" type="text" asp-page-handler="@Model.SearchBy" asp-for="SearchFilter" placeholder=@Resource.EnterSearchQueryMessage class=" main-text form-control bg-light text-dark font-weight-light" aria-label="Text input with dropdown button">
                 @section Scripts{
                     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
                     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
                     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-                    <script>
-                        $(function () {
-                            $("#tags").autocomplete({
-                                source: '/Inventory/AutoSuggest'
-                            });
-                        });
-                    </script>
+                    <script src="~/js/Inventory/searchbeta.js"></script>
                 }
                 <select class="main-text col-2 custom-select title-1 text-center font-weight-light " id="inputGroupSelect01" asp-for="ViewStyle">
-                    <option value="Grid">Grid</option>
-                    <option value="Tabular">Tabular</option>
+                    <option value="Grid">@Resource.GridLabel</option>
+                    <option value="Tabular">@Resource.TabularLabel</option>
                 </select>
-                <button class="main-text btn btn-outline-secondary title-1 text-center font-weight-light  " type="submit">Submit</button>
+                <button class="main-text btn btn-outline-secondary title-1 text-center font-weight-light  " type="submit">@Resource.SubmitButton</button>
             </form>
         </div>
     </div>
@@ -91,7 +55,7 @@
     <div class="row">
         <div class="col-12 col-sm-3">
             <div class="card bg-light mb-3">
-                <div class="main-text card-header  text-white text-uppercase text-center " style="background-color: #7D53DE">Best Selling Book</div>
+                <div class="main-text card-header  text-white text-uppercase text-center " style="background-color: #7D53DE">@Resource.BestSellerBookLabel</div>
                 <div class="card-body">
                     <img class="img-fluid" src="" />
                     <h5 class="main-text card-title text-center">@ViewData["name"]</h5>
@@ -99,7 +63,7 @@
                 </div>
             </div>
             <div class="card bg-light mb-3">
-                <div class="main-text card-header  text-white text-uppercase text-center " style="background-color: #7D53DE">Best Selling Publisher</div>
+                <div class="main-text card-header  text-white text-uppercase text-center " style="background-color: #7D53DE">@Resource.BestSellerPublisherLabel</div>
                 <div class="card-body">
                     <img class="img-fluid" src="" />
                     <h5 class="main-text card-title text-center">@ViewData["publisher"]</h5>
@@ -107,7 +71,7 @@
                 </div>
             </div>
             <div class="card bg-light mb-3">
-                <div class="main-text card-header  text-white text-uppercase text-center " style="background-color: #7D53DE">Best Selling Format</div>
+                <div class="main-text card-header  text-white text-uppercase text-center " style="background-color: #7D53DE">@Resource.BestSellerFormatLabel</div>
                 <div class="card-body">
                     <img class="img-fluid" src="" />
                     <h5 class="main-text card-title text-center">@ViewData["type"]</h5>
@@ -115,7 +79,7 @@
                 </div>
             </div>
             <div class="card bg-light mb-3">
-                <div class="main-text card-header  text-white text-uppercase text-center " style="background-color: #7D53DE">Best Selling Genre</div>
+                <div class="main-text card-header  text-white text-uppercase text-center " style="background-color: #7D53DE">@Resource.BestSellerGenreLabel</div>
                 <div class="card-body">
                     <img class="img-fluid" src="" />
                     <h5 class="main-text card-title text-center">@ViewData["genre"]</h5>
@@ -262,7 +226,7 @@
         }
         else
         {
-            <h3 class="text-center font-weight-light text-primary">Sorry, could not find any relevant books. Try again !!</h3>
+            <h3 class="text-center font-weight-light text-primary">@Resource.NoBookFoundMessage</h3>
         }
     </div>
 </div>

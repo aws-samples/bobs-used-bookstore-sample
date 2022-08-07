@@ -1,4 +1,5 @@
-﻿@{
+﻿@using System.Globalization
+@{
     ViewData["Title"] = "Process Orders";
 }
 @model BookstoreBackend.ViewModel.ProcessOrders.ProcessOrderViewModel;
@@ -21,42 +22,9 @@
             break;
     }
 }
-
-<style>
-    .progress-bar-empty {
-        height: 1.7rem;
-        margin-top: 25px;
-        margin-bottom: 45px;
-        border-radius: 1.8rem;
-        margin-top: 25px;
-        margin-bottom: 45px;
-    }
-    .progress-bar-filled {
-        background-color: #7D53DE;
-    }
-    .website-text {
-        font-family: 'Arvo',serif;
-    }
-    .manage-order-button {
-        border-color: #7D53DE;
-        border-radius: 3rem;
-        background-color: #7D53DE;
-        color: white;
-    }
-    .manage-order-button:hover {
-        color:white;
-    }
-    .filter-pill {
-        font-weight: normal;
-        font-family: 'Arvo',serif;
-        padding: .6em;
-        border-top-left-radius: 12rem;
-        border-bottom-left-radius: 12rem;
-        border-top-right-radius: 12rem;
-        border-bottom-right-radius: 12rem;
-        background-color: #7D53DE;
-    }
-</style>
+<head>
+    <link rel="stylesheet" href="/css/Orders/processorders.css"/>
+</head>
 <div class="container">
     <div class="text-center">
         <h2 class="website-text">Process Order</h2>
@@ -82,7 +50,7 @@
                 <svg class="bi bi-chevron-left" width="24" height="24" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                     <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
                 </svg>
-                Manage Orders
+                @Resource.ManageOrdersMessage
             </a>
         </div>
         <div class="text-center col-4 website-text">
@@ -109,7 +77,7 @@
     </div>
 
     <div>
-        <p class="website-text">Expected Delivery Date: @(fullOrder.Order.DeliveryDate == null ? "Pending Confirmation" : DateTime.Parse(fullOrder.Order.DeliveryDate).ToString("MM/dd/yyyy"))</p>
+        <p class="website-text">Expected Delivery Date: @(fullOrder.Order.DeliveryDate == null ? "Pending Confirmation" : DateTime.ParseExact(fullOrder.Order.DeliveryDate, "dd/MM/yyyy", CultureInfo.InvariantCulture).ToString("MM/dd/yyyy"))</p>
         @if (Model.FullOrder.OrderDetails.Count() == Model.FullOrder.ItemsRemoved && Model.FullOrder.Order.OrderStatus.Status != "Cancelled")
         {
             var cancelId = Model.Statuses.FirstOrDefault(o => o.Status == "Cancelled").OrderStatus_Id;
@@ -120,7 +88,7 @@
                 { "status", "" + cancelId },
                 { "oldStatus", "" + Model.FullOrder.Order.OrderStatus.OrderStatus_Id }
             };
-            <a asp-controller="Orders" asp-action="UpdateOrderStatus" asp-all-route-data="data" style="padding-top:.8rem; margin-left:.7rem;" class=" filter-pill badge badge-pill text-white">Cancel Order</a>
+            <a asp-controller="Orders" asp-action="UpdateOrderStatus" asp-all-route-data="data" style="padding-top:.8rem; margin-left:.7rem;" class=" filter-pill badge badge-pill text-white">@Resource.CancelOrderMessage</a>
         }
     </div>
     <div>

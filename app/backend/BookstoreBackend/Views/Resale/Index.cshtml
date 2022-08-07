@@ -1,14 +1,13 @@
 ﻿@model  IEnumerable<BobsBookstore.Models.Books.Resale> 
+@using System
 @{ ViewData["Title"] = "Index"; }
 
-<style>
-    .card-border {
-        border-radius: 2px 2px 2px 2px;
-    }
-</style>
+<head>
+    <link rel="stylesheet" href="/css/Resale/index.css"/>
+</head>
 
 <div class="text-center">
-    <h2 style="font-family: 'Arvo', serif; color: black;">Manage Resale Books</h2>
+    <h2 style="font-family: 'Arvo', serif; color: black;">@Resource.ManageResaleMessage</h2>
 </div>
 <div class="card shadow card-border border-dark mb-3" style="font-family: 'Arvo', sans-serif;">
     <div class="card-body">
@@ -16,11 +15,11 @@
             <table class="table_font  table  table-striped table-hover ">
                 <thead>
                 <tr>
-                    <th scope="col">Book Name</th>
-                    <th scope="col">Author</th>
-                    <th scope="col">Genre</th>
-                    <th scope="col">Status</th>
-                    <th scope="col">Action</th>
+                    <th scope="col">@Resource.BookNameLabel</th>
+                    <th scope="col">@Resource.AuthorLabel</th>
+                    <th scope="col">@Resource.GenreLabel</th>
+                    <th scope="col">@Resource.StatusLabel</th>
+                    <th scope="col">@Resource.ActionLabel</th>
                 </tr>
                 </thead>
                 @foreach (var b in Model)
@@ -35,7 +34,7 @@
                         <td>@b.GenreName</td>
                         <td>@b.ResaleStatus.Status</td>
                         <td>
-                            <a class="card-link" asp-action="Details" asp-controller="Resale" asp-all-route-data="param">Details</a>
+                            <a class="card-link" asp-action="Details" asp-controller="Resale" asp-all-route-data="param">@Resource.DetailsButton</a>
                         </td>
                     </tr>
                 }

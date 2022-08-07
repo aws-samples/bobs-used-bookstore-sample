@@ -2,8 +2,8 @@
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using AutoMapper;
+using BobsBookstore.DataAccess.Repository.Interface.NotificationsInterface;
 using BobsBookstore.DataAccess.Repository.Interface.OrdersInterface;
-using BookstoreBackend.Notifications.NotificationsInterface;
 using BookstoreBackend.ViewModel.ManageOrders;
 using BookstoreBackend.ViewModel.ProcessOrders;
 using Microsoft.AspNetCore.Authorization;
@@ -50,7 +50,7 @@ namespace BookstoreBackend.Controllers
             {
                 if (quant > maxQuant)
                 {
-                    errorMessage = "Error Occurred: Quantity must be less or equal to the max quantity";
+                    errorMessage = Resource.ResourceManager.GetString("MaxQuantityErrorMessage");
                     return RedirectToAction("ProcessOrders", new { orderId, errorMessage });
                 }
 
@@ -71,12 +71,12 @@ namespace BookstoreBackend.Controllers
                 }
                 else
                 {
-                    errorMessage = "Error Occurred: When trying to remove item. Please try again";
+                    errorMessage = Resource.ResourceManager.GetString("RemoveFailErrorMessage");
                 }
             }
             else
             {
-                errorMessage = " Error Occurred: Quantity must be a integer";
+                errorMessage = Resource.ResourceManager.GetString("IntegerQuantityErrorMessage");
             }
 
             return RedirectToAction("ProcessOrders", new { orderId, errorMessage });
@@ -133,17 +133,18 @@ namespace BookstoreBackend.Controllers
 
             if (newStatus.Position < order.OrderStatus.Position || order.OrderStatus.OrderStatus_Id != oldStatus)
             {
-                errorMessage = "Error Occurred: The order status has changed";
+                errorMessage = Resource.ResourceManager.GetString("OrderStatusChangeErrorMessage");
                 return RedirectToAction("ProcessOrders", new { orderId, errorMessage });
             }
 
             if (status == order.OrderStatus.OrderStatus_Id)
             {
-                errorMessage = "Error Occurred: This is already the order status of the order";
+                errorMessage = Resource.ResourceManager.GetString("OrderStatusNoChangeErrorMessage");
                 return RedirectToAction("ProcessOrders", new { orderId, errorMessage });
             }
 
-            if (status == cancelled.OrderStatus_Id)
+
+            if (cancelled !=null && status == cancelled.OrderStatus_Id)
                 order = await _orderDetail.CancelOrder(orderId);
             else
                 order = await _orderStatus.UpdateOrderStatus(order, status);
@@ -152,7 +153,7 @@ namespace BookstoreBackend.Controllers
                 _emailSender.SendOrderStatusUpdateEmail(order.OrderStatus.Status, order.Order_Id,
                     order.Customer.FirstName, order.Customer.Email);
             else
-                errorMessage = "Error Occured: Couldn't updated order status please try again";
+                errorMessage = Resource.ResourceManager.GetString("OrderStatusUpdateErrorMessage");
 
             return RedirectToAction("ProcessOrders", new { orderId, errorMessage });
         }

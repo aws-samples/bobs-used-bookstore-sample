@@ -7,18 +7,18 @@
     @if (SignInManager.IsSignedIn(User))
     {
         <li class="nav-item">
-            <a id="manage" class="main-color-text" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage" style="padding-top: 0.55rem">Hello @UserManager.GetUserName(User)!</a>
+            <a id="manage" class="main-color-text" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage" style="padding-top: 0.55rem">@Resource.HelloMessage @UserManager.GetUserName(User)!</a>
         </li>
         <li class="nav-item">
             <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-                <button id="logout" type="submit" class="nav-link btn btn-link main-color-text" style="color: black;">Logout</button>
+                <button id="logout" type="submit" class="nav-link btn btn-link main-color-text" style="color: black;">@Resource.LogoutMessage</button>
             </form>
         </li>
     }
     else
     {
         <li class="nav-item">
-            <a class="main-color-text" id="login" asp-area="Identity" asp-page="/Account/Login">Log in</a>
+            <a class="main-color-text" id="login" asp-area="Identity" asp-page="/Account/Login">@Resource.LoginMessage</a>
         </li>
     }
 </ul>

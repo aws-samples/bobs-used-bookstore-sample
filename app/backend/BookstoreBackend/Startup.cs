@@ -11,17 +11,18 @@ using Amazon.Translate;
 using BobsBookstore.DataAccess.Data;
 using BobsBookstore.DataAccess.Repository.Implementation;
 using BobsBookstore.DataAccess.Repository.Implementation.InventoryImplementation;
+using BobsBookstore.DataAccess.Repository.Implementation.NotificationsImplementations;
 using BobsBookstore.DataAccess.Repository.Implementation.OrderImplementations;
 using BobsBookstore.DataAccess.Repository.Implementation.SearchImplementation;
 using BobsBookstore.DataAccess.Repository.Implementation.WelcomePageImplementation;
 using BobsBookstore.DataAccess.Repository.Interface;
 using BobsBookstore.DataAccess.Repository.Interface.Implementations;
 using BobsBookstore.DataAccess.Repository.Interface.InventoryInterface;
+using BobsBookstore.DataAccess.Repository.Interface.NotificationsInterface;
 using BobsBookstore.DataAccess.Repository.Interface.OrdersInterface;
 using BobsBookstore.DataAccess.Repository.Interface.SearchImplementations;
 using BobsBookstore.DataAccess.Repository.Interface.WelcomePageInterface;
 using BobsBookstore.Models.AdminUser;
-using BookstoreBackend.Notifications.NotificationsInterface;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Data.SqlClient;
@@ -51,14 +52,19 @@ namespace BookstoreBackend
             services.AddAWSService<IAmazonPolly>();
             services.AddAWSService<IAmazonRekognition>();
             services.AddAWSService<IAmazonTranslate>();
-            services.AddAWSService<IAmazonCloudWatch>();
 
             services.AddAutoMapper(typeof(Startup));
             services.AddCognitoIdentity();
             services.AddRazorPages();
             services.AddControllersWithViews();
 
+            //rds db
             var connectionString = GetConnectionString(awsOptions);
+
+            //local db
+            //var connectionString = "Server=(localdb)\\MSSQLLocalDB; Initial Catalog=BobsUsedBookStore;Integrated Security= true";
+
+
 
             services.AddDbContext<ApplicationDbContext>(option => option.UseSqlServer(connectionString));
             services.AddTransient<ISearchDatabaseCalls, SearchDatabaseCalls>();
@@ -73,7 +79,7 @@ namespace BookstoreBackend
             services.AddTransient<IOrderDetailRepository, OrderDetailRepository>();
             services.AddTransient<IOrderStatusRepository, OrderStatusRepository>();
 
-            services.AddTransient<INotifications, Notifications.Implementations.Notifications>();
+            services.AddTransient<INotifications, Notifications>();
             services.AddTransient<ICustomAdminPage, CustomAdmin>();
 
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));

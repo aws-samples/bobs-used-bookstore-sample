@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using BobsBookstore.DataAccess.Data;
@@ -150,7 +151,7 @@ namespace BobsBookstore.DataAccess.Repository.Implementation.WelcomePageImplemen
 
                 foreach (var order in allOrders)
                 {
-                    var time = Convert.ToDateTime(order.DeliveryDate).ToUniversalTime();
+                    var time = DateTime.ParseExact(order.DeliveryDate, "dd/MM/yyyy", CultureInfo.InvariantCulture).ToUniversalTime();
                     if (order.OrderStatus.Status == "Pending")
                     {
                         // check pending orders which are due within 5 days

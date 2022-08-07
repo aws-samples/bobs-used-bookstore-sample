@@ -1,7 +1,7 @@
 ﻿@model BookstoreBackend.ViewModel.SearchBooks.SearchBookViewModel;
 
 <head>
-    <link rel="stylesheet" href="~/css/Orders/ManageOrders/Pagination.css"/>
+    <link rel="stylesheet" href="/css/Orders/Partials/pagination.css"/>
 </head>
 
 <ul class="list-group-horizontal list-group text-center">
@@ -10,7 +10,7 @@
         if (!string.IsNullOrEmpty(Model.Ascdesc)) ascdesc = Model.Ascdesc.Contains("asc") ? "desc" : "asc";
         else ascdesc = "asc";
     }
-    @if (Model.HasPreviousPages)
+    @if (Model.HasPreviousPages) 
     {
         var prevPag = new Dictionary<string, string>
         {

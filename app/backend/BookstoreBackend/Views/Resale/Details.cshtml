@@ -1,46 +1,11 @@
 ﻿@model BookstoreBackend.ViewModel.ResaleBooks.ResaleViewModel;
 @{ var customerInfo = Model.Customer; }
 
-<style>
-    .progress-bar-empty {
-        height: 1.7rem;
-        margin-top: 25px;
-        margin-bottom: 45px;
-        border-radius: 1.8rem;
-        margin-top: 25px;
-        margin-bottom: 45px;
-    }
 
-    .progress-bar-filled {
-        background-color: #7D53DE;
-    }
+<head>
+    <link rel="stylesheet" href="/css/Resale/details.css"/>
+</head>
 
-    .website-text {
-        font-family: 'Arvo',serif;
-    }
-
-    .manage-order-button {
-        border-color: #7D53DE;
-        border-radius: 3rem;
-        background-color: #7D53DE;
-        color: white;
-    }
-
-        .manage-order-button:hover {
-            color: white;
-        }
-
-    .filter-pill {
-        font-weight: normal;
-        font-family: 'Arvo',serif;
-        padding: .6em;
-        border-top-left-radius: 12rem;
-        border-bottom-left-radius: 12rem;
-        border-top-right-radius: 12rem;
-        border-bottom-right-radius: 12rem;
-        background-color: #7D53DE;
-    }
-</style>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj" crossorigin="anonymous"></script>
 
 <div class="container">
@@ -60,13 +25,13 @@
         {
             <div class="col-1 text-right">
                 <form asp-controller="Resale" asp-action="ApproveResale" method="get">
-                    <button class="btn shadow manage-order-button website-text" name="id" value="@Model.Resale_Id" type="submit">Approve</button>
+                    <button class="btn shadow manage-order-button website-text" name="id" value="@Model.Resale_Id" type="submit">@Resource.ApproveButton</button>
                 </form>
             </div>
 
             <div class="col-1 text-right">
                 <form asp-controller="Resale" asp-action="RejectResale" method="get">
-                    <button class="btn shadow manage-order-button website-text" name="id" value="@Model.Resale_Id" type="submit">Reject</button>
+                    <button class="btn shadow manage-order-button website-text" name="id" value="@Model.Resale_Id" type="submit">@Resource.RejectButton</button>
                 </form>
             </div>
         }
@@ -75,13 +40,13 @@
             <div class="col-3 text-right">
                 <form asp-controller="Resale" asp-action="AddResaleBookDetails" method="get">
 
-                    <button class="btn shadow manage-order-button website-text" name="id" value="@Model.Resale_Id" type="submit">Confirm Shipment</button>
+                    <button class="btn shadow manage-order-button website-text" name="id" value="@Model.Resale_Id" type="submit">@Resource.ConfirmShipmentButton</button>
                 </form>
             </div>
         }
         @if (Model.ResaleStatus.Status == Constants.ResaleStatusReceived)
         {
-            <button class="btn btn-primary shadow manage-order-button website-text" data-toggle="modal" data-target="#exampleModal" name="id" value="@Model.Resale_Id" type="submit">Make Payment</button>
+            <button class="btn btn-primary shadow manage-order-button website-text" data-toggle="modal" data-target="#exampleModal" name="id" value="@Model.Resale_Id" type="submit">@Resource.PaymentButton</button>
         }
     </div>
 
@@ -101,7 +66,7 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Payment Details</h5>
+                <h5 class="modal-title" id="exampleModalLabel">@Resource.PaymentDetailsButton</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -111,10 +76,10 @@
                 Customer Name: @Model.Customer.FirstName @Model.Customer.LastName
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn shadow manage-order-button website-text" data-dismiss="modal">Close</button>
+                <button type="button" class="btn shadow manage-order-button website-text" data-dismiss="modal">@Resource.CloseButton</button>
                 <div class="col-3 text-right">
                     <form asp-controller="Resale" asp-action="PaymentDone" method="get">
-                        <button class="btn shadow manage-order-button website-text" name="id" value="@Model.Resale_Id" type="submit">Confirm</button>
+                        <button class="btn shadow manage-order-button website-text" name="id" value="@Model.Resale_Id" type="submit">@Resource.ConfirmButton</button>
                     </form>
                 </div>
             </div>

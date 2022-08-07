@@ -1,0 +1,31 @@
+﻿.table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
+    background-color: #e8e4f2;
+}
+
+.btn-outline-secondary {
+    color: #ffffff;
+    border-color: #ffffff;
+    border-radius: .5rem;
+    background-color: #7D53DE;
+}
+
+.text {
+    color: #7D53DE;
+    font-family: 'Arvo', serif
+}
+
+.website-text {
+    font-family: 'Arvo', serif;
+}
+
+.container h2 h3 h4 h5 p {
+    font-family: 'Arvo', serif
+}
+
+.main-text {
+    font-family: 'Arvo', serif
+}
+
+p.author {
+    font-family: 'Arvo', serif
+}

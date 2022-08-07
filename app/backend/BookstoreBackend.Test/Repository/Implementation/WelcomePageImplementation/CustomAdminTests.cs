@@ -1,40 +1,21 @@
 
 using System;
 using Xunit;
-using Bobs_Backend;
-using BOBS_Backend.Repository.Implementations.WelcomePageImplementation;
-using Moq;
-using Microsoft.EntityFrameworkCore.Storage;
-using BOBS_Backend.Database;
 using System.Threading.Tasks;
-using BOBS_Backend.Models.Book;
 using System.Collections.Generic;
-using System.Security.Claims;
 using System.Linq;
-using Microsoft.EntityFrameworkCore;
-using Autofac.Extras.Moq;
 using Bobs_Backend.Test.Repository;
-using Microsoft.AspNetCore.Http;
-using BOBS_Backend.Models.Order;
-using BOBS_Backend.Models.Customer;
-using System.Data.Entity.Core.Metadata.Edm;
-using BOBS_Backend.ViewModel.UpdateBooks;
-using BOBS_Backend.Repository.OrdersInterface;
-using Amazon.SimpleEmail.Model;
-using Castle.DynamicProxy.Generators.Emitters.SimpleAST;
-using System.Linq.Expressions;
-using BOBS_Backend.Repository.Implementations.SearchImplementation;
-using BOBS_Backend.Repository.SearchImplementations;
-using Autofac.Core;
-using AutoMoq;
+using BobsBookstore.Models.Books;
+using BobsBookstore.DataAccess.Repository.Implementation.WelcomePageImplementation;
+using BookstoreBackend.ViewModel.UpdateBooks;
+using BobsBookstore.Models.Orders;
+using BobsBookstore.Models.Customers;
+using BobsBookstore.DataAccess.Dtos;
 
 namespace Bobs_Backend.Test
 {
     public class CustomAdminTests
     {
-        
-
-        
         private List<Price> GetSampleTestData()
         {
             var sampleData = new List<Price>
@@ -67,8 +48,6 @@ namespace Bobs_Backend.Test
             //Arrange
             MockDatabaseRepo connect = new MockDatabaseRepo();
             
-           
-
             var context1 = connect.CreateInMemoryContext();
             
             string adminUsername = "admin";
@@ -201,10 +180,9 @@ namespace Bobs_Backend.Test
                     Subtotal = 222,
                     Tax = 21,
                     DeliveryDate = "2020-08-15",
-                    OrderStatus = new OrderStatus { OrderStatus_Id = 2, Status = "Pending", position = 2 },
+                    OrderStatus = new OrderStatus { OrderStatus_Id = 2, Status = "Pending", Position = 2 },
                     Customer = new Customer(),
                     Address = new Address(),
-                    RowVersion = new byte[] { 0x20, 0x20 }
 
                 };
 
@@ -243,37 +221,37 @@ namespace Bobs_Backend.Test
             //Arrange
             MockDatabaseRepo connect = new MockDatabaseRepo();
             var context = connect.CreateInMemoryContext();
-            var expectedResult = new List<Order> {
+            var expectedResult = new List<Order>() {
 
-                new Order
-                {
-                    Order_Id = 22,
-                    Subtotal = 222,
-                    Tax = 21,
-                    DeliveryDate = DateTime.Today.AddDays(-1).ToShortDateString(),
-                    OrderStatus = new OrderStatus { OrderStatus_Id = 3, Status = "En Route", position = 3 },
-                    Customer = new Customer{Customer_Id ="123" ,FirstName="AB", LastName="CD", DateOfBirth=DateTime.Parse("1996-08-01"), Username="ABCD", Email="abcd@gmail.com", Phone="12345678" },
-                    Address = new Address(),
-                    RowVersion = new byte[] { 0x20, 0x20 }
+            new Order
+            {
+                Order_Id = 42,
+                Subtotal = 222,
+                Tax = 21,
+                DeliveryDate = DateTime.Today.AddDays(-1).ToString("dd/MM/yyyy"),
+            OrderStatus = context.OrderStatus.Find((long) 2),
+                Customer = new Customer { Customer_Id = "123", FirstName = "AB", LastName = "CD", DateOfBirth = DateTime.Parse("1996-08-01"), Username = "ABCD", Email = "abcd@gmail.com", Phone = "12345678" },
+                Address = new Address(),
 
-                },
-                new Order
-                {
-                     Order_Id = 23,
-                     Subtotal = 2,
-                     Tax = 1,
-                     DeliveryDate = DateTime.Today.AddDays(1).ToShortDateString(),
-                     OrderStatus = new OrderStatus { OrderStatus_Id = 2, Status = "Pending", position = 2 },
-                     Customer = new Customer{Customer_Id ="1234" ,FirstName="AB", LastName="CD", DateOfBirth=DateTime.Parse("1996-08-01"), Username="ABCD", Email="abcd@gmail.com", Phone="12345678" },
-                     Address = new Address(),
-                     RowVersion = new byte[] { 0x20, 0x20 }
+            },
+           new Order
+            {
+                Order_Id = 43,
+                Subtotal = 2,
+                Tax = 1,
+                DeliveryDate = DateTime.Today.AddDays(1).ToString("dd/MM/yyyy"),
+                OrderStatus = context.OrderStatus.Find((long) 3),
+                Customer = new Customer { Customer_Id = "1234", FirstName = "AB", LastName = "CD", DateOfBirth = DateTime.Parse("1996-08-01"), Username = "ABCD", Email = "abcd@gmail.com", Phone = "12345678" },
+                Address = new Address(),
 
-                }
+            }
             };
-            foreach(var order in expectedResult)
+
+            foreach (var order in expectedResult)
             {
                 context.Order.Add(order);
             }
+
             context.SaveChanges();
             int minDateRange = 0;
             int maxDateRange = 4;
@@ -299,51 +277,43 @@ namespace Bobs_Backend.Test
         {
             MockDatabaseRepo connect = new MockDatabaseRepo();
             var context = connect.CreateInMemoryContext();
-            var filterOrders = new List<FilterOrders>
+            var filterOrders = new List<FilterOrdersDto>
             {
-               new FilterOrders
+               new FilterOrdersDto
                {
                    Order = new Order
                    {
                         Order_Id = 22,
-                        Subtotal = 222,
+                        Subtotal = 22,
                         Tax = 21,
                         DeliveryDate = "2020-08-15",
-                        OrderStatus = new OrderStatus { OrderStatus_Id = 3, Status = "En Route", position = 3 },
+                        OrderStatus = context.OrderStatus.Find((long) 2),
                         Customer = new Customer{Customer_Id ="123" ,FirstName="AB", LastName="CD", DateOfBirth=DateTime.Parse("1996-08-01"), Username="ABCD", Email="abcd@gmail.com", Phone="12345678" },
                         Address = new Address(),
-                        RowVersion = new byte[] { 0x20, 0x20 }
                    },
                    Severity = 2
                },
-               new FilterOrders
+               new FilterOrdersDto
                {
                    Order = new Order
                    {
                         Order_Id = 23,
-                        Subtotal = 2,
+                        Subtotal = 222,
                         Tax = 1,
                         DeliveryDate = "2020-08-18",
-                        OrderStatus = new OrderStatus { OrderStatus_Id = 2, Status = "Pending", position = 2 },
+                        OrderStatus = context.OrderStatus.Find((long) 3),
                         Customer = new Customer{Customer_Id ="1234" ,FirstName="AB", LastName="CD", DateOfBirth=DateTime.Parse("1996-08-01"), Username="ABCD", Email="abcd@gmail.com", Phone="12345678" },
                         Address = new Address(),
-                        RowVersion = new byte[] { 0x20, 0x20 }
                    },
                    Severity=1
                }
             };
-            string sortByValue = "price";
+            string sortByValue = "price_desc";
 
             CustomAdmin _sut = new CustomAdmin(context);
             var result = _sut.SortTable(filterOrders, sortByValue);
 
-
-            Assert.NotNull(result);
-            Assert.True(result[0].Order.Subtotal < result[1].Order.Subtotal);
-
-            sortByValue = "price_desc";
             result = _sut.SortTable(filterOrders, sortByValue);
-
 
             Assert.NotNull(result);
             Assert.True(result[0].Order.Subtotal > result[1].Order.Subtotal);
@@ -356,9 +326,9 @@ namespace Bobs_Backend.Test
         {
             MockDatabaseRepo connect = new MockDatabaseRepo();
             var context = connect.CreateInMemoryContext();
-            var filterOrders = new List<FilterOrders>
+            var filterOrders = new List<FilterOrdersDto>
             {
-               new FilterOrders
+               new FilterOrdersDto
                {
                    Order = new Order
                    {
@@ -366,14 +336,13 @@ namespace Bobs_Backend.Test
                         Subtotal = 222,
                         Tax = 21,
                         DeliveryDate = "2020-08-15",
-                        OrderStatus = new OrderStatus { OrderStatus_Id = 3, Status = "En Route", position = 3 },
+                        OrderStatus = new OrderStatus { OrderStatus_Id = 3, Status = "En Route", Position = 3 },
                         Customer = new Customer{Customer_Id ="123" ,FirstName="AB", LastName="CD", DateOfBirth=DateTime.Parse("1996-08-01"), Username="ABCD", Email="abcd@gmail.com", Phone="12345678" },
                         Address = new Address(),
-                        RowVersion = new byte[] { 0x20, 0x20 }
                    },
                    Severity = 2
                },
-               new FilterOrders
+               new FilterOrdersDto
                {
                    Order = new Order
                    {
@@ -381,10 +350,9 @@ namespace Bobs_Backend.Test
                         Subtotal = 2,
                         Tax = 1,
                         DeliveryDate = "2020-08-18",
-                        OrderStatus = new OrderStatus { OrderStatus_Id = 2, Status = "Pending", position = 2 },
+                        OrderStatus = new OrderStatus { OrderStatus_Id = 2, Status = "Pending", Position = 2 },
                         Customer = new Customer{Customer_Id ="1234" ,FirstName="AB", LastName="CD", DateOfBirth=DateTime.Parse("1996-08-01"), Username="ABCD", Email="abcd@gmail.com", Phone="12345678" },
                         Address = new Address(),
-                        RowVersion = new byte[] { 0x20, 0x20 }
                    },
                    Severity=1
                }
@@ -412,9 +380,9 @@ namespace Bobs_Backend.Test
         {
             MockDatabaseRepo connect = new MockDatabaseRepo();
             var context = connect.CreateInMemoryContext();
-            var filterOrders = new List<FilterOrders>
+            var filterOrders = new List<FilterOrdersDto>
             {
-               new FilterOrders
+               new FilterOrdersDto
                {
                    Order = new Order
                    {
@@ -422,14 +390,13 @@ namespace Bobs_Backend.Test
                         Subtotal = 222,
                         Tax = 21,
                         DeliveryDate = "2020-08-15",
-                        OrderStatus = new OrderStatus { OrderStatus_Id = 3, Status = "En Route", position = 3 },
+                        OrderStatus = new OrderStatus { OrderStatus_Id = 3, Status = "En Route", Position = 3 },
                         Customer = new Customer{Customer_Id ="123" ,FirstName="AB", LastName="CD", DateOfBirth=DateTime.Parse("1996-08-01"), Username="ABCD", Email="abcd@gmail.com", Phone="12345678" },
                         Address = new Address(),
-                        RowVersion = new byte[] { 0x20, 0x20 }
                    },
                    Severity = 2
                },
-               new FilterOrders
+               new FilterOrdersDto
                {
                    Order = new Order
                    {
@@ -437,10 +404,9 @@ namespace Bobs_Backend.Test
                         Subtotal = 2,
                         Tax = 1,
                         DeliveryDate = "2020-08-18",
-                        OrderStatus = new OrderStatus { OrderStatus_Id = 2, Status = "Pending", position = 2 },
+                        OrderStatus = new OrderStatus { OrderStatus_Id = 2, Status = "Pending", Position = 2 },
                         Customer = new Customer{Customer_Id ="1234" ,FirstName="AB", LastName="CD", DateOfBirth=DateTime.Parse("1996-08-01"), Username="ABCD", Email="abcd@gmail.com", Phone="12345678" },
                         Address = new Address(),
-                        RowVersion = new byte[] { 0x20, 0x20 }
                    },
                    Severity=1
                }

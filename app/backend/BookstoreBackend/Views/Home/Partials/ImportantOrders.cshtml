@@ -1,82 +1,12 @@
-﻿@model BookstoreBackend.ViewModel.UpdateBooks.LatestUpdates
+﻿@using System.Globalization
+@model BookstoreBackend.ViewModel.UpdateBooks.LatestUpdates
 @{
     var updates = Model;
 }
 
-<style>
-    ::-webkit-scrollbar {
-        width: 5px;
-    }
-
-    /* Track */
-    ::-webkit-scrollbar-track {
-        background: #f1f1f1;
-    }
-
-    /* Handle */
-    ::-webkit-scrollbar-thumb {
-        background: #495057;
-        border-radius: 2px;
-    }
-
-        /* Handle on hover */
-        ::-webkit-scrollbar-thumb:hover {
-            background: #495057 ;
-        }
-
-     th{
-        position: sticky;
-        top: 0;
-        z-index:2
-    }
-    .table .thead-light th {
-    color: #495057;
-    background-color: white;
-    border-color: #dee2e6;
-}
-
-   th a{
-       color: inherit;
-   }
-    .box{
-        width: 12px;
-        height:12px;
-        border-radius: 50%;
-        display:inline-block;
-    }
-    .boxRed {
-        background-color: #dc3545;
-    }
-    .boxYellow {
-        background-color: #ffc107;
-    }
-    #key{
-      margin:auto;
-    }
-
-    .keyRows td{
-        padding-left: 30px ;
-        padding-right: 30px;
-    }
-
-    .dot {
-        height: 10px;
-        width: 10px;
-        background-color: #bbb;
-        border-radius: 50%;
-        display: inline-block;
-        float: right;
-    }
-    .dotRed {
-        background-color: #dc3545;
-        
-
-    }
-    .dotYellow {
-        background-color: #ffc107;
-    }
-
-</style>
+<head>
+    <link rel="stylesheet" href="/css/Home/Partials/importantorders.css"/>
+</head>
 
 <div class="mb-2">
     <table id="key"r>
@@ -154,7 +84,7 @@
                             <td>@order.Order.Customer.Customer_Id</td>
                             <td>@order.Order.Customer.FirstName @order.Order.Customer.LastName</td>
                             <td>$@(order.Order.Subtotal + order.Order.Tax)</td>
-                            <td> @DateTime.Parse(order.Order.DeliveryDate).ToString("MM/dd/yyyy")</td>
+                            <td> @DateTime.ParseExact(order.Order.DeliveryDate, "dd/MM/yyyy", CultureInfo.InvariantCulture).ToString("MM/dd/yyyy")</td>
                             <td>@order.Order.OrderStatus.Status</td>
                             <td>
                                 <a class="card-link" asp-controller="Orders" asp-action="ProcessOrders" asp-all-route-data="param">View Details</a>

@@ -24,22 +24,13 @@
     var total_sales = order_stats[6];
 }
 
-<style>
-    .website-text {
-        font-family: 'Arvo', serif;
-        color: black;
-    }
-
-    .card-color {
-        background-color: #7D53DE;
-        margin-right: .5em;
-        margin-bottom: .5em;
-    }
-</style>
+<head>
+    <link rel="stylesheet" href="/css/Inventory/dashboard.css"/>
+</head>
 
 <div class="" style="margin-left:15%;margin-right:15%">
     <div class="row" style="margin-bottom: 30px;">
-        <h3 class="col-12 website-text text-center">Inventory Dashboard</h3>
+        <h3 class="col-12 website-text text-center">@Resource.InventoryDashboardLabel</h3>
     </div>
     <div class="row d-flex justify-content-center">
         <partial name="./Partials/_BookCardsStats" view-data="ViewData"/>
@@ -51,22 +42,22 @@
 
     <div class="row" style="margin-top:35px;">
         <div class="col-lg-4 col-md-4 col-sm-3">
-            <h5 class="website-text text-center">Top 5 Genres</h5>
+            <h5 class="website-text text-center">@Resource.TopGenresLabel</h5>
             <partial name="./Partials/_GenreGraph" view-data="ViewData"/>
         </div>
 
         <div class="col-lg-4 col-md-4 col-sm-3">
-            <h5 class="website-text text-center">Top 2 Types</h5>
+            <h5 class="website-text text-center">@Resource.TopTypesLabel</h5>
             <partial name="./Partials/_TypeGraph" view-data="ViewData"/>
         </div>
 
         <div class="col-lg-4 col-md-4 col-sm-3">
-            <h5 class="website-text text-center">Top 5 Publishers</h5>
+            <h5 class="website-text text-center">@Resource.TopPublishersLabel</h5>
             <partial name="./Partials/_PublisherGraph" view-data="ViewData"/>
         </div>
 
         <div class="col-lg-4 col-md-4 col-sm-3" style="margin-top:25px;">
-            <h5 class="website-text text-center">Top 5 Book Titles</h5>
+            <h5 class="website-text text-center">@Resource.TopTitlesLabel</h5>
             <partial name="./Partials/_BookNameGraph" view-data="ViewData"/>
         </div>
     </div>

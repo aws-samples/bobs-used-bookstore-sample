@@ -11,9 +11,9 @@ namespace BobsBookstore.DataAccess.Migrations
                 columns: new[] { "OrderStatus_Id", "Position", "Status" },
                 values: new object[,]
                 {
-                    { 1L, 1, "Just Placed" },
-                    { 2L, 2, "En Route" },
-                    { 3L, 3, "Pending" },
+                    { 1L, 2, "Just Placed" },
+                    { 2L, 3, "En Route" },
+                    { 3L, 1, "Pending" },
                     { 4L, 4, "Delivered" }
                 });
 

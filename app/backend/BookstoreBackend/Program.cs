@@ -1,7 +1,8 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using NLog;
+using Microsoft.Extensions.Logging;
+using NLog.Web;
 
 namespace BookstoreBackend
 {
@@ -9,17 +10,11 @@ namespace BookstoreBackend
     {
         public static void Main(string[] args)
         {
-            //var logger = NLog.Web.NLogBuilder.ConfigureNLog("NLog.config").GetCurrentClassLogger();
-            try
-            {
-                //logger.Debug("init main");
-                CreateHostBuilder(args).Build().Run();
-            }
-            finally
-            {
-                // Ensure to flush and stop internal timers/threads before application-exit (Avoid segmentation fault on Linux)
-                LogManager.Shutdown();
-            }
+            /*var logger = NLog.Web.NLogBuilder.ConfigureNLog("NLog.config").GetCurrentClassLogger();
+            
+            logger.Debug("init main");*/
+            CreateHostBuilder(args).Build().Run();
+            
         }
 
         private static IHostBuilder CreateHostBuilder(string[] args)
@@ -33,15 +28,14 @@ namespace BookstoreBackend
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
-                });
-        }
-        /* .ConfigureLogging(logging =>
-        {
-             logging.ClearProviders();
-             logging.SetMinimumLevel(Microsoft.Extensions.Logging.LogLevel.Trace);
-         })
-         .UseNLog();
-         */
-        // NLog: Setup NLog for Dependency injection
+                }).ConfigureLogging(logging =>
+                {
+                    logging.AddAWSProvider();
+
+                    // When you need logging below set the minimum level. Otherwise the logging framework will default to Informational for external providers.
+                    logging.SetMinimumLevel(LogLevel.Debug);
+                }).UseNLog();
+        } 
+        
     }
 }

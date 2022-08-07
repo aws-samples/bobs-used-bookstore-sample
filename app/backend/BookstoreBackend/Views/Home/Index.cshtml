@@ -2,30 +2,18 @@
     ViewData["Title"] = "Home";
 }
 @*The view for when is the user is logged in*@
+@using System
 
-<style>
-    .text {
-        font-family: 'Arvo', serif;
-    }
-    .login-button {
-        font-weight: normal;
-        font-family: 'Arvo',serif;
-        padding: .6em;
-        border-top-left-radius: 12rem;
-        border-bottom-left-radius: 12rem;
-        border-top-right-radius: 12rem;
-        border-bottom-right-radius: 12rem;
-        background-color: #7D53DE;
-        min-width:10rem
-    }
-</style>
+<head>
+    <link rel="stylesheet" href="/css/Home/index.css"/>
+</head>
 
 @if (User.Identity.IsAuthenticated)
 {
     <div class="position-relative overflow-hidden p-0 m-0 text-center">
         <div class="col-md-5 p-lg-5 mx-auto my-5">
             <h1 class="display-4 font-weight-normal text">Bob's Used Bookstore</h1>
-            <p class="lead font-weight-normal text">Manage your workspace</p>
+            <p class="lead font-weight-normal text">@Resource.ManageWS</p>
             @Html.ActionLink("Manage", "WelcomePage", "Home", null, new { @class = "btn-group-sm btn login-button text-white" })
         </div>
     </div>

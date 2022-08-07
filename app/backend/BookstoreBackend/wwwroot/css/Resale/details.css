@@ -1,0 +1,38 @@
+﻿.progress-bar-empty {
+    height: 1.7rem;
+    margin-top: 25px;
+    margin-bottom: 45px;
+    border-radius: 1.8rem;
+    margin-top: 25px;
+    margin-bottom: 45px;
+}
+
+.progress-bar-filled {
+    background-color: #7D53DE;
+}
+
+.website-text {
+    font-family: 'Arvo',serif;
+}
+
+.manage-order-button {
+    border-color: #7D53DE;
+    border-radius: 3rem;
+    background-color: #7D53DE;
+    color: white;
+}
+
+    .manage-order-button:hover {
+        color: white;
+    }
+
+.filter-pill {
+    font-weight: normal;
+    font-family: 'Arvo',serif;
+    padding: .6em;
+    border-top-left-radius: 12rem;
+    border-bottom-left-radius: 12rem;
+    border-top-right-radius: 12rem;
+    border-bottom-right-radius: 12rem;
+    background-color: #7D53DE;
+}

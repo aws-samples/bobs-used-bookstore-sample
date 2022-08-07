@@ -1,0 +1,16 @@
+﻿.page-num {
+    border: none;
+    padding: .50rem;
+}
+
+.page-num-next {
+    padding-left: .25rem;
+}
+
+.page-num-prev {
+    padding-right: .25rem;
+}
+
+.website-text {
+    font-family: 'Arvo', serif;
+}

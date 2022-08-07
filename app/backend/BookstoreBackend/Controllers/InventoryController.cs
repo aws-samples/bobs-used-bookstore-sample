@@ -12,11 +12,11 @@ using BobsBookstore.DataAccess.Dtos;
 using BobsBookstore.DataAccess.Repository.Interface;
 using BobsBookstore.DataAccess.Repository.Interface.InventoryInterface;
 using BobsBookstore.Models.Books;
-using BookstoreBackend.Notifications.NotificationsInterface;
 using BookstoreBackend.ViewModel;
 using BookstoreBackend.ViewModel.ManageInventory;
 using BookstoreBackend.ViewModel.SearchBooks;
 using Type = BobsBookstore.Models.Books.Type;
+using BobsBookstore.DataAccess.Repository.Interface.NotificationsInterface;
 
 namespace BookstoreBackend.Controllers
 {
@@ -30,6 +30,8 @@ namespace BookstoreBackend.Controllers
         private readonly IMapper _mapper;
         private readonly SignInManager<CognitoUser> _signInManager;
         private readonly UserManager<CognitoUser> _userManager;
+        private string updateSuccess = Resource.ResourceManager.GetString("UpdateSuccessMessage");
+
 
         public InventoryController(IGenericRepository<Book> bookRepository,
                                    IMapper mapper,
@@ -261,7 +263,7 @@ namespace BookstoreBackend.Controllers
                 ViewData["Status"] = "Successfully updated the existing records";
             }
 
-            ViewData["Publishers"] = _inventory.GetAllPublishers();
+        ViewData["Publishers"] = _inventory.GetAllPublishers();
 
             return View();
         }
@@ -301,12 +303,12 @@ namespace BookstoreBackend.Controllers
         {
             if (string.CompareOrdinal(actual, name) == 0)
             {
-                ViewData["Status"] = "Successfully updated the existing records";
+                ViewData["Status"] = updateSuccess;
             }
             else
             {
                 _inventory.EditCondition(actual, name);
-                ViewData["Status"] = "Successfully updated the existing records";
+                ViewData["Status"] = updateSuccess;
             }
 
             ViewData["Conditions"] = _inventory.GetConditions();
@@ -325,12 +327,12 @@ namespace BookstoreBackend.Controllers
         {
             if (string.CompareOrdinal(actual, name) == 0)
             {
-                ViewData["Status"] = "Successfully updated the existing records";
+                ViewData["Status"] = updateSuccess;
             }
             else
             {
                 _inventory.EditType(actual, name);
-                ViewData["Status"] = "Successfully updated the existing records";
+                ViewData["Status"] = updateSuccess;
             }
 
             ViewData["Types"] = _inventory.GetTypes();

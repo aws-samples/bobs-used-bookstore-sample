@@ -1,0 +1,30 @@
+﻿.card-custom {
+    border-radius: 3rem;
+    border-color: black;
+    background-color: white;
+}
+
+.card-custom-header {
+    border-top-left-radius: 3rem;
+    border-top-right-radius: 3rem;
+    background-color: white;
+    padding: .75rem 1.25rem;
+    border-bottom: 1px solid rgba(0,0,0,.125);
+}
+
+.website-text {
+    font-family: 'Arvo',serif
+}
+
+.card-custom-li-last-item {
+    border-bottom-left-radius: 3rem;
+    border-bottom-right-radius: 3rem;
+    padding-bottom: 1rem;
+}
+
+.card-custom-li-item {
+    display: block;
+    border-top: 1px solid rgba(0,0,0,.125);
+    display: block;
+    padding: .75rem 1.25rem;
+}

@@ -5,21 +5,9 @@
     var orderStatus = Model.Statuses;
 }
 
-<style>
-    .submit-button {
-        border-bottom-right-radius: 1.2rem;
-        border-top-right-radius: 1.2rem;
-        border-color: #7D53DE;
-        background-color: #7D53DE;
-        color: white;
-    }
-    .submit-button:hover {
-        color:white;
-    }
-    .website-text {
-        font-family: 'Arvo',serif;
-    }
-</style>
+<head>
+    <link rel="stylesheet" href="/css/Orders/Partials/updateorderstatus.css"/>
+</head>
 
 <form class="input-group mb-3" asp-controller="Orders" asp-action="UpdateOrderStatus" method="get">
     <select asp-for="OrderId" class="invisible">
@@ -45,5 +33,5 @@
             }
         }
     </select>
-    <button class="btn submit-button website-text" type="submit">Submit</button>
+    <button class="btn submit-button website-text" type="submit">@Resource.SubmitButton</button>
 </form>

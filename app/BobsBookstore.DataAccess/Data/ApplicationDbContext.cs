@@ -49,11 +49,11 @@ namespace BobsBookstore.DataAccess.Data
                 { ResaleStatus_Id = 5, Status = "Payment Completed" });
 
             modelBuilder.Entity<OrderStatus>().HasData(new OrderStatus
-                { OrderStatus_Id = 1, Status = "Just Placed", Position = 1 });
+                { OrderStatus_Id = 1, Status = "Just Placed", Position = 2 });
             modelBuilder.Entity<OrderStatus>().HasData(new OrderStatus
-                { OrderStatus_Id = 2, Status = "En Route", Position = 2 });
+                { OrderStatus_Id = 2, Status = "En Route", Position = 3 });
             modelBuilder.Entity<OrderStatus>().HasData(new OrderStatus
-                { OrderStatus_Id = 3, Status = "Pending", Position = 3 });
+                { OrderStatus_Id = 3, Status = "Pending", Position = 1 });
             modelBuilder.Entity<OrderStatus>().HasData(new OrderStatus
                 { OrderStatus_Id = 4, Status = "Delivered", Position = 4 });
         }

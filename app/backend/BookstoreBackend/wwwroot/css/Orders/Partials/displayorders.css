@@ -1,0 +1,58 @@
+﻿.filter-pill {
+    padding: .6em;
+}
+
+.filter-pill-tag {
+    font-weight: normal;
+    background-color: #7D53DE;
+    padding: .6em;
+    padding-left: 1.5em;
+    margin-top: -.375rem;
+    margin-bottom: .5rem;
+    border-bottom-right-radius: 0;
+    border-top-right-radius: 0;
+    margin-right: -1.25rem;
+}
+
+.order-info-card {
+    border-radius: 3rem;
+    max-width: 28rem;
+    min-height: 18rem;
+    border-color: black;
+    background-color: white;
+}
+
+.order-info-card-header {
+    border-top-left-radius: 3rem;
+    border-top-right-radius: 3rem;
+    background-color: white;
+    padding: .75rem 1.25rem;
+}
+
+.order-info-card-header-text {
+    text-align: center;
+    font-weight: bold;
+}
+
+.website-text {
+    font-family: 'Arvo', serif;
+}
+
+.go-corner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    overflow: hidden;
+    top: 0rem;
+    right: 0;
+    background-color: #7D53DE;
+    border-radius: 0 3rem 0 32px;
+}
+
+.go-arrow {
+    color: white;
+    font-family: courier, sans;
+}
