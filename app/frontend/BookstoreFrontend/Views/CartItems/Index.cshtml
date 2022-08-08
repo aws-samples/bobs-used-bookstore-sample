@@ -60,7 +60,7 @@
             <h4 style="color:red">@Html.DisplayFor(modelitem => item.BookName) is out of stock,please wait or remove it!</h4>
         }
     }
-    <h3>Total price：$ <span id="totalprice">0</span></h3>
+    <h4>Total price：$ <span id="totalprice">0</span></h4><br/>
     <table class="table">
         <thead>
         <tr>
@@ -84,7 +84,7 @@
             {
                 <tr>
                     <td>
-                        <img src="@Html.DisplayFor(modelitem => item.Url)"/>
+                        <img src="@Html.DisplayFor(modelitem => item.Url)" onerror="this.onerror=null;this.src='/images/default_c.jpg';" style="width: 135px;height: 200px;"/>
                     </td>
                     <td>
                         @Html.DisplayFor(modelitem => item.BookName)
@@ -94,7 +94,7 @@
                         <td>
                             <input type="hidden" name="bookF" value="@Html.DisplayFor(modelitem => item.BookId)">
                             <input type="hidden" name="priceF" value="@Html.DisplayFor(modelitem => item.PriceId)">
-                            <input type="hidden" name="fruits" value="@Html.DisplayFor(modelitem => item.Prices)">
+                            <input type="hidden" name="prices" value="@Html.DisplayFor(modelitem => item.Prices)">
                             <input type="hidden" name="IDs" value="@Html.DisplayFor(modelitem => item.CartItem_Id)">
                             &nbsp;&nbsp;$@Html.DisplayFor(modelitem => item.Prices)
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;

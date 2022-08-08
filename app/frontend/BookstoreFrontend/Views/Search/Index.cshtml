@@ -68,7 +68,7 @@ else if (Model != null)
                         <div class="col-md-3">
                             <div class="item text-center">
                                 <a asp-controller="Search" asp-action="Detail" asp-route-id="@item.BookId">
-                                    <img src="@Html.DisplayFor(modelItem => item.Url)" alt="img" class="book_image" onerror="this.onerror=null;this.src='/images/default_c.jpg';">
+                                    <img src="@Html.DisplayFor(modelItem => item.Url)" alt="img" class="book_image_size" onerror="this.onerror=null;this.src='/images/default_c.jpg';" style="width: 135px;height: 200px;">
                                 </a>
                                 <center>
                                     <p class="text-dark">@Html.DisplayFor(modelitem => item.BookName)</p>

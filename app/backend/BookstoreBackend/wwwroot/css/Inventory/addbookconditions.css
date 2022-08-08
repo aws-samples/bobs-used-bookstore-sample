@@ -81,3 +81,7 @@ body {
 .main-text {
     font-family: 'Arvo', serif
 }
+
+.form h3 {
+    color: #ff0000;
+}

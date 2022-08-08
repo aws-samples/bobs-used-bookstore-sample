@@ -47,9 +47,9 @@ namespace BookstoreFrontend
             services.AddCognitoIdentity();
             services.AddRazorPages();
 
-            var connectionString = GetConnectionString(awsOptions);
+            //var connectionString = GetConnectionString(awsOptions);
             //var connectionString = "Server=testdb.cs5hbr9vqrxz.us-west-2.rds.amazonaws.com; Initial Catalog=BobsUsedBookStore;User Id=admin;Password=p2ssw0rd;Integrated Security= false; MultipleActiveResultSets=true";
-            //var connectionString = "Server=(localdb)\\MSSQLLocalDB; Initial Catalog=BobsUsedBookStore;Integrated Security= true";
+            var connectionString = "Server=(localdb)\\MSSQLLocalDB; Initial Catalog=BobsUsedBookStore;Integrated Security= true";
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString));
 
             services.AddAWSService<IAmazonS3>();

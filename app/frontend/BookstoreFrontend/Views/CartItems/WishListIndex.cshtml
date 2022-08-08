@@ -34,7 +34,7 @@
             @Html.DisplayNameFor(Model => Model.BookName)
         </th>
         <th>
-            <input type="checkbox" name="selectall" value="choose" onclick="selectall();count()"/>choose all &nbsp;@Html.DisplayNameFor(Model => Model.Prices)
+            <input type="checkbox" name="selectall" value="choose" onclick="selectall();count()"/> choose all &nbsp;@Html.DisplayNameFor(Model => Model.Prices)
         </th>
 
         <th></th>
@@ -47,7 +47,7 @@
         {
             <tr>
                 <td>
-                    <img src="@Html.DisplayFor(modelitem => item.Url)"/>
+                    <img src="@Html.DisplayFor(modelitem => item.Url)" style="width: 135px;height: 200px;" onerror="this.onerror=null;this.src='/images/default_c.jpg';"/>
                 </td>
                 <td>
                     @Html.DisplayFor(modelitem => item.BookName)

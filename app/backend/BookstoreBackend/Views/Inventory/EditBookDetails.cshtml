@@ -29,6 +29,8 @@
 
 <head>
     <link rel="stylesheet" href="/css/Inventory/editbookdetails.css"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="~/js/Inventory/editbookdetails.js"></script>
 </head>
 
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -57,7 +59,7 @@
     </div>
 </div>
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
 
 @if (errorstatus == "Yes")
 {
@@ -97,38 +99,38 @@
                                 <div class="row-sm-12">
                                     @if (BookNamePlaceHolder == "BOOK NAME")
                                     {
-                                        <input class="main-text form-control bg-light text-dark" asp-for="BookName" placeholder="@BookNamePlaceHolder" required /> }
+                                        <input class="main-text form-control bg-light text-dark" asp-for="BookName" placeholder="@BookNamePlaceHolder" required onchange="onValChange(this)"/> }
                                     else
                                     {
-                                        <input class="main-text form-control bg-light text-dark" asp-for="BookName" readonly placeholder="@BookNamePlaceHolder" required />}
+                                        <input class="main-text form-control bg-light text-dark" asp-for="BookName" readonly placeholder="@BookNamePlaceHolder" required onchange="onValChange(this)"/>}
                                 </div>
                                 <div class="row-sm-12">
                                     @if (AuthorPlaceHolder == "AUTHOR")
                                     {
-                                        <input class="main-text form-control bg-light text-dark" asp-for="Author" placeholder="@AuthorPlaceHolder" required /> }
+                                        <input class="main-text form-control bg-light text-dark" asp-for="Author" placeholder="@AuthorPlaceHolder" required onchange="onValChange(this)"/> }
                                     else
                                     {
-                                        <input class="main-text form-control bg-light text-dark" asp-for="Author" readonly placeholder="@AuthorPlaceHolder" required />}
+                                        <input class="main-text form-control bg-light text-dark" asp-for="Author" readonly placeholder="@AuthorPlaceHolder" required onchange="onValChange(this)"/>}
                                 </div>
                                 <div class="row-sm-12">
-                                    <input class="main-text form-control bg-light text-dark" asp-for="ISBN" placeholder="@ISBNPlaceHolder" required />
+                                    <input class="main-text form-control bg-light text-dark" asp-for="ISBN" placeholder="@ISBNPlaceHolder" required onchange="onValChange(this)"/>
                                 </div>
                                 <div class="row">
                                     <div class="col-sm-6">
-                                        <input class="main-text form-control bg-light text-dark" asp-for="price" placeholder="PRICE" required />
+                                        <input class="main-text form-control bg-light text-dark" asp-for="price" placeholder="PRICE" required onchange="onValChange(this)"/>
                                     </div>
                                     <div class="col-sm-6">
-                                        <input class="main-text form-control bg-light text-dark" asp-for="Quantity" placeholder="QUANTITY" required />
+                                        <input class="main-text form-control bg-light text-dark" asp-for="Quantity" placeholder="QUANTITY" required onchange="onValChange(this)"/>
                                     </div>
                                 </div>
                                 <div class="row-sm-12" style="margin-top:2.5%;height:25%">
-                                    <textarea class="main-text form-control bg-light text-dark" asp-for="Summary" style="height:100%" placeholder="@SummaryPlaceHolder"></textarea>
+                                    <textarea class="main-text form-control bg-light text-dark" asp-for="Summary" style="height:100%" placeholder="@SummaryPlaceHolder" onchange="onValChange(this)"></textarea>
                                 </div>
                             </div>
                             <div class="col-sm-5" style="margin-left:10%">
                                 <div class="row-sm-6">
                                     <div class="form-group">
-                                        <select class="main-text custom-select bg-light text-dark" required asp-for="PublisherName">
+                                        <select class="main-text custom-select bg-light text-dark" required asp-for="PublisherName" onchange="onValChange(this)">
                                             <option value="">@Resource.SelectPublisherLabel</option>
                                             @if (publishers != null)
                                             {
@@ -144,7 +146,7 @@
                                 </div>
                                 <div class="row-sm-6">
                                     <div class="form-group">
-                                        <select class="main-text custom-select bg-light text-dark" required asp-for="Genre">
+                                        <select class="main-text custom-select bg-light text-dark" required asp-for="Genre" onchange="onValChange(this)">
                                             <option value="">@Resource.SelectGenreLabel</option>
                                             @if (genres != null)
                                             {
@@ -160,7 +162,7 @@
                                 </div>
                                 <div class="row-sm-6">
                                     <div class="form-group">
-                                        <select class="main-text custom-select bg-light text-dark" required asp-for="BookType">
+                                        <select class="main-text custom-select bg-light text-dark" required asp-for="BookType" onchange="onValChange(this)">
                                             <option value="">@Resource.SelectTypeLabel</option>
                                             @if (types != null)
                                             {
@@ -176,7 +178,7 @@
                                 </div>
                                 <div class="row-sm-6">
                                     <div class="form-group">
-                                        <select class="main-text custom-select bg-light text-dark" required asp-for="BookCondition">
+                                        <select class="main-text custom-select bg-light text-dark" required asp-for="BookCondition" onchange="onValChange(this)">
                                             <option value="">@Resource.SelectConditionLabel</option>
                                             @if (conditions != null)
                                             {
@@ -235,7 +237,7 @@
                         <br />
 
                         <div class="form-group text-center ">
-                            <button class="main-text btn text-white font-weight-bold" style="width:20% ;background-color: #7D53DE" type="submit">@Resource.SubmitButton</button>
+                            <button class="main-text btn text-white font-weight-bold" style="width:20% ;background-color: #7D53DE" type="submit" onclick="localStorage.clear()">@Resource.SubmitButton</button>
                         </div>
                     </div>
                 </div>

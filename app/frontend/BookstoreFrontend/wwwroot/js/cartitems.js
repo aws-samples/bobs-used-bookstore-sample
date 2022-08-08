@@ -1,24 +1,24 @@
-﻿var fruits = document.getElementsByName('fruits');
+﻿var prices = document.getElementsByName('prices');
 var numbers = document.getElementsByClassName("numbers");
 var totalprice = 0;
-for (var i = 0; i < fruits.length; i++) {
+for (var i = 0; i < prices.length; i++) {
 
     var number = numbers[i].value;
-    totalprice += fruits[i].value * number;
+    totalprice += prices[i].value * number;
 
 }
 document.getElementById('totalprice').innerHTML = totalprice;
 
 for (var i = 0; i < numbers.length; i++) {
-    numbers[i].onclick = count;
+    numbers[i].onchange = count;
 }
 
 function count() {
     var totalprice = 0;
-    for (var i = 0; i < fruits.length; i++) {
+    for (var i = 0; i < prices.length; i++) {
 
         var number = numbers[i].value;
-        totalprice += fruits[i].value * number;
+        totalprice += prices[i].value * number;
 
     }
     document.getElementById('totalprice').innerHTML = totalprice;

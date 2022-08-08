@@ -127,7 +127,7 @@ namespace BookstoreFrontend.Controllers
             return RedirectToAction("WishListIndex");
         }
 
-        public async Task<IActionResult> CheckOut(string[] fruits, string[] IDs, string[] quantity, string[] bookF, string[] priceF)
+        public async Task<IActionResult> CheckOut(string[] prices, string[] IDs, string[] quantity, string[] bookF, string[] priceF)
         {
             //set the origin value
             var orderStatue
@@ -146,7 +146,7 @@ namespace BookstoreFrontend.Controllers
             // calculate the total price and put all books in a list
             for (var i = 0; i < IDs.Length; i++)
             {
-                subTotal += Convert.ToDecimal(fruits[i]) * Convert.ToInt32(quantity[i]);
+                subTotal += Convert.ToDecimal(prices[i]) * Convert.ToInt32(quantity[i]);
             }
 
             // create a new order
@@ -183,7 +183,7 @@ namespace BookstoreFrontend.Controllers
                 {
                     Book = orderDetailBook,
                     Price = orderDetailPrice,
-                    OrderDetailPrice = Convert.ToDecimal(fruits[i]),
+                    OrderDetailPrice = Convert.ToDecimal(prices[i]),
                     Quantity = Convert.ToInt32(quantity[i]),
                     Order = recentOrder,
                     IsRemoved = false
@@ -230,7 +230,7 @@ namespace BookstoreFrontend.Controllers
             return View(address.ToList());
         }
 
-        public IActionResult Congratulation(long orderIdC)
+        public IActionResult OrderPlaced(long orderIdC)
         {
             var order = _orderRepository.Get(orderIdC);
             var orderItem = _orderDetailRepository.Get(c => c.Order == order, includeProperties: "Book")
@@ -254,7 +254,7 @@ namespace BookstoreFrontend.Controllers
             _orderRepository.Update(order);
             _orderRepository.Save();
 
-            return RedirectToAction(nameof(Congratulation), new { OrderIdC = orderId });
+            return RedirectToAction(nameof(OrderPlaced), new { OrderIdC = orderId });
         }
 
         public IActionResult AddAddressAtCheckout()
