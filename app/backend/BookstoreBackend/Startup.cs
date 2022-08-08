@@ -58,12 +58,15 @@ namespace BookstoreBackend
             services.AddRazorPages();
             services.AddControllersWithViews();
 
-            //rds db
-           // var connectionString = GetConnectionString(awsOptions);
+            //RDS db
+            var rdsConnectionString = GetConnectionString(awsOptions);
 
             //local db
-            var connectionString = "Server=(localdb)\\MSSQLLocalDB; Initial Catalog=BobsUsedBookStore;Integrated Security= true";
+            var localConnectionString = "Server=(localdb)\\MSSQLLocalDB; Initial Catalog=BobsUsedBookStore;Integrated Security= true";
 
+
+            //Set this to rdsConnectionString or localConnectionString
+            var connectionString = localConnectionString;
 
 
             services.AddDbContext<ApplicationDbContext>(option => option.UseSqlServer(connectionString));

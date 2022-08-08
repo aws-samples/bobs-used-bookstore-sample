@@ -22,34 +22,47 @@
     ```
     cdk deploy -profile <your_aws_credentials_profile>
     ```
-## Module 2: Configure the security group
-1) Open the Amazon RDS Console from AWS Management Console
-1) Go to Databases and select the database instance created by the CDK application.
-1) Under Connectivity & security, go to Security and select the VPC Security group.
-1) Edit the inbound rules and add your ip to allow the database instance port 1433
 
-## Module 3: Run migrations
-1) First, you'll have to install the [EF Core command-line tools](https://docs.microsoft.com/en-us/ef/core/cli/)
-1) Go to AWS Secrets Manager in AWS Management Console and retrieve the secret values - host, username, password and port from the secret created by the CDK application.
-1) Run the migrations to create the tables.
-Go to `BobsUsedBookstore\app\BobsBookstore.Migrations` and run 
-    ```
-    dotnet ef database update --connection "Server=<host>,<port>; Initial Catalog=BobsUsedBookStore; User Id=<username>; Password=<password>"
-    ```
-## Module 4: Create Admin user for Admin application
+
+## Module 2: Create Admin user for Admin application
 1) Go to Amazon Cognito in in AWS Management Console.
-1) Select Manage User Pools and click on the User pool created for the admin application.
+1) Select Manage User Pools and click on the User pool created for the admin application - *BobsBookstoreAdminUserPool*.
 1) Go to Users and groups -> Create User
-1) Enter the Username, password, email and select the option to Send an invitation to this new user via Email
+1) Enter the Username, password, email and select the option to Send an invitation to this new user via Email (Phone Number is not required)
 1) Select Create User
 
-## Module 5: Deploy the Customer and Admin application
+
+## Module 3: Select the appropriate db connection string (local db or RDS) before deployment
+1) Customer Application
+    - Go to *PATH_TO_SLN\bobs-used-bookstore-sample\app\frontend\BookstoreFrontend\Startup.cs* and change the value of the variable *connectionString* to *localConnectionString* for local database and *rdsConnectionString* for RDS Database
+2) Admin Application
+     - Go to *PATH_TO_SLN\bobs-used-bookstore-sample\app\backend\BookstoreBackend\Startup.cs*
+
+    ```C#
+    var connectionString = localConnectionString // for local db connection
+    ```
+     ```C#
+    var connectionString = rdsConnectionString // for rds db connection
+    ```
+
+## Module 4: Deploy the Customer and Admin application
 1) Host the sample application on Elastic Beanstalk using the VPC, security group, subnet and the IAM Instance role created by the CDK application
+2) Select *Create a new application environment*
+3) Select default Environment and URL. Click *Next*
+4) Check *Use non-default VPC*
+5) In the *Relational Database Access* select the security group corresponding to the **bookstoredb** Database Instance. Click *Next*
+6) Select the following 
+    - VPC - Select the **BobsBookstoreCoreInfra/BobsBookstoreVpc...**
+    - Security Group - Select the **default** security group for the selected VPC
+    - Instances Subnet - Select the 2 public subnets available (Hover over the options to view the complete string and select the ones which are PublicSubnet)
+7) Under *Deployed Application Permissions*, select **BobsBookstoreCoreInfra-AdminBobsBookstoreInstanceProfile-...** for the admin application deployment and **BobsBookstoreCoreInfra-CustomerBobsBookstoreInstanceProfile-...** for the customer application deployment
+8) Keep the *Services Permission* field unchanged. Click *Next*
+9) Select the *Reverse Proxy* as **none**. Click *Next*
+10) Click *Deploy*
 
+## Note: User Registration for Customer Application
+> Create different sets of users in Customer application while connecting to local and RDS database. 
 
-## Configuration Details
-1) `\BobsUsedBookstore\app\frontend\Program.cs` has the System manager configuration for the Customer application 
-1) `\BobsUsedBookstore\app\backend\BookstoreBackend\Program.cs` has the System manager configuration for the Admin application.
 
 
 
