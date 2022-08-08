@@ -1,9 +1,8 @@
 # Steps to run the CDK app and Bob's Used Bookstore application
 ## Modules
 1. Run the CDK application
-1. Configure the security group
-1. Run migrations
 1. Create Admin user for Admin application
+1. Select the appropriate db connection string (local db or RDS) before deployment
 1. Deploy the Customer and Admin application
 
 ## Module 1: Run the CDK application
