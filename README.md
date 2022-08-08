@@ -17,7 +17,7 @@
     > The CDK CLI requires you to be in the same directory as your cdk.json file.
 
 
-1) Go to `\BobsUsedBookstore\infra\bookstoreCdkStack` and run the following command(This will take several minutes). If the profile is not mentioned, it will pick the default profile.
+1) Go to `\bobs-used-bookstore-sample\infra\BookstoreInfra` and run the following command(This will take several minutes). If the profile is not mentioned, it will pick the default profile.
     ```
     cdk deploy -profile <your_aws_credentials_profile>
     ```
