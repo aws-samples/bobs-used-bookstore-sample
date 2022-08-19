@@ -1,0 +1,132 @@
+﻿@using Amazon.Extensions.CognitoAuthentication
+@using Microsoft.AspNetCore.Identity
+@model IEnumerable<BobsCustomerSite.Models.ViewModels.CartViewModel>
+
+@inject SignInManager<CognitoUser> SignInManager
+@inject UserManager<CognitoUser> UserManager
+@*@model Tuple<IEnumerable<DataModels.Carts.CartItem>, DataModels.Books.Book>*@
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<head>
+    <meta charset="UTF-8">
+    <title>>Book Store</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="theme-color" content="#03a6f3">
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <link rel="stylesheet" href="/css/googlefont.css">
+    <link rel="stylesheet" href="/css/font-awesome.min.css">
+
+    <link rel="stylesheet" href="/css/styles.css">
+    <link href="css/Line.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/custom-style.css">
+    <script src="/js/cartitems.js" defer></script>
+</head>
+<body>
+<p style="text-align: center">
+    <h1>Cart</h1>
+</p>
+
+<div class="container">
+
+    <ul class="time-horizontal">
+        <li style="color:red"><b></b>Cart</li>
+        <li>
+            <p></p>Choose Address
+        </li>
+        <li>
+            <p></p>Finish
+        </li>
+
+    </ul>
+</div>
+
+<div>
+    <br/>
+    <br/>
+    <br/>
+
+    @foreach (var item in Model)
+    {
+        if (item.Quantity <= 5 && item.Quantity > 0)
+        {
+            <h4 style="color:red">There is only a few @Html.DisplayFor(modelitem => item.BookName) in the store</h4>
+        }
+        if (item.Quantity == 0)
+        {
+            <h4 style="color:red">@Html.DisplayFor(modelitem => item.BookName) is out of stock,please wait or remove it!</h4>
+        }
+    }
+    <h4>Total price：$ <span id="totalprice">0</span></h4><br/>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>
+                Cover
+            </th>
+            <th>
+                @Html.DisplayNameFor(Model => Model.BookName)
+            </th>
+            <th>
+                &nbsp;@Html.DisplayNameFor(Model => Model.Prices) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Quantity
+            </th>
+
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        @using (Html.BeginForm(new { action = "CheckOut" }))
+        {
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        <img src="@Html.DisplayFor(modelitem => item.Url)" onerror="this.onerror=null;this.src='/images/default_c.jpg';" style="width: 135px;height: 200px;"/>
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelitem => item.BookName)
+                    </td>
+                    @if (item.Quantity != 0)
+                    {
+                        <td>
+                            <input type="hidden" name="bookF" value="@Html.DisplayFor(modelitem => item.BookId)">
+                            <input type="hidden" name="priceF" value="@Html.DisplayFor(modelitem => item.PriceId)">
+                            <input type="hidden" name="prices" value="@Html.DisplayFor(modelitem => item.Prices)">
+                            <input type="hidden" name="IDs" value="@Html.DisplayFor(modelitem => item.CartItem_Id)">
+                            &nbsp;&nbsp;$@Html.DisplayFor(modelitem => item.Prices)
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <input type="number" name="quantity" min="1" max="@Html.DisplayFor(modelitem => item.Quantity)" value="1" id="quantity" class="numbers"><br/>
+
+                        </td>
+                    }
+                    else
+                    {
+                        <td>
+                            <h4 style="color:red">This book is out of stock</h4>
+                        </td>
+                    }
+                    <td>
+
+                        <a asp-action="Delete" asp-route-id="@item.CartItem_Id">Remove</a>
+                    </td>
+                </tr>
+            }
+
+            @if (SignInManager.IsSignedIn(User))
+            {
+                <input type="submit" value="checkout" class="btn"/>
+            }
+            else
+            {
+                <h5 style="color:#ff0000">Log in to check out!<a class="nav-link text-dark" id="login" asp-area="Identity" asp-page="/Account/Login">Log in</a></h5>
+            }
+        }
+
+        </tbody>
+    </table>
+</div>
+<br/>
+</body>

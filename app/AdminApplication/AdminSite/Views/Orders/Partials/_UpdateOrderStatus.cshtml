@@ -1,0 +1,37 @@
+﻿@model AdminSite.ViewModel.ProcessOrders.ProcessOrderViewModel;
+@{
+    var fullOrder = Model.FullOrder;
+
+    var orderStatus = Model.Statuses;
+}
+
+<head>
+    <link rel="stylesheet" href="/css/Orders/Partials/updateorderstatus.css"/>
+</head>
+
+<form class="input-group mb-3" asp-controller="Orders" asp-action="UpdateOrderStatus" method="get">
+    <select asp-for="OrderId" class="invisible">
+        <option selected value="@fullOrder.Order.Order_Id">id</option>
+    </select>
+    <select asp-for="OldStatus" class="invisible">
+        <option selected value="@fullOrder.Order.OrderStatus.OrderStatus_Id">id</option>
+    </select>
+    <select asp-for="Status" class="col-5 custom-select website-text" id="inputGroupSelect01">
+        @foreach (var status in orderStatus)
+        {
+            if (status.Position < fullOrder.Order.OrderStatus.Position || fullOrder.Order.OrderStatus.Status != "Just Placed" && fullOrder.Order.OrderStatus.Status != "Cancelled" && status.Status == "Cancelled")
+            {
+                <option disabled value="@status.OrderStatus_Id">@status.Status</option>
+            }
+            else if (status.OrderStatus_Id == fullOrder.Order.OrderStatus.OrderStatus_Id)
+            {
+                <option value="@status.OrderStatus_Id" selected>@status.Status</option>
+            }
+            else
+            {
+                <option value="@status.OrderStatus_Id">@status.Status</option>
+            }
+        }
+    </select>
+    <button class="btn submit-button website-text" type="submit">Submit</button>
+</form>
