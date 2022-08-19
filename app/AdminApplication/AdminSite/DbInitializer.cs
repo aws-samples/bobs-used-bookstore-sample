@@ -19,7 +19,7 @@ namespace AdminSite
             {
                 return;
             }*/
-            var books = new Book[]
+           /* var books = new Book[]
             {
                 new Book{Author = "Test Lastname", Publisher = new Publisher{Name = "Stupore Bookhouse" }, ISBN = "6775546678", Type = new Type{TypeName = "AudioBook" }, Name = "Stupore Cries", Genre = new Genre{ Name = "Horror"}, FrontUrl = uploadToS3(bucketName, cdnDomain, path, "stupore.jpg") }
             };
@@ -28,7 +28,7 @@ namespace AdminSite
             {
                 context.Book.Add(s);
             }
-            context.SaveChanges();
+            context.SaveChanges();*/
         }
 
         public static string uploadToS3(string bucketName, string cdnDomain, string path, string bookCover)
