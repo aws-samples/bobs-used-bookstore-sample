@@ -21,6 +21,7 @@
     ```
     cdk deploy -profile <your_aws_credentials_profile>
     ```
+> It takes about 20 minutes for all the resource creation
 
 
 ## Module 2: Create Admin user for Admin application
