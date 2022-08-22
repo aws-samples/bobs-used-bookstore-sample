@@ -1,4 +1,5 @@
-﻿function updateFilterValue(filterValue, filterValueData) {
+﻿// Concatenate new filter rule to existing filter rule
+function updateFilterValue(filterValue, filterValueData) {
     var text = document.getElementById('idFilterValue').value;
     var reg = new RegExp(filterValue, "g");
 

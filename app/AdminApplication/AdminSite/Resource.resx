@@ -117,307 +117,34 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="ActionLabel" xml:space="preserve">
-    <value>Action</value>
+  <data name="AddConditionsMessage" xml:space="preserve">
+    <value>Please enter the details of the condition you wish to add to the database</value>
   </data>
-  <data name="ActiveLabel" xml:space="preserve">
-    <value>Active</value>
+  <data name="AddGenreMessage" xml:space="preserve">
+    <value>Please enter the details of the Genre you wish to add to the database</value>
   </data>
-  <data name="AddressInfoLabel" xml:space="preserve">
-    <value>Address Info</value>
+  <data name="AddPublisherMessage" xml:space="preserve">
+    <value>Please enter the details of the publisher you wish to add to the database</value>
   </data>
-  <data name="AddressLabel" xml:space="preserve">
-    <value>Address</value>
+  <data name="AddTypeMessage" xml:space="preserve">
+    <value>Please enter the details of the format you wish to add to the database</value>
   </data>
-  <data name="AllOrdersLabel" xml:space="preserve">
-    <value>All Orders</value>
+  <data name="CombinationErrorStatus" xml:space="preserve">
+    <value>Sorry, we don't currently have any relevant results for the given combination</value>
   </data>
-  <data name="ApproveButton" xml:space="preserve">
-    <value>Approve</value>
+  <data name="ConditionExistsStatus" xml:space="preserve">
+    <value>Given condition already exists in the database</value>
   </data>
-  <data name="AuthorLabel" xml:space="preserve">
-    <value>Author</value>
+  <data name="GenreExistsStatus" xml:space="preserve">
+    <value>Given genre already exists in the database</value>
   </data>
-  <data name="BackPictureLabel" xml:space="preserve">
-    <value>Back Picture</value>
+  <data name="PublisherExistsStatus" xml:space="preserve">
+    <value>Given publisher already exists in the database</value>
   </data>
-  <data name="BestSellerBookLabel" xml:space="preserve">
-    <value>Best Selling Book</value>
-  </data>
-  <data name="BestSellerFormatLabel" xml:space="preserve">
-    <value>Best Selling Format</value>
-  </data>
-  <data name="BestSellerGenreLabel" xml:space="preserve">
-    <value>Best Selling Genre</value>
-  </data>
-  <data name="BestSellerPublisherLabel" xml:space="preserve">
-    <value>Best Selling Publisher</value>
-  </data>
-  <data name="BookIdLabel" xml:space="preserve">
-    <value>Book Id</value>
-  </data>
-  <data name="BookNameLabel" xml:space="preserve">
-    <value>Book Name</value>
-  </data>
-  <data name="BookNotFoundMessage" xml:space="preserve">
-    <value>Can't Find Book Click Here</value>
-  </data>
-  <data name="CancelOrderMessage" xml:space="preserve">
-    <value>Cancel Order</value>
-  </data>
-  <data name="ChangeQueryMessage" xml:space="preserve">
-    <value>It seems that no search results have been returned. Try changing your search query or the filter category</value>
-  </data>
-  <data name="ChooseFileField" xml:space="preserve">
-    <value>Choose File...</value>
-  </data>
-  <data name="CityLabel" xml:space="preserve">
-    <value>City</value>
-  </data>
-  <data name="CloseButton" xml:space="preserve">
-    <value>Close</value>
-  </data>
-  <data name="ConditionLabel" xml:space="preserve">
-    <value>Condition</value>
-  </data>
-  <data name="ConditionNotFoundLabel" xml:space="preserve">
-    <value>Didn't find in the list ? Add New Condition</value>
-  </data>
-  <data name="ConfirmButton" xml:space="preserve">
-    <value>Confirm</value>
-  </data>
-  <data name="ConfirmShipmentButton" xml:space="preserve">
-    <value>Confirm Shipment</value>
-  </data>
-  <data name="CoverPhotoViolateErrorMessage" xml:space="preserve">
-    <value>Please re-upload the photos as they violate one or more of our content policies</value>
-  </data>
-  <data name="CoverPictureMessage" xml:space="preserve">
-    <value>Cover Pictures Gallery</value>
-  </data>
-  <data name="CustomerIdLabel" xml:space="preserve">
-    <value>Customer ID</value>
-  </data>
-  <data name="CustomerInfoLabel" xml:space="preserve">
-    <value>Customer Info</value>
-  </data>
-  <data name="CustomerNameLabel" xml:space="preserve">
-    <value>Customer Name</value>
-  </data>
-  <data name="DetailsButton" xml:space="preserve">
-    <value>Details</value>
-  </data>
-  <data name="EditButton" xml:space="preserve">
-    <value>Edit</value>
-  </data>
-  <data name="EmailLabel" xml:space="preserve">
-    <value>Email</value>
-  </data>
-  <data name="EnterSearchQueryMessage" xml:space="preserve">
-    <value>Please, enter the search query</value>
-  </data>
-  <data name="ErrorMessage" xml:space="preserve">
-    <value>Error</value>
-  </data>
-  <data name="ErrorPageMessage" xml:space="preserve">
-    <value>Sorry, an error has occurred. Please refresh the page or go back to the previous page</value>
-  </data>
-  <data name="ExpectedDeliveryDateLabel" xml:space="preserve">
-    <value>Expected Delivery Date</value>
-  </data>
-  <data name="FilterByLabel" xml:space="preserve">
-    <value>Filter By</value>
-  </data>
-  <data name="FirstNameLabel" xml:space="preserve">
-    <value>First Name</value>
-  </data>
-  <data name="FormatLabel" xml:space="preserve">
-    <value>Format</value>
-  </data>
-  <data name="FrontPictureLabel" xml:space="preserve">
-    <value>Front Picture</value>
-  </data>
-  <data name="GenreLabel" xml:space="preserve">
-    <value>Genre</value>
-  </data>
-  <data name="GenreNotFoundLabel" xml:space="preserve">
-    <value>Didn't find in the list ? Add New Genre</value>
-  </data>
-  <data name="GridLabel" xml:space="preserve">
-    <value>Grid</value>
-  </data>
-  <data name="HelloMessage" xml:space="preserve">
-    <value>Hello</value>
-  </data>
-  <data name="InactiveLabel" xml:space="preserve">
-    <value>Inactive</value>
-  </data>
-  <data name="IntegerQuantityErrorMessage" xml:space="preserve">
-    <value>Error Occurred: Quantity must be a integer</value>
-  </data>
-  <data name="InventoryDashboardLabel" xml:space="preserve">
-    <value>Inventory Dashboard</value>
-  </data>
-  <data name="ISBNLabel" xml:space="preserve">
-    <value>ISBN</value>
-  </data>
-  <data name="ItemRemovedMessage" xml:space="preserve">
-    <value>Item Has Been Removed</value>
-  </data>
-  <data name="LastNameLabel" xml:space="preserve">
-    <value>Last Name</value>
-  </data>
-  <data name="LeftPictureLabel" xml:space="preserve">
-    <value>Left Picture</value>
-  </data>
-  <data name="LoginMessage" xml:space="preserve">
-    <value>Log in</value>
-  </data>
-  <data name="LogoutMessage" xml:space="preserve">
-    <value>Logout</value>
-  </data>
-  <data name="ManageOrdersMessage" xml:space="preserve">
-    <value>Manage Orders</value>
-  </data>
-  <data name="ManageResaleMessage" xml:space="preserve">
-    <value>Manage Resale Books</value>
-  </data>
-  <data name="ManageWS" xml:space="preserve">
-    <value>Manage your workspace</value>
-  </data>
-  <data name="MaxQuantityErrorMessage" xml:space="preserve">
-    <value>Error Occurred: Quantity must be less or equal to the max quantity</value>
-  </data>
-  <data name="MessageLabel" xml:space="preserve">
-    <value>Message</value>
-  </data>
-  <data name="NoBookFoundMessage" xml:space="preserve">
-    <value>Sorry, could not find any relevant books. Try again!</value>
-  </data>
-  <data name="NoOfCopiesMessage" xml:space="preserve">
-    <value>How many copies of the book do you have</value>
-  </data>
-  <data name="NoResultsMessage" xml:space="preserve">
-    <value>No Results Returned</value>
-  </data>
-  <data name="OrderDetailPriceCol" xml:space="preserve">
-    <value>OrderDetailPrice</value>
-  </data>
-  <data name="OrderIdLabel" xml:space="preserve">
-    <value>Order Id</value>
-  </data>
-  <data name="OrderInfoLabel" xml:space="preserve">
-    <value>Order Info</value>
-  </data>
-  <data name="OrdersStatusLabel" xml:space="preserve">
-    <value>Order Status</value>
-  </data>
-  <data name="OrderStatusChangeErrorMessage" xml:space="preserve">
-    <value>Error Occurred: The order status has changed</value>
-  </data>
-  <data name="OrderStatusNoChangeErrorMessage" xml:space="preserve">
-    <value>Error Occurred: This is already the order status of the order</value>
-  </data>
-  <data name="OrderStatusUpdateErrorMessage" xml:space="preserve">
-    <value>Error Occured: Couldn't updated order status please try again</value>
-  </data>
-  <data name="PaymentButton" xml:space="preserve">
-    <value>Make Payment</value>
-  </data>
-  <data name="PaymentDetailsButton" xml:space="preserve">
-    <value>Payment Details</value>
-  </data>
-  <data name="PhoneLabel" xml:space="preserve">
-    <value>Phone</value>
-  </data>
-  <data name="PhotoContentErrorMessage" xml:space="preserve">
-    <value>Photo content must not contain profanity</value>
-  </data>
-  <data name="PhotoFormatErrorMeessage" xml:space="preserve">
-    <value>Photo must be of type .jpg or .png or .gif</value>
-  </data>
-  <data name="PhotoTypeErrorMessage" xml:space="preserve">
-    <value>Photo must be that of a book</value>
-  </data>
-  <data name="PriceLabel" xml:space="preserve">
-    <value>Price</value>
-  </data>
-  <data name="PublisherLabel" xml:space="preserve">
-    <value>Publisher</value>
-  </data>
-  <data name="PublisherNotFoundLabel" xml:space="preserve">
-    <value>Didn't find in the list ? Add New Publisher</value>
-  </data>
-  <data name="QuantityLabel" xml:space="preserve">
-    <value>Quantity</value>
-  </data>
-  <data name="RejectButton" xml:space="preserve">
-    <value>Reject</value>
-  </data>
-  <data name="RemoveFailErrorMessage" xml:space="preserve">
-    <value>Error Occurred: When trying to remove item. Please try again</value>
-  </data>
-  <data name="RemoveItemWarningMessage" xml:space="preserve">
-    <value>Warning removing last item will cancel the order</value>
-  </data>
-  <data name="RightPictureLabel" xml:space="preserve">
-    <value>Right Picture</value>
-  </data>
-  <data name="SaveChangesButton" xml:space="preserve">
-    <value>Save changes</value>
-  </data>
-  <data name="SearchBooksMessage" xml:space="preserve">
-    <value>Search Books</value>
-  </data>
-  <data name="SelectConditionLabel" xml:space="preserve">
-    <value>Selet the condition</value>
-  </data>
-  <data name="SelectGenreLabel" xml:space="preserve">
-    <value>Select the genre</value>
-  </data>
-  <data name="SelectPublisherLabel" xml:space="preserve">
-    <value>Select the publisher</value>
-  </data>
-  <data name="SelectTypeLabel" xml:space="preserve">
-    <value>Select the type</value>
-  </data>
-  <data name="StateLabel" xml:space="preserve">
-    <value>State</value>
-  </data>
-  <data name="StatusLabel" xml:space="preserve">
-    <value>Status</value>
-  </data>
-  <data name="SubmitButton" xml:space="preserve">
-    <value>Submit</value>
-  </data>
-  <data name="TabularLabel" xml:space="preserve">
-    <value>Tabular</value>
-  </data>
-  <data name="TopGenresLabel" xml:space="preserve">
-    <value>Top Genres</value>
-  </data>
-  <data name="TopPublishersLabel" xml:space="preserve">
-    <value>Top Publishers</value>
-  </data>
-  <data name="TopTitlesLabel" xml:space="preserve">
-    <value>Top Book Titles</value>
-  </data>
-  <data name="TopTypesLabel" xml:space="preserve">
-    <value>Top Types</value>
-  </data>
-  <data name="TypeLabel" xml:space="preserve">
-    <value>Type</value>
-  </data>
-  <data name="TypeNotFoundLabel" xml:space="preserve">
-    <value>Didn't find in the list ? Add New BookType</value>
+  <data name="TypeExistsStatus" xml:space="preserve">
+    <value>Given format already exists in the database</value>
   </data>
   <data name="UpdateSuccessMessage" xml:space="preserve">
     <value>Successfully updated the existing records</value>
-  </data>
-  <data name="UsernameLabel" xml:space="preserve">
-    <value>Username</value>
-  </data>
-  <data name="ZipCodeLabel" xml:space="preserve">
-    <value>Zip Code Label</value>
   </data>
 </root>

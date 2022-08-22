@@ -10,6 +10,7 @@ using AdminSite.ViewModel.UpdateBooks;
 using Microsoft.Extensions.Logging;
 using System.Resources;
 using AdminSite;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AdminSite.Controllers
 {
@@ -36,6 +37,7 @@ namespace AdminSite.Controllers
             return View();
         }
 
+        [Authorize]
         public async Task<IActionResult> WelcomePageAsync(string sortByValue)
         {
             _logger.LogInformation("In the welcome page");
