@@ -3,8 +3,10 @@ using Amazon.S3.Transfer;
 using DataAccess.Data;
 using DataModels.Books;
 using Microsoft.Extensions.Configuration;
+using System;
 using System.IO;
 using System.Linq;
+using Type = DataModels.Books.Type;
 
 namespace AdminSite
 {
@@ -44,8 +46,7 @@ namespace AdminSite
                 new Book{Author = "Owen Kain", Publisher = new Publisher{Name = "Poetic Publication" }, ISBN = "2354435678", Type = hardcoverType, Name = "The Girl In The Polaroid", Genre = new Genre{ Name = "Crime & Mystery"}, FrontUrl = uploadToS3(bucketName, cdnDomain, path, "girlinpolaroid.png") },
                 new Book{Author = "Adrian Lawrence", Publisher = new Publisher{Name = "All Memoirs" }, ISBN = "6554789632", Type = tradeType, Name = "Nana Lawrence 10001 Jokes", Genre = new Genre{ Name = "Humor and Satire"}, FrontUrl = uploadToS3(bucketName, cdnDomain, path, "nana.png") },
                 new Book{Author = "Harlow Nicholas", Publisher = new Publisher{Name = "Reeve-Chase, Inc" }, ISBN = "4558786554", Type = massType, Name = "My Search For Meaning", Genre = new Genre{ Name = "Biography and Autobiography"}, FrontUrl = uploadToS3(bucketName, cdnDomain, path, "search.png") }
-                /*new Book{Author = "Test Lastname", Publisher = new Publisher{Name = "Stupore Bookhouse" }, ISBN = "4556345790", Type = massType, Name = "Stupore Cries", Genre = new Genre{ Name = "Horror"}, FrontUrl = uploadToS3(bucketName, cdnDomain, path, "stupore.jpg") },
-                new Book{Author = "Test Lastname", Publisher = new Publisher{Name = "Stupore Bookhouse" }, ISBN = "5443567976", Type = massType, Name = "Stupore Cries", Genre = new Genre{ Name = "Horror"}, FrontUrl = uploadToS3(bucketName, cdnDomain, path, "stupore.jpg") }*/
+              
             };
 
             foreach (Book s in books)
@@ -56,43 +57,36 @@ namespace AdminSite
 
             var prices = new Price[]
             {
-                new Price{ Book = context.Book.First(a => a.Name == "2020 : The Apocalypse"), Condition = new Condition {ConditionName = "New" }, ItemPrice = 23, Quantity = 100, UpdatedBy = "Admin", Active = true },
+                new Price{ Book = context.Book.First(a => a.Name == "2020 : The Apocalypse"), Condition = new Condition {ConditionName = "New" }, ItemPrice = 23, Quantity = 100,  UpdatedOn = DateTime.Now.ToUniversalTime(),
+            UpdatedBy = "Admin", Active = true },
                 new Price
             {
-                Book = context.Book.First(a => a.Name == "Children Of Iron"), Condition = new Condition {ConditionName = "Fine/Like New" }, ItemPrice = 25, Quantity = 100, UpdatedBy = "Admin", Active = true
+                Book = context.Book.First(a => a.Name == "Children Of Iron"), Condition = new Condition {ConditionName = "Fine/Like New" }, ItemPrice = 25, Quantity = 100,UpdatedOn = DateTime.Now.ToUniversalTime(), UpdatedBy = "Admin", Active = true
             },
             new Price
             {
-                Book = context.Book.First(a => a.Name == "Gold In The Dark"), Condition = new Condition {ConditionName = "Near Fine" }, ItemPrice = 34, Quantity = 100, UpdatedBy = "Admin", Active = true
+                Book = context.Book.First(a => a.Name == "Gold In The Dark"), Condition = new Condition {ConditionName = "Near Fine" }, ItemPrice = 34, Quantity = 100,UpdatedOn = DateTime.Now.ToUniversalTime(), UpdatedBy = "Admin", Active = true
             },
              new Price
             {
-                Book = context.Book.First(a => a.Name == "League Of Smokes"), Condition = new Condition {ConditionName = "Very Good" }, ItemPrice = 37, Quantity = 100, UpdatedBy = "Admin", Active = true
+                Book = context.Book.First(a => a.Name == "League Of Smokes"), Condition = new Condition {ConditionName = "Very Good" }, ItemPrice = 37, Quantity = 100,UpdatedOn = DateTime.Now.ToUniversalTime(), UpdatedBy = "Admin", Active = true
             },
              new Price
             {
-                Book = context.Book.First(a => a.Name == "Alone With The Stars"), Condition = new Condition {ConditionName = "Good" }, ItemPrice = 12, Quantity = 100, UpdatedBy = "Admin", Active = true
+                Book = context.Book.First(a => a.Name == "Alone With The Stars"), Condition = new Condition {ConditionName = "Good" }, ItemPrice = 12, Quantity = 100,UpdatedOn = DateTime.Now.ToUniversalTime(), UpdatedBy = "Admin", Active = true
             },
              new Price
             {
-                Book = context.Book.First(a => a.Name == "The Girl In The Polaroid"), Condition = new Condition {ConditionName = "Fair" }, ItemPrice = 26, Quantity = 100, UpdatedBy = "Admin", Active = true
+                Book = context.Book.First(a => a.Name == "The Girl In The Polaroid"), Condition = new Condition {ConditionName = "Fair" }, ItemPrice = 26, Quantity = 100,UpdatedOn = DateTime.Now.ToUniversalTime(), UpdatedBy = "Admin", Active = true
             },
                new Price
             {
-                Book = context.Book.First(a => a.Name == "Nana Lawrence 10001 Jokes"), Condition = new Condition {ConditionName = "Poor" }, ItemPrice = 32, Quantity = 100, UpdatedBy = "Admin", Active = true
+                Book = context.Book.First(a => a.Name == "Nana Lawrence 10001 Jokes"), Condition = new Condition {ConditionName = "Poor" }, ItemPrice = 32, Quantity = 100,UpdatedOn = DateTime.Now.ToUniversalTime(), UpdatedBy = "Admin", Active = true
             },
                  new Price
             {
-                Book = context.Book.First(a => a.Name == "My Search For Meaning"), Condition = new Condition {ConditionName = "Ex-library" }, ItemPrice = 19, Quantity = 100, UpdatedBy = "Admin", Active = true
-            }/*
-                new Price
-            {
-                Book = context.Book.First(a => a.Name == "Stupore Cries"), Condition = new Condition {ConditionName = "Book club" }, ItemPrice = 27, Quantity = 100, UpdatedBy = "Admin", Active = true
-            },
-                 new Price
-            {
-                Book = context.Book.First(a => a.Name == "Stupore Cries"), Condition = new Condition {ConditionName = "Binding copy" }, ItemPrice = 28, Quantity = 100, UpdatedBy = "Admin", Active = true
-            }*/
+                Book = context.Book.First(a => a.Name == "My Search For Meaning"), Condition = new Condition {ConditionName = "Ex-library" }, ItemPrice = 19, Quantity = 100,UpdatedOn = DateTime.Now.ToUniversalTime(), UpdatedBy = "Admin", Active = true
+            }
            };
 
                 foreach (Price p in prices)
