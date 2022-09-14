@@ -1,4 +1,5 @@
-﻿var onValChange = args => {
+﻿// Retain form data on page reload using localStorage
+var onValChange = args => {
     localStorage.setItem(args.id, args.value)
 };
 

@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 
 
 namespace AdminSite.Controllers { 
+
     [Authorize]
     public class ResaleController : Controller
     {

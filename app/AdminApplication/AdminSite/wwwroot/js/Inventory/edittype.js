@@ -1,4 +1,5 @@
-﻿var text;
+﻿// Populate page with current type to edit
+var text;
 function LoadText() {
     text = document.getElementById('list').value;
     console.log(text);

@@ -1,35 +1,34 @@
-﻿var fruits = document.getElementsByName('fruits');
+﻿// Update total price based on number of books in wishlist
+var prices = document.getElementsByName('prices');
 var numbers = document.getElementsByClassName("numbers");
 
 var list = [];
-for (var i = 0; i < fruits.length; i++) {
-    fruits[i].onclick = count;
+for (var i = 0; i < prices.length; i++) {
+    prices[i].onclick = updateTotalPrice;
 }
 for (var i = 0; i < numbers.length; i++) {
-    numbers[i].onclick = count;
+    numbers[i].onclick = updateTotalPrice;
 }
 
-function count() {
+function updateTotalPrice() {
     var totalprice = 0;
-    for (var i = 0; i < fruits.length; i++) {
-        if (fruits[i].checked) {
-            var number = fruits[i].nextSibling.nextSibling.value;
-            totalprice += parseFloat(fruits[i].value) * number;
+    for (var i = 0; i < prices.length; i++) {
+        if (prices[i].checked) {
+            var number = prices[i].nextSibling.nextSibling.value;
+            totalprice += parseFloat(prices[i].value) * number;
         }
     }
     document.getElementById('totalprice').innerHTML = totalprice;
 }
 
 function selectall() {
-    var sports = document.getElementsByName("fruits");
-    for (i = 0; i < sports.length; i++) {
-        var sportname = sports[i];
-        if (sportname.checked == true) {
-            sportname.checked = false
-
+    var prices = document.getElementsByName("prices");
+    for (i = 0; i < prices.length; i++) {
+        var price = prices[i];
+        if (price.checked == true) {
+            price.checked = false
         } else {
-            sportname.checked = true;
+            price.checked = true;
         }
-
     }
 }

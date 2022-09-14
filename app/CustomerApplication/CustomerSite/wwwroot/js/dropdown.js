@@ -1,4 +1,5 @@
-﻿function buttonFn(a) {
+﻿// On creating a new element, add it to Options list
+function buttonFn(a) {
 
     var section_id = "#" + a.parentNode.previousElementSibling.id
     var newitem = a.previousElementSibling.value;
@@ -8,6 +9,7 @@
     $("#" + a.parentNode.id).css("display", "none");
 }
 
+// Show textbox if selected option is "Others"
 $(document).ready(function () {
     $(".dropdown").change(function () {
         var item = $(this).find("option:selected");

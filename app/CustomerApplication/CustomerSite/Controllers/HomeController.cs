@@ -13,9 +13,11 @@ using DataAccess.Repository.Interface;
 using DataModels.Carts;
 using DataModels.Customers;
 using CustomerSite.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CustomerSite.Controllers
 {
+   
     public class HomeController : Controller
     {
         private readonly IGenericRepository<CartItem> _cartItemRepository;

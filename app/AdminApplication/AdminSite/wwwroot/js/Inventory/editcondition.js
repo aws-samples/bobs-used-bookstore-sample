@@ -1,7 +1,7 @@
-﻿var text;
+﻿// Populate page with current book condition to edit
+var text;
 function LoadText() {
     text = document.getElementById('list').value;
-    console.log(text);
     $('#actual').val()
     return text;
 }

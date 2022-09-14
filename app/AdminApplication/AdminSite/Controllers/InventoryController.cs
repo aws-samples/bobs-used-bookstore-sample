@@ -18,9 +18,11 @@ using AdminSite.ViewModel.SearchBooks;
 using Type = DataModels.Books.Type;
 using DataAccess.Repository.Interface.NotificationsInterface;
 using AdminSite;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AdminSite.Controllers
 {
+    [Authorize]
     public class InventoryController : Controller
     {
         private const int NumberOfDetails = 5;
@@ -138,7 +140,7 @@ namespace AdminSite.Controllers
         [HttpGet]
         public IActionResult AddPublishers()
         {
-            ViewData["Status"] = Constants.AddPublisherMessage;
+            ViewData["Status"] = Resource.ResourceManager.GetString("AddPublisherMessage");
             ViewData["Publishers"] = _inventory.GetAllPublishers();
 
             return View();
@@ -153,7 +155,7 @@ namespace AdminSite.Controllers
 
                 if (status)
                     return RedirectToAction("EditBookDetails");
-                ViewData["Status"] = Constants.PublisherExistsStatus;
+                ViewData["Status"] = Resource.ResourceManager.GetString("PublisherExistsStatus");
             }
 
             catch (Exception e)
@@ -167,7 +169,7 @@ namespace AdminSite.Controllers
         [HttpGet]
         public IActionResult AddGenres()
         {
-            ViewData["Status"] = Constants.AddGenreMessage;
+            ViewData["Status"] = Resource.ResourceManager.GetString("AddGenreMessage");
             return View();
         }
 
@@ -180,7 +182,7 @@ namespace AdminSite.Controllers
 
                 if (status)
                     return RedirectToAction("EditBookDetails");
-                ViewData["Status"] = Constants.GenreExistsStatus;
+                ViewData["Status"] = Resource.ResourceManager.GetString("GenreExistsStatus");
             }
 
             catch (Exception e)
@@ -194,7 +196,7 @@ namespace AdminSite.Controllers
         [HttpGet]
         public IActionResult AddBookTypes()
         {
-            ViewData["Status"] = Constants.AddTypeMessage;
+            ViewData["Status"] = Resource.ResourceManager.GetString("AddTypeMessage");
             return View();
         }
 
@@ -207,7 +209,7 @@ namespace AdminSite.Controllers
 
                 if (status)
                     return RedirectToAction("EditBookDetails");
-                ViewData["Status"] = Constants.TypeExistsStatus;
+                ViewData["Status"] = Resource.ResourceManager.GetString("TypeExistsStatus");
             }
             catch (Exception e)
             {
@@ -220,7 +222,7 @@ namespace AdminSite.Controllers
         [HttpGet]
         public IActionResult AddBookConditions()
         {
-            ViewData["Status"] = Constants.AddConditionsMessage;
+            ViewData["Status"] = Resource.ResourceManager.GetString("AddConditionsMessage");
             return View();
         }
 
@@ -233,7 +235,7 @@ namespace AdminSite.Controllers
 
                 if (status)
                     return RedirectToAction("EditBookDetails");
-                ViewData["Status"] = Constants.ConditionExistsStatus;
+                ViewData["Status"] = Resource.ResourceManager.GetString("ConditionExistsStatus");
             }
             catch (Exception e)
             {
@@ -402,7 +404,7 @@ namespace AdminSite.Controllers
                     book.Author = variant.Author;
                     book.Summary = variant.Summary;
                     ViewData["status"] = Constants.BookDetailsStatusDetails;
-                    ViewData["fetchstatus"] = Constants.CombinationErrorStatus;
+                    ViewData["fetchstatus"] = Resource.ResourceManager.GetString("CombinationErrorStatus");
                     return View(book);
                 }
 
