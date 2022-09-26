@@ -4,7 +4,6 @@ using System.Linq.Expressions;
 using DataAccess.Data;
 using DataAccess.Repository.Interface.InventoryInterface;
 using DataModels.Books;
-using DataAccess.Data;
 
 namespace DataAccess.Repository.Implementation.InventoryImplementation
 {
