@@ -34,7 +34,7 @@ builder.Services.AddAWSService<IAmazonRekognition>();
 builder.Services.AddAWSService<IAmazonTranslate>();
 builder.Services.AddCognitoIdentity();
 builder.Services.AddDefaultAWSOptions(builder.Configuration.GetAWSOptions());
-builder.Services.AddDbContext<ApplicationDbContext>(option => option.UseSqlServer(builder.Configuration.GetConnectionString("BobsBookstoreContextConnection")));
+builder.Services.AddDbContext<ApplicationDbContext>(option => option.UseSqlServer(builder.Configuration.GetConnectionString("BookstoreDbDefaultConnection")));
 builder.Services.AddTransient<ISearchDatabaseCalls, SearchDatabaseCalls>();
 builder.Services.AddTransient<IExpressionFunction, ExpressionFunction>();
 builder.Services.AddTransient<IOrderDatabaseCalls, OrderDatabaseCalls>();

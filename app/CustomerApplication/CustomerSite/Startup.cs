@@ -51,7 +51,7 @@ namespace CustomerSite
             services.AddCognitoIdentity();
             services.AddRazorPages();
 
-            var connectionString = Configuration.GetConnectionString("BobsBookstoreContextConnection");
+            var connectionString = Configuration.GetConnectionString("BookstoreDbDefaultConnection");
 
             if (!CurrentEnvironment.IsDevelopment())
             {
@@ -111,7 +111,7 @@ namespace CustomerSite
 
         private string GetConnectionString(AWSOptions awsOptions)
         {
-            var connString = Configuration.GetConnectionString("BobsBookstoreContextConnection");
+            var connString = Configuration.GetConnectionString("BookstoreDbDefaultConnection");
             try
             {
                 Console.WriteLine("Non-development mode, building connection string for SQL Server");
