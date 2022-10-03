@@ -20,8 +20,7 @@ namespace AdminSite.Controllers
         private readonly SignInManager<CognitoUser> _signInManager;
         private readonly UserManager<CognitoUser> _userManager;
         private readonly ILogger<HomeController> _logger;
-        private string warningMsg = Resource.ResourceManager.GetString("OrderDetailPriceCol"); 
-        public HomeController(ICustomAdminPage customAdmin, 
+        public HomeController(ICustomAdminPage customAdmin,
                               SignInManager<CognitoUser> signInManager,
                               UserManager<CognitoUser> userManager, ILogger<HomeController> logger)
         {
