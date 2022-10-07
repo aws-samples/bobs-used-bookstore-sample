@@ -502,7 +502,7 @@ namespace AdminSite.Controllers
                 var user = await _userManager.GetUserAsync(User);
                 details.UpdatedBy = user.Username;
                 details.UpdatedOn = DateTime.Now.ToUniversalTime();
-                _inventory.PushDetails(details);
+                await _inventory.PushDetailsAsync(details);
             }
             catch (Exception e)
             {
@@ -576,7 +576,7 @@ namespace AdminSite.Controllers
             try
             {
                 var term = HttpContext.Request.Query["term"].ToString();
-                var names = _inventory.autosuggest(term);
+                var names = _inventory.AutoSuggest(term);
 
                 return Ok(names);
             }

@@ -302,19 +302,19 @@ namespace DataAccess.Repository.Implementation.InventoryImplementation
                 string frontUrl = "", backUrl = "", leftUrl = "", rightUrl = "", audioBookUrl = "";
                 if (booksDto.FrontPhoto != null)
                     frontUrl = await _rekognitionNPollyRepository
-                        .UploadtoS3(booksDto.FrontPhoto, booksDto.BookId, booksDto.BookCondition);
+                        .UploadtoS3Async(booksDto.FrontPhoto, booksDto.BookId, booksDto.BookCondition);
 
                 if (booksDto.BackPhoto != null)
                     backUrl = await _rekognitionNPollyRepository
-                        .UploadtoS3(booksDto.BackPhoto, booksDto.BookId, booksDto.BookCondition);
+                        .UploadtoS3Async(booksDto.BackPhoto, booksDto.BookId, booksDto.BookCondition);
 
                 if (booksDto.LeftSidePhoto != null)
                     leftUrl = await _rekognitionNPollyRepository
-                        .UploadtoS3(booksDto.LeftSidePhoto, booksDto.BookId, booksDto.BookCondition);
+                        .UploadtoS3Async(booksDto.LeftSidePhoto, booksDto.BookId, booksDto.BookCondition);
 
                 if (booksDto.RightSidePhoto != null)
                     rightUrl = await _rekognitionNPollyRepository
-                        .UploadtoS3(booksDto.RightSidePhoto, booksDto.BookId, booksDto.BookCondition);
+                        .UploadtoS3Async(booksDto.RightSidePhoto, booksDto.BookId, booksDto.BookCondition);
 
                 if (_rekognitionNPollyRepository.IsContentViolation(frontUrl)
                     || _rekognitionNPollyRepository.IsContentViolation(backUrl)
@@ -722,7 +722,7 @@ namespace DataAccess.Repository.Implementation.InventoryImplementation
         }
 
         // Update details of an existing book
-        public async void PushDetails(BookDetailsDto bookDetailsDto)
+        public async Task PushDetailsAsync(BookDetailsDto bookDetailsDto)
         {
             _logger.LogInformation("Pushing edited details to database");
 
@@ -733,19 +733,19 @@ namespace DataAccess.Repository.Implementation.InventoryImplementation
                     p.Book.Book_Id == bookDetailsDto.BookId).ToList();
 
                 if (bookDetailsDto.FrontPhoto != null)
-                    bookDetailsDto.FrontUrl = await _rekognitionNPollyRepository.UploadtoS3(bookDetailsDto.FrontPhoto,
+                    bookDetailsDto.FrontUrl = await _rekognitionNPollyRepository.UploadtoS3Async(bookDetailsDto.FrontPhoto,
                         bookDetailsDto.BookId, bookDetailsDto.BookCondition.ConditionName);
 
                 if (bookDetailsDto.BackPhoto != null)
-                    bookDetailsDto.BackUrl = await _rekognitionNPollyRepository.UploadtoS3(bookDetailsDto.BackPhoto,
+                    bookDetailsDto.BackUrl = await _rekognitionNPollyRepository.UploadtoS3Async(bookDetailsDto.BackPhoto,
                         bookDetailsDto.BookId, bookDetailsDto.BookCondition.ConditionName);
 
                 if (bookDetailsDto.LeftSidePhoto != null)
-                    bookDetailsDto.LeftUrl = await _rekognitionNPollyRepository.UploadtoS3(bookDetailsDto.LeftSidePhoto,
+                    bookDetailsDto.LeftUrl = await _rekognitionNPollyRepository.UploadtoS3Async(bookDetailsDto.LeftSidePhoto,
                         bookDetailsDto.BookId, bookDetailsDto.BookCondition.ConditionName);
 
                 if (bookDetailsDto.RightSidePhoto != null)
-                    bookDetailsDto.RightUrl = await _rekognitionNPollyRepository.UploadtoS3(bookDetailsDto.RightSidePhoto,
+                    bookDetailsDto.RightUrl = await _rekognitionNPollyRepository.UploadtoS3Async(bookDetailsDto.RightSidePhoto,
                         bookDetailsDto.BookId, bookDetailsDto.BookCondition.ConditionName);
 
                 await using var transaction = await _context.Database.BeginTransactionAsync();
@@ -774,7 +774,7 @@ namespace DataAccess.Repository.Implementation.InventoryImplementation
         }
 
         // Display autosuggestions that enhances search functionality
-        public List<string> autosuggest(string input)
+        public List<string> AutoSuggest(string input)
         {
             _logger.LogInformation("Preparing autosuggestions");
 

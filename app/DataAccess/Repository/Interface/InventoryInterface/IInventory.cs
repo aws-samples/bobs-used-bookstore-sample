@@ -48,9 +48,9 @@ namespace DataAccess.Repository.Interface.InventoryInterface
 
         public List<Dictionary<string, int>> DashBoard(int numberOfDetails);
 
-        public void PushDetails(BookDetailsDto bookDetailsDto);
+        public Task PushDetailsAsync(BookDetailsDto bookDetailsDto);
 
-        public List<string> autosuggest(string input);
+        public List<string> AutoSuggest(string input);
 
         public BookDetailsDto UpdateDetails(int id, string condition);
 

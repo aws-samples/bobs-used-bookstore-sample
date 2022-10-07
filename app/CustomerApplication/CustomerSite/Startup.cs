@@ -42,7 +42,7 @@ namespace CustomerSite
         private IWebHostEnvironment CurrentEnvironment { get; set; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public async void ConfigureServices(IServiceCollection services)
+        public async Task ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
 
@@ -52,12 +52,10 @@ namespace CustomerSite
             services.AddCognitoIdentity();
             services.AddRazorPages();
 
-            var connectionString = Configuration.GetConnectionString("BobsBookstoreContextConnection");
-
-            if (!CurrentEnvironment.IsDevelopment())
-            {
-                connectionString = await GetConnectionString(awsOptions);
-            }
+            var connectionString =
+                CurrentEnvironment.IsDevelopment()
+                    ? Configuration.GetConnectionString("BobsBookstoreContextConnection")
+                    : await GetConnectionStringAsync(awsOptions);
 
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString));
 
@@ -110,7 +108,7 @@ namespace CustomerSite
             });
         }
 
-        private async Task<string> GetConnectionString(AWSOptions awsOptions)
+        private async Task<string> GetConnectionStringAsync(AWSOptions awsOptions)
         {
             var connString = Configuration.GetConnectionString("BobsBookstoreContextConnection");
             try
