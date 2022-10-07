@@ -1,5 +1,6 @@
 using System;
 using System.Text.Json;
+using System.Threading.Tasks;
 using Amazon.Extensions.NETCore.Setup;
 using Amazon.Polly;
 using Amazon.Rekognition;
@@ -41,7 +42,7 @@ namespace CustomerSite
         private IWebHostEnvironment CurrentEnvironment { get; set; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
+        public async void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
 
@@ -55,7 +56,7 @@ namespace CustomerSite
 
             if (!CurrentEnvironment.IsDevelopment())
             {
-                connectionString = GetConnectionString(awsOptions);
+                connectionString = await GetConnectionString(awsOptions);
             }
 
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString));
@@ -109,7 +110,7 @@ namespace CustomerSite
             });
         }
 
-        private string GetConnectionString(AWSOptions awsOptions)
+        private async Task<string> GetConnectionString(AWSOptions awsOptions)
         {
             var connString = Configuration.GetConnectionString("BobsBookstoreContextConnection");
             try
@@ -118,17 +119,15 @@ namespace CustomerSite
 
                 //take the db details from secret manager
                 var secretsClient = awsOptions.CreateServiceClient<IAmazonSecretsManager>();
-                var response = secretsClient.GetSecretValueAsync(new GetSecretValueRequest
+                var response = await secretsClient.GetSecretValueAsync(new GetSecretValueRequest
                 {
                     SecretId = Configuration.GetValue<string>("dbsecretsname")
-                }).Result;
-
+                });
 
                 var dbSecrets = JsonSerializer.Deserialize<DbSecrets>(response.SecretString, new JsonSerializerOptions
                 {
                     PropertyNameCaseInsensitive = true
                 });
-
 
                 var partialConnString = string.Format(connString, dbSecrets.Host, dbSecrets.Port);
 

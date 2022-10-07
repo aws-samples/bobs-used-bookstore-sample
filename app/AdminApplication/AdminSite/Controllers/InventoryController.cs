@@ -116,7 +116,7 @@ namespace AdminSite.Controllers
             if (ModelState.IsValid)
             {
                 var booksDto = _mapper.Map<BooksDto>(bookview);
-                var status = _inventory.AddToTables(booksDto);
+                var status = await _inventory.AddToTablesAsync(booksDto);
 
                 if (!status)
                 {

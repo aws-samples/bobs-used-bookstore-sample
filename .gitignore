@@ -2,6 +2,11 @@
 .cdk.staging
 cdk.out
 
+# Created by AWS deployment tools
+aws-beanstalk-tools-defaults.json
+aws-ecs-tools-defaults.json
+aws-lambda-tools-defaults.json
+
 # Created by https://www.gitignore.io/api/csharp
 
 ### Csharp ###

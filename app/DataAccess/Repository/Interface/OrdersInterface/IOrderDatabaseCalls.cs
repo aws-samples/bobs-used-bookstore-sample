@@ -12,9 +12,9 @@ namespace DataAccess.Repository.Interface.OrdersInterface
 
         IDbContextTransaction BeginTransaction();
 
-        Task TransactionCommitChanges(IDbContextTransaction transaction);
+        Task TransactionCommitChangesAsync(IDbContextTransaction transaction);
 
-        Task ContextSaveChanges();
+        Task ContextSaveChangesAsync();
 
         IQueryable<T> ReturnBaseQuery<T>(IQueryable query, string[] includes) where T : class;
 

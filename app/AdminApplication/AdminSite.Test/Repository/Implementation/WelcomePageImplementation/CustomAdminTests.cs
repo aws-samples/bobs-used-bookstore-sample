@@ -16,7 +16,7 @@ namespace Bobs_Backend.Test
 {
     public class CustomAdminTests
     {
-        private List<Price> GetSampleTestData()
+        private static List<Price> GetSampleTestData()
         {
             var sampleData = new List<Price>
             {
@@ -42,59 +42,58 @@ namespace Bobs_Backend.Test
 
         [Fact]
         
-        public  void GetUserUpdateBooks_ShouldReturnUserUpdatedBooks_WhenUserExists()
+        public async void GetUserUpdateBooks_ShouldReturnUserUpdatedBooks_WhenUserExists()
         {
-
             //Arrange
-            MockDatabaseRepo connect = new MockDatabaseRepo();
+            var connect = new MockDatabaseRepo();
             
             var context1 = connect.CreateInMemoryContext();
             
-            string adminUsername = "admin";
+            const string adminUsername = "admin";
             var sampleData = GetSampleTestData();
             foreach(var data in sampleData)
             {
                 context1.Price.Add(data);
             }
-            context1.SaveChanges();
+            await context1.SaveChangesAsync();
             //Act
-            CustomAdmin _sut = new CustomAdmin(context1);
-            var UserBooks = _sut.GetUserUpdatedBooks(adminUsername);
+            var _sut = new CustomAdmin(context1);
+            var UserBooks = await _sut.GetUserUpdatedBooksAsync(adminUsername);
 
             //Assert
             Assert.NotNull(UserBooks);
-            foreach (var bookinstance in UserBooks.Result)
+            foreach (var bookInstance in UserBooks)
             {
-                Assert.Equal(adminUsername, bookinstance.UpdatedBy);
+                Assert.Equal(adminUsername, bookInstance.UpdatedBy);
             }
 
-            context1.Dispose();
+            await context1.DisposeAsync();
         }
   
         [Fact]
-        public void  GetUserUpdateBooks_ShouldReturnZeroValues_WhenUserHasNoUpdates()
+        public async void GetUserUpdateBooks_ShouldReturnZeroValues_WhenUserHasNoUpdates()
         {
-            MockDatabaseRepo connect = new MockDatabaseRepo();
+            var connect = new MockDatabaseRepo();
             var context = connect.CreateInMemoryContext();
-            string adminUsername = "admin2";
+            const string adminUsername = "admin2";
             var sampleData = GetSampleTestData();
             foreach(var data in sampleData)
             {
                 context.Price.Add(data);
             }
-            CustomAdmin _sut = new CustomAdmin(context);
+            var _sut = new CustomAdmin(context);
             //Act
-            var result = _sut.GetUserUpdatedBooks(adminUsername);
+            var result = await _sut.GetUserUpdatedBooksAsync(adminUsername);
             
-            Assert.True(result.Result.Count == 0);
-            context.Dispose();
+            Assert.True(result.Count == 0);
+            await context.DisposeAsync();
         }
 
         [Fact]
         public async Task GetUserUpdateBooks_ShouldReturnException_WhenAdminUserisNull()
         {
             //Arrange
-            MockDatabaseRepo connect = new MockDatabaseRepo();
+            var connect = new MockDatabaseRepo();
             var context = connect.CreateInMemoryContext();
             string adminUsername = null ;
             var sampleData = GetSampleTestData();
@@ -104,20 +103,20 @@ namespace Bobs_Backend.Test
             }
 
             //Act
-            CustomAdmin _sut = new CustomAdmin(context);
+            var _sut = new CustomAdmin(context);
             //Assert
-            await Assert.ThrowsAsync<ArgumentNullException>(() => _sut.GetUserUpdatedBooks(adminUsername));
-            context.Dispose();
+            await Assert.ThrowsAsync<ArgumentNullException>(() => _sut.GetUserUpdatedBooksAsync(adminUsername));
+            await context.DisposeAsync();
         }
 
 
 
         [Fact]
-        public void OtherUpdatedBooks_ShouldReturnBooksByOtherUsers_WhenGivenUser() 
+        public async void OtherUpdatedBooks_ShouldReturnBooksByOtherUsers_WhenGivenUser()
         { 
-            MockDatabaseRepo connect = new MockDatabaseRepo();
+            var connect = new MockDatabaseRepo();
             var context1 = connect.CreateInMemoryContext();
-            string adminUsername = "admin";
+            const string adminUsername = "admin";
             context1.Price.Add(
                     new Price
                     {
@@ -126,36 +125,36 @@ namespace Bobs_Backend.Test
                     }
                
                );
-            context1.SaveChanges();
+            await context1.SaveChangesAsync();
             //Act
-            CustomAdmin _sut = new CustomAdmin(context1);
-            var otherBooks = _sut.OtherUpdatedBooks(adminUsername);
+            var _sut = new CustomAdmin(context1);
+            var otherBooks = await _sut.OtherUpdatedBooksAsync(adminUsername);
+
             Assert.NotNull(otherBooks);
-            Assert.True(otherBooks.Result.Count == 1);
-            context1.Dispose();
-                
+            Assert.True(otherBooks.Count == 1);
+            await context1.DisposeAsync();
         }
 
         [Fact]
-        public void OtherUpdatedBooks_ShouldReturnZeroValues_NoOtherUserExists()
+        public async void OtherUpdatedBooks_ShouldReturnZeroValues_NoOtherUserExists()
         {
-            MockDatabaseRepo connect = new MockDatabaseRepo();
+            var connect = new MockDatabaseRepo();
             var context1 = connect.CreateInMemoryContext();
-            string adminUsername = "admin";
+            const string adminUsername = "admin";
             var sampleData = GetSampleTestData();
             foreach(var data in sampleData)
             {
                 context1.Price.Add(data);
             }
-            CustomAdmin _sut = new CustomAdmin(context1);
-            var otherBooks = _sut.OtherUpdatedBooks(adminUsername);
-            Assert.Empty(otherBooks.Result);
+            var _sut = new CustomAdmin(context1);
+            var otherBooks = await _sut.OtherUpdatedBooksAsync(adminUsername);
+            Assert.Empty(otherBooks);
         }
 
         [Fact]
-        public void OtherUpdateBooks_ShouldReturnException_WhenUserIsNull()
+        public async void OtherUpdateBooks_ShouldReturnException_WhenUserIsNull()
         {
-            MockDatabaseRepo connect = new MockDatabaseRepo();
+            var connect = new MockDatabaseRepo();
             var context = connect.CreateInMemoryContext();
             string adminUsername = null;
             var sampleData = GetSampleTestData();
@@ -163,17 +162,17 @@ namespace Bobs_Backend.Test
             {
                 context.Price.Add(data);
             }
-            CustomAdmin _sut = new CustomAdmin(context);
-            Assert.ThrowsAsync<ArgumentNullException>(() => _sut.OtherUpdatedBooks(adminUsername));
+            var _sut = new CustomAdmin(context);
+            await Assert.ThrowsAsync<ArgumentNullException>(async () => await _sut.OtherUpdatedBooksAsync(adminUsername));
         }
 
         [Fact]
         public void GetOrderSeverity_ShouldReturnSeverity_WhenInputsNotNull()
         {
             //Arrange
-            MockDatabaseRepo connect = new MockDatabaseRepo();
+            var connect = new MockDatabaseRepo();
             var context = connect.CreateInMemoryContext();
-           var order = 
+            var order =
                 new Order
                 {
                     Order_Id = 22,
@@ -187,64 +186,74 @@ namespace Bobs_Backend.Test
                 };
 
             //Act
-            CustomAdmin _sut = new CustomAdmin(context);
-            int actualResult = _sut.GetOrderSeverity(order, 2);
+            var _sut = new CustomAdmin(context);
+            var actualResult = _sut.GetOrderSeverity(order, 2);
 
-            //Assert
-           
             Assert.Equal(1, actualResult);
-
         }
 
         [Fact]
         
-        public void GetOrderSeverity_ShouldReturnException_WhenInputsAreNull()
+        public async void GetOrderSeverity_ShouldReturnException_WhenInputsAreNull()
         {
-            MockDatabaseRepo connect = new MockDatabaseRepo();
+            var connect = new MockDatabaseRepo();
             var context = connect.CreateInMemoryContext();
-            var order = new Order();
-            order = null;
-            int timeDiff = 2;
+
+            const int timeDiff = 2;
           
-            CustomAdmin _sut = new CustomAdmin(context);
+            var _sut = new CustomAdmin(context);
 
-
-            var result = Assert.Throws<NullReferenceException>(() => _sut.GetOrderSeverity(order, timeDiff));
+            var result = Assert.Throws<NullReferenceException>(() => _sut.GetOrderSeverity(/* Order */ null, timeDiff));
             Assert.Equal("Object reference not set to an instance of an object.", result.Message);
-            context.Dispose();
-
+            await context.DisposeAsync();
         }
 
         [Fact]
-        public void GetImportantOrders_ShouldReturnFilteredOrders_GivenDateRange()
+        public async void GetImportantOrders_ShouldReturnFilteredOrders_GivenDateRange()
         {
             //Arrange
-            MockDatabaseRepo connect = new MockDatabaseRepo();
+            var connect = new MockDatabaseRepo();
             var context = connect.CreateInMemoryContext();
-            var expectedResult = new List<Order>() {
-
-            new Order
+            var expectedResult = new List<Order>()
             {
-                Order_Id = 42,
-                Subtotal = 222,
-                Tax = 21,
-                DeliveryDate = DateTime.Today.AddDays(-1).ToString("dd/MM/yyyy"),
-            OrderStatus = context.OrderStatus.Find((long) 2),
-                Customer = new Customer { Customer_Id = "123", FirstName = "AB", LastName = "CD", DateOfBirth = DateTime.Parse("1996-08-01"), Username = "ABCD", Email = "abcd@gmail.com", Phone = "12345678" },
-                Address = new Address(),
-
-            },
-           new Order
-            {
-                Order_Id = 43,
-                Subtotal = 2,
-                Tax = 1,
-                DeliveryDate = DateTime.Today.AddDays(1).ToString("dd/MM/yyyy"),
-                OrderStatus = context.OrderStatus.Find((long) 3),
-                Customer = new Customer { Customer_Id = "1234", FirstName = "AB", LastName = "CD", DateOfBirth = DateTime.Parse("1996-08-01"), Username = "ABCD", Email = "abcd@gmail.com", Phone = "12345678" },
-                Address = new Address(),
-
-            }
+                new Order
+                {
+                    Order_Id = 42,
+                    Subtotal = 222,
+                    Tax = 21,
+                    DeliveryDate = DateTime.Today.AddDays(-1).ToString("dd/MM/yyyy"),
+                    OrderStatus = context.OrderStatus.Find((long) 2),
+                    Customer = new Customer
+                    {
+                        Customer_Id = "123",
+                        FirstName = "AB",
+                        LastName = "CD",
+                        DateOfBirth = DateTime.Parse("1996-08-01"),
+                        Username = "ABCD",
+                        Email = "abcd@gmail.com",
+                        Phone = "12345678"
+                    },
+                    Address = new Address(),
+                },
+                new Order
+                {
+                    Order_Id = 43,
+                    Subtotal = 2,
+                    Tax = 1,
+                    DeliveryDate = DateTime.Today.AddDays(1).ToString("dd/MM/yyyy"),
+                    OrderStatus = context.OrderStatus.Find((long) 3),
+                    Customer = new Customer
+                    {
+                        Customer_Id = "1234",
+                        FirstName = "AB",
+                        LastName = "CD",
+                        DateOfBirth = DateTime.Parse("1996-08-01"),
+                        Username = "ABCD",
+                        Email = "abcd@gmail.com",
+                        Phone = "12345678"
+                    },
+                    Address = new Address(),
+                }
             };
 
             foreach (var order in expectedResult)
@@ -252,30 +261,29 @@ namespace Bobs_Backend.Test
                 context.Order.Add(order);
             }
 
-            context.SaveChanges();
-            int minDateRange = 0;
-            int maxDateRange = 4;
-            //Act
+            await context.SaveChangesAsync();
+            const int minDateRange = 0;
+            const int maxDateRange = 4;
 
-            CustomAdmin _sut = new CustomAdmin(context);
-            var actualResult = _sut.GetImportantOrders(maxDateRange , minDateRange).Result;
+            //Act
+            var _sut = new CustomAdmin(context);
+            var actualResult = await _sut.GetImportantOrdersAsync(maxDateRange , minDateRange);
             
             //Assert
             Assert.NotNull(actualResult);
-            Assert.Equal(2, actualResult.Count());
-            for(int i=0;i<expectedResult.Count;i++)
+            Assert.Equal(2, actualResult.Count);
+            for(var i=0; i < expectedResult.Count; i++)
             {
                 Assert.Equal(expectedResult[i].Order_Id, actualResult[i].Order.Order_Id);
             }
 
-            context.Dispose();
-
+            await context.DisposeAsync();
         }
 
         [Fact]
-        public void SortTable_ShouldSortOrderByPrice_WhenSortingByPrice()
+        public async void SortTable_ShouldSortOrderByPrice_WhenSortingByPrice()
         {
-            MockDatabaseRepo connect = new MockDatabaseRepo();
+            var connect = new MockDatabaseRepo();
             var context = connect.CreateInMemoryContext();
             var filterOrders = new List<FilterOrdersDto>
             {
@@ -287,8 +295,17 @@ namespace Bobs_Backend.Test
                         Subtotal = 22,
                         Tax = 21,
                         DeliveryDate = "2020-08-15",
-                        OrderStatus = context.OrderStatus.Find((long) 2),
-                        Customer = new Customer{Customer_Id ="123" ,FirstName="AB", LastName="CD", DateOfBirth=DateTime.Parse("1996-08-01"), Username="ABCD", Email="abcd@gmail.com", Phone="12345678" },
+                        OrderStatus = await context.OrderStatus.FindAsync((long) 2),
+                        Customer = new Customer
+                        {
+                            Customer_Id ="123",
+                            FirstName="AB",
+                            LastName="CD",
+                            DateOfBirth=DateTime.Parse("1996-08-01"),
+                            Username="ABCD",
+                            Email="abcd@gmail.com",
+                            Phone="12345678"
+                        },
                         Address = new Address(),
                    },
                    Severity = 2
@@ -301,30 +318,38 @@ namespace Bobs_Backend.Test
                         Subtotal = 222,
                         Tax = 1,
                         DeliveryDate = "2020-08-18",
-                        OrderStatus = context.OrderStatus.Find((long) 3),
-                        Customer = new Customer{Customer_Id ="1234" ,FirstName="AB", LastName="CD", DateOfBirth=DateTime.Parse("1996-08-01"), Username="ABCD", Email="abcd@gmail.com", Phone="12345678" },
+                        OrderStatus = await context.OrderStatus.FindAsync((long) 3),
+                        Customer = new Customer
+                        {
+                            Customer_Id ="1234",
+                            FirstName="AB",
+                            LastName="CD",
+                            DateOfBirth=DateTime.Parse("1996-08-01"),
+                            Username="ABCD",
+                            Email="abcd@gmail.com",
+                            Phone="12345678"
+                        },
                         Address = new Address(),
                    },
                    Severity=1
                }
             };
-            string sortByValue = "price_desc";
 
-            CustomAdmin _sut = new CustomAdmin(context);
+            const string sortByValue = "price_desc";
+
+            var _sut = new CustomAdmin(context);
             var result = _sut.SortTable(filterOrders, sortByValue);
 
             result = _sut.SortTable(filterOrders, sortByValue);
 
             Assert.NotNull(result);
             Assert.True(result[0].Order.Subtotal > result[1].Order.Subtotal);
-
-
         }
 
         [Fact]
         public void SortTable_ShouldSortOrderByPrice_WhenSortingByDate()
         {
-            MockDatabaseRepo connect = new MockDatabaseRepo();
+            var connect = new MockDatabaseRepo();
             var context = connect.CreateInMemoryContext();
             var filterOrders = new List<FilterOrdersDto>
             {
@@ -337,7 +362,16 @@ namespace Bobs_Backend.Test
                         Tax = 21,
                         DeliveryDate = "2020-08-15",
                         OrderStatus = new OrderStatus { OrderStatus_Id = 3, Status = "En Route", Position = 3 },
-                        Customer = new Customer{Customer_Id ="123" ,FirstName="AB", LastName="CD", DateOfBirth=DateTime.Parse("1996-08-01"), Username="ABCD", Email="abcd@gmail.com", Phone="12345678" },
+                        Customer = new Customer
+                        {
+                            Customer_Id ="123",
+                            FirstName="AB",
+                            LastName="CD",
+                            DateOfBirth=DateTime.Parse("1996-08-01"),
+                            Username="ABCD",
+                            Email="abcd@gmail.com",
+                            Phone="12345678"
+                        },
                         Address = new Address(),
                    },
                    Severity = 2
@@ -351,17 +385,26 @@ namespace Bobs_Backend.Test
                         Tax = 1,
                         DeliveryDate = "2020-08-18",
                         OrderStatus = new OrderStatus { OrderStatus_Id = 2, Status = "Pending", Position = 2 },
-                        Customer = new Customer{Customer_Id ="1234" ,FirstName="AB", LastName="CD", DateOfBirth=DateTime.Parse("1996-08-01"), Username="ABCD", Email="abcd@gmail.com", Phone="12345678" },
+                        Customer = new Customer
+                        {
+                            Customer_Id ="1234",
+                            FirstName="AB",
+                            LastName="CD",
+                            DateOfBirth=DateTime.Parse("1996-08-01"),
+                            Username="ABCD",
+                            Email="abcd@gmail.com",
+                            Phone="12345678"
+                        },
                         Address = new Address(),
                    },
                    Severity=1
                }
             };
-            string sortByValue = "date";
 
-            CustomAdmin _sut = new CustomAdmin(context);
+            var sortByValue = "date";
+
+            var _sut = new CustomAdmin(context);
             var result = _sut.SortTable(filterOrders, sortByValue);
-
 
             Assert.NotNull(result);
             Assert.True(DateTime.Parse(result[0].Order.DeliveryDate) < DateTime.Parse(result[1].Order.DeliveryDate));
@@ -369,16 +412,14 @@ namespace Bobs_Backend.Test
             sortByValue = "date_desc";
             result = _sut.SortTable(filterOrders, sortByValue);
 
-
             Assert.NotNull(result);
             Assert.True(DateTime.Parse(result[0].Order.DeliveryDate) > DateTime.Parse(result[1].Order.DeliveryDate));
-
         }
 
         [Fact]
         public void SortTable_ShouldSortOrderByPrice_WhenSortingByOrderStatus()
         {
-            MockDatabaseRepo connect = new MockDatabaseRepo();
+            var connect = new MockDatabaseRepo();
             var context = connect.CreateInMemoryContext();
             var filterOrders = new List<FilterOrdersDto>
             {
@@ -391,7 +432,16 @@ namespace Bobs_Backend.Test
                         Tax = 21,
                         DeliveryDate = "2020-08-15",
                         OrderStatus = new OrderStatus { OrderStatus_Id = 3, Status = "En Route", Position = 3 },
-                        Customer = new Customer{Customer_Id ="123" ,FirstName="AB", LastName="CD", DateOfBirth=DateTime.Parse("1996-08-01"), Username="ABCD", Email="abcd@gmail.com", Phone="12345678" },
+                        Customer = new Customer
+                        {
+                            Customer_Id ="123",
+                            FirstName="AB",
+                            LastName="CD",
+                            DateOfBirth=DateTime.Parse("1996-08-01"),
+                            Username="ABCD",
+                            Email="abcd@gmail.com",
+                            Phone="12345678"
+                        },
                         Address = new Address(),
                    },
                    Severity = 2
@@ -405,17 +455,26 @@ namespace Bobs_Backend.Test
                         Tax = 1,
                         DeliveryDate = "2020-08-18",
                         OrderStatus = new OrderStatus { OrderStatus_Id = 2, Status = "Pending", Position = 2 },
-                        Customer = new Customer{Customer_Id ="1234" ,FirstName="AB", LastName="CD", DateOfBirth=DateTime.Parse("1996-08-01"), Username="ABCD", Email="abcd@gmail.com", Phone="12345678" },
+                        Customer = new Customer
+                        {
+                            Customer_Id ="1234",
+                            FirstName="AB",
+                            LastName="CD",
+                            DateOfBirth=DateTime.Parse("1996-08-01"),
+                            Username="ABCD",
+                            Email="abcd@gmail.com",
+                            Phone="12345678"
+                        },
                         Address = new Address(),
                    },
                    Severity=1
                }
             };
-            string sortByValue = "status";
 
-            CustomAdmin _sut = new CustomAdmin(context);
+            var sortByValue = "status";
+
+            var _sut = new CustomAdmin(context);
             var result = _sut.SortTable(filterOrders, sortByValue);
-
 
             Assert.NotNull(result);
             Assert.Equal(-1,string.Compare(result[0].Order.OrderStatus.Status ,result[1].Order.OrderStatus.Status));
@@ -423,12 +482,8 @@ namespace Bobs_Backend.Test
             sortByValue = "status_desc";
             result = _sut.SortTable(filterOrders, sortByValue);
 
-
             Assert.NotNull(result);
             Assert.Equal(1, string.Compare(result[0].Order.OrderStatus.Status, result[1].Order.OrderStatus.Status));
-
         }
-        
-        
     }
 }

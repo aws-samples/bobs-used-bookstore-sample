@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using DataAccess.Dtos;
 using DataModels.Books;
 
@@ -35,7 +36,7 @@ namespace DataAccess.Repository.Interface.InventoryInterface
 
         public BookDetailsDto GetBookDetails(long bookId, long priceId);
 
-        public bool AddToTables(BooksDto booksDto);
+        public Task<bool> AddToTablesAsync(BooksDto booksDto);
 
         public IEnumerable<BookDetailsDto> GetDetails(long bookId);
 
@@ -47,7 +48,7 @@ namespace DataAccess.Repository.Interface.InventoryInterface
 
         public List<Dictionary<string, int>> DashBoard(int numberOfDetails);
 
-        public void PushDetails(BookDetailsDto bookdetailsDto);
+        public void PushDetails(BookDetailsDto bookDetailsDto);
 
         public List<string> autosuggest(string input);
 

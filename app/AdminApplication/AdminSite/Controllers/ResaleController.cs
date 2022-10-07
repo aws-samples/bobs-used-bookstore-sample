@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
 using AutoMapper;
 using DataAccess.Dtos;
 using DataAccess.Repository.Interface;
@@ -85,11 +86,11 @@ namespace AdminSite.Controllers {
         }
 
         [HttpPost]
-        public IActionResult AddResaleBookDetails(ResaleViewModel resaleViewModel)
+        public async Task<IActionResult> AddResaleBookDetails(ResaleViewModel resaleViewModel)
         {
             resaleViewModel.ConditionName = resaleViewModel.ConditionName;
             var booksDto = _mapper.Map<BooksDto>(resaleViewModel);
-            _inventory.AddToTables(booksDto);
+            await _inventory.AddToTablesAsync(booksDto);
             var resale = _resaleRepository
                 .Get(c => c.Resale_Id == resaleViewModel.Resale_Id, includeProperties: "ResaleStatus").FirstOrDefault();
             var resaleStatus = _resaleStatusRepository.Get(c => c.Status == Constants.ResaleStatusReceived)

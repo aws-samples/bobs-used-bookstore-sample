@@ -68,19 +68,19 @@ namespace DataAccess.Repository.Implementation.OrderImplementations
                             order.Subtotal -= detail.Quantity * detail.OrderDetailPrice;
                             order.Tax -= detail.Quantity * detail.OrderDetailPrice * (decimal).1;
 
-                            await _orderDbCalls.ContextSaveChanges();
+                            await _orderDbCalls.ContextSaveChangesAsync();
 
                             detail.Price.Quantity += detail.Quantity;
                             detail.IsRemoved = true;
 
-                            await _orderDbCalls.ContextSaveChanges();
+                            await _orderDbCalls.ContextSaveChangesAsync();
                         }
 
                     order.OrderStatus = orderStatus;
 
-                    await _orderDbCalls.ContextSaveChanges();
+                    await _orderDbCalls.ContextSaveChangesAsync();
 
-                    await _orderDbCalls.TransactionCommitChanges(transaction);
+                    await _orderDbCalls.TransactionCommitChangesAsync(transaction);
 
                     return order;
                 }
@@ -117,16 +117,16 @@ namespace DataAccess.Repository.Implementation.OrderImplementations
 
                     origOrder.Tax -= moneyOwe * (decimal).10;
 
-                    await _orderDbCalls.ContextSaveChanges();
+                    await _orderDbCalls.ContextSaveChangesAsync();
 
                     origOrderDetail.IsRemoved = true;
 
                     origOrderDetail.Price.Quantity += quantity;
 
 
-                    await _orderDbCalls.ContextSaveChanges();
+                    await _orderDbCalls.ContextSaveChangesAsync();
 
-                    await _orderDbCalls.TransactionCommitChanges(transaction);
+                    await _orderDbCalls.TransactionCommitChangesAsync(transaction);
                     var emailInfo = new Dictionary<string, string>
                     {
                         { "bookName", origOrderDetail.Book.Name },

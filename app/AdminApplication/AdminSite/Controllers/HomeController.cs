@@ -59,12 +59,11 @@ namespace AdminSite.Controllers
             const int dateMaxRange = 5;
 
             // get books updated by current user
-            var userBooks = _customAdmin.GetUserUpdatedBooks(adminUsername);
-            bookUpdates.UserBooks = userBooks.Result;
+            bookUpdates.UserBooks = await _customAdmin.GetUserUpdatedBooksAsync(adminUsername);
             // get recent books updated globally
-            bookUpdates.NotUserBooks = _customAdmin.OtherUpdatedBooks(adminUsername).Result;
+            bookUpdates.NotUserBooks = await _customAdmin.OtherUpdatedBooksAsync(adminUsername);
             // get important orders
-            bookUpdates.ImpOrders = _customAdmin.GetImportantOrders(dateMaxRange, dateMinRange).Result;
+            bookUpdates.ImpOrders = await _customAdmin.GetImportantOrdersAsync(dateMaxRange, dateMinRange);
             _logger.LogInformation(bookUpdates.ToString());
 
             if (bookUpdates.UserBooks == null || bookUpdates.NotUserBooks == null || bookUpdates.ImpOrders == null)

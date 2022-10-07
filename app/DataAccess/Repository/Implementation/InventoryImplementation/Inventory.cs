@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 using Amazon.Polly;
 using DataAccess.Data;
 using DataAccess.Dtos;
@@ -270,29 +271,29 @@ namespace DataAccess.Repository.Implementation.InventoryImplementation
         // Fetch Book details given its BookId and Condition 
         public BookDetailsDto GetBookDetails(long bookId, long priceId)
         {
-            var booker = (from booke in _context.Book
-                join price in _context.Price on booke.Book_Id equals price.Book.Book_Id
-                where booke.Book_Id == bookId && price.Price_Id == priceId
+            var booker = (from book in _context.Book
+                join price in _context.Price on book.Book_Id equals price.Book.Book_Id
+                where book.Book_Id == bookId && price.Price_Id == priceId
                 select new BookDetailsDto
                 {
-                    BookName = booke.Name,
+                    BookName = book.Name,
                     Price = price.ItemPrice,
-                    Publisher = booke.Publisher,
-                    Genre = booke.Genre,
+                    Publisher = book.Publisher,
+                    Genre = book.Genre,
                     BookCondition = price.Condition,
-                    BookType = booke.Type,
+                    BookType = book.Type,
                     Quantity = price.Quantity,
-                    FrontUrl = booke.FrontUrl,
-                    BackUrl = booke.BackUrl,
-                    LeftUrl = booke.LeftUrl,
-                    RightUrl = booke.RightUrl
+                    FrontUrl = book.FrontUrl,
+                    BackUrl = book.BackUrl,
+                    LeftUrl = book.LeftUrl,
+                    RightUrl = book.RightUrl
                 }).ToList();
 
             return booker[0];
         }
 
         // Fetch all process form inputs and add details to the database 
-        public bool AddToTables(BooksDto booksDto)
+        public async Task<bool> AddToTablesAsync(BooksDto booksDto)
         {
             _logger.LogInformation("Processing and Posting data to tables and cloud ");
 
@@ -300,20 +301,20 @@ namespace DataAccess.Repository.Implementation.InventoryImplementation
             {
                 string frontUrl = "", backUrl = "", leftUrl = "", rightUrl = "", audioBookUrl = "";
                 if (booksDto.FrontPhoto != null)
-                    frontUrl = _rekognitionNPollyRepository
-                        .UploadtoS3(booksDto.FrontPhoto, booksDto.BookId, booksDto.BookCondition).Result;
+                    frontUrl = await _rekognitionNPollyRepository
+                        .UploadtoS3(booksDto.FrontPhoto, booksDto.BookId, booksDto.BookCondition);
 
                 if (booksDto.BackPhoto != null)
-                    backUrl = _rekognitionNPollyRepository
-                        .UploadtoS3(booksDto.BackPhoto, booksDto.BookId, booksDto.BookCondition).Result;
+                    backUrl = await _rekognitionNPollyRepository
+                        .UploadtoS3(booksDto.BackPhoto, booksDto.BookId, booksDto.BookCondition);
 
                 if (booksDto.LeftSidePhoto != null)
-                    leftUrl = _rekognitionNPollyRepository
-                        .UploadtoS3(booksDto.LeftSidePhoto, booksDto.BookId, booksDto.BookCondition).Result;
+                    leftUrl = await _rekognitionNPollyRepository
+                        .UploadtoS3(booksDto.LeftSidePhoto, booksDto.BookId, booksDto.BookCondition);
 
                 if (booksDto.RightSidePhoto != null)
-                    rightUrl = _rekognitionNPollyRepository
-                        .UploadtoS3(booksDto.RightSidePhoto, booksDto.BookId, booksDto.BookCondition).Result;
+                    rightUrl = await _rekognitionNPollyRepository
+                        .UploadtoS3(booksDto.RightSidePhoto, booksDto.BookId, booksDto.BookCondition);
 
                 if (_rekognitionNPollyRepository.IsContentViolation(frontUrl)
                     || _rekognitionNPollyRepository.IsContentViolation(backUrl)
@@ -328,8 +329,8 @@ namespace DataAccess.Repository.Implementation.InventoryImplementation
                 var book = new Book();
                 var price = new Price();
 
-                var publisherData = _context.Publisher.Where(publisher => publisher.Name == booksDto.PublisherName)
-                    .FirstOrDefault();
+                var publisherData = _context.Publisher
+                    .FirstOrDefault(publisher => publisher.Name == booksDto.PublisherName);
                 if (publisherData == null)
                 {
                     publisherData = new Publisher
@@ -340,7 +341,7 @@ namespace DataAccess.Repository.Implementation.InventoryImplementation
                     _publisherRepository.Save();
                 }
 
-                var genreData = _context.Genre.Where(genre => genre.Name == booksDto.Genre).FirstOrDefault();
+                var genreData = _context.Genre.FirstOrDefault(genre => genre.Name == booksDto.Genre);
                 if (genreData == null)
                 {
                     genreData = new Genre
@@ -362,8 +363,7 @@ namespace DataAccess.Repository.Implementation.InventoryImplementation
                     _typeRepository.Save();
                 }
 
-                var conditionData = _context.Condition
-                    .Where(condition => condition.ConditionName == booksDto.BookCondition).FirstOrDefault();
+                var conditionData = _context.Condition.FirstOrDefault(condition => condition.ConditionName == booksDto.BookCondition);
                 if (conditionData == null)
                 {
                     conditionData = new Condition
@@ -722,46 +722,46 @@ namespace DataAccess.Repository.Implementation.InventoryImplementation
         }
 
         // Update details of an existing book
-        public void PushDetails(BookDetailsDto bookdetailsDto)
+        public async void PushDetails(BookDetailsDto bookDetailsDto)
         {
             _logger.LogInformation("Pushing edited details to database");
 
             try
             {
                 var output = _context.Price.Where(p =>
-                    p.Condition.ConditionName == bookdetailsDto.BookCondition.ConditionName &&
-                    p.Book.Book_Id == bookdetailsDto.BookId).ToList();
-                if (bookdetailsDto.FrontPhoto != null)
-                    bookdetailsDto.FrontUrl = _rekognitionNPollyRepository.UploadtoS3(bookdetailsDto.FrontPhoto,
-                        bookdetailsDto.BookId, bookdetailsDto.BookCondition.ConditionName).Result;
+                    p.Condition.ConditionName == bookDetailsDto.BookCondition.ConditionName &&
+                    p.Book.Book_Id == bookDetailsDto.BookId).ToList();
 
-                if (bookdetailsDto.BackPhoto != null)
-                    bookdetailsDto.BackUrl = _rekognitionNPollyRepository.UploadtoS3(bookdetailsDto.BackPhoto,
-                        bookdetailsDto.BookId, bookdetailsDto.BookCondition.ConditionName).Result;
+                if (bookDetailsDto.FrontPhoto != null)
+                    bookDetailsDto.FrontUrl = await _rekognitionNPollyRepository.UploadtoS3(bookDetailsDto.FrontPhoto,
+                        bookDetailsDto.BookId, bookDetailsDto.BookCondition.ConditionName);
 
-                if (bookdetailsDto.LeftSidePhoto != null)
-                    bookdetailsDto.LeftUrl = _rekognitionNPollyRepository.UploadtoS3(bookdetailsDto.LeftSidePhoto,
-                        bookdetailsDto.BookId, bookdetailsDto.BookCondition.ConditionName).Result;
+                if (bookDetailsDto.BackPhoto != null)
+                    bookDetailsDto.BackUrl = await _rekognitionNPollyRepository.UploadtoS3(bookDetailsDto.BackPhoto,
+                        bookDetailsDto.BookId, bookDetailsDto.BookCondition.ConditionName);
 
-                if (bookdetailsDto.RightSidePhoto != null)
-                    bookdetailsDto.RightUrl = _rekognitionNPollyRepository.UploadtoS3(bookdetailsDto.RightSidePhoto,
-                        bookdetailsDto.BookId, bookdetailsDto.BookCondition.ConditionName).Result;
+                if (bookDetailsDto.LeftSidePhoto != null)
+                    bookDetailsDto.LeftUrl = await _rekognitionNPollyRepository.UploadtoS3(bookDetailsDto.LeftSidePhoto,
+                        bookDetailsDto.BookId, bookDetailsDto.BookCondition.ConditionName);
 
-                using (var transaction = _context.Database.BeginTransaction())
-                {
-                    var book = _context.Book.Where(p => p.Book_Id == bookdetailsDto.BookId).ToList();
-                    book[0].FrontUrl = bookdetailsDto.FrontUrl;
-                    book[0].BackUrl = bookdetailsDto.BackUrl;
-                    book[0].LeftUrl = bookdetailsDto.LeftUrl;
-                    book[0].RightUrl = bookdetailsDto.RightUrl;
-                    output[0].Quantity = bookdetailsDto.Quantity;
-                    output[0].ItemPrice = bookdetailsDto.Price;
-                    output[0].UpdatedBy = bookdetailsDto.UpdatedBy;
-                    output[0].UpdatedOn = bookdetailsDto.UpdatedOn;
-                    output[0].Active = bookdetailsDto.Active;
-                    _context.SaveChanges();
-                    transaction.Commit();
-                }
+                if (bookDetailsDto.RightSidePhoto != null)
+                    bookDetailsDto.RightUrl = await _rekognitionNPollyRepository.UploadtoS3(bookDetailsDto.RightSidePhoto,
+                        bookDetailsDto.BookId, bookDetailsDto.BookCondition.ConditionName);
+
+                await using var transaction = await _context.Database.BeginTransactionAsync();
+
+                var book = _context.Book.Where(p => p.Book_Id == bookDetailsDto.BookId).ToList();
+                book[0].FrontUrl = bookDetailsDto.FrontUrl;
+                book[0].BackUrl = bookDetailsDto.BackUrl;
+                book[0].LeftUrl = bookDetailsDto.LeftUrl;
+                book[0].RightUrl = bookDetailsDto.RightUrl;
+                output[0].Quantity = bookDetailsDto.Quantity;
+                output[0].ItemPrice = bookDetailsDto.Price;
+                output[0].UpdatedBy = bookDetailsDto.UpdatedBy;
+                output[0].UpdatedOn = bookDetailsDto.UpdatedOn;
+                output[0].Active = bookDetailsDto.Active;
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
             }
             catch (DbUpdateConcurrencyException ex)
             {

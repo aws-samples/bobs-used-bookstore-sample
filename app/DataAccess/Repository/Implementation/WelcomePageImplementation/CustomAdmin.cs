@@ -21,7 +21,7 @@ namespace DataAccess.Repository.Implementation.WelcomePageImplementation
             _context = context;
         }
 
-        public Task<List<Price>> GetUserUpdatedBooks(string adminUsername)
+        public Task<List<Price>> GetUserUpdatedBooksAsync(string adminUsername)
         {
             // the query returns the collection of updated book models
             // Return the books updated by the current User. Returns only latest 5
@@ -44,7 +44,7 @@ namespace DataAccess.Repository.Implementation.WelcomePageImplementation
             return books;
         }
 
-        public async Task<List<Price>> OtherUpdatedBooks(string adminUsername)
+        public async Task<List<Price>> OtherUpdatedBooksAsync(string adminUsername)
         {
             /*
              Returns the latest updates made on the inventory excluding 
@@ -69,7 +69,7 @@ namespace DataAccess.Repository.Implementation.WelcomePageImplementation
             return books;
         }
 
-        public async Task<List<FilterOrdersDto>> GetImportantOrders(int dateMaxRange, int dateMinRange)
+        public async Task<List<FilterOrdersDto>> GetImportantOrdersAsync(int dateMaxRange, int dateMinRange)
         {
             /*
              Returns a filtered list of pending and EnRoute orders
