@@ -8,19 +8,14 @@
 
     var orderStatus = Model.Statuses;
 
-    var orderStatusWidth = "0";
-
-    switch (fullOrder.Order.OrderStatus.Position)
+    var orderStatusWidth = fullOrder.Order.OrderStatus.Position switch
     {
-        case 1: orderStatusWidth = "25%";
-            break;
-        case 2: orderStatusWidth = "50%";
-            break;
-        case 3: orderStatusWidth = "75%";
-            break;
-        case 4: orderStatusWidth = "100%";
-            break;
-    }
+        1 => "25%",
+        2 => "50%",
+        3 => "75%",
+        4 => "100%",
+        _ => "0"
+    };
 }
 <head>
     <link rel="stylesheet" href="/css/Orders/processorders.css"/>

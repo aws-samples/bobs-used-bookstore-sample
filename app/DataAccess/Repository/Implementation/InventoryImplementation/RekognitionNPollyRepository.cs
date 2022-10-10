@@ -50,7 +50,7 @@ namespace DataAccess.Repository.Implementation.InventoryImplementation
         /*
         *  function to  process  and push user uploaded book cover pictures to S3 bucket 
         */
-        public async Task<string> UploadtoS3(IFormFile file, long BookId, string Condition)
+        public async Task<string> UploadtoS3Async(IFormFile file, long BookId, string Condition)
         {
             _logger.LogInformation("Uploading Picture to S3 Bucket");
 

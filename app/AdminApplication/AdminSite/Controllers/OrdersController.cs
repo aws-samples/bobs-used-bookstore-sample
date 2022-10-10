@@ -163,7 +163,7 @@ namespace AdminSite.Controllers
             return View();
         }
 
-        public async Task<IActionResult> ProcessOrders(long orderId, string errorMessage)
+        public async Task<IActionResult> ProcessOrdersAsync(long orderId, string errorMessage)
         {
             if (string.IsNullOrEmpty(orderId.ToString()))
                 return RedirectToAction("Error");

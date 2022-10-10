@@ -78,7 +78,7 @@ namespace DataAccess.Repository.Implementation.OrderImplementations
                 if (order.OrderStatus.Status != OrderStatusJustPlaced && order.DeliveryDate == null)
                     order.DeliveryDate = DateTime.Now.ToUniversalTime().AddDays(14).ToString();
 
-                await _orderDbCalls.ContextSaveChanges();
+                await _orderDbCalls.ContextSaveChangesAsync();
 
                 return order;
             }

@@ -20,6 +20,6 @@ namespace DataAccess.Repository.Interface.Implementations
 
         public string GenerateAudioSummary(string BookName, string Summary, string targetLanguageCode, VoiceId voice);
 
-        public Task<string> UploadtoS3(IFormFile file, long BookId, string Condition);
+        public Task<string> UploadtoS3Async(IFormFile file, long BookId, string Condition);
     }
 }

@@ -19,24 +19,20 @@ namespace DataAccess.Repository.Implementation.OrderImplementations
 
         public IQueryable GetBaseQuery(string objPath)
         {
-            var query = _context.Query(objPath);
-
-            return query;
+            return _context.Query(objPath);
         }
 
         public IDbContextTransaction BeginTransaction()
         {
-            var transaction = _context.Database.BeginTransaction();
-
-            return transaction;
+            return _context.Database.BeginTransaction();
         }
 
-        public async Task TransactionCommitChanges(IDbContextTransaction transaction)
+        public async Task TransactionCommitChangesAsync(IDbContextTransaction transaction)
         {
             await transaction.CommitAsync();
         }
 
-        public async Task ContextSaveChanges()
+        public async Task ContextSaveChangesAsync()
         {
             await _context.SaveChangesAsync();
         }
@@ -44,9 +40,7 @@ namespace DataAccess.Repository.Implementation.OrderImplementations
         public IQueryable<T> ReturnBaseQuery<T>(IQueryable query, string[] includes) where T : class
         {
             var result = (IQueryable<T>)query;
-            result = result.Include(includes);
-
-            return result;
+            return result.Include(includes);
         }
 
         public IQueryable<T> ReturnFilterQuery<T>(IQueryable<T> query, Expression<Func<T, bool>> lambda)
