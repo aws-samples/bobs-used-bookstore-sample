@@ -110,7 +110,7 @@ namespace CustomerSite
 
         private async Task<string> GetConnectionStringAsync(AWSOptions awsOptions)
         {
-            var connString = Configuration.GetConnectionString("BobsBookstoreContextConnection");
+            var connString = Configuration.GetConnectionString("BookstoreDbDefaultConnection");
             try
             {
                 Console.WriteLine("Non-development mode, building connection string for SQL Server");
