@@ -1,3 +1,4 @@
+using AdminSite;
 using Amazon.Polly;
 using Amazon.Rekognition;
 using Amazon.S3;
@@ -37,7 +38,7 @@ builder.Services.AddAWSService<IAmazonS3>();
 builder.Services.AddAWSService<IAmazonPolly>();
 builder.Services.AddAWSService<IAmazonRekognition>();
 builder.Services.AddAWSService<IAmazonTranslate>();
-builder.Services.AddAutoMapper(typeof(ApplicationBuilder));
+builder.Services.AddAutoMapper(x => x.AddProfile<AutoMapperProfile>());
 builder.Services.AddDefaultAWSOptions(builder.Configuration.GetAWSOptions());
 builder.Services.AddDbContext<ApplicationDbContext>(option => option.UseSqlServer(builder.Configuration.GetConnectionString("BookstoreDbDefaultConnection")));
 
