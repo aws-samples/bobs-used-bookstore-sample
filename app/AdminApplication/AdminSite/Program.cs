@@ -56,7 +56,6 @@ builder.Services.AddAuthentication(x =>
     x.ResponseType = builder.Configuration["Authentication:Cognito:ResponseType"];
     x.MetadataAddress = builder.Configuration["Authentication:Cognito:MetadataAddress"];
     x.ClientId = builder.Configuration["Authentication:Cognito:ClientId"];
-    x.CallbackPath = builder.Configuration["Authentication:Cognito:CallbackPath"];
     x.TokenValidationParameters = new TokenValidationParameters
     {
         NameClaimType = "cognito:username"
@@ -124,7 +123,7 @@ Task OnRedirectToIdentityProviderForSignOut(RedirectContext context)
 
     var logoutUrl = $"{context.Request.Scheme}://{context.Request.Host}{builder.Configuration["Authentication:Cognito:AppSignOutUrl"]}";
 
-    context.ProtocolMessage.IssuerAddress = $"{cognitoDomain}/logout?client_id={clientId}&logout_uri={logoutUrl}&redirect_uri={logoutUrl}";
+    context.ProtocolMessage.IssuerAddress = $"{cognitoDomain}/logout?client_id={clientId}&logout_uri={logoutUrl}";
 
     // delete cookies
     context.Properties.Items.Remove(CookieAuthenticationDefaults.AuthenticationScheme);

@@ -5,9 +5,7 @@
             <a id="manage" class="main-color-text" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage" style="padding-top: 0.55rem">Hello @User.Identity.Name!</a>
         </li>
         <li class="nav-item">
-            <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-                <button id="logout" type="submit" class="nav-link btn btn-link main-color-text" style="color: black;">Logout</button>
-            </form>
+            @Html.ActionLink("Logout", "LogOut", "ExternalAuthentication")
         </li>
     }
     else

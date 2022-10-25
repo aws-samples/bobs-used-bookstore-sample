@@ -1,12 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.AspNetCore.Mvc;
 
 namespace AdminSite.Controllers
 {
     public class ExternalAuthenticationController : Controller
     {
-        public IActionResult Callback()
+        public IActionResult LogOut()
         {
-            return RedirectToAction("Index", "Home");
+            return SignOut(CookieAuthenticationDefaults.AuthenticationScheme, OpenIdConnectDefaults.AuthenticationScheme);
         }
     }
 }
