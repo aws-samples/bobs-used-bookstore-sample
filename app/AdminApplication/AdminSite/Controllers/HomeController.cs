@@ -2,14 +2,10 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Amazon.Extensions.CognitoAuthentication;
 using DataAccess.Repository.Interface.WelcomePageInterface;
 using AdminSite.ViewModel.UpdateBooks;
 using Microsoft.Extensions.Logging;
-using System.Resources;
-using AdminSite;
 using Microsoft.AspNetCore.Authorization;
 
 namespace AdminSite.Controllers
@@ -17,16 +13,11 @@ namespace AdminSite.Controllers
     public class HomeController : Controller
     {
         private readonly ICustomAdminPage _customAdmin;
-        private readonly SignInManager<CognitoUser> _signInManager;
-        private readonly UserManager<CognitoUser> _userManager;
         private readonly ILogger<HomeController> _logger;
-        public HomeController(ICustomAdminPage customAdmin,
-                              SignInManager<CognitoUser> signInManager,
-                              UserManager<CognitoUser> userManager, ILogger<HomeController> logger)
+
+        public HomeController(ICustomAdminPage customAdmin, ILogger<HomeController> logger)
         {
             _customAdmin = customAdmin;
-            _signInManager = signInManager;
-            _userManager = userManager;
             _logger = logger;
         }
 
@@ -40,13 +31,12 @@ namespace AdminSite.Controllers
         public async Task<IActionResult> WelcomePageAsync(string sortByValue)
         {
             _logger.LogInformation("In the welcome page");
-            var user = await _userManager.GetUserAsync(User);
-            var adminUsername = user.Username;
 
             var bookUpdates = new LatestUpdates();
 
             // the sortByValue input for different sorting parameters. 
             var orderByMethods = new List<string> { "OrderDetailPrice", "price_desc", "date", "date_desc" };
+            
             // assigns ViewBag a default value just to initialize it 
             ViewBag.SortPrice = "OrderDetailPrice";
             ViewBag.SortDate = "date";
@@ -54,14 +44,17 @@ namespace AdminSite.Controllers
             ViewBag.PriceArrow = "▲";
             ViewBag.DateArrow = "▲";
             ViewBag.StatusArrow = "▲";
+            
             // get the date range from the user
             const int dateMinRange = 0;
             const int dateMaxRange = 5;
 
             // get books updated by current user
-            bookUpdates.UserBooks = await _customAdmin.GetUserUpdatedBooksAsync(adminUsername);
+            bookUpdates.UserBooks = await _customAdmin.GetUserUpdatedBooksAsync(User.Identity.Name);
+            
             // get recent books updated globally
-            bookUpdates.NotUserBooks = await _customAdmin.OtherUpdatedBooksAsync(adminUsername);
+            bookUpdates.NotUserBooks = await _customAdmin.OtherUpdatedBooksAsync(User.Identity.Name);
+            
             // get important orders
             bookUpdates.ImpOrders = await _customAdmin.GetImportantOrdersAsync(dateMaxRange, dateMinRange);
             _logger.LogInformation(bookUpdates.ToString());

@@ -1,13 +1,10 @@
-@using Amazon.Extensions.CognitoAuthentication
 @using Microsoft.AspNetCore.Identity
-@inject SignInManager<CognitoUser> SignInManager
-@inject UserManager<CognitoUser> UserManager
-@{ var user = await UserManager.GetUserAsync(User); }
+
 <ul class="navbar-nav">
-    @if (SignInManager.IsSignedIn(User))
+    @if (User.Identity.IsAuthenticated)
     {
         <li class="nav-item">
-            <a id="manage" class="main-color-text" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage" style="padding-top: 0.55rem">Hello @UserManager.GetUserName(User)!</a>
+            <a id="manage" class="main-color-text" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage" style="padding-top: 0.55rem">Hello @User.Identity.Name!</a>
         </li>
         <li class="nav-item">
             <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
@@ -18,7 +15,7 @@
     else
     {
         <li class="nav-item">
-            <a class="main-color-text" id="login" asp-area="Identity" asp-page="/Account/Login">Log In</a>
+            @Html.ActionLink("Log In", "Index", "Resale")
         </li>
     }
 </ul>

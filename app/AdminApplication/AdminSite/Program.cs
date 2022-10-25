@@ -16,12 +16,17 @@ using DataAccess.Repository.Interface.NotificationsInterface;
 using DataAccess.Repository.Interface.OrdersInterface;
 using DataAccess.Repository.Interface.SearchImplementations;
 using DataAccess.Repository.Interface.WelcomePageInterface;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Threading.Tasks;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,9 +37,34 @@ builder.Services.AddAWSService<IAmazonS3>();
 builder.Services.AddAWSService<IAmazonPolly>();
 builder.Services.AddAWSService<IAmazonRekognition>();
 builder.Services.AddAWSService<IAmazonTranslate>();
-builder.Services.AddCognitoIdentity();
+builder.Services.AddAutoMapper(typeof(ApplicationBuilder));
 builder.Services.AddDefaultAWSOptions(builder.Configuration.GetAWSOptions());
 builder.Services.AddDbContext<ApplicationDbContext>(option => option.UseSqlServer(builder.Configuration.GetConnectionString("BookstoreDbDefaultConnection")));
+
+JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+
+// Configure Authentication
+builder.Services.AddAuthentication(x =>
+{
+    x.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    x.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    x.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
+})
+.AddCookie()
+.AddOpenIdConnect(x =>
+{
+    x.ResponseType = builder.Configuration["Authentication:Cognito:ResponseType"];
+    x.MetadataAddress = builder.Configuration["Authentication:Cognito:MetadataAddress"];
+    x.ClientId = builder.Configuration["Authentication:Cognito:ClientId"];
+    x.CallbackPath = builder.Configuration["Authentication:Cognito:CallbackPath"];
+    x.TokenValidationParameters = new TokenValidationParameters
+    {
+        NameClaimType = "cognito:username"
+    };
+    x.Events = new OpenIdConnectEvents() { OnRedirectToIdentityProviderForSignOut = OnRedirectToIdentityProviderForSignOut };
+});
+
+//Configure DI
 builder.Services.AddTransient<ISearchDatabaseCalls, SearchDatabaseCalls>();
 builder.Services.AddTransient<IExpressionFunction, ExpressionFunction>();
 builder.Services.AddTransient<IOrderDatabaseCalls, OrderDatabaseCalls>();
@@ -52,16 +82,16 @@ builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepositor
 builder.Logging.AddAWSProvider();
 
 // Add AWS Systems Manager 
-builder.Configuration.AddSystemsManager("/BobsUsedBookAdminStore/", optional:true);
-builder.Configuration.AddSystemsManager("/bookstoredb/", optional:true);
+builder.Configuration.AddSystemsManager("/BobsUsedBookAdminStore/", optional: true);
+builder.Configuration.AddSystemsManager("/bookstoredb/", optional: true);
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
-{   
+{
     app.UseExceptionHandler("/Error");
-    
+
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
@@ -82,3 +112,25 @@ using (var scope = app.Services.CreateAsyncScope())
 }
 
 app.Run();
+
+Task OnRedirectToIdentityProviderForSignOut(RedirectContext context)
+{
+    context.ProtocolMessage.Scope = "openid";
+    context.ProtocolMessage.ResponseType = "code";
+
+    var cognitoDomain = builder.Configuration["Authentication:Cognito:CognitoDomain"];
+
+    var clientId = builder.Configuration["Authentication:Cognito:ClientId"];
+
+    var logoutUrl = $"{context.Request.Scheme}://{context.Request.Host}{builder.Configuration["Authentication:Cognito:AppSignOutUrl"]}";
+
+    context.ProtocolMessage.IssuerAddress = $"{cognitoDomain}/logout?client_id={clientId}&logout_uri={logoutUrl}&redirect_uri={logoutUrl}";
+
+    // delete cookies
+    context.Properties.Items.Remove(CookieAuthenticationDefaults.AuthenticationScheme);
+    
+    // close openid session
+    context.Properties.Items.Remove(OpenIdConnectDefaults.AuthenticationScheme);
+
+    return Task.CompletedTask;
+}
