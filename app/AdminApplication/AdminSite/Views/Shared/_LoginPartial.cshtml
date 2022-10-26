@@ -1,17 +1,12 @@
-<ul class="navbar-nav">
-    @if (User.Identity.IsAuthenticated)
-    {
-        <li class="nav-item">
-            <a id="manage" class="main-color-text" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage" style="padding-top: 0.55rem">Hello @User.Identity.Name!</a>
-        </li>
-        <li class="nav-item">
-            @Html.ActionLink("Logout", "LogOut", "ExternalAuthentication")
-        </li>
-    }
-    else
-    {
-        <li class="nav-item">
-            @Html.ActionLink("Log In", "WelcomePage", "Home")
-        </li>
-    }
-</ul>
+@if (User.Identity.IsAuthenticated)
+{
+    <span class="navbar-text me-2">
+        Hello @User.Identity.Name!
+    </span>
+
+    <a class="nav-link" asp-action="LogOut" asp-controller="ExternalAuthentication">Logout</a>
+}
+else
+{
+    <a class="nav-link" asp-action="WelcomePage" asp-controller="Home">Log In</a>
+}
