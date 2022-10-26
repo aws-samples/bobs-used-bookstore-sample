@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -12,16 +13,22 @@ namespace AdminSite.Startup
 {
     public static class AuthenticationSetup
     {
-        private static WebApplicationBuilder _builder;
+        private static bool _isDevelopment;
+        private static string _cognitoDomain;
+        private static string _cognitoClientId;
+        private static string _cognitoAppSignOutUrl;
 
         public static WebApplicationBuilder ConfigureAuthentication(this WebApplicationBuilder builder)
         {
-            _builder = builder;
+            _isDevelopment = builder.Environment.IsDevelopment();
+            _cognitoDomain = builder.Configuration["Authentication:Cognito:CognitoDomain"];
+            _cognitoClientId = builder.Configuration["Authentication:Cognito:ClientId"];
+            _cognitoAppSignOutUrl = builder.Configuration["Authentication:Cognito:AppSignOutUrl"];
 
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
             // Configure Authentication
-            _builder.Services.AddAuthentication(x =>
+            builder.Services.AddAuthentication(x =>
             {
                 x.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
                 x.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
@@ -30,9 +37,9 @@ namespace AdminSite.Startup
             .AddCookie()
             .AddOpenIdConnect(x =>
             {
-                x.ResponseType = _builder.Configuration["Authentication:Cognito:ResponseType"];
-                x.MetadataAddress = _builder.Configuration["Authentication:Cognito:MetadataAddress"];
-                x.ClientId = _builder.Configuration["Authentication:Cognito:ClientId"];
+                x.ResponseType = builder.Configuration["Authentication:Cognito:ResponseType"];
+                x.MetadataAddress = builder.Configuration["Authentication:Cognito:MetadataAddress"];
+                x.ClientId = builder.Configuration["Authentication:Cognito:ClientId"];
                 x.TokenValidationParameters = new TokenValidationParameters
                 {
                     NameClaimType = "cognito:username"
@@ -42,33 +49,40 @@ namespace AdminSite.Startup
                 x.Events.OnRedirectToIdentityProviderForSignOut = OnRedirectToIdentityProviderForSignOut;
             });
 
-            return _builder;
+            return builder;
         }
 
-        private static Task OnRedirectToIdentityProviderForSignOut(RedirectContext context)
+        private static async Task OnRedirectToIdentityProviderForSignOut(RedirectContext context)
         {
+            if (_isDevelopment)
+            {
+                context.Response.Redirect("/");
+
+                context.HandleResponse();
+
+                await context.HttpContext.SignOutAsync();
+
+                return;
+            }
+
             context.ProtocolMessage.Scope = "openid";
             context.ProtocolMessage.ResponseType = "code";
 
-            var cognitoDomain = _builder.Configuration["Authentication:Cognito:CognitoDomain"];
+            var logoutUrl = $"{context.Request.Scheme}://{context.Request.Host}{_cognitoAppSignOutUrl}";
 
-            var clientId = _builder.Configuration["Authentication:Cognito:ClientId"];
-
-            var logoutUrl = $"{context.Request.Scheme}://{context.Request.Host}{_builder.Configuration["Authentication:Cognito:AppSignOutUrl"]}";
-
-            context.ProtocolMessage.IssuerAddress = $"{cognitoDomain}/logout?client_id={clientId}&logout_uri={logoutUrl}";
+            context.ProtocolMessage.IssuerAddress = $"{_cognitoDomain}/logout?client_id={_cognitoClientId}&logout_uri={logoutUrl}";
 
             // delete cookies
             context.Properties.Items.Remove(CookieAuthenticationDefaults.AuthenticationScheme);
 
             // close openid session
             context.Properties.Items.Remove(OpenIdConnectDefaults.AuthenticationScheme);
-
-            return Task.CompletedTask;
         }
 
         private static async Task OnRedirectToIdentityProvider(RedirectContext context)
         {
+            if (!_isDevelopment) return;
+
             var identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme, ClaimTypes.Name, ClaimTypes.Role);
 
             identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, "admin"));
