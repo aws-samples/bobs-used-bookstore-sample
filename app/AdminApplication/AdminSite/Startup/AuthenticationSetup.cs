@@ -88,7 +88,7 @@ namespace AdminSite.Startup
             identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, "admin"));
             identity.AddClaim(new Claim(ClaimTypes.Name, "admin user"));
 
-            context.Response.Redirect("/");
+            context.Response.Redirect("/Home/WelcomePage");
 
             context.HandleResponse();
 
