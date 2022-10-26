@@ -99,12 +99,8 @@ namespace AdminSite.Controllers
                 return View(bookUpdates);
             }
             _logger.LogInformation(bookUpdates.ToString());
-            return View(bookUpdates);
-        }
 
-        public IActionResult Logout()
-        {
-            return View();
+            return View(bookUpdates);
         }
 
         public IActionResult Privacy()
