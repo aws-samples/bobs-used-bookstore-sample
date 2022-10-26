@@ -1,39 +1,34 @@
 ﻿<header>
-    <nav class="navbar navbar-expand-lg navbar-toggleable-sm navbar-dark  nav-background-color  box-shadow mb-3">
+    <nav class="navbar navbar-expand-lg mb-3">
         <div class="container-fluid">
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportContent" aria-controls="navbarSupportedContent"
                     aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
+            <div class="collapse navbar-collapse d-sm-inline-flex flex-sm-row-reverse" id="navbarSupportedContent">
                 <ul class="navbar-nav flex-grow-1">
                     <li class="nav-item">
-                        <a class="main-color-text" asp-controller="Home" asp-action="Index">Bob's Used Bookstore</a>
+                        <a class="nav-link active" asp-controller="Home" asp-action="Index">Bob's Used Bookstore</a>
                     </li>
-
-                    @if (User.Identity.IsAuthenticated)
-                    {
-                        <li class="nav-item">
-                            <a class="main-color-text" asp-area="" asp-controller="Home" asp-action="WelcomePage">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="main-color-text" asp-area="" asp-controller="Orders" asp-action="Index">Manage Orders</a>
-                        </li>
-                        <li class="nav-item dropdown">
-                            <a class="main-color-text dropdown-toggle" id="navbarDropdownMenuLink-333" data-toggle="dropdown"
-                           aria-haspopup="true" aria-expanded="false">
-                                Inventory
-                            </a>
-                            <div class="nav-background-color dropdown-menu dropdown-default" aria-labelledby="navbarDropdownMenuLink-333">
-                                <a class="dropdown-item main-color-text" asp-controller="Inventory" asp-action="EditBookDetails">Add New Book</a>
-                                <a class="dropdown-item main-color-text" asp-controller="Inventory" asp-action="SearchBeta">Search Inventory</a>
-                                <a class="dropdown-item main-color-text" asp-controller="Inventory" asp-action="Dashboard">Dashboard</a>
-                            </div>
-                        </li>
-                        <li class="nav-item">
-                            <a class="main-color-text" asp-area="" asp-controller="Resale" asp-action="Index">Resale Books</a>
-                        </li>
-                    }
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Home" asp-action="WelcomePage">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Orders" asp-action="Index">Manage Orders</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" id="navbarDropdownMenuLink-333" aria-haspopup="true" aria-expanded="false">
+                            Inventory
+                        </a>
+                        <ul class="nav-background-color dropdown-menu dropdown-default" aria-labelledby="navbarDropdownMenuLink-333">
+                            <li><a class="dropdown-item" asp-controller="Inventory" asp-action="EditBookDetails">Add New Book</a></li>
+                            <li><a class="dropdown-item" asp-controller="Inventory" asp-action="SearchBeta">Search Inventory</a></li>
+                            <li><a class="dropdown-item" asp-controller="Inventory" asp-action="Dashboard">Dashboard</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-controller="Resale" asp-action="Index">Resale Books</a>
+                    </li>
                 </ul>
             </div>
             <div class="nav navbar-nav navbar-right">
