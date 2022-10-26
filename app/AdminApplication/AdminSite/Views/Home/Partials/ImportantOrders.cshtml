@@ -5,38 +5,17 @@
 }
 
 <head>
-    <link rel="stylesheet" href="/css/Home/Partials/importantorders.css"/>
+    <link rel="stylesheet" href="/css/Home/Partials/importantorders.css" />
 </head>
 
-<div class="mb-2">
-    <table id="key"r>
-        <tr class="keyRows">
-            <td>
-                <div class="box boxRed">
-
-                </div>
-                <span>
-                    Delayed Orders
-                </span>
-            </td>
-            <td>
-                <div class="box boxYellow"></div>
-                <span>Upcoming Orders</span>
-            </td>
-        </tr>
-    </table>
-</div>
-
-<div class="card mb-3 border-dark shadow">
+<div class="card m-3">
     <div class="card-body">
-        <div class="p-0 m-0" style="max-height:500px; overflow-y:scroll;">
-            <table class="orderT box-shadow table_font table table-hover table-striped  h-auto">
-
-                <thead class="thead-light">
+        <table class="table table-hover table-striped">
+            <thead class="thead-light">
                 <tr>
-                    <th scope="col">Order_ID</th>
-                    <th scope="col">Customer_ID</th>
-                    <th scope="col">CustomerName</th>
+                    <th scope="col">Order ID</th>
+                    <th scope="col">Customer ID</th>
+                    <th scope="col">Customer Name</th>
 
                     <th scope="col">
                         <a href="@Url.Action("WelcomePage", "Home", new { sortByValue = ViewBag.SortPrice })">Price @ViewBag.PriceArrow</a>
@@ -48,17 +27,14 @@
                         <a href="@Url.Action("WelcomePage", "Home", new { sortByValue = ViewBag.SortStatus })">Status @ViewBag.StatusArrow</a>
                     </th>
                     <th scope="col"> Action</th>
-
                 </tr>
-                </thead>
-                <tbody>
+            </thead>
+            <tbody>
                 @if (updates.ImpOrders.Count == 0)
                 {
                     <tr>
                         <td colspan="7" rowspan="4" style="text-align:center;">
-                            <span>
-                                <h4>No Updates Currently</h4>
-                            </span>
+                            <span>No Updates Currently</span>
                         </td>
 
                     </tr>
@@ -68,16 +44,15 @@
                     @foreach (var order in updates.ImpOrders)
                     {
                         var param = new Dictionary<string, string>
-                        {
-                            { "orderId", $"{order.Order.Order_Id}" }
-                        };
+                {
+                { "orderId", $"{order.Order.Order_Id}" }
+                };
                         var status = order.Order.OrderStatus.OrderStatus_Id;
 
                         <tr class="">
                             <td>
                                 @order.Order.Order_Id
                                 <div class="dot @(order.Severity == 2 ? "dotRed" : "dotYellow")">
-
                                 </div>
 
                             </td>
@@ -93,8 +68,25 @@
                         </tr>
                     }
                 }
-                </tbody>
-            </table>
-        </div>
+            </tbody>
+        </table>
     </div>
+</div>
+
+<div class="mb-2">
+    <table id="key" r>
+        <tr class="keyRows">
+            <td>
+                <div class="box boxRed">
+                </div>
+                <span>
+                    Delayed Orders
+                </span>
+            </td>
+            <td>
+                <div class="box boxYellow"></div>
+                <span>Upcoming Orders</span>
+            </td>
+        </tr>
+    </table>
 </div>

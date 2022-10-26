@@ -1,21 +1,14 @@
-﻿@*The view partial for last update book by global user*@
-@model AdminSite.ViewModel.UpdateBooks.LatestUpdates;
+﻿@model AdminSite.ViewModel.UpdateBooks.LatestUpdates;
 @{
     var updates = Model;
 }
 
-<head>
-    <link rel="stylesheet" href="/css/Home/Partials/globalbookupdates.css"/>
-</head>
-
-<div class="card shadow card-border border-dark mb-3">
+<div class="card m-3">
     <div class="card-body">
-        <div class="p-0 m-0">
-            <table class="table_font  table  table-striped table-hover">
-
-                <thead>
+        <table class="table table-striped table-hover">
+            <thead>
                 <tr>
-                    <th scope="col">Book_ID</th>
+                    <th scope="col">Book ID</th>
                     <th scope="col">Name</th>
                     <th scope="col">Author</th>
                     <th scope="col">Publisher</th>
@@ -26,17 +19,14 @@
                     <th scope="col">Updated</th>
                     <th scope="col">Action</th>
                 </tr>
-                </thead>
-                <tbody>
+            </thead>
+            <tbody>
                 @if (updates.NotUserBooks.Count == 0)
                 {
                     <tr>
                         <td colspan="10" rowspan="4" style="text-align:center;">
-                            <span>
-                                <h4>No Updates Currently</h4>
-                            </span>
+                            <span>No Updates Currently</span>
                         </td>
-
                     </tr>
                 }
                 else
@@ -44,9 +34,9 @@
                     @foreach (var b in updates.NotUserBooks)
                     {
                         var param = new Dictionary<string, string>
-                        {
-                            { "BookId", $"{b.Book.Book_Id}" }
-                        };
+                {
+                { "BookId", $"{b.Book.Book_Id}" }
+                };
                         <tr>
                             <td>@b.Book.Book_Id</td>
                             <td>@b.Book.Name</td>
@@ -63,8 +53,7 @@
                         </tr>
                     }
                 }
-                </tbody>
-            </table>
-        </div>
+            </tbody>
+        </table>
     </div>
 </div>
