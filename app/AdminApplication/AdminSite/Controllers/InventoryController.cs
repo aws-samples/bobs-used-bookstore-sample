@@ -28,7 +28,6 @@ namespace AdminSite.Controllers
         private readonly IMapper _mapper;
         private string updateSuccess = Resource.ResourceManager.GetString("UpdateSuccessMessage");
 
-
         public InventoryController(IGenericRepository<Book> bookRepository,
                                    IMapper mapper,
                                    IInventory inventory,
