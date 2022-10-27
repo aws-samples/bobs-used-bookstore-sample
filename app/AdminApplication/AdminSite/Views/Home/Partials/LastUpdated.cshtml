@@ -1,11 +1,8 @@
 ﻿@model AdminSite.ViewModel.UpdateBooks.LatestUpdates;
-@{
-    var updates = Model;
-}
 
 <div class="card m-3">
     <div class="card-body">
-        <table class="table table-striped  table-hover">
+        <table class="table table-striped table-hover">
             <thead>
                 <tr>
                     <th scope="col">Book ID</th>
@@ -21,7 +18,7 @@
                 </tr>
             </thead>
             <tbody>
-                @if (updates.UserBooks.Count == 0)
+                @if (Model.UserBooks.Count == 0)
                 {
                     <tr>
                         <td colspan="10" rowspan="4" style="text-align:center;">
@@ -31,7 +28,7 @@
                 }
                 else
                 {
-                    @foreach (var b in updates.UserBooks)
+                    @foreach (var b in Model.UserBooks)
                     {
                         var param = new Dictionary<string, string>
                 {
@@ -45,7 +42,7 @@
                             <td>@b.Book.Genre.Name</td>
                             <td>@b.Book.Type.TypeName</td>
                             <td>@b.Condition.ConditionName</td>
-                            <td>@b.ItemPrice</td>
+                            <td>@b.ItemPrice.ToString("C")</td>
                             <td>@b.UpdatedOn.ToShortDateString()</td>
                             <td>
                                 <a class="card-link" asp-controller="Inventory" asp-action="BookDetails" asp-all-route-data="param">Details</a>
