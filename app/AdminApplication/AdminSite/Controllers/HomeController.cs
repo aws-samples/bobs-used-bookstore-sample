@@ -28,7 +28,7 @@ namespace AdminSite.Controllers
         }
 
         [Authorize]
-        public async Task<IActionResult> WelcomePageAsync(string sortByValue)
+        public async Task<IActionResult> DashboardAsync(string sortByValue)
         {
             _logger.LogInformation("In the welcome page");
 

@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using AutoMapper;
-using DataAccess.Data;
 using DataAccess.Dtos;
 using DataAccess.Repository.Interface;
 using DataAccess.Repository.Interface.InventoryInterface;
@@ -14,7 +13,6 @@ using AdminSite.ViewModel;
 using AdminSite.ViewModel.ManageInventory;
 using AdminSite.ViewModel.SearchBooks;
 using Type = DataModels.Books.Type;
-using DataAccess.Repository.Interface.NotificationsInterface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -25,7 +23,6 @@ namespace AdminSite.Controllers
     {
         private const int NumberOfDetails = 5;
         private readonly IGenericRepository<Book> _bookRepository;
-        private readonly INotifications _emailSender;
         private readonly IInventory _inventory;
         private readonly ILogger<InventoryController> _logger;
         private readonly IMapper _mapper;
@@ -35,13 +32,10 @@ namespace AdminSite.Controllers
         public InventoryController(IGenericRepository<Book> bookRepository,
                                    IMapper mapper,
                                    IInventory inventory,
-                                   ApplicationDbContext context,
-                                   ILogger<InventoryController> logger,
-                                   INotifications emailSender)
+                                   ILogger<InventoryController> logger)
         {
             _inventory = inventory;
             _logger = logger;
-            _emailSender = emailSender;
             _mapper = mapper;
             _bookRepository = bookRepository;
         }
@@ -231,7 +225,6 @@ namespace AdminSite.Controllers
             return View();
         }
 
-
         [HttpPost]
         public IActionResult EditPublisher(string actual, string name)
         {
@@ -321,7 +314,6 @@ namespace AdminSite.Controllers
 
             return View();
         }
-
 
         [HttpGet]
         public IActionResult BookDetails(long bookId)
