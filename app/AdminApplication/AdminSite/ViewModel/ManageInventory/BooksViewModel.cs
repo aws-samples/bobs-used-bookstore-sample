@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace AdminSite.ViewModel.ManageInventory
 {
@@ -8,27 +9,31 @@ namespace AdminSite.ViewModel.ManageInventory
     {
         public string BookName { get; set; }
 
-        public long ISBN { get; set; }
+        public string ISBN { get; set; }
 
         public long BookId { get; set; }
+
+        public IEnumerable<SelectListItem> Publishers { get; set; } = new List<SelectListItem>();
 
         public long PublisherId { get; set; }
 
         public string PublisherName { get; set; }
 
+        public IEnumerable<SelectListItem> BookTypes { get; set; } = new List<SelectListItem>();
+
         public string BookType { get; set; }
+
+        public IEnumerable<SelectListItem> Genres { get; set; } = new List<SelectListItem>();
 
         public string Genre { get; set; }
 
+        public IEnumerable<SelectListItem> BookConditions { get; set; } = new List<SelectListItem>();
+
         public string BookCondition { get; set; }
 
-        public long PriceId { get; set; }
+        public double? Price { get; set; }
 
-        public double price { get; set; }
-
-        public int Quantity { get; set; }
-
-        public string Name { get; set; }
+        public int? Quantity { get; set; }
 
         public IFormFile FrontPhoto { get; set; }
 

@@ -16,6 +16,7 @@ using AdminSite.ViewModel.SearchBooks;
 using Type = DataModels.Books.Type;
 using DataAccess.Repository.Interface.NotificationsInterface;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace AdminSite.Controllers
 {
@@ -46,49 +47,35 @@ namespace AdminSite.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> EditBookDetails(string bookName)
+        public IActionResult EditBookDetails(string bookName)
         {
             _logger.LogInformation("Loading : Add New Book View");
 
-            try
+            var model = new BooksViewModel
             {
-                ViewData["user"] = User.Identity.Name;
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e, "Error in authentication @ Adding a new Book");
-            }
+                Publishers = _inventory.GetAllPublishers().Select(x => new SelectListItem(x.Name, x.Name)),
+                Genres = _inventory.GetGenres().Select(x => new SelectListItem(x.Name, x.Name)),
+                BookTypes = _inventory.GetTypes().Select(x => new SelectListItem(x.TypeName, x.TypeName)),
+                BookConditions = _inventory.GetConditions().Select(x => new SelectListItem(x.ConditionName, x.ConditionName))
+            };
 
-            try
+            if (!string.IsNullOrEmpty(bookName))
             {
-                if (!string.IsNullOrEmpty(bookName))
-                {
-                    var temp = _bookRepository.Get(b => b.Name == bookName).FirstOrDefault();
-                    var variant = _inventory.GetBookByID(temp.Book_Id);
-                    ViewData["ISBN"] = variant.ISBN;
-                    ViewData["Author"] = variant.Author;
-                    ViewData["Summary"] = variant.Summary;
-                }
+                var temp = _bookRepository.Get(b => b.Name == bookName).FirstOrDefault();
+                var variant = _inventory.GetBookByID(temp.Book_Id);
 
-                if (bookName != null)
-                    ViewData["Book"] = bookName;
-
-                ViewData["Types"] = _inventory.GetTypes();
-                ViewData["Publishers"] = _inventory.GetAllPublishers();
-                ViewData["Genres"] = _inventory.GetGenres();
-                ViewData["Conditions"] = _inventory.GetConditions();
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e, "Error in loading data for Books Action Method");
+                model.BookName = variant.BookName;
+                model.ISBN = variant.ISBN;
+                model.Author = variant.Author;
+                model.Summary = variant.Summary;
             }
 
             ViewData["check"] = Constants.ErrorStatusYes;
 
-            return View();
+            return View(model);
         }
 
-        [HttpPost] //Post Data from forms to tables
+        [HttpPost]
         public async Task<IActionResult> EditBookDetails(BooksViewModel bookview)
         {
             _logger.LogInformation("Posting new book details from form to Database ");
@@ -258,7 +245,7 @@ namespace AdminSite.Controllers
                 ViewData["Status"] = "Successfully updated the existing records";
             }
 
-        ViewData["Publishers"] = _inventory.GetAllPublishers();
+            ViewData["Publishers"] = _inventory.GetAllPublishers();
 
             return View();
         }
