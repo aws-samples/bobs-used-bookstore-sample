@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using AdminSite.ViewModel.ManageInventory;
+using Microsoft.Build.Evaluation;
 
 namespace AdminSite.ViewModel
 {
@@ -29,6 +30,8 @@ namespace AdminSite.ViewModel
 
         public string RightUrl { get; set; }
 
+        public IList<string> Images { get; set; } = new List<string>();
+
         public string TypeChosen { get; set; }
 
         public string ViewStyle { get; set; }
@@ -42,5 +45,7 @@ namespace AdminSite.ViewModel
         public string Summary { get; set; }
 
         public string ISBN { get; set; }
+
+        public decimal Price { get; set; }
     }
 }

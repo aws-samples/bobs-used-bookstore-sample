@@ -1,188 +1,65 @@
-﻿@using AdminSite.ViewModel.ManageInventory
-@model AdminSite.ViewModel.FetchBooksViewModel
+﻿@model AdminSite.ViewModel.FetchBooksViewModel
 
-@{
-    var types = (List<string>)ViewData["Types"];
-    var status = (string)ViewData["status"];
-    var conditions = (List<string>)ViewData["Conditions"];
+<h1 class="text-center mb-3">Book Details</h1>
 
-    var Genre = Model.Genre.ToUpper();
-    var books = (IEnumerable<BookDetailsViewModel>)ViewData["Books"];
-
-    var Author = Model.Author.ToUpper();
-    var BookName = Model.BookName.ToUpper();
-    var fetch_status = (string)ViewData["fetchstatus"];
-}
-
-<div class="overview-wrap">
-    <h1 class="title-1 text-center font-weight-light" style="margin-bottom: 45px;">Book Details</h1>
-</div>
-<!-- Page Content -->
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-lg">
-            <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
-                <div class="carousel-inner">
-                    <div class="carousel-item active">
-                        @if (string.IsNullOrEmpty(Model.FrontUrl))
-                        {
-                            <img class="img-thumbnail" style="width:100%;height:100%" src="https://dtdt6j0vhq1rq.cloudfront.net/default0Kind of New.jpg" alt="Ft slide">
-                        }
-                        else
-                        {
-                            <img class="img-thumbnail" style="width:525px;height:525px" src="@Model.FrontUrl" alt="First slide">
-                        }
-                    </div>
-                    <div class="carousel-item">
-                        @if (string.IsNullOrEmpty(Model.BackUrl))
-                        {
-                            <img class="img-thumbnail" style="width:100%;height:100%" src="https://dtdt6j0vhq1rq.cloudfront.net/default0Kind of New.jpg" alt="Second slide">
-                        }
-                        else
-                        {
-                            <img class="img-thumbnail" style="width:525px;height:525px" src="@Model.BackUrl" alt="Second slide">
-                        }
-                    </div>
-                    <div class="carousel-item">
-
-                        @if (string.IsNullOrEmpty(Model.LeftUrl))
-                        {
-                            <img class="img-thumbnail" style="width:100%;height:100%" src="https://dtdt6j0vhq1rq.cloudfront.net/default0Kind of New.jpg" alt="Third slide">
-                        }
-                        else
-                        {
-                            <img class="img-thumbnail" style="width:525px;height:525px" src="@Model.LeftUrl" alt="Third slide">
-                        }
-                    </div>
-                </div>
-            </div>
-            <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="main-text sr-only">Previous</span>
-            </a>
-            <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="main-text sr-only">Next</span>
-            </a>
-            @if (!string.IsNullOrEmpty(fetch_status))
-            {
-                <h4 class="main text font-weight-light" style="margin-top:10% ;margin-left:5%">@fetch_status</h4>
-            }
-        </div>
-        <div class="col-lg-6">
-
-            <div class="row justify-content-center">
-                <div class="col">
-                    <button type="submit" class="main-text btn  btn-lg text-white text-center" style="background-color: #7D53DE;width: 90%;margin-top: 4%;font-size: 1rem">BOOK NAME</button>
-                </div>
-                <div class="col">
-                    <button type="submit" class="main-text btn  btn-lg text-white text-center" style="background-color: #7D53DE;width: 90%;margin-top: 4%;margin-left: 25%;font-size: 1rem">@BookName</button>
-                </div>
-            </div>
-            <div class="row justify-content-center">
-                <div class="col">
-                    <button type="submit" class="main-text btn  btn-lg text-white text-center" style="background-color: #7D53DE;width: 90%;margin-top: 4%;font-size: 1rem">GENRE</button>
-                </div>
-                <div class="col">
-                    <button type="submit" class="main-text btn  btn-lg text-white text-center" style="background-color: #7D53DE; width: 90%; margin-left: 25%; margin-top: 4%; font-size: 1rem">@Genre</button>
-                </div>
-            </div>
-
-            <div class="row justify-content-center">
-                <div class="col">
-                    <button type="submit" class="main-text btn  btn-lg text-white text-center" style="background-color: #7D53DE;width: 90%;margin-top: 4%;font-size: 1rem">AUTHOR</button>
-                </div>
-                <div class="col">
-                    <button type="submit" class="main-text btn  btn-lg text-white text-center" style="background-color: #7D53DE;width: 90%;margin-top: 4%;margin-left: 25%;font-size: 1rem">@Author</button>
-                </div>
-            </div>
-
-            @{
-                var param = new Dictionary<string, string>
+<div class="row justify-content-center">
+    <div class="col-4">
+        <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">
+                @for (var i = 0; i < Model.Images.Count; i++)   
                 {
-                    { "BookName", $"{Model.BookName}" },
-                    { "type", $"{Model.Type}" },
-                    { "condition_chosen", $"{Model.ConditionChosen}" }
-                };
-            }
-            <form asp-controller="Inventory" asp-action="BookDetails" asp-all-route-data="param" style="padding-bottom: 0px;" method="post">
-                <div class="row justify-content-center">
-                    <div class="col">
-                        <select class="main-text custom-select bg-light text-dark" asp-for="Type" style="margin-top: 3%; margin-bottom: 2%;width: 90%">
-                            <option value="">Select the Format</option>
-                            @foreach (var type in types)
-                            {
-                                <option value="@type">@type</option>
-                            }
-                        </select>
+                    <div class="carousel-item active">
+                        <img class="d-block w-100" src="@Model.Images[i]" alt="Slide @i">
                     </div>
-                    <div class="col">
-                        <select class="main-text custom-select bg-light text-dark" asp-for="ConditionChosen" style="margin-top: 3%; margin-bottom: 2%; margin-left: 25%; width: 90%">
-                            <option value="">Select the Condition</option>
-                            @foreach (var condition in conditions)
-                            {
-                                <option value="@condition">@condition</option>
-                            }
-                        </select>
-                    </div>
-                </div>
-                <div class="row justify-content-center">
-                    <button type="submit" class="main-text btn  btn-lg text-white text-center" style="background-color: #7D53DE;width: 40%;margin-top: 4%;font-size: 1rem">Show Book List</button>
-                </div>
-            </form>
-            <form method="get">
-                <div class="text-center">
-                    <button name="BookName" value="@Model.BookName" asp-controller="Inventory" asp-action="EditBookDetails" type="submit" class="main-text btn btn-lg text-center text-white" style=" background-color: #7D53DE; width: 33%; margin-top: 4%; font-size: 1rem "><span class="glyphicon glyphicon-ok-sign"></span>Add Book Variant</button>
-                    @*   <h3 class="my-3 text-center">@Model.BookName</h3> *@
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
-@if (status == "List" && books != null)
-{
-    <hr class="mt-2 mb-5">
-    <div class="container">
-        <div class="row" style="margin-left:2%">
-            <div class="col-md-12">
-                <div class="table-responsive">
-                    <table id="mytable" class="table table-bordred table-striped">
-                        <thead>
-                        <th>Price</th>
-                        <th>Quantity</th>
-                        <th>Publisher</th>
-                        <th>Type</th>
-                        <th>Condition</th>
-                        <th>Edit</th>
-                        </thead>
-                        <tbody>
-                        <form method="post" style="padding-bottom: 0px;">
-                            @foreach (var m in books)
-                            {
-                                <tr>
-                                    <td>@m.Price</td>
-                                    <td>@m.Quantity</td>
-                                    <td>@m.Publisher.Name</td>
-                                    <td>@m.BookType.TypeName</td>
-                                    <td>@m.BookCondition.ConditionName</td>
-                                    <td>
-                                        @{
-                                            var parm = new Dictionary<string, string>
-                                            {
-                                                { "Condition", $"{m.BookCondition.ConditionName}" }
-                                            };
-                                        }
-                                        <button type="submit" name="BookId" value="@m.BookId" asp-controller="Inventory" asp-action="UpdateDetails" asp-all-route-data="parm" class="btn btn-outline-secondary rounded">Edit</button>
-                                    </td>
-                                </tr>
-                            }
-                        </form>
-                        </tbody>
-                    </table>
-                    <div class="clearfix"></div>
-                </div>
+                }                
             </div>
         </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
     </div>
-}
+
+    <div class="col-4">
+        <table class="table">
+            <tbody>
+                <tr>
+                    <th scope="row">Name</th>
+                    <td>@Model.BookName</td>
+                </tr>
+                <tr>
+                    <th scope="row">Author</th>
+                    <td>@Model.Author</td>
+                </tr>
+                <tr>
+                    <th scope="row">Genre</th>
+                    <td>@Model.Genre</td>
+                </tr>
+                <tr>
+                    <th scope="row">Price</th>
+                    <td>@Model.Price.ToString("C")</td>
+                </tr>
+                <tr>
+                    <th scope="row">ISBN</th>
+                    <td>@Model.ISBN</td>
+                </tr>
+                <tr>
+                    <th scope="row">Book Type</th>
+                    <td>@Model.BookType</td>
+                </tr>
+                <tr>
+                    <th scope="row">Condition</th>
+                    <td>@Model.Condition</td>
+                </tr>
+                <tr>
+                    <th scope="row">Description</th>
+                    <td>@Model.Summary</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

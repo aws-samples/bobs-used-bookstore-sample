@@ -321,17 +321,24 @@ namespace AdminSite.Controllers
             _logger.LogInformation("Loading Book Details on Click in search page");
 
             var books = new FetchBooksViewModel();
+
             try
             {
                 var bookDetailDto = _inventory.GetBookByID(bookId);
-                var bookDetails =
-                    _mapper.Map<IEnumerable<BookDetailsDto>, IEnumerable<BookDetailsViewModel>>(
-                        _inventory.GetDetails(bookId));
+                var bookDetails = _mapper.Map<IEnumerable<BookDetailsDto>, IEnumerable<BookDetailsViewModel>>(_inventory.GetDetails(bookId));
+
                 books.Publisher = bookDetailDto.Publisher.Name;
                 books.Genre = bookDetailDto.Genre.Name;
                 books.BookType = bookDetailDto.BookType.TypeName;
                 books.BookName = bookDetailDto.BookName;
                 books.Books = bookDetails;
+                
+                if (!string.IsNullOrWhiteSpace(bookDetailDto.FrontUrl)) books.Images.Add(bookDetailDto.FrontUrl);
+                if (!string.IsNullOrWhiteSpace(bookDetailDto.BackUrl)) books.Images.Add(bookDetailDto.BackUrl);
+                if (!string.IsNullOrWhiteSpace(bookDetailDto.LeftUrl)) books.Images.Add(bookDetailDto.LeftUrl);
+                if (!string.IsNullOrWhiteSpace(bookDetailDto.RightUrl)) books.Images.Add(bookDetailDto.RightUrl);
+                if (books.Images.Count == 0) books.Images.Add("https://dtdt6j0vhq1rq.cloudfront.net/default0Kind of New.jpg");
+
                 books.FrontUrl = bookDetailDto.FrontUrl;
                 books.BackUrl = bookDetailDto.BackUrl;
                 books.LeftUrl = bookDetailDto.LeftUrl;
@@ -339,6 +346,8 @@ namespace AdminSite.Controllers
                 books.Author = bookDetailDto.Author;
                 books.ISBN = bookDetailDto.ISBN;
                 books.Summary = bookDetailDto.Summary;
+                books.Price = bookDetailDto.Price;
+                books.Condition = bookDetailDto.BookCondition.ConditionName;
 
                 ViewData["Types"] = _inventory.GetFormatsOfTheSelectedBook(bookDetailDto.BookName);
                 ViewData["Conditions"] = _inventory.GetConditionsOfTheSelectedBook(bookDetailDto.BookName);
