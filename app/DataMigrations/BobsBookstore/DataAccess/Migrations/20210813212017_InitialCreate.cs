@@ -198,7 +198,7 @@ namespace DataAccess.Migrations
                 name: "Book",
                 columns: table => new
                 {
-                    Book_Id = table.Column<long>(type: "bigint", nullable: false)
+                    Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Author = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Publisher_Id = table.Column<long>(type: "bigint", nullable: true),
@@ -212,11 +212,14 @@ namespace DataAccess.Migrations
                     RightUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     AudioBookUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Summary = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UpdatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
                     RowVersion = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Book", x => x.Book_Id);
+                    table.PrimaryKey("PK_Book", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Book_Genre_Genre_Id",
                         column: x => x.Genre_Id,
@@ -296,7 +299,7 @@ namespace DataAccess.Migrations
                         name: "FK_Price_Book_Book_Id",
                         column: x => x.Book_Id,
                         principalTable: "Book",
-                        principalColumn: "Book_Id",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Price_Condition_Condition_Id",
@@ -323,7 +326,7 @@ namespace DataAccess.Migrations
                         name: "FK_CartItem_Book_Book_Id",
                         column: x => x.Book_Id,
                         principalTable: "Book",
-                        principalColumn: "Book_Id",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_CartItem_Cart_Cart_Id",
@@ -360,7 +363,7 @@ namespace DataAccess.Migrations
                         name: "FK_OrderDetail_Book_Book_Id",
                         column: x => x.Book_Id,
                         principalTable: "Book",
-                        principalColumn: "Book_Id",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_OrderDetail_Order_Order_Id",

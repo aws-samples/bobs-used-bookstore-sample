@@ -1,0 +1,84 @@
+﻿@*@model IEnumerable<DataModels.ViewModels.OrderViewModel>
+*@
+@model IEnumerable<Order>
+
+@{
+    ViewData["Title"] = "Orders";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    foreach (var item in Model)
+
+    {
+        item.Subtotal += item.Tax;
+    }
+}
+<head>
+    <meta charset="UTF-8">
+    <title>Bob's Book Store</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <link rel="stylesheet" href="/css/googlefont.css">
+    <link rel="stylesheet" href="/css/font-awesome.min.css">
+
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+<h1>Your Orders</h1>
+
+@if (!Model.Any())
+{
+    <h2>No Orders Found.</h2>
+}
+else
+{
+    <table class="table table-hover mt-5">
+        <thead>
+        <tr>
+            <th>
+                Total Cost
+            </th>
+            <th>
+                Delivery Date
+            </th>
+            <th>
+                Status
+            </th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Subtotal)
+                </td>
+                @if (string.IsNullOrEmpty(item.DeliveryDate))
+                {
+                    <td>Unknown</td>
+                }
+                else
+                {
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DeliveryDate)
+                    </td>
+                }
+                <td>
+                    @Html.DisplayFor(modelItem => item.OrderStatus.Status)
+                </td>
+                <td>
+
+                    <form asp-controller="Orders" asp-action="Detail" method="get">
+                        <input type="hidden" name="id" value="@item.Order_Id"/>
+                        <input type="submit" value="details" class="btn"/>
+                    </form>
+                    <a asp-action="Delete" asp-route-id="@item.Order_Id">Cancel</a>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+<br/>
+
+</body>

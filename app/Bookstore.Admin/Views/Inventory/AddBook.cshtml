@@ -1,0 +1,48 @@
+﻿@model AdminSite.ViewModel.ManageInventory.AddBookViewModel
+@{
+    ViewData["Title"] = "Add/Edit Book";
+    var errorstatus = (string)ViewData["ErrorStatus"];
+    var error = (string)ViewData["Error"];
+    var check = (string)ViewData["check"];
+}
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="text-center font-weight-light modal-title" id="exampleModalLabel">Message</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <span class="main-text">Please re-upload the photos as they violate one or more of our content policies</span>
+                    <ol>
+                        <li class="main-text">Photo must be of type .jpg or .png or .gif</li>
+                        <li class="main-text">Photo content must not contain profanity</li>
+                        <li class="main-text">Photo must be that of a book</li>
+                    </ol>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button style="margin-left:5%" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (errorstatus == "Yes")
+{
+    <script type="text/javascript">
+        $(
+            function () {
+                $('#exampleModal').modal('show');
+            }
+        );
+    </script>
+}
+
+<h1 class="text-center">ADD BOOK</h1>
+
+<partial name="_BookFormPartial" />
