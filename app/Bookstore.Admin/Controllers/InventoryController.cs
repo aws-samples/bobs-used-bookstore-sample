@@ -12,6 +12,7 @@ using AdminSite.ViewModel.Inventory;
 using Bookstore.Domain.Books;
 using Bookstore.Admin;
 using Bookstore.Data.Repository.Interface;
+using Amazon.SimpleSystemsManagement.Model;
 
 namespace AdminSite.Controllers
 {
@@ -43,11 +44,11 @@ namespace AdminSite.Controllers
         }
 
         [HttpGet]
-        public IActionResult Index()
+        public IActionResult Index(int startIndex = 0, int count = 10)
         {
-            var dtos = _inventoryService.GetBooks(User.Identity.Name, 0, 10);
+            var books = _inventoryService.GetBooks(User.Identity.Name, startIndex, count);
 
-            var viewModel = _mapper.Map<InventoryIndexViewModel>(dtos);
+            var viewModel = _mapper.Map<InventoryIndexViewModel>(books);
 
             return View(viewModel);
         }
