@@ -70,7 +70,7 @@ namespace Bookstore.Data.Repository.Implementation.OrderImplementations
 
                             await _orderDbCalls.ContextSaveChangesAsync();
 
-                            detail.Price.Quantity += detail.Quantity;
+                            //detail.Price.Quantity += detail.Quantity;
                             detail.IsRemoved = true;
 
                             await _orderDbCalls.ContextSaveChangesAsync();
@@ -121,7 +121,7 @@ namespace Bookstore.Data.Repository.Implementation.OrderImplementations
 
                     origOrderDetail.IsRemoved = true;
 
-                    origOrderDetail.Price.Quantity += quantity;
+                    //origOrderDetail.Price.Quantity += quantity;
 
 
                     await _orderDbCalls.ContextSaveChangesAsync();
@@ -130,7 +130,7 @@ namespace Bookstore.Data.Repository.Implementation.OrderImplementations
                     var emailInfo = new Dictionary<string, string>
                     {
                         { "bookName", origOrderDetail.Book.Name },
-                        { "bookCondition", origOrderDetail.Price.Condition.ConditionName },
+                        //{ "bookCondition", origOrderDetail.Price.Condition.ConditionName },
                         { "customerFirstName", origOrder.Customer.FirstName },
                         { "customerEmail", origOrder.Customer.Email }
                     };

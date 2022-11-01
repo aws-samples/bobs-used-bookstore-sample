@@ -6,6 +6,14 @@ using AdminSite.ViewModel.ManageOrders;
 using AdminSite.ViewModel.ResaleBooks;
 using AdminSite.ViewModel.SearchBooks;
 using Bookstore.Domain.Books;
+using AdminSite.ViewModel.Inventory;
+using System.Collections.Generic;
+using System.Linq;
+using Amazon.SimpleEmailV2.Model;
+using Microsoft.Build.Framework;
+using Bookstore.Admin.ViewModel.Inventory;
+using Bookstore.Domain.ReferenceData;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace AdminSite
 {
@@ -14,13 +22,13 @@ namespace AdminSite
         public AutoMapperProfile()
         {
             CreateMap<BookDetailsDto, BookDetailsViewModel>();
-            CreateMap<BookDetailsDto, BooksViewModel>()
+            CreateMap<BookDetailsDto, InventoryCreateUpdateViewModel>()
                 .ForMember(dest => dest.Genre, opt => opt.MapFrom(src => src.Genre.Name))
                 .ForMember(dest => dest.BookType, opt => opt.MapFrom(src => src.BookType.TypeName))
                 .ForMember(dest => dest.BookCondition, opt => opt.MapFrom(src => src.BookCondition.ConditionName));
             CreateMap<ManageOrderDto, ManageOrderViewModel>();
-            CreateMap<BooksViewModel, BooksDto>();
-            CreateMap<BooksViewModel, Book>();
+            CreateMap<InventoryCreateUpdateViewModel, BooksDto>();
+            CreateMap<InventoryCreateUpdateViewModel, Book>();
             CreateMap<BookDetailsViewModel, BookDetailsDto>();
             CreateMap<FullBookDto, FullBook>();
             CreateMap<SearchBookDto, SearchBookViewModel>();
@@ -34,6 +42,27 @@ namespace AdminSite
                 .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.BookPrice))
                 .ForMember(dest => dest.BookCondition, opt => opt.MapFrom(src => src.ConditionName))
                 .ForMember(dest => dest.BookType, opt => opt.MapFrom(src => src.TypeName));
+
+            ///////////
+
+            CreateMap<Book, InventoryIndexViewModel.BookViewModel>()
+                .ForMember(dest => dest.BookType, opt => opt.MapFrom(src => src.Type.TypeName))
+                .ForMember(dest => dest.Genre, opt => opt.MapFrom(src => src.Genre.Name))
+                .ForMember(dest => dest.Publisher, opt => opt.MapFrom(src => src.Publisher.Name));
+            CreateMap<IEnumerable<Book>, InventoryIndexViewModel>()
+                .ForMember(dest => dest.Books, opt => opt.MapFrom(src => src.ToList()));
+
+            CreateMap<Book, InventoryDetailsViewModel>()
+                .ForMember(dest => dest.BookType, opt => opt.MapFrom(src => src.Type.TypeName))
+                .ForMember(dest => dest.Genre, opt => opt.MapFrom(src => src.Genre.Name))
+                .ForMember(dest => dest.Publisher, opt => opt.MapFrom(src => src.Publisher.Name));
+
+            CreateMap<IEnumerable<ReferenceDataItem>, InventoryCreateUpdateViewModel>()
+                .ForMember(dest => dest.Genres, opt => opt.MapFrom(src => src.Where(x => x.DataType == ReferenceDataType.Genre).Select(x => new SelectListItem(x.Text, x.Id.ToString()))))
+                .ForMember(dest => dest.Publishers, opt => opt.MapFrom(src => src.Where(x => x.DataType == ReferenceDataType.Publisher).Select(x => new SelectListItem(x.Text, x.Id.ToString()))))
+                .ForMember(dest => dest.BookConditions, opt => opt.MapFrom(src => src.Where(x => x.DataType == ReferenceDataType.Condition).Select(x => new SelectListItem(x.Text, x.Id.ToString()))))
+                .ForMember(dest => dest.BookTypes, opt => opt.MapFrom(src => src.Where(x => x.DataType == ReferenceDataType.BookType).Select(x => new SelectListItem(x.Text, x.Id.ToString()))));
+
         }
     }
 }

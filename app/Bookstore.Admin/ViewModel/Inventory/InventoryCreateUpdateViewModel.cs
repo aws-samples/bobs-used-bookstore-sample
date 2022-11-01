@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
-namespace AdminSite.ViewModel.ManageInventory
+namespace Bookstore.Admin.ViewModel.Inventory
 {
-    public class BooksViewModel
+    public class InventoryCreateUpdateViewModel
     {
         public string BookName { get; set; }
 

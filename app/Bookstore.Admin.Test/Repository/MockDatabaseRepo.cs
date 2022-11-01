@@ -1,10 +1,6 @@
-﻿using DataAccess.Data;
-using Microsoft.Data.Sqlite;
+﻿using Bookstore.Data.Data;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Text;
 
 namespace AdminSite.Test.Repository
 {

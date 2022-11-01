@@ -24,6 +24,11 @@ namespace Bookstore.Data.Repository.Implementation
             context.Set<TModel>().Add(entity);
         }
 
+        public TModel Get(int id)
+        {
+            return context.Set<TModel>().Find(id);
+        }
+
         public TModel Get(long? id)
         {
             return context.Set<TModel>().Find(id);
@@ -64,8 +69,28 @@ namespace Bookstore.Data.Repository.Implementation
 
             if (filter != null) query = query.Where(filter);
 
-            foreach (var includeProperty in includeProperties.Split
-                         (new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+            foreach (var includeProperty in includeProperties.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+            {
+                query = query.Include(includeProperty.Trim());
+            }
+
+            if (orderBy != null)
+            {
+                return orderBy(query).ToList();
+            }
+
+            return query.ToList();
+        }
+
+        public IEnumerable<TModel> Get2(Expression<Func<TModel, bool>> filter = null,
+            Func<IQueryable<TModel>, IOrderedQueryable<TModel>> orderBy = null,
+            params Expression<Func<TModel, object>>[] includeProperties)
+        {
+            IQueryable<TModel> query = dbSet;
+
+            if (filter != null) query = query.Where(filter);
+
+            foreach (var includeProperty in includeProperties)
             {
                 query = query.Include(includeProperty);
             }

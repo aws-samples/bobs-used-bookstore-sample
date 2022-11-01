@@ -32,10 +32,10 @@
                     {
                         var param = new Dictionary<string, string>
                 {
-                { "BookId", $"{b.Book.Book_Id}" }
+                { "BookId", $"{b.Book.Id}" }
                 };
                         <tr>
-                            <td>@b.Book.Book_Id</td>
+                            <td>@b.Book.Id</td>
                             <td>@b.Book.Name</td>
                             <td>@b.Book.Author</td>
                             <td>@b.Book.Publisher.Name</td>
@@ -46,7 +46,7 @@
                             <td>@b.UpdatedOn.ToShortDateString()</td>
                             <td>
                                 <a class="card-link" asp-controller="Inventory" asp-action="BookDetails" asp-all-route-data="param">View</a> |
-                                <a class="card-link" asp-controller="Inventory" asp-action="EditBookDetails" asp-route-bookId="@b.Book.Book_Id">Edit</a>
+                                <a class="card-link" asp-controller="Inventory" asp-action="EditBookDetails" asp-route-bookId="@b.Book.Id">Edit</a>
                             </td>
                         </tr>
                     }

@@ -11,9 +11,9 @@
                         <a class="nav-link active" asp-controller="Home" asp-action="Index">Bob's Used Bookstore</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" asp-controller="Home" asp-action="Dashboard">Dashboard</a>
-                    </li>                    
-                    <li class="nav-item dropdown">
+                        <a class="nav-link" asp-controller="Inventory" asp-action="Index">Inventory</a>
+                    </li>
+                    @*<li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" id="navbarDropdownMenuLink-333" aria-haspopup="true" aria-expanded="false">
                             Inventory
                         </a>
@@ -22,12 +22,15 @@
                             <li><a class="dropdown-item" asp-controller="Inventory" asp-action="SearchBeta">Search Inventory</a></li>
                             <li><a class="dropdown-item" asp-controller="Inventory" asp-action="Dashboard">Dashboard</a></li>
                         </ul>
-                    </li>
+                    </li>*@
                     <li class="nav-item">
                         <a class="nav-link" asp-controller="Orders" asp-action="Index">Orders</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" asp-area="" asp-controller="Resale" asp-action="Index">Resale Books</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-controller="Resale" asp-action="Index">Reference Data</a>
                     </li>
                 </ul>
             </div>

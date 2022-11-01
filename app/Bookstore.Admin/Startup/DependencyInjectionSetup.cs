@@ -12,6 +12,7 @@ using Bookstore.Data.Repository.Implementation.InventoryImplementation;
 using Bookstore.Data.Repository.Interface.SearchImplementations;
 using Bookstore.Data.Repository.Interface;
 using Bookstore.Data.Repository.Implementation.NotificationsImplementation;
+using Services;
 
 namespace AdminSite.Startup
 {
@@ -30,6 +31,9 @@ namespace AdminSite.Startup
             builder.Services.AddTransient<IOrderStatusRepository, OrderStatusRepository>();
             builder.Services.AddTransient<INotifications, Notifications>();
             builder.Services.AddTransient<ICustomAdminPage, CustomAdmin>();
+
+            builder.Services.AddTransient<IInventoryService, InventoryService>();
+            builder.Services.AddTransient<IReferenceDataService, ReferenceDataService>();
             builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
             return builder;

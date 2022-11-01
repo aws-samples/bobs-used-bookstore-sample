@@ -50,7 +50,7 @@
                     <img src="@book.Book.FrontUrl" onerror="this.onerror=null;this.src='/images/default_c.jpg';" style="width: 135px;height: 200px;"/>
                 </td>
                 <td>
-                    <a asp-controller="Search" asp-action="Detail" asp-route-id="@book.Book.Book_Id">
+                    <a asp-controller="Search" asp-action="Detail" asp-route-id="@book.Book.Id">
                         @book.Book.Name
                     </a>
                 </td>

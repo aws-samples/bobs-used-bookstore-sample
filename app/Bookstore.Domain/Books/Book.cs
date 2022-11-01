@@ -1,10 +1,12 @@
-﻿using Bookstore.Domain;
-
-namespace Bookstore.Domain.Books
+﻿namespace Bookstore.Domain.Books
 {
     public class Book : Entity
     {
+        public string Name { get; set; }
+
         public string Author { get; set; }
+
+        public int Year { get; set; }
 
         public Publisher Publisher { get; set; }
 
@@ -12,9 +14,9 @@ namespace Bookstore.Domain.Books
 
         public BookType Type { get; set; }
 
-        public string Name { get; set; }
-
         public Genre Genre { get; set; }
+
+        //public Condition Condition { get; set; }
 
         public string FrontUrl { get; set; }
 

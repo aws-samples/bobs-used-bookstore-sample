@@ -15,7 +15,7 @@ namespace Bookstore.Domain.Orders
         public Book Book { get; set; }
 
         // Many to One Relationship
-        public Price Price { get; set; }
+        //public Price Price { get; set; }
 
         [RegularExpression(@"^\d+\.\d{0,2}$")]
         [Range(0, 9999999999999999.99)]

@@ -1,9 +1,10 @@
-﻿@using Type = Type
+﻿@using Bookstore.Domain.Books
+
 @model AdminSite.ViewModel.ManageInventory.EditViewModel
 
 @{
     var status = (string)ViewData["Status"];
-    var types = (List<Type>)ViewData["Types"];
+    var types = (List<BookType>)ViewData["Types"];
 }
 
 

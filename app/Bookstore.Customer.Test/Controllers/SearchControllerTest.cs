@@ -1,12 +1,12 @@
 ﻿using BobCustomerSite.Controllers;
-using DataAccess.Repository.Interface;
-using DataAccess.Repository.Interface.SearchImplementations;
 using CustomerSite.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Xunit;
 using Bookstore.Domain.Books;
 using Bookstore.Domain.Carts;
+using Bookstore.Data.Repository.Interface;
+using Bookstore.Data.Repository.Interface.SearchImplementations;
 
 namespace CustomerSite.Test.Controllers
 {

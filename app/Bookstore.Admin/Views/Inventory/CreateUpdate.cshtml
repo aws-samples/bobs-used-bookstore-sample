@@ -1,4 +1,6 @@
-﻿@model AdminSite.ViewModel.ManageInventory.BooksViewModel
+﻿@using Bookstore.Domain.ReferenceData
+
+@model Bookstore.Admin.ViewModel.Inventory.InventoryCreateUpdateViewModel
 @{
     ViewData["Title"] = "Add/Edit Book";
     var errorstatus = (string)ViewData["ErrorStatus"];
@@ -76,7 +78,7 @@
                     </select>
                 </div>
                 <div class="col-2">
-                    <a class="mb-3" asp-action="AddPublishers" asp-controller="Inventory">Add</a>
+                    <a class="mb-3" asp-action="Create" asp-controller="ReferenceData" asp-route-selectedReferenceDataType="@ReferenceDataType.Publisher">Add</a>
                 </div>
 
                 <div class="col-10">
@@ -85,7 +87,7 @@
                     </select>
                 </div>
                 <div class="col-2">
-                    <a class="mb-3" asp-action="AddGenres" asp-controller="Inventory">Add</a>
+                    <a class="mb-3" asp-action="Create" asp-controller="ReferenceData" asp-route-selectedReferenceDataType="@ReferenceDataType.Genre">Add</a>
                 </div>
 
                 <div class="col-10">
@@ -94,7 +96,7 @@
                     </select>
                 </div>
                 <div class="col-2">
-                    <a class="mb-3" asp-action="AddBookTypes" asp-controller="Inventory">Add</a>
+                    <a class="mb-3" asp-action="Create" asp-controller="ReferenceData" asp-route-selectedReferenceDataType="@ReferenceDataType.BookType">Add</a>
                 </div>
 
                 <div class="col-10">
@@ -103,7 +105,7 @@
                     </select>
                 </div>
                 <div class="col-2">
-                    <a class="mb-3" asp-action="AddBookConditions" asp-controller="Inventory">Add</a>
+                    <a class="mb-3" asp-action="Create" asp-controller="ReferenceData" asp-route-selectedReferenceDataType="@ReferenceDataType.Condition">Add</a>
                 </div>
 
             </div>

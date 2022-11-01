@@ -1,7 +1,6 @@
 ﻿@using CustomerSite.Models.ViewModels
-@model IEnumerable<Address>
-@*@model Tuple<IEnumerable<DataModels.Customers.Address>,IEnumerable<DataModels.Orders.OrderDetail>>*@
-@*@model Tuple<IEnumerable<DataModels.Customers.Address>, IEnumerable<DataModels.Customers.Address>>*@
+@model IEnumerable<Bookstore.Domain.Customers.Address>
+
 @{
     decimal totalprice = 0;
     foreach (var item in ViewData["order"] as List<OrderDetailViewModel>)

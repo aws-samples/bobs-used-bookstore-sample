@@ -1,4 +1,10 @@
-﻿@model AdminSite.ViewModel.UpdateBooks.LatestUpdates;
+﻿@model AdminSite.ViewModel.Inventory.InventoryIndexViewModel
+
+<div class="card m-3">
+    <div class="card-body">
+        <a class="btn btn-primary" asp-controller="Inventory" asp-action="Create">New Book</a>
+    </div>
+</div>
 
 <div class="card m-3">
     <div class="card-body">
@@ -18,7 +24,7 @@
                 </tr>
             </thead>
             <tbody>
-                @if (Model.UserBooks.Count == 0)
+                @if (Model.Books.Count == 0)
                 {
                     <tr>
                         <td colspan="10" rowspan="4" style="text-align:center;">
@@ -28,25 +34,21 @@
                 }
                 else
                 {
-                    @foreach (var b in Model.UserBooks)
+                    foreach (var book in Model.Books)
                     {
-                        var param = new Dictionary<string, string>
-                {
-                { "BookId", $"{b.Book.Id}" }
-                };
                         <tr>
-                            <td>@b.Book.Id</td>
-                            <td>@b.Book.Name</td>
-                            <td>@b.Book.Author</td>
-                            <td>@b.Book.Publisher.Name</td>
-                            <td>@b.Book.Genre.Name</td>
-                            <td>@b.Book.BookType.TypeName</td>
-                            <td>@b.Condition.ConditionName</td>
-                            <td>@b.ItemPrice.ToString("C")</td>
-                            <td>@b.UpdatedOn.ToShortDateString()</td>
+                            <td>@book.Id</td>
+                            <td>@book.Name</td>
+                            <td>@book.Author</td>
+                            <td>@book.Publisher</td>
+                            <td>@book.Genre</td>
+                            <td>@book.BookType</td>
+                            <td>@book.Condition</td>
+                            <td>@book.Price.ToString("C")</td>
+                            <td>@book.UpdatedOn.ToShortDateString()</td>
                             <td>
-                                <a class="card-link" asp-controller="Inventory" asp-action="BookDetails" asp-all-route-data="param">View</a> |
-                                <a class="card-link" asp-controller="Inventory" asp-action="EditBookDetails" asp-route-bookId="@b.Book.Id">Edit</a>
+                                <a class="card-link" asp-controller="Inventory" asp-action="Details" asp-route-id="@book.Id">View</a> |
+                                <a class="card-link" asp-controller="Inventory" asp-action="EditBookDetails" asp-route-id="@book.Id">Edit</a>
                             </td>
                         </tr>
                     }

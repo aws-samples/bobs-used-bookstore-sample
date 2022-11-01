@@ -5,9 +5,10 @@ namespace Bookstore.Domain.Carts
 {
     public class CartItem
     {
-        [Key] public string CartItem_Id { get; set; }
+        [Key] 
+        public string CartItem_Id { get; set; }
 
-        public Price Price { get; set; }
+        //public Price Price { get; set; }
 
         public Cart Cart { get; set; }
 

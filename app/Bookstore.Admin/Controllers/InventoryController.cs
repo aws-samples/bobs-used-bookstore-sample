@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using AutoMapper;
 using AdminSite.ViewModel;
-using AdminSite.ViewModel.ManageInventory;
 using BookType = Bookstore.Domain.Books.BookType;
 using Microsoft.AspNetCore.Authorization;
 using Services;
@@ -13,63 +12,64 @@ using Bookstore.Domain.Books;
 using Bookstore.Admin;
 using Bookstore.Data.Repository.Interface;
 using Amazon.SimpleSystemsManagement.Model;
+using Bookstore.Admin.ViewModel.Inventory;
 
 namespace AdminSite.Controllers
 {
     [Authorize]
     public class InventoryController : Controller
     {
-        private const int NumberOfDetails = 5;
-        private readonly IGenericRepository<Book> _bookRepository;
-        //private readonly IInventory _inventory;
-        private readonly ILogger<InventoryController> _logger;
-        private readonly IMapper _mapper;
-        //private string updateSuccess = Resource.ResourceManager.GetString("UpdateSuccessMessage");
+        private readonly ILogger<InventoryController> logger;
+        private readonly IMapper mapper;
+        private readonly IInventoryService inventoryService;
+        private readonly IReferenceDataService referenceDataService;
 
-
-        private readonly IInventoryService _inventoryService;
-
-        public InventoryController(IGenericRepository<Book> bookRepository,
+        public InventoryController(ILogger<InventoryController> logger,
                                    IMapper mapper,
-                                   //IInventory inventory,
-                                   ILogger<InventoryController> logger,
-                                   IInventoryService inventoryService)
+                                   IInventoryService inventoryService,
+                                   IReferenceDataService referenceDataService)
         {
-            //_inventory = inventory;
-            _logger = logger;
-            _mapper = mapper;
-            _bookRepository = bookRepository;
-
-            _inventoryService = inventoryService;
+            this.logger = logger;
+            this.mapper = mapper;
+            this.inventoryService = inventoryService;
+            this.referenceDataService = referenceDataService;
         }
 
         [HttpGet]
         public IActionResult Index(int startIndex = 0, int count = 10)
         {
-            var books = _inventoryService.GetBooks(User.Identity.Name, startIndex, count);
+            var books = inventoryService.GetBooks(User.Identity.Name, startIndex, count);
 
-            var viewModel = _mapper.Map<InventoryIndexViewModel>(books);
+            var viewModel = mapper.Map<InventoryIndexViewModel>(books);
 
             return View(viewModel);
         }
 
         [HttpGet]
-        public IActionResult AddBook()
+        public IActionResult Details(int id)
         {
-            var model = new BooksViewModel();
+            logger.LogInformation("Loading Book Details on Click in search page");
 
-            //model.Publishers = _inventory.GetAllPublishers().Select(x => new SelectListItem(x.Name, x.Name));
-            //model.Genres = _inventory.GetGenres().Select(x => new SelectListItem(x.Name, x.Name));
-            //model.BookTypes = _inventory.GetTypes().Select(x => new SelectListItem(x.TypeName, x.TypeName));
-            //model.BookConditions = _inventory.GetConditions().Select(x => new SelectListItem(x.ConditionName, x.ConditionName));
+            var book = inventoryService.GetBook(id);
+            var viewModel = mapper.Map<InventoryDetailsViewModel>(book);
 
-            return View("EditBookDetails", model);
+            return View(viewModel);
+        }
+
+        [HttpGet]
+        public IActionResult Create()
+        {
+            var referenceData = referenceDataService.GetAllReferenceData();
+
+            var viewModel = mapper.Map<InventoryCreateUpdateViewModel>(referenceData);
+
+            return View("CreateUpdate", viewModel);
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddBook(BooksViewModel model)
+        public async Task<IActionResult> Create(InventoryCreateUpdateViewModel model)
         {
-            if(!ModelState.IsValid) return View("EditBookDetails", model);
+            if (!ModelState.IsValid) return View("CreateUpdate", model);
 
             //var book = _mapper.Map<Book>(model);
 
@@ -77,24 +77,24 @@ namespace AdminSite.Controllers
 
             //await _database.SaveChangesAsync();
 
-            return RedirectToAction("Dashboard", "Home");
+            return RedirectToAction("Index", "Inventory");
         }
 
         [HttpGet]
         public IActionResult EditBookDetails(int? bookId = null)
         {
-            _logger.LogInformation("Loading : Add New Book View");
+            logger.LogInformation("Loading : Add New Book View");
 
-            var model = new BooksViewModel();
+            var model = new InventoryCreateUpdateViewModel();
 
             if (bookId.HasValue)
             {
                 //var book = _inventory.GetBookByID(bookId.Value);
-                var book = _inventoryService.GetBook(bookId.Value);
+                var book = inventoryService.GetBook(bookId.Value);
 
                 //TODO handle book not found
 
-                model = _mapper.Map<BooksViewModel>(book);
+                model = mapper.Map<InventoryCreateUpdateViewModel>(book);
             }
 
             //model.Publishers = _inventory.GetAllPublishers().Select(x => new SelectListItem(x.Name, x.Name));
@@ -108,17 +108,17 @@ namespace AdminSite.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> EditBookDetails(BooksViewModel bookview)
+        public async Task<IActionResult> EditBookDetails(InventoryCreateUpdateViewModel bookview)
         {
-            _logger.LogInformation("Posting new book details from form to Database ");
+            logger.LogInformation("Posting new book details from form to Database ");
 
             bookview.UpdatedBy = User.Identity.Name;
             bookview.UpdatedOn = DateTime.Now.ToUniversalTime();
             bookview.Active = true;
 
-            var book = _mapper.Map<Book>(bookview);
+            var book = mapper.Map<Book>(bookview);
 
-            await _inventoryService.SaveBookAsync(book);
+            await inventoryService.SaveBookAsync(book);
 
             //if (string.IsNullOrEmpty(bookview.Author))
             //{
@@ -357,101 +357,10 @@ namespace AdminSite.Controllers
             return View();
         }
 
-        [HttpGet]
-        public IActionResult BookDetails(long bookId)
-        {
-            _logger.LogInformation("Loading Book Details on Click in search page");
-
-            var books = new FetchBooksViewModel();
-
-            try
-            {
-                //var bookDetailDto = _inventory.GetBookByID(bookId);
-                //var bookDetails = _mapper.Map<IEnumerable<BookDetailsDto>, IEnumerable<BookDetailsViewModel>>(_inventory.GetDetails(bookId));
-
-                //books.Publisher = bookDetailDto.Publisher.Name;
-                //books.Genre = bookDetailDto.Genre.Name;
-                //books.BookType = bookDetailDto.BookType.TypeName;
-                //books.BookName = bookDetailDto.BookName;
-                //books.Books = bookDetails;
-
-                //if (!string.IsNullOrWhiteSpace(bookDetailDto.FrontUrl)) books.Images.Add(bookDetailDto.FrontUrl);
-                //if (!string.IsNullOrWhiteSpace(bookDetailDto.BackUrl)) books.Images.Add(bookDetailDto.BackUrl);
-                //if (!string.IsNullOrWhiteSpace(bookDetailDto.LeftUrl)) books.Images.Add(bookDetailDto.LeftUrl);
-                //if (!string.IsNullOrWhiteSpace(bookDetailDto.RightUrl)) books.Images.Add(bookDetailDto.RightUrl);
-                //if (books.Images.Count == 0) books.Images.Add("https://dtdt6j0vhq1rq.cloudfront.net/default0Kind of New.jpg");
-
-                //books.FrontUrl = bookDetailDto.FrontUrl;
-                //books.BackUrl = bookDetailDto.BackUrl;
-                //books.LeftUrl = bookDetailDto.LeftUrl;
-                //books.RightUrl = bookDetailDto.RightUrl;
-                //books.Author = bookDetailDto.Author;
-                //books.ISBN = bookDetailDto.ISBN;
-                //books.Summary = bookDetailDto.Summary;
-                //books.Price = bookDetailDto.Price;
-                //books.Condition = bookDetailDto.BookCondition.ConditionName;
-
-                //ViewData["Types"] = _inventory.GetFormatsOfTheSelectedBook(bookDetailDto.BookName);
-                //ViewData["Conditions"] = _inventory.GetConditionsOfTheSelectedBook(bookDetailDto.BookName);
-                //ViewData["status"] = Constants.BookDetailsStatusDetails;
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e, "Error in displaying Book Details");
-            }
-
-            return View(books);
-        }
-
-        [HttpPost]
-        public IActionResult BookDetails(string type, string chosenCondition, string bookName, FetchBooksViewModel book)
-        {
-            _logger.LogInformation("Loading books to be displayed in table based on type and condition chosen");
-            try
-            {
-                //ViewData["Types"] = _inventory.GetFormatsOfTheSelectedBook(bookName);
-                //ViewData["Conditions"] = _inventory.GetConditionsOfTheSelectedBook(bookName);
-                ViewData["status"] = "List";
-
-                //var bookDetails =
-                //    _mapper.Map<List<BookDetailsDto>, IEnumerable<BookDetailsViewModel>>(
-                //        _inventory.GetRelevantBooks(bookName, type, book.ConditionChosen));
-                //ViewData["Books"] = bookDetails;
-                //var lis = _inventory.GetRelevantBooks(bookName, type, book.ConditionChosen);
-                //if (lis.Count == 0)
-                //{
-                //    var temp = _bookRepository.Get(b => b.Name == bookName).FirstOrDefault();
-                //    var variant = _inventory.GetBookByID(temp.Book_Id);
-                //    book.Genre = variant.Genre.Name;
-                //    book.Author = variant.Author;
-                //    book.Summary = variant.Summary;
-                //    ViewData["status"] = Constants.BookDetailsStatusDetails;
-                //    ViewData["fetchstatus"] = Resource.ResourceManager.GetString("CombinationErrorStatus");
-                //    return View(book);
-                //}
-
-                //book.BookType = lis[0].BookType.TypeName;
-                //book.Publisher = lis[0].Publisher.Name;
-                //book.Genre = lis[0].Genre.Name;
-                //book.FrontUrl = lis[0].FrontUrl;
-                //book.BackUrl = lis[0].BackUrl;
-                //book.Author = lis[0].Author;
-                //book.Author = lis[0].Author;
-                //book.ISBN = lis[0].ISBN;
-                //book.Summary = lis[0].Summary;
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e, "Error in loading table data for book details ");
-            }
-
-            return View(book);
-        }
-
         public IActionResult SearchBeta(string searchfilter, string searchby, int pageNum, string viewStyle,
             string sortBy, string ascdesc, string pagination)
         {
-            _logger.LogInformation("Search Page");
+            logger.LogInformation("Search Page");
 
             //try
             //{
@@ -500,7 +409,7 @@ namespace AdminSite.Controllers
         [HttpPost]
         public IActionResult UpdateDetails(int bookId, string condition)
         {
-            _logger.LogInformation("Load Edit Book Details page with pre-filled values");
+            logger.LogInformation("Load Edit Book Details page with pre-filled values");
             //try
             //{
             //    var details = _inventory.UpdateDetails(bookId, condition);
@@ -536,7 +445,7 @@ namespace AdminSite.Controllers
 
         public IActionResult Dashboard(FetchBooksViewModel book)
         {
-            _logger.LogInformation("Dashboard Display");
+            logger.LogInformation("Dashboard Display");
 
             // _emailSender.SendInventoryLowEmail(_Inventory.ScreenInventory(), Constants.BoBsEmailAddress);
             try
@@ -585,7 +494,7 @@ namespace AdminSite.Controllers
             }
             catch (Exception e)
             {
-                _logger.LogError("Error in displaying dashboard statistics", e);
+                logger.LogError("Error in displaying dashboard statistics", e);
                 return RedirectToAction("Error", "Home");
             }
 

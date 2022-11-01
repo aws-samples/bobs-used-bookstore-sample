@@ -63,13 +63,13 @@ namespace CustomerSite.Controllers
                             includeProperties: "Price,Book,Cart")
                     .Select(c => new CartViewModel
                     {
-                        BookId = c.Book.Book_Id,
+                        BookId = c.Book.Id,
                         Url = c.Book.FrontUrl,
-                        Prices = c.Price.ItemPrice,
+                        //Prices = c.Price.ItemPrice,
                         BookName = c.Book.Name,
                         CartItem_Id = c.CartItem_Id,
-                        Quantity = c.Price.Quantity,
-                        PriceId = c.Price.Price_Id
+                        //Quantity = c.Price.Quantity,
+                        //PriceId = c.Price.Price_Id
                     });
 
             return View(cartItem);
@@ -84,13 +84,13 @@ namespace CustomerSite.Controllers
                             includeProperties: "Price,Book,Cart")
                     .Select(c => new CartViewModel
                     {
-                        BookId = c.Book.Book_Id,
+                        BookId = c.Book.Id,
                         Url = c.Book.FrontUrl,
-                        Prices = c.Price.ItemPrice,
+                        //Prices = c.Price.ItemPrice,
                         BookName = c.Book.Name,
                         CartItem_Id = c.CartItem_Id,
-                        Quantity = c.Price.Quantity,
-                        PriceId = c.Price.Price_Id
+                        //Quantity = c.Price.Quantity,
+                        //PriceId = c.Price.Price_Id
                     });
 
             return View(cartItem);
@@ -182,7 +182,7 @@ namespace CustomerSite.Controllers
                 var orderDetail = new OrderDetail
                 {
                     Book = orderDetailBook,
-                    Price = orderDetailPrice,
+                    //Price = orderDetailPrice,
                     OrderDetailPrice = Convert.ToDecimal(prices[i]),
                     Quantity = Convert.ToInt32(quantity[i]),
                     Order = recentOrder,

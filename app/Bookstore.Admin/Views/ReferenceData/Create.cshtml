@@ -1,0 +1,21 @@
+﻿@using Bookstore.Domain.ReferenceData
+
+@model Bookstore.Admin.ViewModel.ReferenceData.ReferenceDataCreateViewModel
+
+<div asp-validation-summary="All"></div>
+
+<form class="row justify-content-center" asp-controller="ReferenceData" asp-action="Create" method="post">
+    <div class="col-4">
+        <div class="mb-3">
+            <label for="referenceDataTypeSelect" class="form-label">Reference data type</label>
+            <select id="referenceDataTypeSelect" class="form-select" asp-for="SelectedReferenceDataType" asp-items="Html.GetEnumSelectList<ReferenceDataType>()"></select>
+        </div>
+
+        <div class="mb-3">
+            <label for="referenceDataTextInput" class="form-label">Text</label>
+            <input id="referenceDataTextInput" type="text" class="form-control" asp-for="Text" required />
+        </div>
+
+        <button class="btn btn-primary" type="submit">Create</button>
+    </div>
+</form>

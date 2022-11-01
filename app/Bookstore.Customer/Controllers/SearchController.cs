@@ -55,7 +55,7 @@ namespace BobCustomerSite.Controllers
                 var books = _bookRepository.Get(includeProperties: "Genre,Type,Publisher")
                     .Select(b => new BookViewModel
                     {
-                        BookId = b.Book_Id,
+                        BookId = b.Id,
                         BookName = b.Name,
                         ISBN = b.ISBN,
                         Author = b.Author,
@@ -63,8 +63,8 @@ namespace BobCustomerSite.Controllers
                         TypeName = b.Type.TypeName,
                         PublisherName = b.Publisher.Name,
                         Url = b.FrontUrl,
-                        Prices = prices.Where(p => p.Book.Book_Id == b.Book_Id).ToList(),
-                        MinPrice = prices.Where(p => p.Book.Book_Id == b.Book_Id).FirstOrDefault().ItemPrice
+                        Prices = prices.Where(p => p.Book.Id == b.Id).ToList(),
+                        MinPrice = prices.Where(p => p.Book.Id == b.Id).FirstOrDefault().ItemPrice
                     });
 
                 var pageSize = 10;
@@ -93,7 +93,7 @@ namespace BobCustomerSite.Controllers
                      var booksQuery = _bookSearch.GetBooksbySearch(searchString)
                         .Select(b => new BookViewModel
                         {
-                            BookId = b.Book_Id,
+                            BookId = b.Id,
                             BookName = b.Name,
                             ISBN = b.ISBN,
                             Author = b.Author,
@@ -101,8 +101,8 @@ namespace BobCustomerSite.Controllers
                             TypeName = b.Type.TypeName,
                             PublisherName = b.Publisher.Name,
                             Url = b.FrontUrl,
-                            Prices = pricesQuery.Where(p => p.Book.Book_Id == b.Book_Id).ToList(),
-                            MinPrice = pricesQuery.Where(p => p.Book.Book_Id == b.Book_Id).FirstOrDefault().ItemPrice
+                            Prices = pricesQuery.Where(p => p.Book.Id == b.Id).ToList(),
+                            MinPrice = pricesQuery.Where(p => p.Book.Id == b.Id).FirstOrDefault().ItemPrice
                         });
 
                     // sort query
@@ -157,7 +157,7 @@ namespace BobCustomerSite.Controllers
                 ViewBag.CurrentSort = sortBy;
             ViewBag.id = id;
 
-            var prices = _priceRepository.Get(p => p.Book.Book_Id == id && p.Active && p.Quantity > 0,
+            var prices = _priceRepository.Get(p => p.Book.Id == id && p.Active && p.Quantity > 0,
                 includeProperties: "Condition,Book");
 
             switch (sortBy)
@@ -181,7 +181,7 @@ namespace BobCustomerSite.Controllers
 
             var pricesLst = await prices.ToListAsync();
 
-            var book = _bookRepository.Get(m => m.Book_Id == id, includeProperties: "Publisher,Genre,Type")
+            var book = _bookRepository.Get(m => m.Id == id, includeProperties: "Publisher,Genre,Type")
                 .Select(m => new BookViewModel
                 {
                     BookName = m.Name,
@@ -192,7 +192,7 @@ namespace BobCustomerSite.Controllers
                     TypeName = m.Type.TypeName,
                     Url = m.FrontUrl,
                     Prices = pricesLst,
-                    BookId = m.Book_Id,
+                    BookId = m.Id,
                     Summary = m.Summary
                 });
 
@@ -208,7 +208,7 @@ namespace BobCustomerSite.Controllers
             var cartItem = new CartItem
             {
                 Book = book,
-                Price = price,
+                //Price = price,
                 Cart = cart,
                 WantToBuy = true,
                 CartItem_Id = Guid.NewGuid().ToString()
@@ -225,7 +225,7 @@ namespace BobCustomerSite.Controllers
             var price = _priceRepository.Get(priceid);
             var cartId = HttpContext.Request.Cookies["CartId"];
             var cart = _cartRepository.Get(Convert.ToString(cartId));
-            var cartItem = new CartItem { Book = book, Price = price, Cart = cart, CartItem_Id = Guid.NewGuid().ToString() };
+            var cartItem = new CartItem { Book = book, /*Price = price,*/ Cart = cart, CartItem_Id = Guid.NewGuid().ToString() };
 
             _cartItemRepository.Add(cartItem);
             _cartItemRepository.Save();

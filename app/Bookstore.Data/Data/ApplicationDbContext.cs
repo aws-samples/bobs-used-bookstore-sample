@@ -4,6 +4,7 @@ using Bookstore.Domain.Books;
 using Bookstore.Domain.Carts;
 using Bookstore.Domain.Customers;
 using Bookstore.Domain.Orders;
+using Bookstore.Domain.ReferenceData;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
@@ -37,6 +38,7 @@ namespace Bookstore.Data.Data
         public DbSet<OrderDetail> OrderDetail { get; set; }
         public DbSet<Resale> Resale { get; set; }
         public DbSet<ResaleStatus> ResaleStatus { get; set; }
+        public DbSet<ReferenceDataItem> ReferenceData { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

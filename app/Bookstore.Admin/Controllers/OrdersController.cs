@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Bookstore.Data.Repository.Interface.OrdersInterface;
 using Bookstore.Data.Repository.Interface.NotificationsInterface;
+using Bookstore.Admin;
 
 namespace AdminSite.Controllers
 {
@@ -86,42 +87,44 @@ namespace AdminSite.Controllers
         {
             if (pageNum == 0) pageNum++;
 
-            if (string.IsNullOrEmpty(searchString) && string.IsNullOrEmpty(filterValue))
-            {
-                var orders = _order.GetAllOrders(pageNum);
-                var manageOrderViewModel = _mapper.Map<ManageOrderViewModel>(orders);
-                return View(manageOrderViewModel);
-            }
+            //if (string.IsNullOrEmpty(searchString) && string.IsNullOrEmpty(filterValue))
+            //{
+            //    var orders = _order.GetAllOrders(pageNum);
+            //    var manageOrderViewModel = _mapper.Map<ManageOrderViewModel>(orders);
+            //    return View(manageOrderViewModel);
+            //}
 
-            if (!string.IsNullOrEmpty(searchString) && !string.IsNullOrEmpty(filterValue))
-            {
-                searchString = Regex.Replace(searchString, @"\s+", " ");
+            //if (!string.IsNullOrEmpty(searchString) && !string.IsNullOrEmpty(filterValue))
+            //{
+            //    searchString = Regex.Replace(searchString, @"\s+", " ");
 
-                var orders = _order.FilterList(filterValue, searchString, pageNum);
+            //    var orders = _order.FilterList(filterValue, searchString, pageNum);
 
-                filterValueText = filterValueText.Replace("Filter By: ", "");
-                orders.FilterValueText = filterValueText;
-                var manageOrderViewModel = _mapper.Map<ManageOrderViewModel>(orders);
-                return View(manageOrderViewModel);
-            }
-            else
-            {
-                var manageOrderViewModel = new ManageOrderViewModel();
+            //    filterValueText = filterValueText.Replace("Filter By: ", "");
+            //    orders.FilterValueText = filterValueText;
+            //    var manageOrderViewModel = _mapper.Map<ManageOrderViewModel>(orders);
+            //    return View(manageOrderViewModel);
+            //}
+            //else
+            //{
+            //    var manageOrderViewModel = new ManageOrderViewModel();
 
-                var pages = Enumerable.Range(1, 1).ToArray();
+            //    var pages = Enumerable.Range(1, 1).ToArray();
 
-                filterValueText = filterValueText.Replace("Filter By: ", "");
+            //    filterValueText = filterValueText.Replace("Filter By: ", "");
 
-                manageOrderViewModel.Orders = null;
-                manageOrderViewModel.FilterValue = filterValue;
-                manageOrderViewModel.SearchString = searchString;
-                manageOrderViewModel.FilterValueText = filterValueText;
-                manageOrderViewModel.Pages = pages;
-                manageOrderViewModel.HasPreviousPages = false;
-                manageOrderViewModel.CurrentPage = 1;
-                manageOrderViewModel.HasNextPages = false;
-                return View(manageOrderViewModel);
-            }
+            //    manageOrderViewModel.Orders = null;
+            //    manageOrderViewModel.FilterValue = filterValue;
+            //    manageOrderViewModel.SearchString = searchString;
+            //    manageOrderViewModel.FilterValueText = filterValueText;
+            //    manageOrderViewModel.Pages = pages;
+            //    manageOrderViewModel.HasPreviousPages = false;
+            //    manageOrderViewModel.CurrentPage = 1;
+            //    manageOrderViewModel.HasNextPages = false;
+            //    return View(manageOrderViewModel);
+            //}
+
+            return View();
         }
 
         public async Task<IActionResult> UpdateOrderStatusAsync(long orderId, long status, long oldStatus)

@@ -1,4 +1,4 @@
-﻿@model AdminSite.ViewModel.FetchBooksViewModel
+﻿@model Bookstore.Admin.ViewModel.Inventory.InventoryDetailsViewModel
 
 <h1 class="text-center mb-3">Book Details</h1>
 
@@ -31,7 +31,7 @@
             <tbody>
                 <tr>
                     <th scope="row">Name</th>
-                    <td>@Model.BookName</td>
+                    <td>@Model.Name</td>
                 </tr>
                 <tr>
                     <th scope="row">Author</th>
@@ -44,6 +44,10 @@
                 <tr>
                     <th scope="row">Price</th>
                     <td>@Model.Price.ToString("C")</td>
+                </tr>
+                <tr>
+                    <th scope="row">Publisher</th>
+                    <td>@Model.Publisher</td>
                 </tr>
                 <tr>
                     <th scope="row">ISBN</th>

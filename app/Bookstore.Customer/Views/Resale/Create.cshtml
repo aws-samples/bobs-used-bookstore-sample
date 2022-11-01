@@ -1,17 +1,19 @@
-﻿@model CustomerSite.Models.ViewModels.ResaleViewModel;
+﻿@using Bookstore.Domain.Books
+
+@model CustomerSite.Models.ViewModels.ResaleViewModel;
 @{
     var resaleBook = (Resale)ViewData["ResaleBooks"];
     var publishers = (List<Publisher>)ViewData["Publishers"];
-    var types = (List<Bookstore.Domain.Books.Type>)ViewData["Types"];
+    var types = (List<BookType>)ViewData["Types"];
     var conditions = (List<Condition>)ViewData["Conditions"];
     var genre = (List<Genre>)ViewData["Genres"];
-    var otherGenre = new DataModels.Books.Genre { Name = "Others" };
+    var otherGenre = new Genre { Name = "Others" };
     genre.Add(otherGenre);
-    var otherPublisher = new DataModels.Books.Publisher { Name = "Others" };
+    var otherPublisher = new Publisher { Name = "Others" };
     publishers.Add(otherPublisher);
-    var otherType = new DataModels.Books.Type { TypeName = "Others" };
+    var otherType = new BookType { TypeName = "Others" };
     types.Add(otherType);
-    var otherCondition = new DataModels.Books.Condition { ConditionName = "Others" };
+    var otherCondition = new Condition { ConditionName = "Others" };
     conditions.Add(otherCondition);
 }
 
