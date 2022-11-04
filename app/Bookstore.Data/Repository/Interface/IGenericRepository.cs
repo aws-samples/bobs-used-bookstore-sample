@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 
 namespace Bookstore.Data.Repository.Interface
 {
@@ -31,5 +32,8 @@ namespace Bookstore.Data.Repository.Interface
             params Expression<Func<TModel, object>>[] includeProperties);
 
         void Save();
+        Task SaveAsync();
+        Task AddAsync(TModel entity);
+        void AddOrUpdate(TModel entity);
     }
 }

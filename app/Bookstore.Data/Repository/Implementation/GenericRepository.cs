@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 using Bookstore.Data.Data;
 using Bookstore.Data.Repository.Interface;
 using Microsoft.EntityFrameworkCore;
@@ -22,6 +23,16 @@ namespace Bookstore.Data.Repository.Implementation
         public void Add(TModel entity)
         {
             context.Set<TModel>().Add(entity);
+        }
+
+        public async Task AddAsync(TModel entity)
+        {
+            await context.Set<TModel>().AddAsync(entity);
+        }
+
+        public void AddOrUpdate(TModel entity)
+        {
+             context.Set<TModel>().Update(entity);
         }
 
         public TModel Get(int id)
@@ -58,7 +69,8 @@ namespace Bookstore.Data.Repository.Implementation
 
         public void Update(TModel entity)
         {
-            context.Entry(entity).State = EntityState.Modified;
+            context.Update(entity);
+            //context.Entry(entity).State = EntityState.Modified;
         }
 
         public IEnumerable<TModel> Get(Expression<Func<TModel, bool>> filter = null,
@@ -106,6 +118,11 @@ namespace Bookstore.Data.Repository.Implementation
         public void Save()
         {
             context.SaveChanges();
+        }
+
+        public async Task SaveAsync()
+        {
+            await context.SaveChangesAsync();
         }
     }
 }

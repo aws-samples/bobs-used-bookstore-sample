@@ -15,5 +15,10 @@ namespace Bookstore.Domain
 
         [Timestamp]
         public byte[] RowVersion { get; set; }
+
+        public bool IsNewEntity()
+        {
+            return Id == 0;
+        }
     }
 }

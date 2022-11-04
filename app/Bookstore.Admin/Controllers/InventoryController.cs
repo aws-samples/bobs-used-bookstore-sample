@@ -13,6 +13,8 @@ using Bookstore.Admin;
 using Bookstore.Data.Repository.Interface;
 using Amazon.SimpleSystemsManagement.Model;
 using Bookstore.Admin.ViewModel.Inventory;
+using System.Collections.Generic;
+using Bookstore.Domain.ReferenceData;
 
 namespace AdminSite.Controllers
 {
@@ -40,7 +42,7 @@ namespace AdminSite.Controllers
         {
             var books = inventoryService.GetBooks(User.Identity.Name, startIndex, count);
 
-            var viewModel = mapper.Map<InventoryIndexViewModel>(books);
+            var viewModel = mapper.Map<IEnumerable<InventoryIndexViewModel>>(books);
 
             return View(viewModel);
         }
@@ -71,290 +73,39 @@ namespace AdminSite.Controllers
         {
             if (!ModelState.IsValid) return View("CreateUpdate", model);
 
-            //var book = _mapper.Map<Book>(model);
+            var book = mapper.Map<Book>(model);
 
-            //_database.Book.Add(book);
+            await inventoryService.SaveBookAsync(book, User.Identity.Name);
 
-            //await _database.SaveChangesAsync();
-
-            return RedirectToAction("Index", "Inventory");
+            return RedirectToAction("Index");
         }
 
         [HttpGet]
-        public IActionResult EditBookDetails(int? bookId = null)
+        public IActionResult Update(int id)
         {
             logger.LogInformation("Loading : Add New Book View");
 
-            var model = new InventoryCreateUpdateViewModel();
+            var book = inventoryService.GetBook(id);
+            var model = mapper.Map<InventoryCreateUpdateViewModel>(book);
 
-            if (bookId.HasValue)
-            {
-                //var book = _inventory.GetBookByID(bookId.Value);
-                var book = inventoryService.GetBook(bookId.Value);
+            var referenceData = referenceDataService.GetAllReferenceData();
+            mapper.Map(referenceData, model);
 
-                //TODO handle book not found
-
-                model = mapper.Map<InventoryCreateUpdateViewModel>(book);
-            }
-
-            //model.Publishers = _inventory.GetAllPublishers().Select(x => new SelectListItem(x.Name, x.Name));
-            //model.Genres = _inventory.GetGenres().Select(x => new SelectListItem(x.Name, x.Name));
-            //model.BookTypes = _inventory.GetTypes().Select(x => new SelectListItem(x.TypeName, x.TypeName));
-            //model.BookConditions = _inventory.GetConditions().Select(x => new SelectListItem(x.ConditionName, x.ConditionName));
-
-            ViewData["check"] = Constants.ErrorStatusYes;
-
-            return View(model);
+            return View("CreateUpdate", model);
         }
 
         [HttpPost]
-        public async Task<IActionResult> EditBookDetails(InventoryCreateUpdateViewModel bookview)
+        public async Task<IActionResult> Update(InventoryCreateUpdateViewModel model)
         {
             logger.LogInformation("Posting new book details from form to Database ");
 
-            bookview.UpdatedBy = User.Identity.Name;
-            bookview.UpdatedOn = DateTime.Now.ToUniversalTime();
-            bookview.Active = true;
+            var book = inventoryService.GetBook(model.Id);
 
-            var book = mapper.Map<Book>(bookview);
+            mapper.Map(model, book);
 
-            await inventoryService.SaveBookAsync(book);
+            await inventoryService.SaveBookAsync(book, User.Identity.Name);
 
-            //if (string.IsNullOrEmpty(bookview.Author))
-            //{
-            //    var temp = _bookRepository.Get(b => b.Name == bookview.BookName).FirstOrDefault();
-            //    var variant = _inventory.GetBookByID(temp.Book_Id);
-            //    bookview.Author = variant.Author;
-            //    bookview.Summary = variant.Summary;
-            //}
-
-            //if (ModelState.IsValid)
-            //{
-            //    var booksDto = _mapper.Map<BooksDto>(bookview);
-            //    var status = await _inventory.AddToTablesAsync(booksDto);
-
-            //    if (!status)
-            //    {
-            //        ViewData["ErrorStatus"] = Constants.ErrorStatusYes;
-
-            //        ViewData["Types"] = _inventory.GetTypes();
-            //        ViewData["Publishers"] = _inventory.GetAllPublishers();
-            //        ViewData["Genres"] = _inventory.GetGenres();
-            //        ViewData["Conditions"] = _inventory.GetConditions();
-            //        return View(bookview);
-            //    }
-
-            //    var temp = _bookRepository.Get(b => b.Name == bookview.BookName).FirstOrDefault();
-            //    var bookId = temp.Book_Id;
-            //    return RedirectToAction("BookDetails", new { BookId = bookId });
-            //}
-
-            return View(bookview);
-        }
-
-        [HttpGet]
-        public IActionResult AddPublishers()
-        {
-            ViewData["Status"] = Resource.ResourceManager.GetString("AddPublisherMessage");
-            //ViewData["Publishers"] = _inventory.GetAllPublishers();
-
-            return View();
-        }
-
-        [HttpPost]
-        public IActionResult AddPublishers(Publisher publisher)
-        {
-            //try
-            //{
-            //    var status = _inventory.AddPublishers(publisher);
-
-            //    if (status)
-            //        return RedirectToAction("EditBookDetails");
-            //    ViewData["Status"] = Resource.ResourceManager.GetString("PublisherExistsStatus");
-            //}
-
-            //catch (Exception e)
-            //{
-            //    _logger.LogError(e, "Error in adding a new publisher");
-            //}
-
-            return View();
-        }
-
-        [HttpGet]
-        public IActionResult AddGenres()
-        {
-            ViewData["Status"] = Resource.ResourceManager.GetString("AddGenreMessage");
-            return View();
-        }
-
-        [HttpPost]
-        public IActionResult AddGenres(Genre genre)
-        {
-            //try
-            //{
-            //    var status = _inventory.AddGenres(genre);
-
-            //    if (status)
-            //        return RedirectToAction("EditBookDetails");
-            //    ViewData["Status"] = Resource.ResourceManager.GetString("GenreExistsStatus");
-            //}
-
-            //catch (Exception e)
-            //{
-            //    _logger.LogError(e, "Error in adding a new genre");
-            //}
-
-            return View();
-        }
-
-        [HttpGet]
-        public IActionResult AddBookTypes()
-        {
-            ViewData["Status"] = Resource.ResourceManager.GetString("AddTypeMessage");
-            return View();
-        }
-
-        [HttpPost]
-        public IActionResult AddBookTypes(BookType booktype)
-        {
-            //try
-            //{
-            //    var status = _inventory.AddBookTypes(booktype);
-
-            //    if (status)
-            //        return RedirectToAction("EditBookDetails");
-            //    ViewData["Status"] = Resource.ResourceManager.GetString("TypeExistsStatus");
-            //}
-            //catch (Exception e)
-            //{
-            //    _logger.LogError(e, "Error in adding a new type");
-            //}
-
-            return View();
-        }
-
-        [HttpGet]
-        public IActionResult AddBookConditions()
-        {
-            ViewData["Status"] = Resource.ResourceManager.GetString("AddConditionsMessage");
-            return View();
-        }
-
-        [HttpPost]
-        public IActionResult AddBookConditions(Condition bookcondition)
-        {
-            //try
-            //{
-            //    var status = _inventory.AddBookConditions(bookcondition);
-
-            //    if (status)
-            //        return RedirectToAction("EditBookDetails");
-            //    ViewData["Status"] = Resource.ResourceManager.GetString("ConditionExistsStatus");
-            //}
-            //catch (Exception e)
-            //{
-            //    _logger.LogError(e, "Error in adding a new condition");
-            //}
-
-            return View();
-        }
-
-        [HttpGet]
-        public IActionResult EditPublisher()
-        {
-            //ViewData["Publishers"] = _inventory.GetAllPublishers();
-            return View();
-        }
-
-        [HttpPost]
-        public IActionResult EditPublisher(string actual, string name)
-        {
-            //if (string.CompareOrdinal(actual, name) == 0)
-            //{
-            //    ViewData["Status"] = "You seem to have not made any change , Please Recheck";
-            //}
-            //else
-            //{
-            //    _inventory.EditPublisher(actual, name);
-            //    ViewData["Status"] = "Successfully updated the existing records";
-            //}
-
-            //ViewData["Publishers"] = _inventory.GetAllPublishers();
-
-            return View();
-        }
-
-        [HttpGet]
-        public IActionResult EditGenre()
-        {
-            //ViewData["Genres"] = _inventory.GetGenres();
-            return View();
-        }
-
-        public IActionResult EditGenre(string actual, string name)
-        {
-            //if (string.CompareOrdinal(actual, name) == 0)
-            //{
-            //    ViewData["Status"] = "Successfully updated the existing records";
-            //}
-            //else
-            //{
-            //    _inventory.EditGenre(actual, name);
-            //    ViewData["Status"] = "Successfully updated the existing records";
-            //}
-
-            //ViewData["Genres"] = _inventory.GetGenres();
-
-            return View();
-        }
-
-        [HttpGet]
-        public IActionResult EditCondition()
-        {
-            //ViewData["Conditions"] = _inventory.GetConditions();
-            return View();
-        }
-
-        public IActionResult EditCondition(string actual, string name)
-        {
-            //if (string.CompareOrdinal(actual, name) == 0)
-            //{
-            //    //ViewData["Status"] = updateSuccess;
-            //}
-            //else
-            //{
-            //    _inventory.EditCondition(actual, name);
-            //    //ViewData["Status"] = updateSuccess;
-            //}
-
-            //ViewData["Conditions"] = _inventory.GetConditions();
-
-            return View();
-        }
-
-        [HttpGet]
-        public IActionResult EditType()
-        {
-            //ViewData["Types"] = _inventory.GetTypes();
-            return View();
-        }
-
-        public IActionResult EditType(string actual, string name)
-        {
-            //if (string.CompareOrdinal(actual, name) == 0)
-            //{
-            //    //ViewData["Status"] = updateSuccess;
-            //}
-            //else
-            //{
-            //    _inventory.EditType(actual, name);
-            //    //ViewData["Status"] = updateSuccess;
-            //}
-
-            //ViewData["Types"] = _inventory.GetTypes();
-
-            return View();
+            return RedirectToAction("Index");
         }
 
         public IActionResult SearchBeta(string searchfilter, string searchby, int pageNum, string viewStyle,

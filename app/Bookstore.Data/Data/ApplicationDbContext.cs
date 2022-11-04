@@ -43,9 +43,9 @@ namespace Bookstore.Data.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             CreateSeedResaleStatus(modelBuilder);
-            CreateSeedOrderStatus(modelBuilder);
-
+            CreateSeedOrderStatus(modelBuilder);            
         }
+
         public void CreateSeedResaleStatus(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ResaleStatus>().HasData(new ResaleStatus

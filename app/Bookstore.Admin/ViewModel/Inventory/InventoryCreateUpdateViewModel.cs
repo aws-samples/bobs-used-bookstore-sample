@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -7,29 +6,25 @@ namespace Bookstore.Admin.ViewModel.Inventory
 {
     public class InventoryCreateUpdateViewModel
     {
-        public string BookName { get; set; }
+        public int Id { get; set; }
+
+        public string Name { get; set; }
+
+        public string Author { get; set; }
 
         public string ISBN { get; set; }
 
-        public long BookId { get; set; }
-
         public IEnumerable<SelectListItem> Publishers { get; set; } = new List<SelectListItem>();
-
-        public long PublisherId { get; set; }
-
-        public string PublisherName { get; set; }
+        public int SelectedPublisherId { get; set; }
 
         public IEnumerable<SelectListItem> BookTypes { get; set; } = new List<SelectListItem>();
-
-        public string BookType { get; set; }
+        public int SelectedBookTypeId { get; set; }
 
         public IEnumerable<SelectListItem> Genres { get; set; } = new List<SelectListItem>();
-
-        public string Genre { get; set; }
+        public int SelectedGenreId { get; set; }
 
         public IEnumerable<SelectListItem> BookConditions { get; set; } = new List<SelectListItem>();
-
-        public string BookCondition { get; set; }
+        public int SelectedConditionId { get; set; }
 
         public double? Price { get; set; }
 
@@ -45,18 +40,6 @@ namespace Bookstore.Admin.ViewModel.Inventory
 
         public IFormFile RightSidePhoto { get; set; }
 
-        public List<string> Booktypes { get; set; }
-
         public string Summary { get; set; }
-
-        public string AudioBookUrl { get; set; }
-
-        public string Author { get; set; }
-
-        public string UpdatedBy { get; set; }
-
-        public DateTime UpdatedOn { get; set; }
-
-        public bool Active { get; set; }
     }
 }

@@ -1,4 +1,4 @@
-﻿@model AdminSite.ViewModel.Inventory.InventoryIndexViewModel
+﻿@model IEnumerable<AdminSite.ViewModel.Inventory.InventoryIndexViewModel>
 
 <div class="card m-3">
     <div class="card-body">
@@ -24,7 +24,7 @@
                 </tr>
             </thead>
             <tbody>
-                @if (Model.Books.Count == 0)
+                @if (Model.Count() == 0)
                 {
                     <tr>
                         <td colspan="10" rowspan="4" style="text-align:center;">
@@ -34,7 +34,7 @@
                 }
                 else
                 {
-                    foreach (var book in Model.Books)
+                    foreach (var book in Model)
                     {
                         <tr>
                             <td>@book.Id</td>
@@ -48,7 +48,7 @@
                             <td>@book.UpdatedOn.ToShortDateString()</td>
                             <td>
                                 <a class="card-link" asp-controller="Inventory" asp-action="Details" asp-route-id="@book.Id">View</a> |
-                                <a class="card-link" asp-controller="Inventory" asp-action="EditBookDetails" asp-route-id="@book.Id">Edit</a>
+                                <a class="card-link" asp-controller="Inventory" asp-action="Update" asp-route-id="@book.Id">Update</a>
                             </td>
                         </tr>
                     }

@@ -22,14 +22,14 @@ namespace Bookstore.Data.Repository.Implementation.SearchImplementation
             IEnumerable<Price> price = _context.Price.Where(p => p.Quantity > 0 &&
                                                                  p.Active && (
                                                                      p.Book.Name.Contains(searchString) ||
-                                                                     p.Book.Genre.Name.Contains(searchString) ||
-                                                                     p.Book.Type.TypeName.Contains(searchString) ||
+                                                                     p.Book.Genre.Text.Contains(searchString) ||
+                                                                     p.Book.BookType.Text.Contains(searchString) ||
                                                                      p.Book.ISBN.Contains(searchString) ||
-                                                                     p.Book.Publisher.Name.Contains(searchString)))
+                                                                     p.Book.Publisher.Text.Contains(searchString)))
                 .Include(price => price.Book)
                 .ThenInclude(book => book.Genre)
                 .Include(price => price.Book)
-                .ThenInclude(book => book.Type)
+                .ThenInclude(book => book.BookType)
                 .Include(price => price.Book)
                 .ThenInclude(book => book.Publisher);
 

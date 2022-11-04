@@ -50,11 +50,11 @@
 <div asp-validation-summary="All"></div>
 
 <form class="needs-validation" enctype="multipart/form-data" method="post">
-    <input type="hidden" asp-for="BookId" />
+    <input type="hidden" asp-for="Id" />
 
     <div class="row justify-content-center">
         <div class="col-4">
-            <input type="text" class="form-control mb-3" asp-for="BookName" placeholder="BOOK NAME" required />
+            <input type="text" class="form-control mb-3" asp-for="Name" placeholder="BOOK NAME" required />
             <input type="text" class="form-control mb-3" asp-for="Author" placeholder="AUTHOR" required />
             <input type="text" class="form-control mb-3" asp-for="ISBN" placeholder="ISBN" required />
 
@@ -73,7 +73,7 @@
         <div class="col-4">
             <div class="row">
                 <div class="col-10">
-                    <select class="form-select mb-3" asp-for="PublisherName" asp-items="Model.Publishers" required>
+                    <select class="form-select mb-3" asp-for="SelectedPublisherId" asp-items="Model.Publishers" required>
                         <option value="">Select the publisher</option>
                     </select>
                 </div>
@@ -82,7 +82,7 @@
                 </div>
 
                 <div class="col-10">
-                    <select class="form-select mb-3" asp-for="Genre" asp-items="Model.Genres" required>
+                    <select class="form-select mb-3" asp-for="SelectedGenreId" asp-items="Model.Genres" required>
                         <option value="">Select the genre</option>
                     </select>
                 </div>
@@ -91,7 +91,7 @@
                 </div>
 
                 <div class="col-10">
-                    <select class="form-select mb-3" asp-for="BookType" asp-items="Model.BookTypes" required>
+                    <select class="form-select mb-3" asp-for="SelectedBookTypeId" asp-items="Model.BookTypes" required>
                         <option value="">Select the type</option>
                     </select>
                 </div>
@@ -100,7 +100,7 @@
                 </div>
 
                 <div class="col-10">
-                    <select class="form-select mb-3" asp-for="BookCondition" asp-items="Model.BookConditions" required>
+                    <select class="form-select mb-3" asp-for="SelectedConditionId" asp-items="Model.BookConditions" required>
                         <option value="">Select the condition</option>
                     </select>
                 </div>

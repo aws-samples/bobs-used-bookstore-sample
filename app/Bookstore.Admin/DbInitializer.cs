@@ -35,23 +35,23 @@ namespace AdminSite
             BookType tradeType = context.Type.First(a => a.TypeName == "Trade Paperback");
             BookType massType = context.Type.First(a => a.TypeName == "Mass-market paperback");
 
-            var books = new Book[]
-            {
-                new Book{Author = "Marley Cobb", Publisher = new Publisher{Name = "The Twisting Memoirs" }, ISBN = "6556784356", Type = hardcoverType, Name = "2020 : The Apocalypse", Genre = new Genre{ Name = "Sci-Fi"}, FrontUrl = uploadToS3(bucketName, cdnDomain, path, "2020Apocalypse.png") },
-                new Book{Author = "Merritt Chambers", Publisher = new Publisher{Name = "Seal Pen Publishing " }, ISBN = "7665438976", Type = hardcoverType, Name = "Children Of Iron", Genre = new Genre{ Name = "Tragedy"}, FrontUrl = uploadToS3(bucketName, cdnDomain, path, "childerofiron.png") },
-                new Book{Author = "Lee Schuman", Publisher = new Publisher{Name = "Witty Tome" }, ISBN = "5442280765", Type = hardcoverType, Name = "Gold In The Dark", Genre = new Genre{ Name = "Fantasy"}, FrontUrl = uploadToS3(bucketName, cdnDomain, path, "GoldInTheDark.png") },
-                new Book{Author = "Vick Hines", Publisher = new Publisher{Name = "Seamark Publishing" }, ISBN = "4556789542", Type = tradeType, Name = "League Of Smokes", Genre = new Genre{ Name = "Classics"}, FrontUrl = uploadToS3(bucketName, cdnDomain, path, "leagueOfSmokes.png") },
-                new Book{Author = "Bailey Armstrong", Publisher = new Publisher{Name = "Fab Paperback" }, ISBN = "4563358087", Type = tradeType, Name = "Alone With The Stars", Genre = new Genre{ Name = "Action and Adventure"}, FrontUrl = uploadToS3(bucketName, cdnDomain, path, "AloneWithStars.png") },
-                new Book{Author = "Owen Kain", Publisher = new Publisher{Name = "Poetic Publication" }, ISBN = "2354435678", Type = hardcoverType, Name = "The Girl In The Polaroid", Genre = new Genre{ Name = "Crime & Mystery"}, FrontUrl = uploadToS3(bucketName, cdnDomain, path, "girlinpolaroid.png") },
-                new Book{Author = "Adrian Lawrence", Publisher = new Publisher{Name = "All Memoirs" }, ISBN = "6554789632", Type = tradeType, Name = "Nana Lawrence 10001 Jokes", Genre = new Genre{ Name = "Humor and Satire"}, FrontUrl = uploadToS3(bucketName, cdnDomain, path, "nana.png") },
-                new Book{Author = "Harlow Nicholas", Publisher = new Publisher{Name = "Reeve-Chase, Inc" }, ISBN = "4558786554", Type = massType, Name = "My Search For Meaning", Genre = new Genre{ Name = "Biography and Autobiography"}, FrontUrl = uploadToS3(bucketName, cdnDomain, path, "search.png") }
+            //var books = new Book[]
+            //{
+            //    new Book{Author = "Marley Cobb", Publisher = new Publisher{Name = "The Twisting Memoirs" }, ISBN = "6556784356", Type = hardcoverType, Name = "2020 : The Apocalypse", Genre = new Genre{ Name = "Sci-Fi"}, FrontUrl = uploadToS3(bucketName, cdnDomain, path, "2020Apocalypse.png") },
+            //    new Book{Author = "Merritt Chambers", Publisher = new Publisher{Name = "Seal Pen Publishing " }, ISBN = "7665438976", Type = hardcoverType, Name = "Children Of Iron", Genre = new Genre{ Name = "Tragedy"}, FrontUrl = uploadToS3(bucketName, cdnDomain, path, "childerofiron.png") },
+            //    new Book{Author = "Lee Schuman", Publisher = new Publisher{Name = "Witty Tome" }, ISBN = "5442280765", Type = hardcoverType, Name = "Gold In The Dark", Genre = new Genre{ Name = "Fantasy"}, FrontUrl = uploadToS3(bucketName, cdnDomain, path, "GoldInTheDark.png") },
+            //    new Book{Author = "Vick Hines", Publisher = new Publisher{Name = "Seamark Publishing" }, ISBN = "4556789542", Type = tradeType, Name = "League Of Smokes", Genre = new Genre{ Name = "Classics"}, FrontUrl = uploadToS3(bucketName, cdnDomain, path, "leagueOfSmokes.png") },
+            //    new Book{Author = "Bailey Armstrong", Publisher = new Publisher{Name = "Fab Paperback" }, ISBN = "4563358087", Type = tradeType, Name = "Alone With The Stars", Genre = new Genre{ Name = "Action and Adventure"}, FrontUrl = uploadToS3(bucketName, cdnDomain, path, "AloneWithStars.png") },
+            //    new Book{Author = "Owen Kain", Publisher = new Publisher{Name = "Poetic Publication" }, ISBN = "2354435678", Type = hardcoverType, Name = "The Girl In The Polaroid", Genre = new Genre{ Name = "Crime & Mystery"}, FrontUrl = uploadToS3(bucketName, cdnDomain, path, "girlinpolaroid.png") },
+            //    new Book{Author = "Adrian Lawrence", Publisher = new Publisher{Name = "All Memoirs" }, ISBN = "6554789632", Type = tradeType, Name = "Nana Lawrence 10001 Jokes", Genre = new Genre{ Name = "Humor and Satire"}, FrontUrl = uploadToS3(bucketName, cdnDomain, path, "nana.png") },
+            //    new Book{Author = "Harlow Nicholas", Publisher = new Publisher{Name = "Reeve-Chase, Inc" }, ISBN = "4558786554", Type = massType, Name = "My Search For Meaning", Genre = new Genre{ Name = "Biography and Autobiography"}, FrontUrl = uploadToS3(bucketName, cdnDomain, path, "search.png") }
               
-            };
+            //};
 
-            foreach (Book s in books)
-            {
-                context.Book.Add(s);
-            }
+            //foreach (Book s in books)
+            //{
+            //    context.Book.Add(s);
+            //}
             context.SaveChanges();
 
             var prices = new Price[]
