@@ -47,8 +47,11 @@
                             <td>@book.Price.ToString("C")</td>
                             <td>@book.UpdatedOn.ToShortDateString()</td>
                             <td>
-                                <a class="card-link" asp-controller="Inventory" asp-action="Details" asp-route-id="@book.Id">View</a> |
-                                <a class="card-link" asp-controller="Inventory" asp-action="Update" asp-route-id="@book.Id">Update</a>
+                                <div class="hstack gap-2">
+                                    <a class="card-link" asp-controller="Inventory" asp-action="Details" asp-route-id="@book.Id">View</a>
+                                    <div class="vr"></div>
+                                    <a class="card-link" asp-controller="Inventory" asp-action="Update" asp-route-id="@book.Id">Update</a>
+                                </div>
                             </td>
                         </tr>
                     }
