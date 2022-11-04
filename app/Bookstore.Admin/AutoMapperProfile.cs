@@ -51,23 +51,17 @@ namespace AdminSite
                 .ForMember(dest => dest.Publisher, opt => opt.MapFrom(src => src.Publisher.Text))
                 .ForMember(dest => dest.Condition, opt => opt.MapFrom(src => src.Condition.Text));
 
+            CreateMap<Book, InventoryDetailsViewModel>()
+                .ForMember(dest => dest.BookType, opt => opt.MapFrom(src => src.BookType.Text))
+                .ForMember(dest => dest.Genre, opt => opt.MapFrom(src => src.Genre.Text))
+                .ForMember(dest => dest.Publisher, opt => opt.MapFrom(src => src.Publisher.Text));
+
             CreateMap<InventoryCreateUpdateViewModel, Book>()
                 .ForMember(dest => dest.BookTypeId, opt => opt.MapFrom(src => src.SelectedBookTypeId))
                 .ForMember(dest => dest.GenreId, opt => opt.MapFrom(src => src.SelectedGenreId))
                 .ForMember(dest => dest.ConditionId, opt => opt.MapFrom(src => src.SelectedConditionId))
                 .ForMember(dest => dest.PublisherId, opt => opt.MapFrom(src => src.SelectedPublisherId))
                 .ReverseMap();
-
-            //CreateMap<Book, InventoryCreateUpdateViewModel>()
-            //    .ForMember(dest => dest.SelectedBookTypeId, opt => opt.MapFrom(src => src.BookTypeId))
-            //    .ForMember(dest => dest.SelectedGenreId, opt => opt.MapFrom(src => src.SelectedGenreId))
-            //    .ForMember(dest => dest.SelectedConditionId, opt => opt.MapFrom(src => src.SelectedConditionId))
-            //    .ForMember(dest => dest.SelectedPublisherId, opt => opt.MapFrom(src => src.SelectedPublisherId));
-
-            CreateMap<Book, InventoryDetailsViewModel>()
-                .ForMember(dest => dest.BookType, opt => opt.MapFrom(src => src.BookType.Text))
-                .ForMember(dest => dest.Genre, opt => opt.MapFrom(src => src.Genre.Text))
-                .ForMember(dest => dest.Publisher, opt => opt.MapFrom(src => src.Publisher.Text));
 
             CreateMap<IEnumerable<ReferenceDataItem>, InventoryCreateUpdateViewModel>()
                 .ForMember(dest => dest.Genres, opt => opt.MapFrom(src => src.Where(x => x.DataType == ReferenceDataType.Genre).Select(x => new SelectListItem(x.Text, x.Id.ToString()))))
