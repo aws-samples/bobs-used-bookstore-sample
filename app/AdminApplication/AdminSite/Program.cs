@@ -1,7 +1,9 @@
+using AdminSite;
 using Amazon.Polly;
 using Amazon.Rekognition;
 using Amazon.S3;
 using Amazon.Translate;
+using Autofac.Core;
 using DataAccess.Data;
 using DataAccess.Repository.Implementation;
 using DataAccess.Repository.Implementation.InventoryImplementation;
@@ -47,6 +49,8 @@ builder.Services.AddTransient<IOrderStatusRepository, OrderStatusRepository>();
 builder.Services.AddTransient<INotifications, Notifications>();
 builder.Services.AddTransient<ICustomAdminPage, CustomAdmin>();
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+
+builder.Services.AddAutoMapper(x => x.AddProfile<AutoMapperProfile>());
 
 // Configure AWS Logging
 builder.Logging.AddAWSProvider();
