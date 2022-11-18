@@ -14,6 +14,7 @@ using Microsoft.Build.Framework;
 using Bookstore.Admin.ViewModel.Inventory;
 using Bookstore.Domain.ReferenceData;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.IO;
 
 namespace AdminSite
 {
@@ -61,7 +62,17 @@ namespace AdminSite
                 .ForMember(dest => dest.GenreId, opt => opt.MapFrom(src => src.SelectedGenreId))
                 .ForMember(dest => dest.ConditionId, opt => opt.MapFrom(src => src.SelectedConditionId))
                 .ForMember(dest => dest.PublisherId, opt => opt.MapFrom(src => src.SelectedPublisherId))
-                .ReverseMap();
+                .ForMember(dest => dest.BackImageUrl, opt => opt.Ignore())
+                .ForMember(dest => dest.FrontImageUrl, opt => opt.Ignore())
+                .ForMember(dest => dest.LeftImageUrl, opt => opt.Ignore())
+                .ForMember(dest => dest.RightImageUrl, opt => opt.Ignore());
+
+            CreateMap<Book, InventoryCreateUpdateViewModel>()
+                .ForMember(dest => dest.SelectedBookTypeId, opt => opt.MapFrom(src => src.BookTypeId))
+                .ForMember(dest => dest.SelectedConditionId, opt => opt.MapFrom(src => src.ConditionId))
+                .ForMember(dest => dest.SelectedGenreId, opt => opt.MapFrom(src => src.GenreId))
+                .ForMember(dest => dest.SelectedPublisherId, opt => opt.MapFrom(src => src.PublisherId));
+
 
             CreateMap<IEnumerable<ReferenceDataItem>, InventoryCreateUpdateViewModel>()
                 .ForMember(dest => dest.Genres, opt => opt.MapFrom(src => src.Where(x => x.DataType == ReferenceDataType.Genre).Select(x => new SelectListItem(x.Text, x.Id.ToString()))))

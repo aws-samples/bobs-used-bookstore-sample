@@ -64,7 +64,7 @@ namespace CustomerSite.Controllers
                     .Select(c => new CartViewModel
                     {
                         BookId = c.Book.Id,
-                        Url = c.Book.FrontUrl,
+                        Url = c.Book.FrontImageUrl,
                         //Prices = c.Price.ItemPrice,
                         BookName = c.Book.Name,
                         CartItem_Id = c.CartItem_Id,
@@ -85,7 +85,7 @@ namespace CustomerSite.Controllers
                     .Select(c => new CartViewModel
                     {
                         BookId = c.Book.Id,
-                        Url = c.Book.FrontUrl,
+                        Url = c.Book.FrontImageUrl,
                         //Prices = c.Price.ItemPrice,
                         BookName = c.Book.Name,
                         CartItem_Id = c.CartItem_Id,
@@ -219,7 +219,7 @@ namespace CustomerSite.Controllers
                 .Select(m => new OrderDetailViewModel
                 {
                     Bookname = m.Book.Name,
-                    Url = m.Book.FrontUrl,
+                    Url = m.Book.FrontImageUrl,
                     Price = m.OrderDetailPrice,
                     Quantity = m.Quantity
                 });
@@ -237,7 +237,7 @@ namespace CustomerSite.Controllers
                 .Select(c => new OrderDetailViewModel
                 {
                     Bookname = c.Book.Name,
-                    Url = c.Book.FrontUrl,
+                    Url = c.Book.FrontImageUrl,
                     Price = c.OrderDetailPrice,
                     Quantity = c.Quantity
                 });

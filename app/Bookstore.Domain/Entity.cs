@@ -4,7 +4,6 @@ namespace Bookstore.Domain
 {
     public class Entity
     {
-        [Key]
         public int Id { get; set; }
 
         public string CreatedBy { get; set; }

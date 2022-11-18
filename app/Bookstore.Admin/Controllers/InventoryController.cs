@@ -15,6 +15,7 @@ using Amazon.SimpleSystemsManagement.Model;
 using Bookstore.Admin.ViewModel.Inventory;
 using System.Collections.Generic;
 using Bookstore.Domain.ReferenceData;
+using System.IO;
 
 namespace AdminSite.Controllers
 {
@@ -75,7 +76,13 @@ namespace AdminSite.Controllers
 
             var book = mapper.Map<Book>(model);
 
-            await inventoryService.SaveBookAsync(book, User.Identity.Name);
+            await inventoryService.SaveBookAsync(
+                book, 
+                model.FrontImage,
+                model.BackImage,
+                model.LeftImage,
+                model.RightImage,
+                User.Identity.Name);
 
             return RedirectToAction("Index");
         }
@@ -103,7 +110,13 @@ namespace AdminSite.Controllers
 
             mapper.Map(model, book);
 
-            await inventoryService.SaveBookAsync(book, User.Identity.Name);
+            await inventoryService.SaveBookAsync(
+                book, 
+                model.FrontImage, 
+                model.BackImage,
+                model.LeftImage,
+                model.RightImage,
+                User.Identity.Name);
 
             return RedirectToAction("Index");
         }

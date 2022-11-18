@@ -13,6 +13,8 @@ using Bookstore.Data.Repository.Interface.SearchImplementations;
 using Bookstore.Data.Repository.Interface;
 using Bookstore.Data.Repository.Implementation.NotificationsImplementation;
 using Services;
+using Microsoft.Extensions.Hosting;
+using Bookstore.Services;
 
 namespace AdminSite.Startup
 {
@@ -23,7 +25,6 @@ namespace AdminSite.Startup
             builder.Services.AddTransient<ISearchDatabaseCalls, SearchDatabaseCalls>();
             builder.Services.AddTransient<IExpressionFunction, ExpressionFunction>();
             builder.Services.AddTransient<IOrderDatabaseCalls, OrderDatabaseCalls>();
-            //builder.Services.AddTransient<IInventory, Inventory>();
             builder.Services.AddTransient<IRekognitionNPollyRepository, RekognitionNPollyRepository>();
             builder.Services.AddTransient<ISearchRepository, SearchRepository>();
             builder.Services.AddTransient<IOrderRepository, OrderRepository>();
@@ -35,6 +36,15 @@ namespace AdminSite.Startup
             builder.Services.AddTransient<IInventoryService, InventoryService>();
             builder.Services.AddTransient<IReferenceDataService, ReferenceDataService>();
             builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+
+            if (builder.Environment.IsDevelopment())
+            {
+                builder.Services.AddTransient<IFileService, LocalFileService>();
+            }
+            else
+            {
+                builder.Services.AddTransient<IFileService, S3FileService>();
+            }
 
             return builder;
         }

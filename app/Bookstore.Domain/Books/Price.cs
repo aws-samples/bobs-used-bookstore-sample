@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Bookstore.Domain.Books
 {
+    //TODO Perhaps this should be renamed to something like StockItem
     public class Price
     {
         [Key]

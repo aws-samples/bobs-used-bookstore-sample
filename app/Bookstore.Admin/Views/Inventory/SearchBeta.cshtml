@@ -106,21 +106,21 @@
 
                             <div class="col-12 col-md-6 col-lg-4">
                                 <div class="card">
-                                        @if(!String.IsNullOrEmpty(@book.Price.Book.FrontUrl))
+                                        @if(!String.IsNullOrEmpty(@book.Price.Book.FrontImageUrl))
                                         {
-                                            <img class="card-img-top" src="@book.Price.Book.FrontUrl" alt="Card image cap"> 
+                                            <img class="card-img-top" src="@book.Price.Book.FrontImageUrl" alt="Card image cap"> 
                                         }
-                                        else if (!String.IsNullOrEmpty(@book.Price.Book.BackUrl))
+                                        else if (!String.IsNullOrEmpty(@book.Price.Book.BackImageUrl))
                                         {
-                                            <img class="card-img-top" src="@book.Price.Book.BackUrl" alt="Card image cap">
+                                            <img class="card-img-top" src="@book.Price.Book.BackImageUrl" alt="Card image cap">
                                         }
-                                        else if (!String.IsNullOrEmpty(@book.Price.Book.LeftUrl))
+                                        else if (!String.IsNullOrEmpty(@book.Price.Book.LeftImageUrl))
                                         {
-                                            <img class="card-img-top" src="@book.Price.Book.LeftUrl" alt="Card image cap">
+                                            <img class="card-img-top" src="@book.Price.Book.LeftImageUrl" alt="Card image cap">
                                         }
-                                        else if (!String.IsNullOrEmpty(@book.Price.Book.RightUrl))
+                                        else if (!String.IsNullOrEmpty(@book.Price.Book.RightImageUrl))
                                         {
-                                            <img class="card-img-top" src="@book.Price.Book.RightUrl" alt="Card image cap">
+                                            <img class="card-img-top" src="@book.Price.Book.RightImageUrl" alt="Card image cap">
                                         }
                                         else
                                         {

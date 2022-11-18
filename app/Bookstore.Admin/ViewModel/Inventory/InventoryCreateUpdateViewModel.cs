@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.IO;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -30,15 +32,17 @@ namespace Bookstore.Admin.ViewModel.Inventory
 
         public int? Quantity { get; set; }
 
-        public IFormFile FrontPhoto { get; set; }
+        public IFormFile FrontImage { get; set; }
+        public string FrontImageUrl { get; set; }
 
-        public IFormFile BackPhoto { get; set; }
+        public IFormFile BackImage { get; set; }
+        public string BackImageUrl { get; set; }
 
-        public IFormFile RearPhoto { get; set; }
+        public IFormFile LeftImage { get; set; }
+        public string LeftImageUrl { get; set; }
 
-        public IFormFile LeftSidePhoto { get; set; }
-
-        public IFormFile RightSidePhoto { get; set; }
+        public IFormFile RightImage { get; set; }
+        public string RightImageUrl { get; set; }
 
         public string Summary { get; set; }
     }

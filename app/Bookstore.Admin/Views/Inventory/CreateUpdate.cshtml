@@ -1,49 +1,6 @@
 ﻿@using Bookstore.Domain.ReferenceData
 
 @model Bookstore.Admin.ViewModel.Inventory.InventoryCreateUpdateViewModel
-@{
-    ViewData["Title"] = "Add/Edit Book";
-    var errorstatus = (string)ViewData["ErrorStatus"];
-    var error = (string)ViewData["Error"];
-    var check = (string)ViewData["check"];
-}
-
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="text-center font-weight-light modal-title" id="exampleModalLabel">Message</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div>
-                    <span class="main-text">Please re-upload the photos as they violate one or more of our content policies</span>
-                    <ol>
-                        <li class="main-text">Photo must be of type .jpg or .png or .gif</li>
-                        <li class="main-text">Photo content must not contain profanity</li>
-                        <li class="main-text">Photo must be that of a book</li>
-                    </ol>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button style="margin-left:5%" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-@if (errorstatus == "Yes")
-{
-    <script type="text/javascript">
-        $(
-            function () {
-                $('#exampleModal').modal('show');
-            }
-        );
-    </script>
-}
 
 <h1 class="text-center">ADD BOOK</h1>
 
@@ -115,30 +72,58 @@
     <div class="row justify-content-center">
         <div class="col-8">
             <div class="mb-3">
-                <label asp-for="FrontPhoto" class="form-label">Front Picture</label>
-                <input type="file" class="form-control" asp-for="FrontPhoto">
+                <label asp-for="FrontImage" class="form-label">Front Image</label>
+                <input asp-for="FrontImage" class="form-control mb-3">
+                <img src="@Model.FrontImageUrl" class="img-thumbnail @(string.IsNullOrWhiteSpace(Model.FrontImageUrl) ? "d-none" : "")" />
             </div>
 
             <div class="mb-3">
-                <label asp-for="BackPhoto" class="form-label">Back Picture</label>
-                <input asp-for="BackPhoto" class="form-control">
+                <label asp-for="BackImage" class="form-label">Back Image</label>
+                <input asp-for="BackImage" class="form-control mb-3">
+                <img src="@Model.BackImageUrl" class="img-thumbnail @(string.IsNullOrWhiteSpace(Model.BackImageUrl) ? "d-none" : "")" />
             </div>
 
             <div class="mb-3">
-                <label asp-for="LeftSidePhoto" class="form-labell">Left Picture</label>
-                <input asp-for="LeftSidePhoto" class="form-control">
+                <label asp-for="LeftImage" class="form-label">Left Image</label>
+                <input asp-for="LeftImage" class="form-control mb-3">
+                <img src="@Model.LeftImageUrl" class="img-thumbnail @(string.IsNullOrWhiteSpace(Model.LeftImageUrl) ? "d-none" : "")" />
             </div>
 
             <div class="mb-3">
-                <label asp-for="RightSidePhoto" class="form-label">Right Picture</label>
-                <input asp-for="RightSidePhoto" class="form-control">
+                <label asp-for="RightImage" class="form-label">Right Image</label>
+                <input asp-for="RightImage" class="form-control mb-3">
+                <img src="@Model.RightImageUrl" class="img-thumbnail @(string.IsNullOrWhiteSpace(Model.RightImageUrl) ? "d-none" : "")" />
             </div>
         </div>
     </div>
 
     <div class="row justify-content-center">
-        <div class="col-2 d-grid gap-2">
-            <button class="btn btn-primary" type="submit">Submit</button>
+        <div class="col-8 d-grid gap-2 d-md-block">
+            <button class="btn btn-primary" type="submit">Save</button>
+            <a class="btn btn-secondary" asp-action="Index">Back</a>
         </div>
     </div>
 </form>
+
+@section Scripts{
+    <script type="text/javascript">
+        $(function () {
+            $("input:file").change(function () {
+                readUrl(this);
+            });
+        });
+
+        function readUrl(input) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                $(input)
+                    .next("img")
+                    .attr("src", e.target.result)
+                    .removeClass("d-none");
+            }
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    </script>
+}

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
 
 namespace AdminSite.Startup
 {
@@ -7,9 +8,12 @@ namespace AdminSite.Startup
     {
         public static WebApplicationBuilder ConfigureConfiguration(this WebApplicationBuilder builder)
         {
-            builder.Configuration.AddSystemsManager("/BobsUsedBookAdminStore/", optional: true);
-            builder.Configuration.AddSystemsManager("/bookstoredb/", optional: true);
-
+            if (!builder.Environment.IsDevelopment())
+            {
+                builder.Configuration.AddSystemsManager("/BobsUsedBookAdminStore/", optional: true);
+                builder.Configuration.AddSystemsManager("/bookstoredb/", optional: true);
+            }
+            
             return builder;
         }
     }

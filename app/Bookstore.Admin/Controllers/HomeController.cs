@@ -21,6 +21,7 @@ namespace AdminSite.Controllers
             _logger = logger;
         }
 
+        [AllowAnonymous]
         public IActionResult Index()
         {
             _logger.LogInformation("In the view");
