@@ -2,11 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using AutoMapper;
-using Amazon.Extensions.CognitoAuthentication;
 using DataAccess.Data;
 using DataAccess.Dtos;
 using DataAccess.Repository.Interface;
@@ -17,7 +15,6 @@ using AdminSite.ViewModel.ManageInventory;
 using AdminSite.ViewModel.SearchBooks;
 using Type = DataModels.Books.Type;
 using DataAccess.Repository.Interface.NotificationsInterface;
-using AdminSite;
 using Microsoft.AspNetCore.Authorization;
 
 namespace AdminSite.Controllers
@@ -31,8 +28,6 @@ namespace AdminSite.Controllers
         private readonly IInventory _inventory;
         private readonly ILogger<InventoryController> _logger;
         private readonly IMapper _mapper;
-        private readonly SignInManager<CognitoUser> _signInManager;
-        private readonly UserManager<CognitoUser> _userManager;
         private string updateSuccess = Resource.ResourceManager.GetString("UpdateSuccessMessage");
 
 
@@ -41,27 +36,23 @@ namespace AdminSite.Controllers
                                    IInventory inventory,
                                    ApplicationDbContext context,
                                    ILogger<InventoryController> logger,
-                                   INotifications emailSender,
-                                   SignInManager<CognitoUser> signInManager,
-                                   UserManager<CognitoUser> userManager)
+                                   INotifications emailSender)
         {
             _inventory = inventory;
             _logger = logger;
             _emailSender = emailSender;
             _mapper = mapper;
             _bookRepository = bookRepository;
-            _signInManager = signInManager;
-            _userManager = userManager;
         }
 
         [HttpGet]
         public async Task<IActionResult> EditBookDetails(string bookName)
         {
             _logger.LogInformation("Loading : Add New Book View");
+
             try
             {
-                var user = await _userManager.GetUserAsync(User);
-                ViewData["user"] = user.Username;
+                ViewData["user"] = User.Identity.Name;
             }
             catch (Exception e)
             {
@@ -101,10 +92,11 @@ namespace AdminSite.Controllers
         public async Task<IActionResult> EditBookDetails(BooksViewModel bookview)
         {
             _logger.LogInformation("Posting new book details from form to Database ");
-            var user = await _userManager.GetUserAsync(User);
-            bookview.UpdatedBy = user.Username;
+
+            bookview.UpdatedBy = User.Identity.Name;
             bookview.UpdatedOn = DateTime.Now.ToUniversalTime();
             bookview.Active = true;
+
             if (string.IsNullOrEmpty(bookview.Author))
             {
                 var temp = _bookRepository.Get(b => b.Name == bookview.BookName).FirstOrDefault();
@@ -499,8 +491,7 @@ namespace AdminSite.Controllers
             _logger.LogInformation("Posting the Edit Book form values to database");
             try
             {
-                var user = await _userManager.GetUserAsync(User);
-                details.UpdatedBy = user.Username;
+                details.UpdatedBy = User.Identity.Name;
                 details.UpdatedOn = DateTime.Now.ToUniversalTime();
                 await _inventory.PushDetailsAsync(details);
             }

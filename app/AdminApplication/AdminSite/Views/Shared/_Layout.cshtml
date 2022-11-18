@@ -1,10 +1,4 @@
-﻿@using Amazon.Extensions.CognitoAuthentication
-@using Microsoft.AspNetCore.Identity
-@inject SignInManager<CognitoUser> SignInManager
-@inject UserManager<CognitoUser> UserManager
-@{ var user = await UserManager.GetUserAsync(User); }
-@{ ViewBag.Title = "title"; }
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8"/>
@@ -33,7 +27,7 @@
                             <a class="main-color-text" asp-controller="Home" asp-action="Index">Bob's Used Bookstore</a>
                         </li>
 
-                        @if (SignInManager.IsSignedIn(User))
+                        @if (User.Identity.IsAuthenticated)
                         {
                             <li class="nav-item">
                                 <a class="main-color-text" asp-area="" asp-controller="Home" asp-action="WelcomePage">Home</a>
