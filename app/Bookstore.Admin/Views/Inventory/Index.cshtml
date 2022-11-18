@@ -1,8 +1,30 @@
-﻿@model IEnumerable<AdminSite.ViewModel.Inventory.InventoryIndexViewModel>
+﻿@model AdminSite.ViewModel.Inventory.InventoryIndexViewModel
 
 <div class="card m-3">
     <div class="card-body">
-        <a class="btn btn-primary" asp-controller="Inventory" asp-action="Create">New Book</a>
+        <div class="row">
+            <div class="col">
+                <a class="btn btn-primary" asp-controller="Inventory" asp-action="Create">New Book</a>
+            </div>
+            <div class="col d-flex justify-content-end">
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination mb-0">
+                        <li class="page-item @(Model.HasPreviousPage ? "" : "disabled")">
+                            <a class="page-link">Previous</a>
+                        </li>
+
+                        @foreach (var button in Model.PaginationButtons)
+                        {
+                            <li class="page-item @(Model.PageIndex == button ? "disabled" : "")"><a class="page-link" asp-action="Index" asp-route-pageIndex="@button">@button</a></li>
+                        }
+
+                        <li class="page-item @(Model.HasNextPage ? "" : "disabled")">
+                            <a class="page-link" href="#">Next</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -23,7 +45,7 @@
                 </tr>
             </thead>
             <tbody>
-                @if (Model.Count() == 0)
+                @if (Model.Items.Count() == 0)
                 {
                     <tr>
                         <td colspan="10" rowspan="4" style="text-align:center;">
@@ -33,7 +55,7 @@
                 }
                 else
                 {
-                    foreach (var book in Model)
+                    foreach (var book in Model.Items)
                     {
                         <tr>
                             <td>@book.Name</td>

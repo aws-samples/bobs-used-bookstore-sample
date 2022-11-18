@@ -5,6 +5,7 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Bookstore.Data.Data;
 using Bookstore.Data.Repository.Interface;
+using Bookstore.Domain;
 using Microsoft.EntityFrameworkCore;
 
 namespace Bookstore.Data.Repository.Implementation
@@ -113,6 +114,27 @@ namespace Bookstore.Data.Repository.Implementation
             }
 
             return query.ToList();
+        }
+
+        public PaginatedList<TModel> GetPaginated(Expression<Func<TModel, bool>> filter = null,
+            Func<IQueryable<TModel>, IOrderedQueryable<TModel>> orderBy = null, int pageIndex = 1, int pageSize = 10,
+            params Expression<Func<TModel, object>>[] includeProperties)
+        {
+            IQueryable<TModel> query = dbSet;
+
+            if (filter != null) query = query.Where(filter);
+
+            foreach (var includeProperty in includeProperties)
+            {
+                query = query.Include(includeProperty);
+            }
+
+            if (orderBy != null)
+            {
+                return PaginatedList<TModel>.Create(orderBy(query), pageIndex, pageSize);
+            }
+
+            return PaginatedList<TModel>.Create(query, pageIndex, pageSize);
         }
 
         public void Save()

@@ -12,6 +12,7 @@ using System.Linq;
 using Bookstore.Admin.ViewModel.Inventory;
 using Bookstore.Domain.ReferenceData;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Bookstore.Domain;
 
 namespace AdminSite
 {
@@ -43,11 +44,11 @@ namespace AdminSite
 
             ///////////
 
-            CreateMap<Book, InventoryIndexViewModel>()
-                .ForMember(dest => dest.BookType, opt => opt.MapFrom(src => src.BookType.Text))
-                .ForMember(dest => dest.Genre, opt => opt.MapFrom(src => src.Genre.Text))
-                .ForMember(dest => dest.Publisher, opt => opt.MapFrom(src => src.Publisher.Text))
-                .ForMember(dest => dest.Condition, opt => opt.MapFrom(src => src.Condition.Text));
+            //CreateMap<PaginatedList<Book>, InventoryIndexViewModel>()
+            //    .ForMember(dest => dest.BookType, opt => opt.MapFrom(src => src.BookType.Text))
+            //    .ForMember(dest => dest.Genre, opt => opt.MapFrom(src => src.Genre.Text))
+            //    .ForMember(dest => dest.Publisher, opt => opt.MapFrom(src => src.Publisher.Text))
+            //    .ForMember(dest => dest.Condition, opt => opt.MapFrom(src => src.Condition.Text));
 
             CreateMap<Book, InventoryDetailsViewModel>()
                 .ForMember(dest => dest.BookType, opt => opt.MapFrom(src => src.BookType.Text))

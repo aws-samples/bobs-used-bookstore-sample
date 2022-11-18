@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Bookstore.Domain;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -35,5 +36,6 @@ namespace Bookstore.Data.Repository.Interface
         Task SaveAsync();
         Task AddAsync(TModel entity);
         void AddOrUpdate(TModel entity);
+        PaginatedList<TModel> GetPaginated(Expression<Func<TModel, bool>> filter = null, Func<IQueryable<TModel>, IOrderedQueryable<TModel>> orderBy = null, int pageIndex = 1, int pageSize = 10, params Expression<Func<TModel, object>>[] includeProperties);
     }
 }

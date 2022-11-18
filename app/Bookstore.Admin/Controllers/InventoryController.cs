@@ -4,18 +4,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using AutoMapper;
 using AdminSite.ViewModel;
-using BookType = Bookstore.Domain.Books.BookType;
 using Microsoft.AspNetCore.Authorization;
 using Services;
 using AdminSite.ViewModel.Inventory;
 using Bookstore.Domain.Books;
-using Bookstore.Admin;
-using Bookstore.Data.Repository.Interface;
-using Amazon.SimpleSystemsManagement.Model;
 using Bookstore.Admin.ViewModel.Inventory;
-using System.Collections.Generic;
-using Bookstore.Domain.ReferenceData;
-using System.IO;
 
 namespace AdminSite.Controllers
 {
@@ -39,11 +32,10 @@ namespace AdminSite.Controllers
         }
 
         [HttpGet]
-        public IActionResult Index(int startIndex = 0, int count = 10)
+        public IActionResult Index(int pageIndex = 1, int pageSize = 2)
         {
-            var books = inventoryService.GetBooks(User.Identity.Name, startIndex, count);
-
-            var viewModel = mapper.Map<IEnumerable<InventoryIndexViewModel>>(books);
+            var books = inventoryService.GetBooks(User.Identity.Name, pageIndex, pageSize);
+            var viewModel = new InventoryIndexViewModel(books);
 
             return View(viewModel);
         }
