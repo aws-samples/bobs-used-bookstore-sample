@@ -3,30 +3,45 @@
 <h1 class="text-center mb-3">Book Details</h1>
 
 <div class="row justify-content-center">
-    <div class="col-4">
-        <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
-            <div class="carousel-inner">
-                @for (var i = 0; i < Model.Images.Count; i++)
-                {
-                    <div class="carousel-item active">
-                        <img class="d-block w-100" src="@Model.Images[i]" alt="Slide @i">
-                    </div>
-                }
+    <div class="col-4 mb-3">
+        @if (Model.Images.Count > 0)
+        {
+            <div id="bookImageCarousel" class="carousel carousel-dark slide" data-bs-ride="carousel">
+                <div class="carousel-indicators">
+                    @for (var i = 0; i < Model.Images.Count; i++)
+                    {
+                        <button type="button" data-bs-target="#bookImageCarousel" data-bs-slide-to="@i" class="@(i == 0 ? "active" : "")" aria-current="true" aria-label="Slide @i"></button>
+                    }
+                </div>
+
+                <div class="carousel-inner">
+                    @for (var i = 0; i < Model.Images.Count; i++)
+                    {
+                        <div class="carousel-item @(i == 0 ? "active" : "")" style="height:600px;">
+                            <img class="d-block mw-100 mh-100 m-auto" src="@Model.Images[i]" alt="Slide @i">
+                        </div>
+                    }
+                </div>
+
+                <button class="carousel-control-prev" type="button" data-bs-target="#bookImageCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+
+                <button class="carousel-control-next" type="button" data-bs-target="#bookImageCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
             </div>
+        }
+        else
+        {
+            <img src="~/images/book-image-placeholder.jpg" class="img-fluid img-thumbnail">
+        }
 
-            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Previous</span>
-            </button>
-
-            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Next</span>
-            </button>
-        </div>
     </div>
 
-    <div class="col-4">
+    <div class="col-4 mb-3">
         <table class="table">
             <tbody>
                 <tr>
@@ -67,5 +82,11 @@
                 </tr>
             </tbody>
         </table>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-8">
+            <a class="btn btn-primary" asp-action="Index">Back</a>
+        </div>
     </div>
 </div>

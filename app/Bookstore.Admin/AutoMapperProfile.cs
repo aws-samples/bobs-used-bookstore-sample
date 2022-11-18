@@ -9,12 +9,9 @@ using Bookstore.Domain.Books;
 using AdminSite.ViewModel.Inventory;
 using System.Collections.Generic;
 using System.Linq;
-using Amazon.SimpleEmailV2.Model;
-using Microsoft.Build.Framework;
 using Bookstore.Admin.ViewModel.Inventory;
 using Bookstore.Domain.ReferenceData;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using System.IO;
 
 namespace AdminSite
 {
@@ -55,7 +52,8 @@ namespace AdminSite
             CreateMap<Book, InventoryDetailsViewModel>()
                 .ForMember(dest => dest.BookType, opt => opt.MapFrom(src => src.BookType.Text))
                 .ForMember(dest => dest.Genre, opt => opt.MapFrom(src => src.Genre.Text))
-                .ForMember(dest => dest.Publisher, opt => opt.MapFrom(src => src.Publisher.Text));
+                .ForMember(dest => dest.Publisher, opt => opt.MapFrom(src => src.Publisher.Text))
+                .ForMember(dest => dest.Images, opt => opt.MapFrom<BookImagesToListResolver>());
 
             CreateMap<InventoryCreateUpdateViewModel, Book>()
                 .ForMember(dest => dest.BookTypeId, opt => opt.MapFrom(src => src.SelectedBookTypeId))
@@ -80,6 +78,21 @@ namespace AdminSite
                 .ForMember(dest => dest.BookConditions, opt => opt.MapFrom(src => src.Where(x => x.DataType == ReferenceDataType.Condition).Select(x => new SelectListItem(x.Text, x.Id.ToString()))))
                 .ForMember(dest => dest.BookTypes, opt => opt.MapFrom(src => src.Where(x => x.DataType == ReferenceDataType.BookType).Select(x => new SelectListItem(x.Text, x.Id.ToString()))));
 
+        }
+    }
+
+    public class BookImagesToListResolver : IValueResolver<Book, InventoryDetailsViewModel, IList<string>>
+    {
+        public IList<string> Resolve(Book source, InventoryDetailsViewModel destination, IList<string> destMember, ResolutionContext context)
+        {
+            var result = new List<string>();
+
+            if (!string.IsNullOrWhiteSpace(source.FrontImageUrl)) result.Add(source.FrontImageUrl);
+            if (!string.IsNullOrWhiteSpace(source.BackImageUrl)) result.Add(source.BackImageUrl);
+            if (!string.IsNullOrWhiteSpace(source.LeftImageUrl)) result.Add(source.LeftImageUrl);
+            if (!string.IsNullOrWhiteSpace(source.RightImageUrl)) result.Add(source.RightImageUrl);
+
+            return result;
         }
     }
 }

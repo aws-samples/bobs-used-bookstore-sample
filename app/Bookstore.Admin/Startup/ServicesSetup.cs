@@ -20,6 +20,7 @@ namespace AdminSite.Startup
             builder.Services.AddAWSService<IAmazonRekognition>();
             builder.Services.AddAWSService<IAmazonTranslate>();
             builder.Services.AddAutoMapper(x => x.AddProfile<AutoMapperProfile>());
+            builder.Services.AddTransient<BookImagesToListResolver>();
             builder.Services.AddDefaultAWSOptions(builder.Configuration.GetAWSOptions());
             builder.Services.AddDbContext<ApplicationDbContext>(option => option.UseSqlServer(builder.Configuration.GetConnectionString("BookstoreDbDefaultConnection")));
 
