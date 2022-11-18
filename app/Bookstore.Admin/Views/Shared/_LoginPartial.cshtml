@@ -4,9 +4,9 @@
         Hello @User.Identity.Name!
     </span>
 
-    <a class="nav-link" asp-action="LogOut" asp-controller="ExternalAuthentication">Logout</a>
+    <a class="nav-link" asp-action="LogOut" asp-controller="SignOut">Logout</a>
 }
 else
 {
-    <a class="nav-link" asp-action="Dashboard" asp-controller="Home">Log In</a>
+    <a class="nav-link" asp-action="Index" asp-controller="Inventory">Log In</a>
 }
