@@ -32,7 +32,7 @@ namespace AdminSite.Controllers
         }
 
         [HttpGet]
-        public IActionResult Index(int pageIndex = 1, int pageSize = 2)
+        public IActionResult Index(int pageIndex = 1, int pageSize = 10)
         {
             var books = inventoryService.GetBooks(User.Identity.Name, pageIndex, pageSize);
 
@@ -161,43 +161,6 @@ namespace AdminSite.Controllers
             return View();
         }
 
-        [HttpPost]
-        public IActionResult UpdateDetails(int bookId, string condition)
-        {
-            logger.LogInformation("Load Edit Book Details page with pre-filled values");
-            //try
-            //{
-            //    var details = _inventory.UpdateDetails(bookId, condition);
-
-            //    var viewModel = _mapper.Map<BookDetailsViewModel>(details);
-
-            //    return View(viewModel);
-            //}
-            //catch (Exception e)
-            //{
-            //    _logger.LogError(e, "Error in fetching prefilled values for edit book details page");
-            //}
-
-            return View();
-        }
-
-        //public async Task<IActionResult> SubmitChangesAsync(BookDetailsDto details)
-        //{
-        //    _logger.LogInformation("Posting the Edit Book form values to database");
-        //    try
-        //    {
-        //        details.UpdatedBy = User.Identity.Name;
-        //        details.UpdatedOn = DateTime.Now.ToUniversalTime();
-        //        await _inventory.PushDetailsAsync(details);
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        _logger.LogError(e, "Error in posting Edited Book details to database");
-        //    }
-
-        //    return RedirectToAction("SearchBeta");
-        //}
-
         public IActionResult Dashboard(FetchBooksViewModel book)
         {
             logger.LogInformation("Dashboard Display");
@@ -255,22 +218,5 @@ namespace AdminSite.Controllers
 
             return View();
         }
-
-        //[HttpGet]
-        //public IActionResult AutoSuggest(string searchby)
-        //{
-        //    try
-        //    {
-        //        var term = HttpContext.Request.Query["term"].ToString();
-        //        var names = _inventory.AutoSuggest(term);
-
-        //        return Ok(names);
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        _logger.LogError(e, "Error in loading autosearch results");
-        //        return BadRequest();
-        //    }
-        //}
     }
 }
