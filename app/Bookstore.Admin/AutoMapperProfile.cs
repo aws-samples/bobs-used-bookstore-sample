@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using DataAccess.Dtos;
 using AdminSite.ViewModel;
-using AdminSite.ViewModel.ManageInventory;
 using AdminSite.ViewModel.ManageOrders;
 using AdminSite.ViewModel.ResaleBooks;
 using AdminSite.ViewModel.SearchBooks;
@@ -20,7 +19,7 @@ namespace AdminSite
     {
         public AutoMapperProfile()
         {
-            CreateMap<BookDetailsDto, BookDetailsViewModel>();
+            //CreateMap<BookDetailsDto, BookDetailsViewModel>();
             CreateMap<BookDetailsDto, InventoryCreateUpdateViewModel>()
                 .ForMember(dest => dest.SelectedGenreId, opt => opt.MapFrom(src => src.Genre.Name))
                 .ForMember(dest => dest.SelectedBookTypeId, opt => opt.MapFrom(src => src.BookType.TypeName))
@@ -28,7 +27,7 @@ namespace AdminSite
             CreateMap<ManageOrderDto, ManageOrderViewModel>();
             CreateMap<InventoryCreateUpdateViewModel, BooksDto>();
             CreateMap<InventoryCreateUpdateViewModel, Book>();
-            CreateMap<BookDetailsViewModel, BookDetailsDto>();
+            //CreateMap<BookDetailsViewModel, BookDetailsDto>();
             CreateMap<FullBookDto, FullBook>();
             CreateMap<SearchBookDto, SearchBookViewModel>();
             CreateMap<Resale, ResaleViewModel>();

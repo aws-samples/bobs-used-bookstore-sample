@@ -161,62 +161,62 @@ namespace AdminSite.Controllers
             return View();
         }
 
-        public IActionResult Dashboard(FetchBooksViewModel book)
-        {
-            logger.LogInformation("Dashboard Display");
+        //public IActionResult Dashboard(FetchBooksViewModel book)
+        //{
+        //    logger.LogInformation("Dashboard Display");
 
-            // _emailSender.SendInventoryLowEmail(_Inventory.ScreenInventory(), Constants.BoBsEmailAddress);
-            try
-            {
-                //var stats = _inventory.DashBoard(NumberOfDetails);
+        //    // _emailSender.SendInventoryLowEmail(_Inventory.ScreenInventory(), Constants.BoBsEmailAddress);
+        //    try
+        //    {
+        //        //var stats = _inventory.DashBoard(NumberOfDetails);
 
-                //if (stats[0].Count() != 0)
-                //{
-                //    ViewData["orders_top_genre"] = stats[0].First().Key;
-                //    ViewData["orders_top_genre_count"] = stats[0].First().Value;
-                //}
+        //        //if (stats[0].Count() != 0)
+        //        //{
+        //        //    ViewData["orders_top_genre"] = stats[0].First().Key;
+        //        //    ViewData["orders_top_genre_count"] = stats[0].First().Value;
+        //        //}
 
-                //if (stats[1].Count() != 0)
-                //{
-                //    ViewData["orders_top_type"] = stats[1].First().Key;
-                //    ViewData["orders_top_type_count"] = stats[1].First().Value;
-                //}
+        //        //if (stats[1].Count() != 0)
+        //        //{
+        //        //    ViewData["orders_top_type"] = stats[1].First().Key;
+        //        //    ViewData["orders_top_type_count"] = stats[1].First().Value;
+        //        //}
 
-                //if (stats[2].Count != 0)
-                //{
-                //    ViewData["orders_top_publisher"] = stats[2].First().Key;
-                //    ViewData["orders_top_publisher_count"] = stats[2].First().Value;
-                //}
+        //        //if (stats[2].Count != 0)
+        //        //{
+        //        //    ViewData["orders_top_publisher"] = stats[2].First().Key;
+        //        //    ViewData["orders_top_publisher_count"] = stats[2].First().Value;
+        //        //}
 
-                //if (stats[1].Count() != 0)
-                //{
-                //    ViewData["orders_top_name"] = stats[3].First().Key;
-                //    ViewData["orders_top_name_count"] = stats[3].First().Value;
-                //}
+        //        //if (stats[1].Count() != 0)
+        //        //{
+        //        //    ViewData["orders_top_name"] = stats[3].First().Key;
+        //        //    ViewData["orders_top_name_count"] = stats[3].First().Value;
+        //        //}
 
-                //ViewData["orders_genre"] = stats[0];
-                //ViewData["orders_type"] = stats[1];
-                //ViewData["orders_publisher"] = stats[2];
-                //ViewData["orders_name"] = stats[3];
+        //        //ViewData["orders_genre"] = stats[0];
+        //        //ViewData["orders_type"] = stats[1];
+        //        //ViewData["orders_publisher"] = stats[2];
+        //        //ViewData["orders_name"] = stats[3];
 
-                //var a = stats[4];
+        //        //var a = stats[4];
 
-                //var inventoryStats = new List<int>();
-                //foreach (var i in a) inventoryStats.Add(i.Value);
-                //ViewData["Inventory"] = inventoryStats;
+        //        //var inventoryStats = new List<int>();
+        //        //foreach (var i in a) inventoryStats.Add(i.Value);
+        //        //ViewData["Inventory"] = inventoryStats;
 
-                //var b = stats[5];
-                //var ordersStats = new List<int>();
-                //foreach (var i in b) ordersStats.Add(i.Value);
-                //ViewData["Orders"] = ordersStats;
-            }
-            catch (Exception e)
-            {
-                logger.LogError("Error in displaying dashboard statistics", e);
-                return RedirectToAction("Error", "Home");
-            }
+        //        //var b = stats[5];
+        //        //var ordersStats = new List<int>();
+        //        //foreach (var i in b) ordersStats.Add(i.Value);
+        //        //ViewData["Orders"] = ordersStats;
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        logger.LogError("Error in displaying dashboard statistics", e);
+        //        return RedirectToAction("Error", "Home");
+        //    }
 
-            return View();
-        }
+        //    return View();
+        //}
     }
 }

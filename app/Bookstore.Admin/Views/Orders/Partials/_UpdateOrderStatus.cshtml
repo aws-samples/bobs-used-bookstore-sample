@@ -11,7 +11,7 @@
 
 <form class="input-group mb-3" asp-controller="Orders" asp-action="UpdateOrderStatus" method="get">
     <select asp-for="OrderId" class="invisible">
-        <option selected value="@fullOrder.Order.Order_Id">id</option>
+        <option selected value="@fullOrder.Order.Id">id</option>
     </select>
     <select asp-for="OldStatus" class="invisible">
         <option selected value="@fullOrder.Order.OrderStatus.OrderStatus_Id">id</option>

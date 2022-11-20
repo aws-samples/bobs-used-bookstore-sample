@@ -174,7 +174,7 @@ namespace Bobs_Backend.Test
             var order =
                 new Order
                 {
-                    Order_Id = 22,
+                    Id = 22,
                     Subtotal = 222,
                     Tax = 21,
                     DeliveryDate = "2020-08-15",
@@ -217,7 +217,7 @@ namespace Bobs_Backend.Test
             {
                 new Order
                 {
-                    Order_Id = 42,
+                    Id = 42,
                     Subtotal = 222,
                     Tax = 21,
                     DeliveryDate = DateTime.Today.AddDays(-1).ToString("dd/MM/yyyy"),
@@ -236,7 +236,7 @@ namespace Bobs_Backend.Test
                 },
                 new Order
                 {
-                    Order_Id = 43,
+                    Id = 43,
                     Subtotal = 2,
                     Tax = 1,
                     DeliveryDate = DateTime.Today.AddDays(1).ToString("dd/MM/yyyy"),
@@ -290,7 +290,7 @@ namespace Bobs_Backend.Test
                {
                    Order = new Order
                    {
-                        Order_Id = 22,
+                        Id = 22,
                         Subtotal = 22,
                         Tax = 21,
                         DeliveryDate = "2020-08-15",
@@ -313,7 +313,7 @@ namespace Bobs_Backend.Test
                {
                    Order = new Order
                    {
-                        Order_Id = 23,
+                        Id = 23,
                         Subtotal = 222,
                         Tax = 1,
                         DeliveryDate = "2020-08-18",
@@ -356,7 +356,7 @@ namespace Bobs_Backend.Test
                {
                    Order = new Order
                    {
-                        Order_Id = 22,
+                        Id = 22,
                         Subtotal = 222,
                         Tax = 21,
                         DeliveryDate = "2020-08-15",
@@ -379,7 +379,7 @@ namespace Bobs_Backend.Test
                {
                    Order = new Order
                    {
-                        Order_Id = 23,
+                        Id = 23,
                         Subtotal = 2,
                         Tax = 1,
                         DeliveryDate = "2020-08-18",
@@ -426,7 +426,7 @@ namespace Bobs_Backend.Test
                {
                    Order = new Order
                    {
-                        Order_Id = 22,
+                        Id = 22,
                         Subtotal = 222,
                         Tax = 21,
                         DeliveryDate = "2020-08-15",
@@ -449,7 +449,7 @@ namespace Bobs_Backend.Test
                {
                    Order = new Order
                    {
-                        Order_Id = 23,
+                        Id = 23,
                         Subtotal = 2,
                         Tax = 1,
                         DeliveryDate = "2020-08-18",

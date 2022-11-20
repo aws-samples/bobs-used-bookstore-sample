@@ -67,10 +67,10 @@ else
                 <td>
 
                     <form asp-controller="Orders" asp-action="Detail" method="get">
-                        <input type="hidden" name="id" value="@item.Order_Id"/>
+                        <input type="hidden" name="id" value="@item.Id"/>
                         <input type="submit" value="details" class="btn"/>
                     </form>
-                    <a asp-action="Delete" asp-route-id="@item.Order_Id">Cancel</a>
+                    <a asp-action="Delete" asp-route-id="@item.Id">Cancel</a>
                 </td>
             </tr>
         }

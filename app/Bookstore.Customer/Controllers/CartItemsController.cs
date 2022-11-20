@@ -162,7 +162,7 @@ namespace CustomerSite.Controllers
             _orderRepository.Add(recentOrder);
             _orderRepository.Save();
 
-            var orderId = recentOrder.Order_Id;
+            var orderId = recentOrder.Id;
             if (!HttpContext.Request.Cookies.ContainsKey("OrderId"))
             {
                 HttpContext.Response.Cookies.Append("OrderId", Convert.ToString(orderId));

@@ -1,25 +1,19 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using Bookstore.Domain.Customers;
+﻿using Bookstore.Domain.Customers;
 
 namespace Bookstore.Domain.Orders
 {
-    public class Order
+    public class Order : Entity
     {
-        [Key] public long Order_Id { get; set; }
+        public Customer Customer { get; set; }
 
-        [Column(TypeName = "decimal(18,2)")] public decimal Subtotal { get; set; }
-
-        [Column(TypeName = "decimal(18,2)")] public decimal Tax { get; set; }
+        public Address Address { get; set; }
 
         public string DeliveryDate { get; set; }
 
         public OrderStatus OrderStatus { get; set; }
 
-        public Customer Customer { get; set; }
+        public decimal Tax { get; set; }
 
-        public Address Address { get; set; }
-
-        [Timestamp] public byte[] Rowversion { get; set; }
+        public decimal Subtotal { get; set; }
     }
 }

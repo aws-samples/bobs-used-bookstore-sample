@@ -4,7 +4,6 @@ using Bookstore.Domain.Books;
 using Bookstore.Services;
 using Microsoft.AspNetCore.Http;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -37,10 +36,6 @@ namespace Services
 
         public PaginatedList<Book> GetBooks(string userName, int index, int count)
         {
-            //return bookRepository
-            //    .Get2(x => x.CreatedBy == userName, y => y.OrderBy(x => x.CreatedOn), x => x.Genre, y => y.Publisher, x => x.BookType)
-            //    .Skip(index).Take(count);
-
             return bookRepository
                 .GetPaginated(x => x.CreatedBy == userName, y => y.OrderBy(x => x.CreatedOn), index, count, x => x.Genre, y => y.Publisher, x => x.BookType);
         }

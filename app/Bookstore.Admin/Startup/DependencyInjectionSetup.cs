@@ -34,6 +34,7 @@ namespace AdminSite.Startup
             builder.Services.AddTransient<ICustomAdminPage, CustomAdmin>();
 
             builder.Services.AddTransient<IInventoryService, InventoryService>();
+            builder.Services.AddTransient<IOrderService, OrderService>();
             builder.Services.AddTransient<IReferenceDataService, ReferenceDataService>();
             builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 

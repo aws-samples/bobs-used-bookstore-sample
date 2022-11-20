@@ -54,9 +54,9 @@ namespace CustomerSite.Controllers
             {
                 var user = await _userManager.GetUserAsync(User);
                 var customer_id = user.Attributes[CognitoAttribute.Sub.AttributeName];
-                var orderDetails = _orderDetailRepository.Get(od => od.Order.Order_Id == id && !od.IsRemoved,
+                var orderDetails = _orderDetailRepository.Get(od => od.Order.Id == id && !od.IsRemoved,
                     q => q.OrderBy(s => s.Book.Name), "Book");
-                var order = _orderRepository.Get(o => o.Customer.Customer_Id == customer_id && o.Order_Id == id,
+                var order = _orderRepository.Get(o => o.Customer.Customer_Id == customer_id && o.Id == id,
                     includeProperties: "OrderStatus");
 
                 var viewModel = new OrderDisplayModel
@@ -75,7 +75,7 @@ namespace CustomerSite.Controllers
         {
             // needs rework, buggy rn
             //TODO Create new order_status (cancel), reassign to order
-            var order = (from o in _context.Order where o.Order_Id == id select o).First();
+            var order = (from o in _context.Order where o.Id == id select o).First();
 
             if (order == null) return NotFound();
 

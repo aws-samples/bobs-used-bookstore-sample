@@ -45,13 +45,13 @@
                     {
                         var param = new Dictionary<string, string>
                 {
-                { "orderId", $"{order.Order.Order_Id}" }
+                { "orderId", $"{order.Order.Id}" }
                 };
                         var status = order.Order.OrderStatus.OrderStatus_Id;
 
                         <tr class="">
                             <td>
-                                @order.Order.Order_Id
+                                @order.Order.Id
                                 <div class="dot @(order.Severity == 2 ? "dotRed" : "dotYellow")">
                                 </div>
 

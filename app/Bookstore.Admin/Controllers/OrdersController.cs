@@ -1,6 +1,4 @@
-﻿using System.Linq;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using AutoMapper;
 using AdminSite.ViewModel.ManageOrders;
 using AdminSite.ViewModel.ProcessOrders;
@@ -10,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Bookstore.Data.Repository.Interface.OrdersInterface;
 using Bookstore.Data.Repository.Interface.NotificationsInterface;
 using Bookstore.Admin;
+using Bookstore.Services;
 
 namespace AdminSite.Controllers
 {
@@ -21,6 +20,7 @@ namespace AdminSite.Controllers
         private readonly IOrderRepository _order;
         private readonly IOrderDetailRepository _orderDetail;
         private readonly IOrderStatusRepository _orderStatus;
+        private readonly IOrderService orderService;
 
         public OrdersController()
         {
@@ -31,13 +31,16 @@ namespace AdminSite.Controllers
             IOrderDetailRepository orderDetail,
             IOrderRepository order,
             IOrderStatusRepository orderStatus,
-            INotifications emailSender)
+            INotifications emailSender,
+            IOrderService orderService)
         {
             _orderDetail = orderDetail;
             _order = order;
             _orderStatus = orderStatus;
             _emailSender = emailSender;
             _mapper = mapper;
+
+            this.orderService= orderService;
         }
 
         public async Task<IActionResult> EditOrderDetailAsync(long orderId, long orderDetailId, string quantity,
@@ -85,6 +88,8 @@ namespace AdminSite.Controllers
 
         public IActionResult Index(string filterValue, string filterValueText, string searchString, int pageNum)
         {
+            var orders = orderService.GetOrders(User.Identity.Name, 1, 10);
+
             if (pageNum == 0) pageNum++;
 
             //if (string.IsNullOrEmpty(searchString) && string.IsNullOrEmpty(filterValue))
@@ -153,7 +158,7 @@ namespace AdminSite.Controllers
                 order = await _orderStatus.UpdateOrderStatus(order, status);
 
             if (order != null)
-                _emailSender.SendOrderStatusUpdateEmail(order.OrderStatus.Status, order.Order_Id,
+                _emailSender.SendOrderStatusUpdateEmail(order.OrderStatus.Status, order.Id,
                     order.Customer.FirstName, order.Customer.Email);
             else
                 errorMessage = Resource.ResourceManager.GetString("OrderStatusUpdateErrorMessage");
