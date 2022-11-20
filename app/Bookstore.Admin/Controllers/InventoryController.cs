@@ -6,9 +6,9 @@ using AutoMapper;
 using AdminSite.ViewModel;
 using Microsoft.AspNetCore.Authorization;
 using Services;
-using AdminSite.ViewModel.Inventory;
 using Bookstore.Domain.Books;
 using Bookstore.Admin.ViewModel.Inventory;
+using Bookstore.Admin.Mappers;
 
 namespace AdminSite.Controllers
 {
@@ -35,9 +35,8 @@ namespace AdminSite.Controllers
         public IActionResult Index(int pageIndex = 1, int pageSize = 2)
         {
             var books = inventoryService.GetBooks(User.Identity.Name, pageIndex, pageSize);
-            var viewModel = new InventoryIndexViewModel(books);
 
-            return View(viewModel);
+            return View(books.ToInventoryIndexViewModel());
         }
 
         [HttpGet]

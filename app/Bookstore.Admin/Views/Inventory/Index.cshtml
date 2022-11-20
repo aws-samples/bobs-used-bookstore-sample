@@ -10,7 +10,7 @@
                 <nav aria-label="Page navigation example">
                     <ul class="pagination mb-0">
                         <li class="page-item @(Model.HasPreviousPage ? "" : "disabled")">
-                            <a class="page-link">Previous</a>
+                            <a class="page-link" asp-action="Index" asp-route-pageIndex="@(Model.PageIndex - 1)">Previous</a>
                         </li>
 
                         @foreach (var button in Model.PaginationButtons)
@@ -19,7 +19,7 @@
                         }
 
                         <li class="page-item @(Model.HasNextPage ? "" : "disabled")">
-                            <a class="page-link" href="#">Next</a>
+                            <a class="page-link" asp-action="Index" asp-route-pageIndex="@(Model.PageIndex + 1)">Next</a>
                         </li>
                     </ul>
                 </nav>
