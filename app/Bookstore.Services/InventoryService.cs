@@ -31,13 +31,13 @@ namespace Services
 
         public Book GetBook(int id)
         {
-            return bookRepository.Get2(x => x.Id == id, null, x => x.Genre, y => y.Publisher, x => x.BookType).SingleOrDefault();
+            return bookRepository.Get2(x => x.Id == id, null, x => x.Genre, y => y.Publisher, x => x.BookType, x => x.Condition).SingleOrDefault();
         }
 
         public PaginatedList<Book> GetBooks(string userName, int index, int count)
         {
             return bookRepository
-                .GetPaginated(x => x.CreatedBy == userName, y => y.OrderBy(x => x.CreatedOn), index, count, x => x.Genre, y => y.Publisher, x => x.BookType);
+                .GetPaginated(x => x.CreatedBy == userName, y => y.OrderBy(x => x.CreatedOn), index, count, x => x.Genre, y => y.Publisher, x => x.BookType, x => x.Condition);
         }
 
         public async Task SaveBookAsync(Book book, IFormFile frontImage, IFormFile backImage, IFormFile leftImage, IFormFile rightImage, string userName)

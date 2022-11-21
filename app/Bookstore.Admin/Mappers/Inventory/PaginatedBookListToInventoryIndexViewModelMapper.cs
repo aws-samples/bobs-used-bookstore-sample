@@ -3,7 +3,7 @@ using Bookstore.Domain;
 using Bookstore.Domain.Books;
 using System.Linq;
 
-namespace Bookstore.Admin.Mappers
+namespace Bookstore.Admin.Mappers.Inventory
 {
     public static class PaginatedBookListToInventoryIndexViewModelMapper
     {
@@ -21,10 +21,11 @@ namespace Bookstore.Admin.Mappers
                     BookType = book.BookType.Text,
                     Condition = book.Condition?.Text,
                     Genre = book.Genre.Text,
-                    Price = 0,
                     Publisher = book.Publisher.Text,
                     UpdatedOn = book.UpdatedOn,
-                    Year = book.Year.GetValueOrDefault()
+                    Year = book.Year.GetValueOrDefault(),
+                    Price = book.Price,
+                    Quantity = book.Quantity
                 });
             }
 

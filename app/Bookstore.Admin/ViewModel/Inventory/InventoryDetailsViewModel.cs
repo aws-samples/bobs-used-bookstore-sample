@@ -27,5 +27,7 @@ namespace Bookstore.Admin.ViewModel.Inventory
         public string ISBN { get; set; }
 
         public decimal Price { get; set; }
+
+        public int Quantity { get; set; }
     }
 }

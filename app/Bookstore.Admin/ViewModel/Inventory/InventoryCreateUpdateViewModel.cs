@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
-using System.IO;
-using System.Threading.Tasks;
+using Bookstore.Domain.ReferenceData;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -13,6 +12,8 @@ namespace Bookstore.Admin.ViewModel.Inventory
         public string Name { get; set; }
 
         public string Author { get; set; }
+
+        public int Year { get; set; }
 
         public string ISBN { get; set; }
 
@@ -28,9 +29,9 @@ namespace Bookstore.Admin.ViewModel.Inventory
         public IEnumerable<SelectListItem> BookConditions { get; set; } = new List<SelectListItem>();
         public int SelectedConditionId { get; set; }
 
-        public double? Price { get; set; }
+        public decimal Price { get; set; }
 
-        public int? Quantity { get; set; }
+        public int Quantity { get; set; }
 
         public IFormFile FrontImage { get; set; }
         public string FrontImageUrl { get; set; }

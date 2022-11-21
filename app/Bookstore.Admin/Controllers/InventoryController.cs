@@ -1,14 +1,11 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using AutoMapper;
-using AdminSite.ViewModel;
 using Microsoft.AspNetCore.Authorization;
 using Services;
-using Bookstore.Domain.Books;
 using Bookstore.Admin.ViewModel.Inventory;
-using Bookstore.Admin.Mappers;
+using Bookstore.Admin.Mappers.Inventory;
 
 namespace AdminSite.Controllers
 {
@@ -16,17 +13,14 @@ namespace AdminSite.Controllers
     public class InventoryController : Controller
     {
         private readonly ILogger<InventoryController> logger;
-        private readonly IMapper mapper;
         private readonly IInventoryService inventoryService;
         private readonly IReferenceDataService referenceDataService;
 
         public InventoryController(ILogger<InventoryController> logger,
-                                   IMapper mapper,
                                    IInventoryService inventoryService,
                                    IReferenceDataService referenceDataService)
         {
             this.logger = logger;
-            this.mapper = mapper;
             this.inventoryService = inventoryService;
             this.referenceDataService = referenceDataService;
         }
@@ -42,22 +36,20 @@ namespace AdminSite.Controllers
         [HttpGet]
         public IActionResult Details(int id)
         {
-            logger.LogInformation("Loading Book Details on Click in search page");
-
             var book = inventoryService.GetBook(id);
-            var viewModel = mapper.Map<InventoryDetailsViewModel>(book);
 
-            return View(viewModel);
+            return View(book.ToInventoryDetailsViewModel());
         }
 
         [HttpGet]
         public IActionResult Create()
         {
+            var model = new InventoryCreateUpdateViewModel();
             var referenceData = referenceDataService.GetAllReferenceData();
 
-            var viewModel = mapper.Map<InventoryCreateUpdateViewModel>(referenceData);
+            model = model.PopulateReferenceData(referenceData);
 
-            return View("CreateUpdate", viewModel);
+            return View("CreateUpdate", model);
         }
 
         [HttpPost]
@@ -65,7 +57,7 @@ namespace AdminSite.Controllers
         {
             if (!ModelState.IsValid) return View("CreateUpdate", model);
 
-            var book = mapper.Map<Book>(model);
+            var book = model.ToBook();
 
             await inventoryService.SaveBookAsync(
                 book, 
@@ -81,13 +73,11 @@ namespace AdminSite.Controllers
         [HttpGet]
         public IActionResult Update(int id)
         {
-            logger.LogInformation("Loading : Add New Book View");
-
             var book = inventoryService.GetBook(id);
-            var model = mapper.Map<InventoryCreateUpdateViewModel>(book);
-
             var referenceData = referenceDataService.GetAllReferenceData();
-            mapper.Map(referenceData, model);
+            var model = book.ToInventoryCreateUpdateViewModel();
+
+            model = model.PopulateReferenceData(referenceData);
 
             return View("CreateUpdate", model);
         }
@@ -99,7 +89,7 @@ namespace AdminSite.Controllers
 
             var book = inventoryService.GetBook(model.Id);
 
-            mapper.Map(model, book);
+            model.ToBook(book);
 
             await inventoryService.SaveBookAsync(
                 book, 

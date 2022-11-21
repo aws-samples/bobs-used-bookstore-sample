@@ -33,5 +33,9 @@ namespace Bookstore.Domain.Books
         public string? RightImageUrl { get; set; }
 
         public string? Summary { get; set; }
+
+        public decimal Price { get; set; }
+
+        public int Quantity { get; set; }
     }
 }

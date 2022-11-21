@@ -31,6 +31,8 @@ namespace AdminSite.ViewModel.Inventory
 
         public decimal Price { get; set; }
 
+        public int Quantity { get; set; }
+
         public DateTime UpdatedOn { get; set; }
     }
 }

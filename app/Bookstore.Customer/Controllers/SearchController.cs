@@ -52,7 +52,7 @@ namespace BobCustomerSite.Controllers
             {
                 var prices = _priceRepository.GetAll();
 
-                var books = _bookRepository.Get(includeProperties: "Genre,Type,Publisher")
+                var books = _bookRepository.Get(includeProperties: "Genre,BookType,Publisher")
                     .Select(b => new BookViewModel
                     {
                         BookId = b.Id,
