@@ -13,6 +13,8 @@ namespace Bookstore.Domain.Customers
 
         public string LastName { get; set; }
 
+        public string FullName => $"{FirstName} {LastName}";
+
         public string Email { get; set; }
 
         public DateTime DateOfBirth { get; set; }

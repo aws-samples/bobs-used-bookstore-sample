@@ -1,13 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace Bookstore.Domain.Orders
+﻿namespace Bookstore.Domain.Orders
 {
-    public class OrderStatus
+    public enum OrderStatus
     {
-        [Key] public long OrderStatus_Id { get; set; }
-
-        public string Status { get; set; }
-
-        public int Position { get; set; }
+        Pending = 0,
+        Ordered = 1,
+        Shipped = 2,
+        Delivered = 3,
+        Cancelled = 4
     }
 }

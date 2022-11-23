@@ -79,19 +79,7 @@ namespace CustomerSite.Controllers
 
             if (order == null) return NotFound();
 
-            var cancel_status = (from o in _context.OrderStatus where o.Status.Equals("Cancelled") select o).First();
-
-            if (cancel_status == null)
-            {
-                // create it
-                cancel_status = new OrderStatus
-                {
-                    Status = "Cancelled"
-                };
-                _context.OrderStatus.Add(cancel_status);
-            }
-
-            order.OrderStatus = cancel_status;
+            order.OrderStatus = OrderStatus.Cancelled;
             _context.Order.Update(order);
 
             await _context.SaveChangesAsync();

@@ -29,7 +29,6 @@ namespace AdminSite.Startup
             builder.Services.AddTransient<ISearchRepository, SearchRepository>();
             builder.Services.AddTransient<IOrderRepository, OrderRepository>();
             builder.Services.AddTransient<IOrderDetailRepository, OrderDetailRepository>();
-            builder.Services.AddTransient<IOrderStatusRepository, OrderStatusRepository>();
             builder.Services.AddTransient<INotifications, Notifications>();
             builder.Services.AddTransient<ICustomAdminPage, CustomAdmin>();
 

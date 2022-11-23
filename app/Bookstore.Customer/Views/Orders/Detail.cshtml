@@ -19,9 +19,9 @@
 <h1>Order: #@Model.OrderDetail.Id</h1>
 
 <div class="container mt-1">
-    <h5>Status: @Model.OrderDetail.OrderStatus.Status</h5>
+    <h5>Status: @Model.OrderDetail.OrderStatus</h5>
 
-    @if (string.IsNullOrEmpty(Model.OrderDetail.DeliveryDate))
+    @if (Model.OrderDetail.DeliveryDate == DateTime.MinValue)
     {
         <h5>Delivery Date: Unknown</h5>
     }

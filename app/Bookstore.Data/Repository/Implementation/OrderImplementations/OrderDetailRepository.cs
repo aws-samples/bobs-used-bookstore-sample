@@ -15,7 +15,6 @@ namespace Bookstore.Data.Repository.Implementation.OrderImplementations
     {
         private readonly ILogger<OrderDetailRepository> _logger;
         private readonly IOrderRepository _orderRepo;
-        private readonly IOrderStatusRepository _orderStatusRepo;
 
         private readonly string[] OrderDetailIncludes =
             { "Book", "Book.Genre", "Book.Publisher", "Book.Type", "Price", "Price.Condition" };
@@ -25,12 +24,10 @@ namespace Bookstore.Data.Repository.Implementation.OrderImplementations
 
         public OrderDetailRepository(ILogger<OrderDetailRepository> logger,
             IOrderRepository ordeRepo,
-            IOrderStatusRepository orderStatusRepo,
             IOrderDatabaseCalls orderDbCalls,
             IExpressionFunction expFunc)
         {
             _orderRepo = ordeRepo;
-            _orderStatusRepo = orderStatusRepo;
             _orderDbCalls = orderDbCalls;
             _expFunc = expFunc;
             _logger = logger;
@@ -55,8 +52,6 @@ namespace Bookstore.Data.Repository.Implementation.OrderImplementations
         {
             try
             {
-                var orderStatus = _orderStatusRepo.FindOrderStatusByName("Cancelled");
-
                 var orderDetails = await FindOrderDetailByOrderIdAsync(id);
                 var order = _orderRepo.FindOrderById(id);
 
@@ -76,7 +71,7 @@ namespace Bookstore.Data.Repository.Implementation.OrderImplementations
                             await _orderDbCalls.ContextSaveChangesAsync();
                         }
 
-                    order.OrderStatus = orderStatus;
+                    order.OrderStatus = OrderStatus.Cancelled;
 
                     await _orderDbCalls.ContextSaveChangesAsync();
 
@@ -105,11 +100,9 @@ namespace Bookstore.Data.Repository.Implementation.OrderImplementations
 
                 var moneyOwe = origOrderDetail.OrderDetailPrice * origOrderDetail.Quantity;
 
-                var pending = _orderStatusRepo.FindOrderStatusByName("Pending");
-
                 var origOrder = _orderRepo.FindOrderById(orderId);
 
-                if (origOrderDetail.IsRemoved || origOrder.OrderStatus.Position > pending.Position) return null;
+                //if (origOrderDetail.IsRemoved || origOrder.OrderStatus.Position > pending.Position) return null;
 
                 using (var transaction = _orderDbCalls.BeginTransaction())
                 {
@@ -168,7 +161,7 @@ namespace Bookstore.Data.Repository.Implementation.OrderImplementations
         // Finds a List of Order Details by the associated Order Id
         public async Task<List<OrderDetail>> FindOrderDetailByOrderIdAsync(long orderId)
         {
-            var filterValue = "Order.Order_Id";
+            var filterValue = "Order.Id";
             var searchString = "" + orderId;
             var inBetween = "";
             var operand = "==";
@@ -189,7 +182,7 @@ namespace Bookstore.Data.Repository.Implementation.OrderImplementations
             var lambda = _expFunc.ReturnLambdaExpression<OrderDetail>(tableName, filterValue, searchString, inBetween,
                 operand, negate);
 
-            var orderDetailBase = _orderDbCalls.GetBaseQuery("DataModels.Orders.OrderDetail");
+            var orderDetailBase = _orderDbCalls.GetBaseQuery("Bookstore.Domain.Orders.OrderDetail");
 
             var query = _orderDbCalls.ReturnBaseQuery<OrderDetail>(orderDetailBase, OrderDetailIncludes);
 

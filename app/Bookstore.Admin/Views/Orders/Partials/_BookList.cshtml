@@ -21,7 +21,7 @@
             }
             else
             {
-                @if (Model.Order.OrderStatus.Status is "Just Placed" or "Pending")
+                @if (Model.Order.OrderStatus is Bookstore.Domain.Orders.OrderStatus.Ordered or Bookstore.Domain.Orders.OrderStatus.Pending)
                 {
                     <button data-toggle="modal" data-target="#Modal@(index)" type="button" style="padding-top:0" class="btn website-text col">Can't Find Book? Click Here</button>
                 }
@@ -51,7 +51,7 @@
                             }
                             <input asp-for="Quantity" type="text" class="form-control website-text" id="quantity" name="quantity" min="1" max="@detail.Quantity">
                             <select asp-for="OrderDetailId" class="invisible">
-                                <option selected value="@detail.OrderDetail_Id">test</option>
+                                <option selected value="@detail.Id">test</option>
                             </select>
                             <select asp-for="MaxQuant" class="invisible">
                                 <option selected value="@detail.Quantity">test</option>

@@ -51,7 +51,7 @@ else
                 <td>
                     @Html.DisplayFor(modelItem => item.Subtotal)
                 </td>
-                @if (string.IsNullOrEmpty(item.DeliveryDate))
+                @if (item.DeliveryDate == DateTime.MinValue)
                 {
                     <td>Unknown</td>
                 }
@@ -62,7 +62,7 @@ else
                     </td>
                 }
                 <td>
-                    @Html.DisplayFor(modelItem => item.OrderStatus.Status)
+                    @Html.DisplayFor(modelItem => item.OrderStatus)
                 </td>
                 <td>
 

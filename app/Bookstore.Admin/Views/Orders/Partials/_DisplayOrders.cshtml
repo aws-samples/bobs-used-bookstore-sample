@@ -48,7 +48,7 @@ else
                     </div>
                     <p class="card-text website-text">Customer ID: @order.Customer.Customer_Id</p>
                     <p class="card-text website-text">Customer Name: @(order.Customer.FirstName == null || order.Customer.LastName == null ? "Error Missing" : order.Customer.FirstName + " " + order.Customer.LastName)</p>
-                    <p class="card-text website-text">Expected Delivery Date: @(order.DeliveryDate == null ? "Pending Confirmation" : DateTime.ParseExact(order.DeliveryDate, "dd/MM/yyyy", CultureInfo.InvariantCulture).ToString("MM/dd/yyyy")) </p>
+                    <p class="card-text website-text">Expected Delivery Date: @(order.DeliveryDate == null ? "Pending Confirmation" : order.DeliveryDate.ToShortDateString()) </p>
                 </div>
             </div>
         </div>

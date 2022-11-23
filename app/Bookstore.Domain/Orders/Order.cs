@@ -6,9 +6,9 @@ namespace Bookstore.Domain.Orders
     {
         public Customer Customer { get; set; }
 
-        public Address Address { get; set; }
+        public Address? Address { get; set; }
 
-        public string DeliveryDate { get; set; }
+        public DateTime DeliveryDate { get; set; }
 
         public OrderStatus OrderStatus { get; set; }
 

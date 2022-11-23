@@ -1,32 +1,17 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using Bookstore.Domain.Books;
+﻿using Bookstore.Domain.Books;
 
 namespace Bookstore.Domain.Orders
 {
-    public class OrderDetail
+    public class OrderDetail : Entity
     {
-        [Key] public long OrderDetail_Id { get; set; }
-
-        // Many to One Relationship
         public Order Order { get; set; }
 
-        // Many To One Relationship
         public Book Book { get; set; }
-
-        // Many to One Relationship
-        //public Price Price { get; set; }
-
-        [RegularExpression(@"^\d+\.\d{0,2}$")]
-        [Range(0, 9999999999999999.99)]
-        [Column(TypeName = "decimal(18,2)")]
 
         public decimal OrderDetailPrice { get; set; }
 
         public int Quantity { get; set; }
 
         public bool IsRemoved { get; set; }
-
-        [Timestamp] public byte[] RowVersion { get; set; }
     }
 }

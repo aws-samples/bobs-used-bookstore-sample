@@ -1,8 +1,8 @@
-﻿@using System.Globalization
+﻿@*@using System.Globalization
 @{
     ViewData["Title"] = "Process Orders";
 }
-@model AdminSite.ViewModel.ProcessOrders.ProcessOrderViewModel;
+@model             AdminSite.ViewModel.ProcessOrders.ProcessOrderViewModel;
 @{
     var fullOrder = Model.FullOrder;
 
@@ -49,7 +49,7 @@
             </a>
         </div>
         <div class="text-center col-4 website-text">
-            <h3>Status: @fullOrder.Order.OrderStatus.Status</h3>
+            <h3>Status: @fullOrder.Order.OrderStatus</h3>
         </div>
         <div class="col-3 text-right">
             <partial name="./Partials/_UpdateOrderStatus" model="Model"/>
@@ -71,17 +71,15 @@
         </div>
     </div>
 
-    <div>
-        <p class="website-text">Expected Delivery Date: @(fullOrder.Order.DeliveryDate == null ? "Pending Confirmation" : DateTime.ParseExact(fullOrder.Order.DeliveryDate, "dd/MM/yyyy", CultureInfo.InvariantCulture).ToString("MM/dd/yyyy"))</p>
+    @*<div>
+        <p class="website-text">Expected Delivery Date: @(fullOrder.Order.DeliveryDate == null ? "Pending Confirmation" : fullOrder.Order.DeliveryDate.ToShortDateString())</p>
         @if (Model.FullOrder.OrderDetails.Count() == Model.FullOrder.ItemsRemoved && Model.FullOrder.Order.OrderStatus.Status != "Cancelled")
         {
-            var cancelId = Model.Statuses.FirstOrDefault(o => o.Status == "Cancelled").OrderStatus_Id;
-
             var data = new Dictionary<string, string>
             {
                 { "orderId", "" + Model.FullOrder.Order.Id },
-                { "status", "" + cancelId },
-                { "oldStatus", "" + Model.FullOrder.Order.OrderStatus.OrderStatus_Id }
+                { "status", "" + ModelStatus.Cance },
+                { "oldStatus", "" + Model.FullOrder.Order.OrderStatus }
             };
             <a asp-controller="Orders" asp-action="UpdateOrderStatus" asp-all-route-data="data" style="padding-top:.8rem; margin-left:.7rem;" class=" filter-pill badge badge-pill text-white">Cancel Order</a>
         }
@@ -91,3 +89,4 @@
     </div>
 
 </div>
+*@

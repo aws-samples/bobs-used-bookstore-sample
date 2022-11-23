@@ -26,7 +26,7 @@ namespace CustomerSite.Controllers
         private readonly IGenericRepository<Customer> _customerRepository;
         private readonly IGenericRepository<OrderDetail> _orderDetailRepository;
         private readonly IGenericRepository<Order> _orderRepository;
-        private readonly IGenericRepository<OrderStatus> _orderStatusRepository;
+        //private readonly IGenericRepository<OrderStatus> _orderStatusRepository;
         private readonly IGenericRepository<Price> _priceRepository;
         private readonly UserManager<CognitoUser> _userManager;
 
@@ -36,7 +36,7 @@ namespace CustomerSite.Controllers
                                    IGenericRepository<Price> priceRepository,
                                    IGenericRepository<Book> bookRepository,
                                    IGenericRepository<Customer> customerRepository,
-                                   IGenericRepository<OrderStatus> orderStatusRepository,
+                                   //IGenericRepository<OrderStatus> orderStatusRepository,
                                    IGenericRepository<CartItem> cartItemRepository,
                                    ApplicationDbContext context,
                                    UserManager<CognitoUser> userManager)
@@ -44,7 +44,7 @@ namespace CustomerSite.Controllers
             _context = context;
             _userManager = userManager;
             _cartItemRepository = cartItemRepository;
-            _orderStatusRepository = orderStatusRepository;
+            //_orderStatusRepository = orderStatusRepository;
             _customerRepository = customerRepository;
             _bookRepository = bookRepository;
             _priceRepository = priceRepository;
@@ -60,15 +60,15 @@ namespace CustomerSite.Controllers
             var cartItem
                 = _cartItemRepository
                     .Get(c => c.Cart.Cart_Id == id && c.WantToBuy == true,
-                            includeProperties: "Price,Book,Cart")
+                            includeProperties: "Book,Cart")
                     .Select(c => new CartViewModel
                     {
                         BookId = c.Book.Id,
                         Url = c.Book.FrontImageUrl,
-                        //Prices = c.Price.ItemPrice,
+                        Prices = c.Book.Price,
                         BookName = c.Book.Name,
                         CartItem_Id = c.CartItem_Id,
-                        //Quantity = c.Price.Quantity,
+                        Quantity = c.Book.Quantity,
                         //PriceId = c.Price.Price_Id
                     });
 
@@ -130,18 +130,18 @@ namespace CustomerSite.Controllers
         public async Task<IActionResult> CheckOut(string[] prices, string[] IDs, string[] quantity, string[] bookF, string[] priceF)
         {
             //set the origin value
-            var orderStatue
-                = _orderStatusRepository
-                    .Get(s => s.Status == Constants.OrderStatusPending)
-                    .FirstOrDefault();
+            //var orderStatue
+            //    = _orderStatusRepository
+            //        .Get(s => s.Status == Constants.OrderStatusPending)
+            //        .FirstOrDefault();
 
             var user = await _userManager.GetUserAsync(User);
             var userId = user.Attributes[CognitoAttribute.Sub.AttributeName];
             var customer = _customerRepository.Get(userId);
 
             decimal subTotal = 0;
-            var date = DateTime.Now.ToUniversalTime().AddDays(7);
-            var deliveryDate = date.ToString("dd/MM/yyyy");
+            //var date = DateTime.Now.ToUniversalTime().AddDays(7);
+            //var deliveryDate = date.ToString("dd/MM/yyyy");
 
             // calculate the total price and put all books in a list
             for (var i = 0; i < IDs.Length; i++)
@@ -152,11 +152,14 @@ namespace CustomerSite.Controllers
             // create a new order
             var recentOrder = new Order
             {
-                OrderStatus = orderStatue,
+                OrderStatus = OrderStatus.Pending,
                 Subtotal = subTotal,
                 Tax = subTotal * (decimal)0.1,
                 Customer = customer,
-                DeliveryDate = deliveryDate
+                DeliveryDate = DateTime.Now.ToUniversalTime().AddDays(7),
+                CreatedBy = user.Username,
+                CreatedOn = DateTime.UtcNow,
+                UpdatedOn = DateTime.UtcNow
             };
 
             _orderRepository.Add(recentOrder);
@@ -176,8 +179,8 @@ namespace CustomerSite.Controllers
             // add item to these order
             for (var i = 0; i < bookF.Length; i++)
             {
-                var orderDetailBook = _bookRepository.Get(Convert.ToInt64(bookF[i]));
-                var orderDetailPrice = _priceRepository.Get(Convert.ToInt64(priceF[i]));
+                var orderDetailBook = _bookRepository.Get(Convert.ToInt32(bookF[i]));
+                //var orderDetailPrice = _priceRepository.Get(Convert.ToInt64(priceF[i]));
 
                 var orderDetail = new OrderDetail
                 {
@@ -189,10 +192,10 @@ namespace CustomerSite.Controllers
                     IsRemoved = false
                 };
 
-                orderDetailPrice.Quantity -= Convert.ToInt32(quantity[i]);
-                _priceRepository.Update(orderDetailPrice);
+                //orderDetailPrice.Quantity -= Convert.ToInt32(quantity[i]);
+                //_priceRepository.Update(orderDetailPrice);
                 _orderDetailRepository.Add(orderDetail);
-                _priceRepository.Save();
+                //_priceRepository.Save();
                 _orderDetailRepository.Save();
             }
 
@@ -207,7 +210,7 @@ namespace CustomerSite.Controllers
             return RedirectToAction(nameof(ConfirmCheckout), new { OrderId = orderId });
         }
 
-        public async Task<IActionResult> ConfirmCheckout(long orderId)
+        public async Task<IActionResult> ConfirmCheckout(int orderId)
         {
             var user = await _userManager.GetUserAsync(User);
             var id = user.Attributes[CognitoAttribute.Sub.AttributeName];
@@ -230,7 +233,7 @@ namespace CustomerSite.Controllers
             return View(address.ToList());
         }
 
-        public IActionResult OrderPlaced(long orderIdC)
+        public IActionResult OrderPlaced(int orderIdC)
         {
             var order = _orderRepository.Get(orderIdC);
             var orderItem = _orderDetailRepository.Get(c => c.Order == order, includeProperties: "Book")
@@ -246,7 +249,7 @@ namespace CustomerSite.Controllers
             return View();
         }
 
-        public IActionResult ConfirmOrderAddress(string addressId, long orderId)
+        public IActionResult ConfirmOrderAddress(string addressId, int orderId)
         {
             var address = _addressRepository.Get(Convert.ToInt64(addressId));
             var order = _orderRepository.Get(orderId);

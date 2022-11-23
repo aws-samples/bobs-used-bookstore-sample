@@ -116,16 +116,17 @@ namespace Bookstore.Data.Repository.Implementation.WelcomePageImplementation
             try
             {
                 var severity = 0;
-                var status = order.OrderStatus.OrderStatus_Id;
+                var status = order.OrderStatus;
+
                 switch (status)
                 {
-                    case 2:
+                    case OrderStatus.Ordered:
                         if (timeDiff <= 0)
                             severity = 2;
                         else
                             severity = 1;
                         break;
-                    case 3:
+                    case OrderStatus.Shipped:
                         severity = 2;
                         break;
                 }

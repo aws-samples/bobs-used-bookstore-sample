@@ -1,4 +1,4 @@
-﻿@model AdminSite.ViewModel.ProcessOrders.ProcessOrderViewModel;
+﻿@*@model AdminSite.ViewModel.ProcessOrders.ProcessOrderViewModel;
 @{
     var fullOrder = Model.FullOrder;
 
@@ -29,9 +29,10 @@
             }
             else
             {
-                <option value="@status.OrderStatus_Id">@status.Status</option>
+                <option value="@status">@status.Status</option>
             }
         }
     </select>
     <button class="btn submit-button website-text" type="submit">Submit</button>
 </form>
+*@

@@ -52,7 +52,7 @@ namespace BobCustomerSite.Controllers
             {
                 var prices = _priceRepository.GetAll();
 
-                var books = _bookRepository.Get(includeProperties: "Genre,BookType,Publisher")
+                var books = _bookRepository.Get(includeProperties: "Genre,BookType,Publisher, Condition")
                     .Select(b => new BookViewModel
                     {
                         BookId = b.Id,
@@ -63,8 +63,10 @@ namespace BobCustomerSite.Controllers
                         TypeName = b.BookType.Text,
                         PublisherName = b.Publisher.Text,
                         Url = b.FrontImageUrl,
-                        Prices = prices.Where(p => p.Book.Id == b.Id).ToList(),
-                        MinPrice = prices.Where(p => p.Book.Id == b.Id).FirstOrDefault().ItemPrice
+                        MinPrice = b.Price,
+                        Quantity = b.Quantity
+                        //Prices = prices.Where(p => p.Book.Id == b.Id).ToList(),
+                        //MinPrice = prices.Where(p => p.Book.Id == b.Id).FirstOrDefault().ItemPrice
                     });
 
                 var pageSize = 10;
@@ -155,33 +157,34 @@ namespace BobCustomerSite.Controllers
         {
             if (!string.IsNullOrEmpty(sortBy))
                 ViewBag.CurrentSort = sortBy;
+
             ViewBag.id = id;
 
-            var prices = _priceRepository.Get(p => p.Book.Id == id && p.Active && p.Quantity > 0,
-                includeProperties: "Condition,Book");
+            //var prices = _priceRepository.Get(p => p.Book.Id == id && p.Active && p.Quantity > 0,
+            //    includeProperties: "Condition,Book");
 
-            switch (sortBy)
-            {
-                case "priceAsc":
-                    prices = prices.OrderBy(p => p.ItemPrice);
-                    break;
-                case "priceDesc":
-                    prices = prices.OrderByDescending(p => p.ItemPrice);
-                    break;
-                case "conditionAsc":
-                    prices = prices.OrderBy(p => p.Condition);
-                    break;
-                case "conditionDesc":
-                    prices = prices.OrderByDescending(p => p.Condition);
-                    break;
-                default:
-                    prices = prices.OrderBy(p => p.ItemPrice);
-                    break;
-            }
+            //switch (sortBy)
+            //{
+            //    case "priceAsc":
+            //        prices = prices.OrderBy(p => p.ItemPrice);
+            //        break;
+            //    case "priceDesc":
+            //        prices = prices.OrderByDescending(p => p.ItemPrice);
+            //        break;
+            //    case "conditionAsc":
+            //        prices = prices.OrderBy(p => p.Condition);
+            //        break;
+            //    case "conditionDesc":
+            //        prices = prices.OrderByDescending(p => p.Condition);
+            //        break;
+            //    default:
+            //        prices = prices.OrderBy(p => p.ItemPrice);
+            //        break;
+            //}
 
-            var pricesLst = await prices.ToListAsync();
+            //var pricesLst = await prices.ToListAsync();
 
-            var book = _bookRepository.Get(m => m.Id == id, includeProperties: "Publisher,Genre,Type")
+            var book = _bookRepository.Get(m => m.Id == id, includeProperties: "Publisher,Genre,BookType, Condition")
                 .Select(m => new BookViewModel
                 {
                     BookName = m.Name,
@@ -191,7 +194,9 @@ namespace BobCustomerSite.Controllers
                     GenreName = m.Genre.Text,
                     TypeName = m.BookType.Text,
                     Url = m.FrontImageUrl,
-                    Prices = pricesLst,
+                    //Prices = pricesLst,
+                    MinPrice = m.Price,
+                    Quantity = m.Quantity,
                     BookId = m.Id,
                     Summary = m.Summary
                 });
@@ -199,10 +204,10 @@ namespace BobCustomerSite.Controllers
             return View(book.FirstOrDefault());
         }
 
-        public IActionResult AddtoCartitem(long bookid, long priceid)
+        public IActionResult AddtoCartitem(int bookid)
         {
             var book = _bookRepository.Get(bookid);
-            var price = _priceRepository.Get(priceid);
+            //var price = _priceRepository.Get(priceid);
             var cartId = HttpContext.Request.Cookies["CartId"];
             var cart = _cartRepository.Get(Convert.ToString(cartId));
             var cartItem = new CartItem

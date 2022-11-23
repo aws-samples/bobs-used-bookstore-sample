@@ -73,7 +73,7 @@ else if (Model != null)
                                 <center>
                                     <p class="text-dark">@Html.DisplayFor(modelitem => item.BookName)</p>
                                 </center>
-                                @if (item.Prices.Count != 0)
+                                @if (item.Quantity > 0)
                                 {
                                     <h6>
                                         <span class="price">$@item.MinPrice </span>

@@ -177,8 +177,8 @@ namespace Bobs_Backend.Test
                     Id = 22,
                     Subtotal = 222,
                     Tax = 21,
-                    DeliveryDate = "2020-08-15",
-                    OrderStatus = new OrderStatus { OrderStatus_Id = 2, Status = "Pending", Position = 2 },
+                    DeliveryDate = new DateTime(2020, 08, 15),
+                    OrderStatus = OrderStatus.Pending,
                     Customer = new Customer(),
                     Address = new Address(),
 
@@ -220,8 +220,8 @@ namespace Bobs_Backend.Test
                     Id = 42,
                     Subtotal = 222,
                     Tax = 21,
-                    DeliveryDate = DateTime.Today.AddDays(-1).ToString("dd/MM/yyyy"),
-                    OrderStatus = context.OrderStatus.Find((long) 2),
+                    DeliveryDate = DateTime.Today.AddDays(-1),
+                    OrderStatus = OrderStatus.Ordered,
                     Customer = new Customer
                     {
                         Customer_Id = "123",
@@ -239,8 +239,8 @@ namespace Bobs_Backend.Test
                     Id = 43,
                     Subtotal = 2,
                     Tax = 1,
-                    DeliveryDate = DateTime.Today.AddDays(1).ToString("dd/MM/yyyy"),
-                    OrderStatus = context.OrderStatus.Find((long) 3),
+                    DeliveryDate = DateTime.Today.AddDays(1),
+                    OrderStatus = OrderStatus.Shipped,
                     Customer = new Customer
                     {
                         Customer_Id = "1234",
@@ -293,8 +293,8 @@ namespace Bobs_Backend.Test
                         Id = 22,
                         Subtotal = 22,
                         Tax = 21,
-                        DeliveryDate = "2020-08-15",
-                        OrderStatus = await context.OrderStatus.FindAsync((long) 2),
+                        DeliveryDate = new DateTime(2020, 08, 15),
+                        OrderStatus = OrderStatus.Ordered,
                         Customer = new Customer
                         {
                             Customer_Id ="123",
@@ -316,8 +316,8 @@ namespace Bobs_Backend.Test
                         Id = 23,
                         Subtotal = 222,
                         Tax = 1,
-                        DeliveryDate = "2020-08-18",
-                        OrderStatus = await context.OrderStatus.FindAsync((long) 3),
+                        DeliveryDate = new DateTime(2020, 08, 15),
+                        OrderStatus = OrderStatus.Shipped,
                         Customer = new Customer
                         {
                             Customer_Id ="1234",
@@ -359,8 +359,8 @@ namespace Bobs_Backend.Test
                         Id = 22,
                         Subtotal = 222,
                         Tax = 21,
-                        DeliveryDate = "2020-08-15",
-                        OrderStatus = new OrderStatus { OrderStatus_Id = 3, Status = "En Route", Position = 3 },
+                        DeliveryDate = new DateTime(2020, 08, 15),
+                        OrderStatus = OrderStatus.Shipped,
                         Customer = new Customer
                         {
                             Customer_Id ="123",
@@ -382,8 +382,8 @@ namespace Bobs_Backend.Test
                         Id = 23,
                         Subtotal = 2,
                         Tax = 1,
-                        DeliveryDate = "2020-08-18",
-                        OrderStatus = new OrderStatus { OrderStatus_Id = 2, Status = "Pending", Position = 2 },
+                        DeliveryDate = new DateTime(2020, 08, 15),
+                        OrderStatus = OrderStatus.Pending,
                         Customer = new Customer
                         {
                             Customer_Id ="1234",
@@ -429,8 +429,8 @@ namespace Bobs_Backend.Test
                         Id = 22,
                         Subtotal = 222,
                         Tax = 21,
-                        DeliveryDate = "2020-08-15",
-                        OrderStatus = new OrderStatus { OrderStatus_Id = 3, Status = "En Route", Position = 3 },
+                        DeliveryDate = new DateTime(2020, 08, 15),
+                        OrderStatus = OrderStatus.Shipped,
                         Customer = new Customer
                         {
                             Customer_Id ="123",
@@ -452,8 +452,8 @@ namespace Bobs_Backend.Test
                         Id = 23,
                         Subtotal = 2,
                         Tax = 1,
-                        DeliveryDate = "2020-08-18",
-                        OrderStatus = new OrderStatus { OrderStatus_Id = 2, Status = "Pending", Position = 2 },
+                        DeliveryDate = new DateTime(2020, 08, 15),
+                        OrderStatus = OrderStatus.Pending,
                         Customer = new Customer
                         {
                             Customer_Id ="1234",

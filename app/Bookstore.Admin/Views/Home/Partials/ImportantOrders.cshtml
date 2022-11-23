@@ -47,7 +47,7 @@
                 {
                 { "orderId", $"{order.Order.Id}" }
                 };
-                        var status = order.Order.OrderStatus.OrderStatus_Id;
+                        var status = order.Order.OrderStatus;
 
                         <tr class="">
                             <td>
@@ -59,8 +59,8 @@
                             <td>@order.Order.Customer.Customer_Id</td>
                             <td>@order.Order.Customer.FirstName @order.Order.Customer.LastName</td>
                             <td>$@(order.Order.Subtotal + order.Order.Tax)</td>
-                            <td> @DateTime.ParseExact(order.Order.DeliveryDate, "dd/MM/yyyy", CultureInfo.InvariantCulture).ToString("MM/dd/yyyy")</td>
-                            <td>@order.Order.OrderStatus.Status</td>
+                            <td> @order.Order.DeliveryDate.ToShortDateString()</td>
+                            <td>@order.Order.OrderStatus</td>
                             <td>
                                 <a class="card-link" asp-controller="Orders" asp-action="ProcessOrders" asp-all-route-data="param">View Details</a>
                             </td>

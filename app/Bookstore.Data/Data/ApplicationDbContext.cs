@@ -29,7 +29,6 @@ namespace Bookstore.Data.Data
         public DbSet<Customer> Customer { get; set; }
         public DbSet<Genre> Genre { get; set; }
         public DbSet<Order> Order { get; set; }
-        public DbSet<OrderStatus> OrderStatus { get; set; }
         public DbSet<Price> Price { get; set; }
         public DbSet<Publisher> Publisher { get; set; }
         public DbSet<BookType> Type { get; set; }
@@ -43,7 +42,6 @@ namespace Bookstore.Data.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             CreateSeedResaleStatus(modelBuilder);
-            CreateSeedOrderStatus(modelBuilder);            
         }
 
         public void CreateSeedResaleStatus(ModelBuilder modelBuilder)
@@ -57,18 +55,6 @@ namespace Bookstore.Data.Data
             { ResaleStatus_Id = 4, Status = "Shipment Receipt Confirmed" });
             modelBuilder.Entity<ResaleStatus>().HasData(new ResaleStatus
             { ResaleStatus_Id = 5, Status = "Payment Completed" });
-        }
-
-        public void CreateSeedOrderStatus(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<OrderStatus>().HasData(new OrderStatus
-            { OrderStatus_Id = 1, Status = "Just Placed", Position = 2 });
-            modelBuilder.Entity<OrderStatus>().HasData(new OrderStatus
-            { OrderStatus_Id = 2, Status = "En Route", Position = 3 });
-            modelBuilder.Entity<OrderStatus>().HasData(new OrderStatus
-            { OrderStatus_Id = 3, Status = "Pending", Position = 1 });
-            modelBuilder.Entity<OrderStatus>().HasData(new OrderStatus
-            { OrderStatus_Id = 4, Status = "Delivered", Position = 4 });
         }
     }
 

@@ -19,51 +19,64 @@ else
         <div class="row">
             <div class="col">
                 <div class="media">
-                    <img class="mr-3" src="@Html.DisplayFor(modelitem => Model.Url)" onerror="this.onerror=null;this.src='/images/default_c.jpg';" style="width: 135px;height: 200px;"/>
+                    <img class="mr-3" src="@Html.DisplayFor(modelitem => Model.Url)" onerror="this.onerror=null;this.src='/images/default_c.jpg';" style="width: 135px;height: 200px;" />
                     <div class="media-body">
-
                         <table class="table">
                             <tbody>
-                            <tr>
-                                <th scope="col">Title</th>
-                                <td>@Html.DisplayFor(modelitem => Model.BookName)</td>
-                            </tr>
-                            <tr>
-                                <th scope="col">Author</th>
-                                <td>@Html.DisplayFor(modelitem => Model.Author)</td>
-                            </tr>
-                            <tr>
-                                <th scope="col">Publisher</th>
-                                <td>@Html.DisplayFor(modelitem => Model.PublisherName)</td>
-                            </tr>
-                            <tr>
-                                <th scope="col">Genre</th>
-                                <td>@Html.DisplayFor(modelitem => Model.GenreName)</td>
-                            </tr>
-                            @if (string.IsNullOrEmpty(Model.Summary))
-                            {
                                 <tr>
-                                    <th scope="col">Description</th>
-                                    <td>No description found.</td>
+                                    <th scope="col">Title</th>
+                                    <td>@Html.DisplayFor(modelitem => Model.BookName)</td>
                                 </tr>
-                            }
-                            else
-                            {
                                 <tr>
-                                    <th scope="col">Description</th>
-                                    <td>@Html.DisplayFor(modelitem => Model.Summary)</td>
+                                    <th scope="col">Author</th>
+                                    <td>@Html.DisplayFor(modelitem => Model.Author)</td>
                                 </tr>
-                            }
+                                <tr>
+                                    <th scope="col">Publisher</th>
+                                    <td>@Html.DisplayFor(modelitem => Model.PublisherName)</td>
+                                </tr>
+                                <tr>
+                                    <th scope="col">Genre</th>
+                                    <td>@Html.DisplayFor(modelitem => Model.GenreName)</td>
+                                </tr>
+                                <tr>
+                                    <th scope="col">Condition</th>
+                                    <td>@Html.DisplayFor(modelitem => Model.ConditionName)</td>
+                                </tr>
+                                <tr>
+                                    <th scope="col">Price</th>
+                                    <td>@Html.DisplayFor(modelitem => Model.MinPrice)</td>
+                                </tr>
+                                @if (string.IsNullOrEmpty(Model.Summary))
+                                {
+                                    <tr>
+                                        <th scope="col">Description</th>
+                                        <td>No description found.</td>
+                                    </tr>
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <th scope="col">Description</th>
+                                        <td>@Html.DisplayFor(modelitem => Model.Summary)</td>
+                                    </tr>
+                                }
                             </tbody>
                         </table>
-
                     </div>
                 </div>
             </div>
         </div>
+        <div class="row">
+            <div class="col">
+                <a class="btn" asp-action="AddtoCartitem" asp-route-bookid="@Model.BookId">Add to cart</a>
+@*                <input type="submit" class="btn" value="Add to cart" />
+*@                <input type="submit" class="btn" value="Add to WishList" />
+            </div>
+        </div>
     </div>
-    <div class="container mt-5">
-        @if (Model.Prices.Count == 0)
+@*    <div class="container mt-5">
+        @if (Model.Quantity == 0)
         {
             <p>None in stock</p>
         }
@@ -76,35 +89,35 @@ else
                 <table class="table table-hover">
                     <thead>
 
-                    <tr>
-                        @if (ViewBag.currentSort != "priceAsc")
-                        {
-                            <th scope="col">
-                                <a asp-controller="Search" asp-action="Detail" asp-route-id="@ViewBag.id" asp-route-sortBy="priceAsc">Price</a>
-                            </th>
-                        }
-                        else
-                        {
-                            <th scope="col">
-                                <a asp-controller="Search" asp-action="Detail" asp-route-id="@ViewBag.id" asp-route-sortBy="priceDesc">Price</a>
-                            </th>
-                        }
-                        @if (ViewBag.currentSort != "ConditionAsc")
-                        {
-                            <th scope="col">
-                                <a asp-controller="Search" asp-action="Detail" asp-route-id="@ViewBag.id" asp-route-sortBy="conditionAsc">Condition</a>
-                            </th>
-                        }
-                        else
-                        {
-                            <th scope="col">
-                                <a asp-controller="Search" asp-action="Detail" asp-route-id="@ViewBag.id" asp-route-sortBy="conditionDesc">Condition</a>
-                            </th>
-                        }
+                        <tr>
+                            @if (ViewBag.currentSort != "priceAsc")
+                            {
+                                <th scope="col">
+                                    <a asp-controller="Search" asp-action="Detail" asp-route-id="@ViewBag.id" asp-route-sortBy="priceAsc">Price</a>
+                                </th>
+                            }
+                            else
+                            {
+                                <th scope="col">
+                                    <a asp-controller="Search" asp-action="Detail" asp-route-id="@ViewBag.id" asp-route-sortBy="priceDesc">Price</a>
+                                </th>
+                            }
+                            @if (ViewBag.currentSort != "ConditionAsc")
+                            {
+                                <th scope="col">
+                                    <a asp-controller="Search" asp-action="Detail" asp-route-id="@ViewBag.id" asp-route-sortBy="conditionAsc">Condition</a>
+                                </th>
+                            }
+                            else
+                            {
+                                <th scope="col">
+                                    <a asp-controller="Search" asp-action="Detail" asp-route-id="@ViewBag.id" asp-route-sortBy="conditionDesc">Condition</a>
+                                </th>
+                            }
 
-                        <th scope="col">Condition</th>
-                        <th scope="col"></th>
-                    </tr>
+                            <th scope="col">Condition</th>
+                            <th scope="col"></th>
+                        </tr>
                     </thead>
                     @foreach (var price in Model.Prices)
                     {
@@ -114,16 +127,16 @@ else
                             <td>
                                 <form asp-controller="Search" asp-action="AddtoCartitem" method="get">
                                     <div class="form-group">
-                                        <input type="hidden" name="bookid" value="@Model.BookId"/>
-                                        <input type="hidden" name="priceid" value="@price.Price_Id"/>
-                                        <input type="submit" class="btn" value="Add to cart"/>
+                                        <input type="hidden" name="bookid" value="@Model.BookId" />
+                                        <input type="hidden" name="priceid" value="@price.Price_Id" />
+                                        <input type="submit" class="btn" value="Add to cart" />
                                     </div>
                                 </form>
                                 <form asp-controller="Search" asp-action="AddtoWishList" method="get">
                                     <div class="form-group">
-                                        <input type="hidden" name="bookid" value="@Model.BookId"/>
-                                        <input type="hidden" name="priceid" value="@price.Price_Id"/>
-                                        <input type="submit" class="btn" value="Add to WishList"/>
+                                        <input type="hidden" name="bookid" value="@Model.BookId" />
+                                        <input type="hidden" name="priceid" value="@price.Price_Id" />
+                                        <input type="submit" class="btn" value="Add to WishList" />
                                     </div>
                                 </form>
                             </td>
@@ -133,4 +146,4 @@ else
             </div>
         }
     </div>
-}
+*@}
