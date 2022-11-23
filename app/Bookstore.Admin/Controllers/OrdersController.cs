@@ -1,15 +1,8 @@
 ﻿using System.Threading.Tasks;
-using AdminSite.ViewModel.ManageOrders;
-using AdminSite.ViewModel.ProcessOrders;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.DependencyInjection;
-using Bookstore.Data.Repository.Interface.OrdersInterface;
-using Bookstore.Data.Repository.Interface.NotificationsInterface;
-using Bookstore.Admin;
 using Bookstore.Services;
 using Bookstore.Admin.Mappers.Orders;
-using Bookstore.Domain.Orders;
 using Bookstore.Admin.ViewModel.Orders;
 
 namespace AdminSite.Controllers
@@ -17,28 +10,13 @@ namespace AdminSite.Controllers
     [Authorize]
     public class OrdersController : Controller
     {
-        private readonly INotifications _emailSender;
-        private readonly IOrderRepository _order;
-        private readonly IOrderDetailRepository _orderDetail;
         private readonly IOrderService orderService;
 
-        public OrdersController()
+        public OrdersController(IOrderService orderService)
         {
+            this.orderService = orderService;
         }
 
-        [ActivatorUtilitiesConstructor]
-        public OrdersController(IOrderDetailRepository orderDetail,
-            IOrderRepository order,
-            INotifications emailSender,
-            IOrderService orderService)
-        {
-            _orderDetail = orderDetail;
-            _order = order;
-            _emailSender = emailSender;
-
-            this.orderService= orderService;
-        }
-        
         public IActionResult Index(int pageIndex = 1, int pageSize = 10)
         {
             var orders = orderService.GetOrders(User.Identity.Name, pageIndex, pageSize);

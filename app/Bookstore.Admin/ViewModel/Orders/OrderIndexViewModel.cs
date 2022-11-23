@@ -1,5 +1,4 @@
-﻿using AdminSite.ViewModel.Inventory;
-using Bookstore.Domain.Orders;
+﻿using Bookstore.Domain.Orders;
 using System;
 using System.Collections.Generic;
 
