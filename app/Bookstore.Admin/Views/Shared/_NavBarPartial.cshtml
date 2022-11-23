@@ -13,14 +13,14 @@
                     @if (User.Identity.IsAuthenticated)
                     {
                         <li class="nav-item">
-                            <a class="nav-link" asp-controller="Inventory" asp-action="Index">Inventory</a>
-                        </li>
-                        <li class="nav-item">
                             <a class="nav-link" asp-controller="Orders" asp-action="Index">Orders</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" asp-area="" asp-controller="Resale" asp-action="Index">Resale Books</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Inventory" asp-action="Index">Inventory</a>
+                        </li>                        
                         <li class="nav-item">
                             <a class="nav-link" asp-area="" asp-controller="Resale" asp-action="Index">Reference Data</a>
                         </li>

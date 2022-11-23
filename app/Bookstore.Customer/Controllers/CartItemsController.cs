@@ -129,19 +129,10 @@ namespace CustomerSite.Controllers
 
         public async Task<IActionResult> CheckOut(string[] prices, string[] IDs, string[] quantity, string[] bookF, string[] priceF)
         {
-            //set the origin value
-            //var orderStatue
-            //    = _orderStatusRepository
-            //        .Get(s => s.Status == Constants.OrderStatusPending)
-            //        .FirstOrDefault();
-
             var user = await _userManager.GetUserAsync(User);
             var userId = user.Attributes[CognitoAttribute.Sub.AttributeName];
             var customer = _customerRepository.Get(userId);
-
             decimal subTotal = 0;
-            //var date = DateTime.Now.ToUniversalTime().AddDays(7);
-            //var deliveryDate = date.ToString("dd/MM/yyyy");
 
             // calculate the total price and put all books in a list
             for (var i = 0; i < IDs.Length; i++)
@@ -180,22 +171,20 @@ namespace CustomerSite.Controllers
             for (var i = 0; i < bookF.Length; i++)
             {
                 var orderDetailBook = _bookRepository.Get(Convert.ToInt32(bookF[i]));
-                //var orderDetailPrice = _priceRepository.Get(Convert.ToInt64(priceF[i]));
 
                 var orderDetail = new OrderDetail
                 {
                     Book = orderDetailBook,
-                    //Price = orderDetailPrice,
                     OrderDetailPrice = Convert.ToDecimal(prices[i]),
                     Quantity = Convert.ToInt32(quantity[i]),
                     Order = recentOrder,
-                    IsRemoved = false
+                    IsRemoved = false,
+                    CreatedBy = user.Username,
+                    CreatedOn = DateTime.UtcNow,
+                    UpdatedOn = DateTime.UtcNow
                 };
 
-                //orderDetailPrice.Quantity -= Convert.ToInt32(quantity[i]);
-                //_priceRepository.Update(orderDetailPrice);
                 _orderDetailRepository.Add(orderDetail);
-                //_priceRepository.Save();
                 _orderDetailRepository.Save();
             }
 

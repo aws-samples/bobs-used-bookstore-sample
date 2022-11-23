@@ -40,7 +40,7 @@ namespace CustomerSite.Controllers
                 var customerId = user.Attributes[CognitoAttribute.Sub.AttributeName];
 
                 var orders = _orderRepository.Get(o => o.Customer.Customer_Id == customerId,
-                    includeProperties: "OrderStatus,Customer");
+                    includeProperties: "Customer");
 
                 return View(orders);
             }
@@ -56,8 +56,7 @@ namespace CustomerSite.Controllers
                 var customer_id = user.Attributes[CognitoAttribute.Sub.AttributeName];
                 var orderDetails = _orderDetailRepository.Get(od => od.Order.Id == id && !od.IsRemoved,
                     q => q.OrderBy(s => s.Book.Name), "Book");
-                var order = _orderRepository.Get(o => o.Customer.Customer_Id == customer_id && o.Id == id,
-                    includeProperties: "OrderStatus");
+                var order = _orderRepository.Get(o => o.Customer.Customer_Id == customer_id && o.Id == id);
 
                 var viewModel = new OrderDisplayModel
                 {
