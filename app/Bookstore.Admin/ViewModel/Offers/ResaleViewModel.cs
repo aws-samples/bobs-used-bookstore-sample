@@ -1,5 +1,5 @@
-﻿using Bookstore.Domain.Books;
-using Bookstore.Domain.Customers;
+﻿using Bookstore.Domain.Customers;
+using Bookstore.Domain.Offers;
 using Microsoft.AspNetCore.Http;
 
 namespace AdminSite.ViewModel.ResaleBooks
@@ -20,7 +20,7 @@ namespace AdminSite.ViewModel.ResaleBooks
 
         public string TypeName { get; set; }
 
-        public ResaleStatus ResaleStatus { get; set; }
+        public OfferStatus ResaleStatus { get; set; }
 
         public Customer Customer { get; set; }
 

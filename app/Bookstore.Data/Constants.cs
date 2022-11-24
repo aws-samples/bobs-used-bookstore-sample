@@ -21,5 +21,6 @@
     public const string ResaleStatusPending = "Pending Approval";
     public const string ResaleStatusApproved = "Approved/Awaiting Shipment";
     public const string ResaleStatusRejected = "Rejected";
-
+    public const string ResaleStatusReceived = "Shipment Receipt Confirmed";
+    public const string ResaleStatusPaymentCompleted = "Payment Completed";
 }

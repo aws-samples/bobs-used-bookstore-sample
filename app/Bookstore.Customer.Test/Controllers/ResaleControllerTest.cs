@@ -7,16 +7,15 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Xunit;
 using SignInResult = Microsoft.AspNetCore.Identity.SignInResult;
-using Bookstore.Domain.Books;
 using Bookstore.Domain.Customers;
 using Bookstore.Data.Repository.Interface;
+using Bookstore.Domain.Offers;
 
 namespace CustomerSite.Test.Controllers
 {
     public class ResaleControllerTest
     {
-        private readonly Mock<IGenericRepository<ResaleStatus>> mockResaleStatusRepository = new Mock<IGenericRepository<ResaleStatus>>();
-        private readonly Mock<IGenericRepository<Resale>> mockResaleRepository = new Mock<IGenericRepository<Resale>>();
+        private readonly Mock<IGenericRepository<Offer>> mockResaleRepository = new Mock<IGenericRepository<Offer>>();
         private readonly Mock<IGenericRepository<Customer>> mockCustomerRepository = new Mock<IGenericRepository<Customer>>();
         private readonly Mock<IInventory> mockInventory = new Mock<IInventory>();
         private readonly Mock<IMapper> mockMapper = new Mock<IMapper>();
@@ -24,13 +23,13 @@ namespace CustomerSite.Test.Controllers
        
        
 
-        private List<Resale> GetSampleTestData()
+        private List<Offer> GetSampleTestData()
         {
-            var sampleData = new List<Resale>
+            var sampleData = new List<Offer>
             {
-                new Resale
+                new Offer
                     {
-                        Resale_Id = 29, Author = "Test Author", ISBN = "122365543", BookName = "Test Book", GenreName = "Test Genre",  Customer = new Customer(), ConditionName = "Test Condition"
+                        Id = 29, Author = "Test Author", ISBN = "122365543", BookName = "Test Book", GenreName = "Test Genre",  Customer = new Customer(), ConditionName = "Test Condition"
                 }
                     };
 

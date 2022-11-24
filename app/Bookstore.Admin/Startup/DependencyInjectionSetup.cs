@@ -26,6 +26,7 @@ namespace AdminSite.Startup
             builder.Services.AddTransient<IInventoryService, InventoryService>();
             builder.Services.AddTransient<IOrderService, OrderService>();
             builder.Services.AddTransient<IReferenceDataService, ReferenceDataService>();
+            builder.Services.AddTransient<IOfferService, OfferService>();
             builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
             if (builder.Environment.IsDevelopment())

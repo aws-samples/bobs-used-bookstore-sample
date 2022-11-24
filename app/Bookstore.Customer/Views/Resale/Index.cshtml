@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Bookstore.Domain.Books.Resale>
+﻿@model IEnumerable<Bookstore.Domain.Offers.Offer>
 
 @{ ViewData["Title"] = "Index"; }
 
@@ -94,7 +94,7 @@
                         @Html.DisplayFor(modelItem => item.BookPrice)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.ResaleStatus.Status)
+                        @Html.DisplayFor(modelItem => item.OfferStatus)
                     </td>
                 </tr>
             }

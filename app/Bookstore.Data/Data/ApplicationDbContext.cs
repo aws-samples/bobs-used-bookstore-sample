@@ -3,6 +3,7 @@ using System.IO;
 using Bookstore.Domain.Books;
 using Bookstore.Domain.Carts;
 using Bookstore.Domain.Customers;
+using Bookstore.Domain.Offers;
 using Bookstore.Domain.Orders;
 using Bookstore.Domain.ReferenceData;
 using Microsoft.EntityFrameworkCore;
@@ -35,29 +36,9 @@ namespace Bookstore.Data.Data
         public DbSet<Cart> Cart { get; set; }
         public DbSet<CartItem> CartItem { get; set; }
         public DbSet<OrderDetail> OrderDetail { get; set; }
-        public DbSet<Resale> Resale { get; set; }
-        public DbSet<ResaleStatus> ResaleStatus { get; set; }
+        public DbSet<Offer> Offer { get; set; }
         public DbSet<ReferenceDataItem> ReferenceData { get; set; }
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            CreateSeedResaleStatus(modelBuilder);
-        }
-
-        public void CreateSeedResaleStatus(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<ResaleStatus>().HasData(new ResaleStatus
-            { ResaleStatus_Id = 1, Status = "Pending Approval" });
-            modelBuilder.Entity<ResaleStatus>().HasData(new ResaleStatus
-            { ResaleStatus_Id = 2, Status = "Approved/Awaiting Shipment from Customer" });
-            modelBuilder.Entity<ResaleStatus>().HasData(new ResaleStatus { ResaleStatus_Id = 3, Status = "Rejected" });
-            modelBuilder.Entity<ResaleStatus>().HasData(new ResaleStatus
-            { ResaleStatus_Id = 4, Status = "Shipment Receipt Confirmed" });
-            modelBuilder.Entity<ResaleStatus>().HasData(new ResaleStatus
-            { ResaleStatus_Id = 5, Status = "Payment Completed" });
-        }
     }
-
 
     public class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<ApplicationDbContext>
     {

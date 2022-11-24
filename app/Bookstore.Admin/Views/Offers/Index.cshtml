@@ -1,0 +1,88 @@
+﻿@using Bookstore.Domain
+@using Bookstore.Domain.Offers
+
+@model Bookstore.Admin.ViewModel.Offers.OfferIndexViewModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show m-3" role="alert">
+        @TempData["Message"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<div class="d-flex m-3">
+    <h5 class="me-auto">Offers</h5>
+</div>
+
+<div class="card m-3">
+    <div class="card-header">
+        <div class="d-flex justify-content-end">
+            @await Html.PartialAsync("_Paginator", Model)
+        </div>
+    </div>
+    <div class="card-body">
+        <table class="table table-striped table-hover ">
+            <thead>
+                <tr>
+                    <th scope="col">Customer</th>
+                    <th scope="col">Book Name</th>
+                    <th scope="col">Author</th>
+                    <th scope="col">Genre</th>
+                    <th scope="col">Condition</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Offer date</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Action</th>
+                </tr>
+            </thead>
+            @foreach (var offer in Model.Items)
+            {
+                <tr>
+                    <td>@offer.CustomerName</td>
+                    <td>@offer.BookName</td>
+                    <td>@offer.Author</td>
+                    <td>@offer.GenreName</td>
+                    <td>@offer.BookCondition</td>
+                    <td>@offer.OfferPrice.ToString("C")</td>
+                    <td>@offer.OfferDate.ToShortDateString()</td>
+                    <td>@offer.OfferStatus.GetDescription()</td>
+                    <td>
+                        @switch (offer.OfferStatus)
+                        {
+                            //TODO Need to POST these.
+                            case OfferStatus.PendingApproval:
+                                <div class="hstack gap-2">
+                                    <a class="card-link" asp-controller="Offers" asp-action="Approve" asp-route-id="@offer.OfferId">Approve</a>
+                                    <div class="vr"></div>
+                                    <a class="card-link" asp-controller="Offers" asp-action="Reject" asp-route-id="@offer.OfferId">Reject</a>
+                                </div>
+
+                                break;
+
+                            case OfferStatus.Approved:
+                                <a class="card-link" asp-controller="Offers" asp-action="Approve" asp-route-id="@offer.OfferId">Confirm Shipment</a>
+
+                                break;
+
+                            case OfferStatus.Received:
+                                <a class="card-link" asp-controller="Offers" asp-action="Approve" asp-route-id="@offer.OfferId">Make Payment</a>
+
+                                break;
+                        }
+
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
+    <div class="card-footer">
+        <div class="d-flex justify-content-end">
+            @await Html.PartialAsync("_Paginator", Model)
+        </div>
+    </div>
+</div>

@@ -3,7 +3,7 @@ using DataAccess.Dtos;
 using AdminSite.ViewModel;
 using AdminSite.ViewModel.ResaleBooks;
 using AdminSite.ViewModel.SearchBooks;
-using Bookstore.Domain.Books;
+using Bookstore.Domain.Offers;
 
 namespace AdminSite
 {
@@ -11,7 +11,7 @@ namespace AdminSite
     {
         public AutoMapperProfile()
         {
-            CreateMap<Resale, ResaleViewModel>();
+            CreateMap<Offer, ResaleViewModel>();
             CreateMap<ResaleViewModel, BooksDto>()
                 .ForMember(dest => dest.FrontPhoto, opt => opt.MapFrom(src => src.FrontUrl))
                 .ForMember(dest => dest.BackPhoto, opt => opt.MapFrom(src => src.BackUrl))

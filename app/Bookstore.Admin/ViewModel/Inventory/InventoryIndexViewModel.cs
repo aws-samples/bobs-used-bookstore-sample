@@ -1,9 +1,6 @@
 ﻿using Bookstore.Admin.ViewModel;
-using Bookstore.Domain;
-using Bookstore.Domain.Books;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace AdminSite.ViewModel.Inventory
 {

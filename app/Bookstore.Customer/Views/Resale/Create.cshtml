@@ -1,20 +1,14 @@
 ﻿@using Bookstore.Domain.Books
+@using Bookstore.Domain.ReferenceData
 
 @model CustomerSite.Models.ViewModels.ResaleViewModel;
 @{
-    var resaleBook = (Resale)ViewData["ResaleBooks"];
-    var publishers = (List<Publisher>)ViewData["Publishers"];
-    var types = (List<BookType>)ViewData["Types"];
-    var conditions = (List<Condition>)ViewData["Conditions"];
-    var genre = (List<Genre>)ViewData["Genres"];
-    var otherGenre = new Genre { Name = "Others" };
-    genre.Add(otherGenre);
-    var otherPublisher = new Publisher { Name = "Others" };
-    publishers.Add(otherPublisher);
-    var otherType = new BookType { TypeName = "Others" };
-    types.Add(otherType);
-    var otherCondition = new Condition { ConditionName = "Others" };
-    conditions.Add(otherCondition);
+    var resaleBook = (Bookstore.Domain.Offers.Offer)ViewData["ResaleBooks"];
+
+    var publishers = new SelectList((IEnumerable<ReferenceDataItem>)ViewData["Publishers"], "Id", "Text");
+    var types = new SelectList((IEnumerable<ReferenceDataItem>)ViewData["Types"], "Id", "Text");
+    var conditions = new SelectList((IEnumerable<ReferenceDataItem>)ViewData["Conditions"], "Id", "Text");
+    var genre = new SelectList((IEnumerable<ReferenceDataItem>)ViewData["Genres"], "Id", "Text");
 }
 
 <head>
@@ -58,7 +52,7 @@
                     </div>
                     <div class="form-group col-md-6">
                         <label class="main-text form-check-label">Publisher Name</label>
-                        @Html.DropDownListFor(model => model.PublisherName, new SelectList(publishers, "Name", "Name"), "Please select", new { id = "othersOptionPublisher", @class = "form-control dropdown", required = "required" })
+                        @Html.DropDownListFor(model => model.PublisherName, publishers, "Please select", new { id = "othersOptionPublisher", @class = "form-control dropdown", required = "required" })
                         <div id="div_content_publisher" style="display:none">
                             <br/>
                             <input class="form-control otherAddPublisherText" asp-for="PublisherName" id="txtNewPublisher" type="text"/>
@@ -75,7 +69,7 @@
                     </div>
                     <div class="form-group col-md-6">
                         <label class="main-text form-check-label">Book Condition</label><br/>
-                        @Html.DropDownListFor(model => model.ConditionName, new SelectList(conditions, "ConditionName", "ConditionName"), "Please select", new { id = "othersOptionCondition", @class = "form-control dropdown", required = "required" })
+                        @Html.DropDownListFor(model => model.ConditionName, conditions, "Please select", new { id = "othersOptionCondition", @class = "form-control dropdown", required = "required" })
                         <div id="div_content_condition" style="display:none">
                             <input class="form-control otherAddText" asp-for="ConditionName" id="txtNewCondition" type="text"/>
                             <input class="btn otherAddButton" id="btnAddNewCondition" type="button" onClick="buttonFn(this)" value="Add"/>
@@ -86,7 +80,7 @@
                 <div class="form-row">
                     <div class="form-group col-md-6">
                         <label class="main-text form-check-label">Book Type</label><br/>
-                        @Html.DropDownListFor(model => model.TypeName, new SelectList(types, "TypeName", "TypeName"), "Please select", new { id = "othersOptionType", @class = "form-control dropdown", required = "required" })
+                        @Html.DropDownListFor(model => model.TypeName, types, "Please select", new { id = "othersOptionType", @class = "form-control dropdown", required = "required" })
                         <div id="div_content_type" style="display:none">
                             <br/>
                             <input class="form-control otherAddText" asp-for="TypeName" id="txtNewType" type="text"/>
@@ -95,7 +89,7 @@
                     </div>
                     <div class="form-group col-md-6">
                         <label class="main-text form-check-label">Book Genre</label><br/>
-                        @Html.DropDownListFor(model => model.GenreName, new SelectList(genre, "Name", "Name"), "Please select", new { id = "othersOptionGenre", @class = "form-control dropdown", required = "required" })
+                        @Html.DropDownListFor(model => model.GenreName, genre, "Please select", new { id = "othersOptionGenre", @class = "form-control dropdown", required = "required" })
                         <div id="div_content_genre" style="display:none">
                             <br/>
                             <input class="form-control otherAddText" asp-for="GenreName" id="txtNewGenre" type="text"/>

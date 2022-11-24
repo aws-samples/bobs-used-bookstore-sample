@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using CustomerSite.Models.ViewModels;
-using Bookstore.Domain.Books;
+using Bookstore.Domain.Offers;
 
 namespace CustomerSite
 {
@@ -8,7 +8,7 @@ namespace CustomerSite
     {
         public AutoMapperProfile()
         {
-            CreateMap<ResaleViewModel, Resale>();
+            CreateMap<ResaleViewModel, Offer>();
         }
     }
 }

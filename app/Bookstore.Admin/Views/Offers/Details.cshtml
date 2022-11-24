@@ -1,7 +1,6 @@
 ﻿@model AdminSite.ViewModel.ResaleBooks.ResaleViewModel;
 @{ var customerInfo = Model.Customer; }
 
-
 <head>
     <link rel="stylesheet" href="/css/Resale/details.css"/>
 </head>
@@ -19,9 +18,9 @@
             </a>
         </div>
         <div class="text-center col website-text">
-            <h3>Status: @Model.ResaleStatus.Status</h3>
+            <h3>Status: @Model.ResaleStatus</h3>
         </div>
-        @if (Model.ResaleStatus.Status == Constants.ResaleStatusPending)
+        @if (Model.ResaleStatus == Bookstore.Domain.Offers.OfferStatus.PendingApproval)
         {
             <div class="col-1 text-right">
                 <form asp-controller="Resale" asp-action="ApproveResale" method="get">
@@ -35,7 +34,7 @@
                 </form>
             </div>
         }
-        @if (Model.ResaleStatus.Status == Constants.ResaleStatusApproved)
+        @if (Model.ResaleStatus == Bookstore.Domain.Offers.OfferStatus.Approved)
         {
             <div class="col-3 text-right">
                 <form asp-controller="Resale" asp-action="AddResaleBookDetails" method="get">
@@ -44,7 +43,7 @@
                 </form>
             </div>
         }
-        @if (Model.ResaleStatus.Status == Constants.ResaleStatusReceived)
+        @if (Model.ResaleStatus == Bookstore.Domain.Offers.OfferStatus.Received)
         {
             <button class="btn btn-primary shadow manage-order-button website-text" data-toggle="modal" data-target="#exampleModal" name="id" value="@Model.Resale_Id" type="submit">Make Payment</button>
         }

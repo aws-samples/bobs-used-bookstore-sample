@@ -1,8 +1,6 @@
 ﻿using Bookstore.Data.Repository.Interface;
 using Bookstore.Domain;
-using Bookstore.Domain.Books;
 using Bookstore.Domain.Orders;
-using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;

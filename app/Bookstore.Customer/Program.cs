@@ -8,7 +8,6 @@ using Bookstore.Data.Repository.Implementation;
 using Bookstore.Data.Repository.Interface.InventoryInterface;
 using Bookstore.Data.Repository.Interface.SearchImplementations;
 using Bookstore.Data.Repository.Interface;
-using CustomerSite;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
@@ -23,6 +22,8 @@ using Microsoft.Data.SqlClient;
 using System.Text.Json;
 using System.Threading.Tasks;
 using System;
+using CustomerSite;
+using Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -49,15 +50,15 @@ builder.Services.AddAWSService<IAmazonPolly>();
 builder.Services.AddAWSService<IAmazonRekognition>();
 
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
-
+builder.Services.AddTransient<IReferenceDataService, ReferenceDataService>();
 builder.Services.AddTransient<IBookSearch, BookSearchRepository>();
 builder.Services.AddTransient<IPriceSearch, PriceSearchRepository>();
-//builder.Services.AddTransient<IInventory, Inventory>();
 builder.Services.AddTransient<IRekognitionNPollyRepository, RekognitionNPollyRepository>();
 builder.Services.AddTransient<ISearchRepository, SearchRepository>();
 builder.Services.AddTransient<ISearchDatabaseCalls, SearchDatabaseCalls>();
 
-builder.Services.AddAutoMapper(typeof(Startup));
+builder.Services.AddAutoMapper(x => x.AddProfile<AutoMapperProfile>());
+
 
 builder.Services.AddSession();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
@@ -135,40 +136,3 @@ async Task<string> GetConnectionStringAsync(AWSOptions awsOptions, Configuration
         throw;
     }
 }
-
-
-//using Microsoft.AspNetCore.Hosting;
-//using Microsoft.Extensions.Configuration;
-//using Microsoft.Extensions.Hosting;
-//using Microsoft.Extensions.Logging;
-//using NLog.Web;
-//namespace CustomerSite
-//{
-//    public class Program
-//    {
-//        public static void Main(string[] args)
-//        {
-//            CreateHostBuilder(args).Build().Run();
-//        }
-
-//        private static IHostBuilder CreateHostBuilder(string[] args)
-//        {
-//            return Host.CreateDefaultBuilder(args)
-//                .ConfigureAppConfiguration((context, builder) =>
-//                {
-//                    builder.AddSystemsManager("/BobsUsedBookCustomerStore/");
-//                    builder.AddSystemsManager("/bookstoredb/");
-//                })
-//                .ConfigureWebHostDefaults(webBuilder =>
-//                {
-//                    webBuilder.UseStartup<Startup>();
-//                }).ConfigureLogging(logging =>
-//                {
-//                    logging.AddAWSProvider();
-
-//                    // When you need logging below set the minimum level. Otherwise the logging framework will default to Informational for external providers.
-//                    logging.SetMinimumLevel(LogLevel.Debug);
-//                }).UseNLog();
-//        }
-//    }
-//}
