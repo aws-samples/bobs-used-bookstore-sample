@@ -40,7 +40,7 @@ namespace Bookstore.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> ReceivedAsync(int id)
         {
-            return await UpdateOfferStatus(id, OfferStatus.Received, "The offer has been updated to reflect that the book has been received");
+            return await UpdateOfferStatus(id, OfferStatus.Received, "The book has been received");
         }
 
         [HttpPost]

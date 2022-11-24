@@ -37,7 +37,7 @@
                     <th scope="col">Price</th>
                     <th scope="col">Offer date</th>
                     <th scope="col">Status</th>
-                    <th scope="col">Action</th>
+                    <th scope="col"></th>
                 </tr>
             </thead>
             @foreach (var offer in Model.Items)
@@ -52,29 +52,29 @@
                     <td>@offer.OfferDate.ToShortDateString()</td>
                     <td>@offer.OfferStatus.GetDescription()</td>
                     <td>
-                        @switch (offer.OfferStatus)
-                        {
-                            //TODO Need to POST these.
-                            case OfferStatus.PendingApproval:
-                                <div class="hstack gap-2">
-                                    <a class="card-link" asp-controller="Offers" asp-action="Approve" asp-route-id="@offer.OfferId">Approve</a>
-                                    <div class="vr"></div>
-                                    <a class="card-link" asp-controller="Offers" asp-action="Reject" asp-route-id="@offer.OfferId">Reject</a>
-                                </div>
+                        <form method="post">
+                            @switch (offer.OfferStatus)
+                            {
+                                case OfferStatus.PendingApproval:
+                                    <div class="hstack gap-2">
+                                        <button type="submit" class="btn btn-link p-0" asp-controller="Offers" asp-action="Approve" asp-route-id="@offer.OfferId">Approve</button>
+                                        <div class="vr"></div>
+                                        <button type="submit" class="btn btn-link p-0" asp-controller="Offers" asp-action="Reject" asp-route-id="@offer.OfferId">Reject</button>
+                                    </div>
 
-                                break;
+                                    break;
 
-                            case OfferStatus.Approved:
-                                <a class="card-link" asp-controller="Offers" asp-action="Approve" asp-route-id="@offer.OfferId">Confirm Shipment</a>
+                                case OfferStatus.Approved:
+                                    <button type="submit" class="btn btn-link p-0" asp-controller="Offers" asp-action="Received" asp-route-id="@offer.OfferId">Confirm Shipment</button>
 
-                                break;
+                                    break;
 
-                            case OfferStatus.Received:
-                                <a class="card-link" asp-controller="Offers" asp-action="Approve" asp-route-id="@offer.OfferId">Make Payment</a>
+                                case OfferStatus.Received:
+                                    <button class="btn btn-link p-0" asp-controller="Offers" asp-action="Paid" asp-route-id="@offer.OfferId">Make Payment</button>
 
-                                break;
-                        }
-
+                                    break;
+                            }
+                        </form>
                     </td>
                 </tr>
             }
