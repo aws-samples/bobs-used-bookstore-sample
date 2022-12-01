@@ -1,10 +1,12 @@
 ﻿@using Bookstore.Domain.ReferenceData
 
-@model Bookstore.Admin.ViewModel.ReferenceData.ReferenceDataCreateViewModel
+@model Bookstore.Admin.ViewModel.ReferenceData.ReferenceDataItemCreateUpdateViewModel
 
 <div asp-validation-summary="All"></div>
 
-<form class="row justify-content-center" asp-controller="ReferenceData" asp-action="Create" method="post">
+<form class="row justify-content-center" method="post">
+    <input type="hidden" asp-for="Id" />
+
     <div class="col-4">
         <div class="mb-3">
             <label for="referenceDataTypeSelect" class="form-label">Reference data type</label>
@@ -16,6 +18,6 @@
             <input id="referenceDataTextInput" type="text" class="form-control" asp-for="Text" required />
         </div>
 
-        <button class="btn btn-primary" type="submit">Create</button>
+        <button class="btn btn-primary" type="submit">Save</button>
     </div>
 </form>

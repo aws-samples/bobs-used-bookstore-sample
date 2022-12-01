@@ -15,7 +15,7 @@ namespace Services
 
         PaginatedList<Book> GetBooks(string userName, int index, int count);
 
-        Task SaveBookAsync(Book book, IFormFile frontPhoto, IFormFile backPhoto, IFormFile leftPhoto, IFormFile rightPhoto, string userName);
+        Task SaveAsync(Book book, IFormFile frontPhoto, IFormFile backPhoto, IFormFile leftPhoto, IFormFile rightPhoto, string userName);
     }
 
     public class InventoryService : IInventoryService
@@ -40,7 +40,7 @@ namespace Services
                 .GetPaginated(x => x.CreatedBy == userName, y => y.OrderBy(x => x.CreatedOn), index, count, x => x.Genre, y => y.Publisher, x => x.BookType, x => x.Condition);
         }
 
-        public async Task SaveBookAsync(Book book, IFormFile frontImage, IFormFile backImage, IFormFile leftImage, IFormFile rightImage, string userName)
+        public async Task SaveAsync(Book book, IFormFile frontImage, IFormFile backImage, IFormFile leftImage, IFormFile rightImage, string userName)
         {
             await UpdateImagesAsync(book, frontImage, backImage, leftImage, rightImage);
 

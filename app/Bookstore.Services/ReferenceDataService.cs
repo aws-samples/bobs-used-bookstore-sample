@@ -1,7 +1,10 @@
 ﻿using Bookstore.Data.Repository.Interface;
+using Bookstore.Domain.Books;
 using Bookstore.Domain.ReferenceData;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Services
 {
@@ -11,7 +14,9 @@ namespace Services
 
         IEnumerable<ReferenceDataItem> GetAllReferenceData();
 
-        void Add(ReferenceDataType dataType, string text, string createdBy);
+        Task SaveAsync(ReferenceDataItem referenceDataItem, string createdBy);
+        
+        ReferenceDataItem GetReferenceDataItem(int id);
     }
 
     public class ReferenceDataService : IReferenceDataService
@@ -23,17 +28,6 @@ namespace Services
             this.referenceDataRepository = referenceDataRepository;
         }
 
-        public void Add(ReferenceDataType dataType, string text, string createdBy)
-        {
-            var formattedText = text.Trim();
-
-            if(referenceDataRepository.Get2(x => x.DataType == dataType && x.Text == text).SingleOrDefault() != null) return;
-
-            referenceDataRepository.Add(new ReferenceDataItem() { DataType = dataType, Text = text, CreatedBy = createdBy });
-
-            referenceDataRepository.Save();
-        }
-
         public IEnumerable<ReferenceDataItem> GetAllReferenceData()
         {
             return referenceDataRepository.Get2();
@@ -42,6 +36,22 @@ namespace Services
         public IEnumerable<ReferenceDataItem> GetReferenceData(ReferenceDataType referenceDataType)
         {
             return referenceDataRepository.Get2(x => x.DataType == referenceDataType);
-        }        
+        }
+
+        public ReferenceDataItem GetReferenceDataItem(int id)
+        {
+            return referenceDataRepository.Get(id);
+        }
+
+        public async Task SaveAsync(ReferenceDataItem referenceDataItem, string createdBy)
+        {
+            if (referenceDataItem.IsNewEntity()) referenceDataItem.CreatedBy = createdBy;
+
+            referenceDataItem.UpdatedOn = DateTime.UtcNow;
+
+            referenceDataRepository.AddOrUpdate(referenceDataItem);
+
+            await referenceDataRepository.SaveAsync();
+        }
     }
 }

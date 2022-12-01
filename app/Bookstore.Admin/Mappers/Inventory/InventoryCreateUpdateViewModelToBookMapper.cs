@@ -3,7 +3,7 @@ using Bookstore.Domain.Books;
 
 namespace Bookstore.Admin.Mappers.Inventory
 {
-    public static class InventoryCreateUpdateViewModelToBookMapper
+    public static class ReferenceDataItemCreateUpdateViewModelToReferenceDataItemMapper
     {
         public static Book ToBook(this InventoryCreateUpdateViewModel viewModel)
         {

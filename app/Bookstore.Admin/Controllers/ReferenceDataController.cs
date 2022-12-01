@@ -1,8 +1,10 @@
-﻿using AutoMapper;
+﻿using Bookstore.Admin.Mappers.ReferenceData;
+using Bookstore.Admin.ViewModel.Inventory;
 using Bookstore.Admin.ViewModel.ReferenceData;
 using Bookstore.Domain.ReferenceData;
 using Microsoft.AspNetCore.Mvc;
 using Services;
+using System.Threading.Tasks;
 
 namespace Bookstore.Admin.Controllers
 {
@@ -15,26 +17,49 @@ namespace Bookstore.Admin.Controllers
             this.referenceDataService = referenceDataService;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(int pageIndex = 1, int pageSize = 10)
         {
-            return View();
+            var referenceDataItems = referenceDataService.GetAllReferenceData();
+
+            return View(referenceDataItems.ToReferenceDataIndexViewModel());
         }
 
         public IActionResult Create(ReferenceDataType? selectedReferenceDataType = null)
         {
-            var model = new ReferenceDataCreateViewModel();
+            var model = new ReferenceDataItemCreateUpdateViewModel();
 
             if(selectedReferenceDataType.HasValue) model.SelectedReferenceDataType = selectedReferenceDataType.Value;
 
-            return View(model);
+            return View("CreateUpdate", model);
         }
 
         [HttpPost]
-        public IActionResult Create(ReferenceDataCreateViewModel model)
+        public async Task<IActionResult> Create(ReferenceDataItemCreateUpdateViewModel model)
         {
-            referenceDataService.Add(model.SelectedReferenceDataType, model.Text, User.Identity.Name);
+            var referenceDataItem = model.ToReferenceDataItem();
 
-            return RedirectToAction("Index", "Inventory");
+            await referenceDataService.SaveAsync(referenceDataItem, User.Identity.Name);
+
+            return RedirectToAction("Index");
+        }
+
+        public IActionResult Update(int id)
+        {
+            var referenceDataItem = referenceDataService.GetReferenceDataItem(id);
+
+            return View("CreateUpdate", referenceDataItem.ToReferenceDataItemCreateUpdateViewModel());
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Update(ReferenceDataItemCreateUpdateViewModel model)
+        {
+            var referenceDataItem = referenceDataService.GetReferenceDataItem(model.Id);
+
+            model.ToReferenceDataItem(referenceDataItem);
+
+            await referenceDataService.SaveAsync(referenceDataItem, User.Identity.Name);
+
+            return RedirectToAction("Index");
         }
     }
 }

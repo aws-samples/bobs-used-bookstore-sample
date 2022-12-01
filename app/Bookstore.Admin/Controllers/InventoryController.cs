@@ -25,7 +25,6 @@ namespace AdminSite.Controllers
             this.referenceDataService = referenceDataService;
         }
 
-        [HttpGet]
         public IActionResult Index(int pageIndex = 1, int pageSize = 10)
         {
             var books = inventoryService.GetBooks(User.Identity.Name, pageIndex, pageSize);
@@ -33,7 +32,6 @@ namespace AdminSite.Controllers
             return View(books.ToInventoryIndexViewModel());
         }
 
-        [HttpGet]
         public IActionResult Details(int id)
         {
             var book = inventoryService.GetBook(id);
@@ -41,7 +39,6 @@ namespace AdminSite.Controllers
             return View(book.ToInventoryDetailsViewModel());
         }
 
-        [HttpGet]
         public IActionResult Create()
         {
             var model = new InventoryCreateUpdateViewModel();
@@ -59,7 +56,7 @@ namespace AdminSite.Controllers
 
             var book = model.ToBook();
 
-            await inventoryService.SaveBookAsync(
+            await inventoryService.SaveAsync(
                 book, 
                 model.FrontImage,
                 model.BackImage,
@@ -70,7 +67,6 @@ namespace AdminSite.Controllers
             return RedirectToAction("Index");
         }
 
-        [HttpGet]
         public IActionResult Update(int id)
         {
             var book = inventoryService.GetBook(id);
@@ -85,13 +81,11 @@ namespace AdminSite.Controllers
         [HttpPost]
         public async Task<IActionResult> Update(InventoryCreateUpdateViewModel model)
         {
-            logger.LogInformation("Posting new book details from form to Database ");
-
             var book = inventoryService.GetBook(model.Id);
 
             model.ToBook(book);
 
-            await inventoryService.SaveBookAsync(
+            await inventoryService.SaveAsync(
                 book, 
                 model.FrontImage, 
                 model.BackImage,

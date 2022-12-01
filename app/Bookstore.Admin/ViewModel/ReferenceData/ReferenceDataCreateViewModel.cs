@@ -4,12 +4,14 @@ using System.Collections.Generic;
 
 namespace Bookstore.Admin.ViewModel.ReferenceData
 {
-    public class ReferenceDataCreateViewModel
+    public class ReferenceDataItemCreateUpdateViewModel
     {
-        public IEnumerable<SelectListItem> DataTypes { get; set; }
+        public int Id { get; set; }
 
         public ReferenceDataType SelectedReferenceDataType { get; set; }
 
         public string Text { get; set; }
+
+        public IEnumerable<SelectListItem> DataTypes { get; set; }
     }
 }

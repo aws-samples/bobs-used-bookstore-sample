@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace AdminSite.ViewModel.Inventory
 {
-    public class InventoryIndexViewModel : PaginatedViewModel
+    public class ReferenceDataIndexViewModel : PaginatedViewModel
     {
         public List<InventoryIndexListItemViewModel> Items { get; set; } = new List<InventoryIndexListItemViewModel>();
     }
