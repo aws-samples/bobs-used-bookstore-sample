@@ -1,5 +1,4 @@
 ﻿using Bookstore.Admin.Mappers.ReferenceData;
-using Bookstore.Admin.ViewModel.Inventory;
 using Bookstore.Admin.ViewModel.ReferenceData;
 using Bookstore.Domain.ReferenceData;
 using Microsoft.AspNetCore.Mvc;
@@ -17,11 +16,13 @@ namespace Bookstore.Admin.Controllers
             this.referenceDataService = referenceDataService;
         }
 
-        public IActionResult Index(int pageIndex = 1, int pageSize = 10)
+        public IActionResult Index(ReferenceDataIndexViewModel model)
         {
-            var referenceDataItems = referenceDataService.GetAllReferenceData();
+            var referenceDataItems = referenceDataService.GetReferenceData(model.Filters.ReferenceDataTypeFilter);
+            
+            model.Items = referenceDataItems.ToReferenceDataIndexListItemViewModels();
 
-            return View(referenceDataItems.ToReferenceDataIndexViewModel());
+            return View(model);
         }
 
         public IActionResult Create(ReferenceDataType? selectedReferenceDataType = null)

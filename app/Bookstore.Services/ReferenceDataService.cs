@@ -10,12 +10,10 @@ namespace Services
 {
     public interface IReferenceDataService
     {
-        IEnumerable<ReferenceDataItem> GetReferenceData(ReferenceDataType referenceDataType);
-
-        IEnumerable<ReferenceDataItem> GetAllReferenceData();
+        IEnumerable<ReferenceDataItem> GetReferenceData(ReferenceDataType? referenceDataType = null);
 
         Task SaveAsync(ReferenceDataItem referenceDataItem, string createdBy);
-        
+
         ReferenceDataItem GetReferenceDataItem(int id);
     }
 
@@ -28,14 +26,11 @@ namespace Services
             this.referenceDataRepository = referenceDataRepository;
         }
 
-        public IEnumerable<ReferenceDataItem> GetAllReferenceData()
+        public IEnumerable<ReferenceDataItem> GetReferenceData(ReferenceDataType? referenceDataType = null)
         {
-            return referenceDataRepository.Get2();
-        }
-
-        public IEnumerable<ReferenceDataItem> GetReferenceData(ReferenceDataType referenceDataType)
-        {
-            return referenceDataRepository.Get2(x => x.DataType == referenceDataType);
+            return referenceDataType.HasValue ?
+             referenceDataRepository.Get2(x => x.DataType == referenceDataType) :
+             referenceDataRepository.Get2();
         }
 
         public ReferenceDataItem GetReferenceDataItem(int id)

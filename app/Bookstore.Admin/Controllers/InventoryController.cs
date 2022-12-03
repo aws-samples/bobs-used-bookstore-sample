@@ -42,7 +42,7 @@ namespace AdminSite.Controllers
         public IActionResult Create()
         {
             var model = new InventoryCreateUpdateViewModel();
-            var referenceData = referenceDataService.GetAllReferenceData();
+            var referenceData = referenceDataService.GetReferenceData();
 
             model = model.PopulateReferenceData(referenceData);
 
@@ -70,7 +70,7 @@ namespace AdminSite.Controllers
         public IActionResult Update(int id)
         {
             var book = inventoryService.GetBook(id);
-            var referenceData = referenceDataService.GetAllReferenceData();
+            var referenceData = referenceDataService.GetReferenceData();
             var model = book.ToInventoryCreateUpdateViewModel();
 
             model = model.PopulateReferenceData(referenceData);
