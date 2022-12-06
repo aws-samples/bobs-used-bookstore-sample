@@ -8,7 +8,16 @@ namespace Bookstore.Admin.ViewModel.Orders
     {
         public List<OrderIndexListItemViewModel> Items { get; set; } = new List<OrderIndexListItemViewModel>();
 
+        public OrderIndexFilters Filters { get; set; }
     }
+
+    public class OrderIndexFilters
+    {
+        public bool ShowFilterPanel { get; set; }
+
+        public OrderStatus? OrderStatusFilter { get; set; }
+    }
+
     public class OrderIndexListItemViewModel
     {
         public int Id { get; set; }
@@ -18,7 +27,9 @@ namespace Bookstore.Admin.ViewModel.Orders
         public OrderStatus OrderStatus { get; set; }
 
         public DateTime DeliveryDate { get; set; }
+
         public DateTime OrderDate { get; internal set; }
+
         public decimal Total { get; internal set; }
     }
 }

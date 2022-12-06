@@ -1,12 +1,23 @@
-﻿using Bookstore.Admin.ViewModel;
+﻿using Bookstore.Services.Filters;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 
-namespace AdminSite.ViewModel.Inventory
+namespace Bookstore.Admin.ViewModel.Inventory
 {
-    public class ReferenceDataIndexViewModel : PaginatedViewModel
+    public class InventoryIndexViewModel : PaginatedViewModel
     {
         public List<InventoryIndexListItemViewModel> Items { get; set; } = new List<InventoryIndexListItemViewModel>();
+
+        public InventoryFilters Filters { get; set; } = new InventoryFilters();
+
+        public IEnumerable<SelectListItem> Publishers { get; set; } = new List<SelectListItem>();
+
+        public IEnumerable<SelectListItem> BookTypes { get; set; } = new List<SelectListItem>();
+
+        public IEnumerable<SelectListItem> Genres { get; set; } = new List<SelectListItem>();
+
+        public IEnumerable<SelectListItem> BookConditions { get; set; } = new List<SelectListItem>();
     }
 
     public class InventoryIndexListItemViewModel

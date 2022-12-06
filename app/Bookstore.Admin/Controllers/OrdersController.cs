@@ -17,11 +17,15 @@ namespace AdminSite.Controllers
             this.orderService = orderService;
         }
 
-        public IActionResult Index(int pageIndex = 1, int pageSize = 10)
+        public IActionResult Index(OrderIndexFilters filters, int pageIndex = 1, int pageSize = 10)
         {
-            var orders = orderService.GetOrders(User.Identity.Name, pageIndex, pageSize);
+            var orders = orderService.GetOrders(filters.OrderStatusFilter, pageIndex, pageSize);
 
-            return View(orders.ToOrderIndexViewModel());
+            var model = orders.ToOrderIndexItemViewModel();
+
+            model.Filters = filters;
+
+            return View(model);
         }
 
         public IActionResult Details(int id)

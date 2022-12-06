@@ -5,9 +5,9 @@ using System.Linq;
 
 namespace Bookstore.Admin.Mappers.Orders
 {
-    public static class PaginatedOfferListToOfferIndexViewModelMapper
+    public static class PaginatedOrderListToOrderIndexViewModelMapper
     {
-        public static OrderIndexViewModel ToOrderIndexViewModel(this PaginatedList<Order> orders)
+        public static OrderIndexViewModel ToOrderIndexItemViewModel(this PaginatedList<Order> orders)
         {
             var result = new OrderIndexViewModel();
 

@@ -120,9 +120,39 @@ namespace Bookstore.Data.Repository.Implementation
             Func<IQueryable<TModel>, IOrderedQueryable<TModel>> orderBy = null, int pageIndex = 1, int pageSize = 10,
             params Expression<Func<TModel, object>>[] includeProperties)
         {
+            //IQueryable<TModel> query = dbSet;
+
+            //if (filter != null) query = query.Where(filter);
+
+            //foreach (var includeProperty in includeProperties)
+            //{
+            //    query = query.Include(includeProperty);
+            //}
+
+            //if (orderBy != null)
+            //{
+            //    return PaginatedList<TModel>.Create(orderBy(query), pageIndex, pageSize);
+            //}
+
+            //return PaginatedList<TModel>.Create(query, pageIndex, pageSize);
+
+            var filters = new List<Expression<Func<TModel, bool>>>();
+
+            if(filter != null)
+            {
+                filters.Add(filter);
+            }
+
+            return GetPaginated(filters, orderBy, pageIndex, pageSize, includeProperties);
+        }
+
+        public PaginatedList<TModel> GetPaginated(List<Expression<Func<TModel, bool>>> filters,
+            Func<IQueryable<TModel>, IOrderedQueryable<TModel>> orderBy = null, int pageIndex = 1, int pageSize = 10,
+            params Expression<Func<TModel, object>>[] includeProperties)
+        {
             IQueryable<TModel> query = dbSet;
 
-            if (filter != null) query = query.Where(filter);
+            filters.ForEach(x => query = query.Where(x));
 
             foreach (var includeProperty in includeProperties)
             {

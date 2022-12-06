@@ -11,7 +11,7 @@ namespace Bookstore.Services
 {
     public interface IOrderService
     {
-        PaginatedList<Order> GetOrders(string userName, int index, int count);
+        PaginatedList<Order> GetOrders(OrderStatus? orderStatus = null, int pageIndex = 1, int pageSize = 10);
 
         Order GetOrder(int id);
 
@@ -31,9 +31,9 @@ namespace Bookstore.Services
             this.orderDetailRepository = orderDetailRepository;
         }
 
-        public PaginatedList<Order> GetOrders(string userName, int index, int count)
+        public PaginatedList<Order> GetOrders(OrderStatus? orderStatus = null, int pageIndex = 1, int pageSize = 10)
         {
-            return orderRepository.GetPaginated(pageIndex: index, pageSize: count, includeProperties: new Expression<Func<Order, object>>[] { x => x.Customer });
+            return orderRepository.GetPaginated(filter: x => x.OrderStatus == orderStatus, pageIndex: pageIndex, pageSize: pageSize, includeProperties: new Expression<Func<Order, object>>[] { x => x.Customer });
         }
 
         public Order GetOrder(int id)

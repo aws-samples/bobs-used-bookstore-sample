@@ -2,9 +2,12 @@
 using Bookstore.Domain;
 using Bookstore.Domain.Books;
 using Bookstore.Services;
+using Bookstore.Services.Filters;
 using Microsoft.AspNetCore.Http;
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace Services
@@ -13,7 +16,7 @@ namespace Services
     {
         Book GetBook(int id);
 
-        PaginatedList<Book> GetBooks(string userName, int index, int count);
+        PaginatedList<Book> GetBooks(InventoryFilters filters, int index, int count);
 
         Task SaveAsync(Book book, IFormFile frontPhoto, IFormFile backPhoto, IFormFile leftPhoto, IFormFile rightPhoto, string userName);
     }
@@ -34,10 +37,42 @@ namespace Services
             return bookRepository.Get2(x => x.Id == id, null, x => x.Genre, y => y.Publisher, x => x.BookType, x => x.Condition).SingleOrDefault();
         }
 
-        public PaginatedList<Book> GetBooks(string userName, int index, int count)
+        public PaginatedList<Book> GetBooks(InventoryFilters filters, int index, int count)
         {
+            var filterExpressions = new List<Expression<Func<Book, bool>>>();
+
+            if (!string.IsNullOrWhiteSpace(filters.Name))
+            {
+                filterExpressions.Add(x => x.Name.StartsWith(filters.Name));
+            }
+
+            if (!string.IsNullOrWhiteSpace(filters.Author))
+            {
+                filterExpressions.Add(x => x.Author.StartsWith(filters.Author));
+            }
+
+            if (filters.ConditionId.HasValue)
+            {
+                filterExpressions.Add(x => x.ConditionId == filters.ConditionId);
+            }
+
+            if (filters.BookTypeId.HasValue)
+            {
+                filterExpressions.Add(x => x.BookTypeId == filters.BookTypeId);
+            }
+
+            if (filters.GenreId.HasValue)
+            {
+                filterExpressions.Add(x => x.GenreId == filters.GenreId);
+            }
+
+            if (filters.PublisherId.HasValue)
+            {
+                filterExpressions.Add(x => x.PublisherId == filters.PublisherId);
+            }
+
             return bookRepository
-                .GetPaginated(x => x.CreatedBy == userName, y => y.OrderBy(x => x.CreatedOn), index, count, x => x.Genre, y => y.Publisher, x => x.BookType, x => x.Condition);
+                .GetPaginated(filterExpressions, y => y.OrderBy(x => x.CreatedOn), index, count, x => x.Genre, y => y.Publisher, x => x.BookType, x => x.Condition);
         }
 
         public async Task SaveAsync(Book book, IFormFile frontImage, IFormFile backImage, IFormFile leftImage, IFormFile rightImage, string userName)

@@ -37,5 +37,7 @@ namespace Bookstore.Data.Repository.Interface
         Task AddAsync(TModel entity);
         void AddOrUpdate(TModel entity);
         PaginatedList<TModel> GetPaginated(Expression<Func<TModel, bool>> filter = null, Func<IQueryable<TModel>, IOrderedQueryable<TModel>> orderBy = null, int pageIndex = 1, int pageSize = 10, params Expression<Func<TModel, object>>[] includeProperties);
+
+        PaginatedList<TModel> GetPaginated(List<Expression<Func<TModel, bool>>> filters, Func<IQueryable<TModel>, IOrderedQueryable<TModel>> orderBy = null, int pageIndex = 1, int pageSize = 10, params Expression<Func<TModel, object>>[] includeProperties);
     }
 }

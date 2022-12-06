@@ -1,4 +1,4 @@
-﻿using AdminSite.ViewModel.Inventory;
+﻿using Bookstore.Admin.ViewModel.Inventory;
 using Bookstore.Domain;
 using Bookstore.Domain.Books;
 using System.Linq;
@@ -7,9 +7,9 @@ namespace Bookstore.Admin.Mappers.Inventory
 {
     public static class PaginatedOrderListToOrderIndexViewModelMapper
     {
-        public static ReferenceDataIndexViewModel ToInventoryIndexViewModel(this PaginatedList<Book> books)
+        public static InventoryIndexViewModel ToInventoryIndexViewModel(this PaginatedList<Book> books)
         {
-            var result = new ReferenceDataIndexViewModel();
+            var result = new InventoryIndexViewModel();
 
             foreach (var book in books)
             {
