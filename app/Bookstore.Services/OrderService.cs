@@ -1,6 +1,8 @@
 ﻿using Bookstore.Data.Repository.Interface;
 using Bookstore.Domain;
+using Bookstore.Domain.Books;
 using Bookstore.Domain.Orders;
+using Bookstore.Services.Filters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +13,7 @@ namespace Bookstore.Services
 {
     public interface IOrderService
     {
-        PaginatedList<Order> GetOrders(OrderStatus? orderStatus = null, int pageIndex = 1, int pageSize = 10);
+        PaginatedList<Order> GetOrders(OrderFilters filters, int pageIndex = 1, int pageSize = 10);
 
         Order GetOrder(int id);
 
@@ -31,9 +33,16 @@ namespace Bookstore.Services
             this.orderDetailRepository = orderDetailRepository;
         }
 
-        public PaginatedList<Order> GetOrders(OrderStatus? orderStatus = null, int pageIndex = 1, int pageSize = 10)
+        public PaginatedList<Order> GetOrders(OrderFilters filters, int pageIndex = 1, int pageSize = 10)
         {
-            return orderRepository.GetPaginated(filter: x => x.OrderStatus == orderStatus, pageIndex: pageIndex, pageSize: pageSize, includeProperties: new Expression<Func<Order, object>>[] { x => x.Customer });
+            var filterExpressions = new List<Expression<Func<Order, bool>>>();
+
+            if (filters.OrderStatusFilter.HasValue)
+            {
+                filterExpressions.Add(x => x.OrderStatus == filters.OrderStatusFilter);
+            }
+
+            return orderRepository.GetPaginated(filterExpressions, pageIndex: pageIndex, pageSize: pageSize, includeProperties: new Expression<Func<Order, object>>[] { x => x.Customer });
         }
 
         public Order GetOrder(int id)

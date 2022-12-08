@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Bookstore.Services;
 using Bookstore.Admin.Mappers.Orders;
 using Bookstore.Admin.ViewModel.Orders;
+using Bookstore.Services.Filters;
 
 namespace AdminSite.Controllers
 {
@@ -17,9 +18,9 @@ namespace AdminSite.Controllers
             this.orderService = orderService;
         }
 
-        public IActionResult Index(OrderIndexFilters filters, int pageIndex = 1, int pageSize = 10)
+        public IActionResult Index(OrderFilters filters, int pageIndex = 1, int pageSize = 10)
         {
-            var orders = orderService.GetOrders(filters.OrderStatusFilter, pageIndex, pageSize);
+            var orders = orderService.GetOrders(filters, pageIndex, pageSize);
 
             var model = orders.ToOrderIndexItemViewModel();
 

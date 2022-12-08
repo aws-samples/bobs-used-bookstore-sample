@@ -1,4 +1,5 @@
 ﻿using Bookstore.Domain.Orders;
+using Bookstore.Services.Filters;
 using System;
 using System.Collections.Generic;
 
@@ -8,14 +9,7 @@ namespace Bookstore.Admin.ViewModel.Orders
     {
         public List<OrderIndexListItemViewModel> Items { get; set; } = new List<OrderIndexListItemViewModel>();
 
-        public OrderIndexFilters Filters { get; set; }
-    }
-
-    public class OrderIndexFilters
-    {
-        public bool ShowFilterPanel { get; set; }
-
-        public OrderStatus? OrderStatusFilter { get; set; }
+        public OrderFilters Filters { get; set; }
     }
 
     public class OrderIndexListItemViewModel

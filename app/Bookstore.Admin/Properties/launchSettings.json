@@ -8,7 +8,6 @@
     }
   },
   "profiles": {
-
     "AdminSite Local": {
       "commandName": "Project",
       "dotnetRunMessages": true,
