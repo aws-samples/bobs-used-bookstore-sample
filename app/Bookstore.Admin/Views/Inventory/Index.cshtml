@@ -24,28 +24,28 @@
             <div class="col-12">
                 <label class="visually-hidden" for="PublisherFilter">Publisher</label>
                 <select id="PublisherFilter" class="form-select" asp-for="Filters.PublisherId" asp-items="Model.Publishers">
-                    <option>All</option>
+                    <option value="">All Publishers</option>
                 </select>
             </div>
 
             <div class="col-12">
                 <label class="visually-hidden" for="GenreFilter">Genre</label>
                 <select id="GenreFilter" class="form-select" asp-for="Filters.GenreId" asp-items="Model.Genres">
-                    <option>All</option>
+                    <option value="">All Genres</option>
                 </select>
             </div>
 
             <div class="col-12">
                 <label class="visually-hidden" for="BookTypeFilter">Book type</label>
                 <select id="BookTypeFilter" class="form-select" asp-for="Filters.BookTypeId" asp-items="Model.BookTypes">
-                    <option>All</option>
+                    <option value="">All Book Types</option>
                 </select>
             </div>
 
             <div class="col-12">
                 <label class="visually-hidden" for="ConditionFilter">Condition</label>
                 <select id="ConditionFilter" class="form-select" asp-for="Filters.ConditionId" asp-items="Model.BookConditions">
-                    <option>All</option>
+                    <option value="">All Book Conditions</option>
                 </select>
             </div>
 
@@ -63,7 +63,7 @@
 <div class="card m-3">
     <div class="card-header">
         <div class="d-flex justify-content-end">
-            @await Html.PartialAsync("_Paginator", Model)
+            @await Html.PartialAsync("_Paginator")
         </div>
     </div>
 
@@ -109,7 +109,7 @@
 
     <div class="card-footer">
         <div class="d-flex justify-content-end">
-            @await Html.PartialAsync("_Paginator", Model)
+            @await Html.PartialAsync("_Paginator")
         </div>
     </div>
 </div>

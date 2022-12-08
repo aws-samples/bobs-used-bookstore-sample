@@ -15,5 +15,7 @@ namespace Bookstore.Admin.ViewModel
         public bool HasPreviousPage { get; set; }
 
         public List<int> PaginationButtons { get; set; } = new List<int>();
+
+        public Dictionary<string, string> RouteData { get; set; } = new Dictionary<string, string>();
     }
 }

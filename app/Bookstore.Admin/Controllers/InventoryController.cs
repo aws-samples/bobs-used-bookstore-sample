@@ -5,6 +5,8 @@ using Services;
 using Bookstore.Admin.ViewModel.Inventory;
 using Bookstore.Admin.Mappers.Inventory;
 using Bookstore.Services.Filters;
+using Microsoft.AspNetCore.Routing;
+using System.Linq;
 
 namespace AdminSite.Controllers
 {
@@ -27,6 +29,7 @@ namespace AdminSite.Controllers
             var model = books.ToInventoryIndexViewModel();
 
             model = model.PopulateReferenceData(referenceData);
+            model.RouteData = new RouteValueDictionary(filters).ToDictionary(x => $"{nameof(filters)}.{x.Key}", x => x.Value?.ToString());
 
             return View(model);
         }
