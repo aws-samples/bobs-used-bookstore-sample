@@ -18,12 +18,12 @@ namespace Bookstore.Admin.Mappers.Offers
                     OfferId = offer.Id,
                     BookName= offer.BookName,
                     Author= offer.Author,
-                    GenreName= offer.GenreName,
+                    Genre= offer.Genre.Text,
                     CustomerName = offer.Customer.FullName,
                     OfferStatus = offer.OfferStatus,
                     OfferDate = offer.CreatedOn,
                     OfferPrice = offer.BookPrice,
-                    BookCondition = offer.ConditionName
+                    Condition = offer.Condition.Text
                 });
             }
 

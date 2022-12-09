@@ -76,19 +76,19 @@
                         @Html.DisplayFor(modelItem => item.Author)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.GenreName)
+                        @Html.DisplayFor(modelItem => item.Genre.Text)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.PublisherName)
+                        @Html.DisplayFor(modelItem => item.Publisher.Text)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.TypeName)
+                        @Html.DisplayFor(modelItem => item.BookType.Text)
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.ISBN)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.ConditionName)
+                        @Html.DisplayFor(modelItem => item.Condition.Text)
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.BookPrice)

@@ -4,25 +4,33 @@ using Microsoft.AspNetCore.Authorization;
 using Bookstore.Domain.Offers;
 using Bookstore.Services;
 using Bookstore.Admin.Mappers.Offers;
+using Bookstore.Services.Filters;
+using Services;
+using Bookstore.Admin.Mappers.Inventory;
 
 namespace Bookstore.Admin.Controllers
 {
-
     [Authorize]
     public class OffersController : Controller
     {
         private readonly IOfferService offerService;
+        private readonly IReferenceDataService referenceDataService;
 
-        public OffersController(IOfferService offerService)
+        public OffersController(IOfferService offerService, IReferenceDataService referenceDataService)
         {
             this.offerService = offerService;
+            this.referenceDataService = referenceDataService;
         }
 
-        public IActionResult Index(int pageIndex = 1, int pageSize = 10)
+        public IActionResult Index(OfferFilters filters, int pageIndex = 1, int pageSize = 10)
         {
-            var offers = offerService.GetOffers(User.Identity.Name, pageIndex, pageSize);
+            var offers = offerService.GetOffers(filters, pageIndex, pageSize);
+            var referenceData = referenceDataService.GetReferenceData();
+            var model = offers.ToOfferIndexViewModel();
 
-            return View(offers.ToOfferIndexViewModel());
+            model.PopulateReferenceData(referenceData);
+
+            return View(model);
         }
 
         [HttpPost]

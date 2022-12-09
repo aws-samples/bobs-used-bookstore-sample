@@ -28,6 +28,11 @@ namespace Bookstore.Data.Repository.Interface
             Func<IQueryable<TModel>, IOrderedQueryable<TModel>> orderBy = null,
             string includeProperties = "");
 
+        public IEnumerable<TModel> Get(
+            List<Expression<Func<TModel, bool>>> filter = null,
+            Func<IQueryable<TModel>, IOrderedQueryable<TModel>> orderBy = null,
+            string includeProperties = "");
+
         public IEnumerable<TModel> Get2(Expression<Func<TModel, bool>> filter = null,
             Func<IQueryable<TModel>, IOrderedQueryable<TModel>> orderBy = null,
             params Expression<Func<TModel, object>>[] includeProperties);

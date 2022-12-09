@@ -1,4 +1,5 @@
 ﻿using Bookstore.Domain.Customers;
+using Bookstore.Domain.ReferenceData;
 
 namespace Bookstore.Domain.Offers
 {
@@ -12,7 +13,17 @@ namespace Bookstore.Domain.Offers
 
         public string? FrontUrl { get; set; }
 
-        public string GenreName { get; set; }
+        public ReferenceDataItem? Genre { get; set; }
+        public int? GenreId { get; set; }
+
+        public ReferenceDataItem? Condition { get; set; }
+        public int? ConditionId { get; set; }
+
+        public ReferenceDataItem? Publisher { get; set; }
+        public int? PublisherId { get; set; }
+
+        public ReferenceDataItem? BookType { get; set; }
+        public int? BookTypeId { get; set; }
 
         public string? BackUrl { get; set; }
 
@@ -24,10 +35,6 @@ namespace Bookstore.Domain.Offers
 
         public string? Summary { get; set; }
 
-        public string PublisherName { get; set; }
-
-        public string TypeName { get; set; }
-
         public OfferStatus OfferStatus { get; set; }
 
         public string? Comment { get; set; }
@@ -35,7 +42,5 @@ namespace Bookstore.Domain.Offers
         public Customer Customer { get; set; }
 
         public decimal BookPrice { get; set; }
-
-        public string ConditionName { get; set; }
     }
 }

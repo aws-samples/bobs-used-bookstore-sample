@@ -1,4 +1,6 @@
 ﻿using Bookstore.Domain.Offers;
+using Bookstore.Services.Filters;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 
@@ -7,6 +9,12 @@ namespace Bookstore.Admin.ViewModel.Offers
     public class OfferIndexViewModel : PaginatedViewModel
     {
         public List<OfferIndexItemViewModel> Items { get; set; } = new List<OfferIndexItemViewModel>();
+
+        public OfferFilters Filters { get; set; }
+
+        public IEnumerable<SelectListItem> Genres { get; set; } = new List<SelectListItem>();
+
+        public IEnumerable<SelectListItem> BookConditions { get; set; } = new List<SelectListItem>();
     }
 
     public class OfferIndexItemViewModel
@@ -19,7 +27,7 @@ namespace Bookstore.Admin.ViewModel.Offers
 
         public string Author { get; set; }
 
-        public string GenreName { get; set; }
+        public string Genre { get; set; }
 
         public OfferStatus OfferStatus { get; set; }
 
@@ -27,6 +35,6 @@ namespace Bookstore.Admin.ViewModel.Offers
 
         public decimal OfferPrice { get; internal set; }
 
-        public string BookCondition { get; internal set; }
+        public string Condition { get; internal set; }
     }
 }

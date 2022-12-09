@@ -71,16 +71,29 @@ namespace Bookstore.Data.Repository.Implementation
         public void Update(TModel entity)
         {
             context.Update(entity);
-            //context.Entry(entity).State = EntityState.Modified;
         }
 
         public IEnumerable<TModel> Get(Expression<Func<TModel, bool>> filter = null,
             Func<IQueryable<TModel>, IOrderedQueryable<TModel>> orderBy = null,
             string includeProperties = "")
         {
+            var filters = new List<Expression<Func<TModel, bool>>>();
+
+            if (filter != null)
+            {
+                filters.Add(filter);
+            }
+
+            return Get(filters, orderBy, includeProperties);
+        }
+
+        public IEnumerable<TModel> Get(List<Expression<Func<TModel, bool>>> filters,
+            Func<IQueryable<TModel>, IOrderedQueryable<TModel>> orderBy = null,
+            string includeProperties = "")
+        {
             IQueryable<TModel> query = dbSet;
 
-            if (filter != null) query = query.Where(filter);
+            filters.ForEach(x => query = query.Where(x));
 
             foreach (var includeProperty in includeProperties.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
             {
@@ -120,22 +133,6 @@ namespace Bookstore.Data.Repository.Implementation
             Func<IQueryable<TModel>, IOrderedQueryable<TModel>> orderBy = null, int pageIndex = 1, int pageSize = 10,
             params Expression<Func<TModel, object>>[] includeProperties)
         {
-            //IQueryable<TModel> query = dbSet;
-
-            //if (filter != null) query = query.Where(filter);
-
-            //foreach (var includeProperty in includeProperties)
-            //{
-            //    query = query.Include(includeProperty);
-            //}
-
-            //if (orderBy != null)
-            //{
-            //    return PaginatedList<TModel>.Create(orderBy(query), pageIndex, pageSize);
-            //}
-
-            //return PaginatedList<TModel>.Create(query, pageIndex, pageSize);
-
             var filters = new List<Expression<Func<TModel, bool>>>();
 
             if(filter != null)
