@@ -1,15 +1,13 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using System;
 using System.IO;
 using System.Threading.Tasks;
 
 namespace Bookstore.Services
 {
-
     public class LocalFileService : IFileService
     {
-        private IWebHostEnvironment environment;
+        private readonly IWebHostEnvironment environment;
 
         public LocalFileService(IWebHostEnvironment environment)
         {
@@ -25,18 +23,24 @@ namespace Bookstore.Services
         {
             if (file == null) return null;
 
-            var uploadFolder = Path.Combine(environment.WebRootPath, "images");
+            var adminAppImageFolder = Path.Combine(environment.WebRootPath, "images");
+            var customerAppImageFolder = adminAppImageFolder.Replace("Bookstore.Admin", "Bookstore.Customer");
             var filename = $"{Path.GetFileNameWithoutExtension(Path.GetRandomFileName())}{Path.GetExtension(file.FileName)}";
 
-            if (!Directory.Exists(uploadFolder)) Directory.CreateDirectory(uploadFolder);
-
-            using (var filestream = new FileStream(Path.Combine(uploadFolder, filename), FileMode.OpenOrCreate))
-            {
-                await file.CopyToAsync(filestream);
-                await filestream.FlushAsync();
-            }
+            await SaveAsync(file, adminAppImageFolder, filename);
+            await SaveAsync(file, customerAppImageFolder, filename);
 
             return $"/images/{filename}";
+        }
+
+        private async Task SaveAsync(IFormFile file, string foldername, string filename)
+        {
+            if (!Directory.Exists(foldername)) Directory.CreateDirectory(foldername);
+
+            using var filestream = new FileStream(Path.Combine(foldername, filename), FileMode.OpenOrCreate);
+
+            await file.CopyToAsync(filestream);
+            await filestream.FlushAsync();
         }
     }
 }

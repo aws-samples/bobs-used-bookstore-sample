@@ -9,23 +9,17 @@ using Microsoft.Extensions.Logging;
 using Amazon.AspNetCore.Identity.Cognito;
 using Amazon.Extensions.CognitoAuthentication;
 using CustomerSite.Models;
-using Microsoft.AspNetCore.Authorization;
 using Bookstore.Domain.Carts;
 using Bookstore.Domain.Customers;
-using Bookstore.Data.Data;
 using Bookstore.Data.Repository.Interface;
 
 namespace CustomerSite.Controllers
 {
-
     public class HomeController : Controller
     {
         private readonly IGenericRepository<CartItem> _cartItemRepository;
         private readonly IGenericRepository<Cart> _cartRepository;
-        private readonly ApplicationDbContext _context;
-
         private readonly IGenericRepository<Customer> _customerRepository;
-        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ILogger<HomeController> _logger;
         private readonly SignInManager<CognitoUser> _signInManager;
         private readonly UserManager<CognitoUser> _userManager;
@@ -34,14 +28,10 @@ namespace CustomerSite.Controllers
                               IGenericRepository<Customer> customerRepository,
                               IGenericRepository<Cart> cartRepository,
                               ILogger<HomeController> logger,
-                              IHttpContextAccessor httpContextAccessor,
-                              ApplicationDbContext context,
                               SignInManager<CognitoUser> signInManager,
                               UserManager<CognitoUser> userManager)
         {
             _logger = logger;
-            _httpContextAccessor = httpContextAccessor;
-            _context = context;
             _signInManager = signInManager;
             _userManager = userManager;
             _cartRepository = cartRepository;
