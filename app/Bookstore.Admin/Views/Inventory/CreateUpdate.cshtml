@@ -2,29 +2,33 @@
 
 @model Bookstore.Admin.ViewModel.Inventory.InventoryCreateUpdateViewModel
 
-<h1 class="text-center">ADD BOOK</h1>
-
 <div asp-validation-summary="All"></div>
+
+<div class="d-flex m-3">
+    <h5 class="me-auto">Create / Update Book</h5>
+</div>
 
 <form class="needs-validation" enctype="multipart/form-data" method="post">
     <input type="hidden" asp-for="Id" />
 
     <div class="row justify-content-center">
         <div class="col-4">
-            <input type="text" class="form-control mb-3" asp-for="Name" placeholder="BOOK NAME" required />
-            <input type="text" class="form-control mb-3" asp-for="Author" placeholder="AUTHOR" required />
+            <input type="text" class="form-control mb-3" asp-for="Name" placeholder="Book Name" required />
+            <input type="text" class="form-control mb-3" asp-for="Author" placeholder="Author" required />
             <input type="text" class="form-control mb-3" asp-for="ISBN" placeholder="ISBN" required />
 
             <div class="row">
                 <div class="col">
-                    <input type="number" class="form-control mb-3" asp-for="Price" placeholder="PRICE" step="0.01" required />
+                    <label for="PriceInput">Price</label>
+                    <input id="PriceInput" type="number" class="form-control mb-3" asp-for="Price" placeholder="Price" step="0.01" required />
                 </div>
                 <div class="col">
-                    <input type="number" class="form-control mb-3" asp-for="Quantity" placeholder="QUANTITY" required />
+                    <label for="QuantityInput">Quantity</label>
+                    <input id="QuantityInput" type="number" class="form-control mb-3" asp-for="Quantity" placeholder="Quantity" required />
                 </div>
             </div>
 
-            <textarea class="form-control mb-3" asp-for="Summary" rows="4" placeholder="DESCRIPTION"></textarea>
+            <textarea class="form-control mb-3" asp-for="Summary" rows="4" placeholder="Description"></textarea>
         </div>
 
         <div class="col-4">

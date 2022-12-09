@@ -5,65 +5,39 @@
 <div class="d-flex m-3">
     <h5 class="me-auto">Reference Data</h5>
 
-    <a id="filterButton" class="btn btn-primary me-2" data-bs-toggle="collapse" href="#filterPanel" role="button" aria-expanded="false" aria-controls="collapseExample">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-funnel" viewBox="0 0 16 16">
-            <path d="M1.5 1.5A.5.5 0 0 1 2 1h12a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.128.334L10 8.692V13.5a.5.5 0 0 1-.342.474l-3 1A.5.5 0 0 1 6 14.5V8.692L1.628 3.834A.5.5 0 0 1 1.5 3.5v-2zm1 .5v1.308l4.372 4.858A.5.5 0 0 1 7 8.5v5.306l2-.666V8.5a.5.5 0 0 1 .128-.334L13.5 3.308V2h-11z" />
-        </svg>
-    </a>
-
     <a class="btn btn-primary" asp-controller="ReferenceData" asp-action="Create">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
-            <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z" />
-        </svg>
+        New Reference Data Item
     </a>
 </div>
 
-<div id="filterPanel" class="collapse @(Model.Filters.ShowFilterPanel ? "show" : "")">
-    <div class="card mx-3">
-        <div class="card-body">
-            <form class="row row-cols-lg-auto g-3 align-items-center" method="get">
-                <input type="hidden" asp-for="Filters.ShowFilterPanel" />
-
-                <div class="col-12">
-                    <label class="visually-hidden" for="referenceDataTypeSelect">Reference data type</label>
-                    <select id="referenceDataTypeSelect" class="form-select" name="Filters.ReferenceDataTypeFilter" asp-for="Filters.ReferenceDataTypeFilter" asp-items="Html.GetEnumSelectList<ReferenceDataType>()">
-                        <option value="">All</option>
-                    </select>
-                </div>
-
-                @*<div class="col-12">
-                <label class="visually-hidden" for="inlineFormSelectPref">Preference</label>
-                <select class="form-select" id="inlineFormSelectPref">
-                <option selected>Choose...</option>
-                <option value="1">One</option>
-                <option value="2">Two</option>
-                <option value="3">Three</option>
+<div class="card mx-3">
+    <div class="card-body">
+        <form class="row row-cols-lg-auto g-3 align-items-center" method="get">
+            <div class="col-12">
+                <label class="visually-hidden" for="referenceDataTypeSelect">Reference data type</label>
+                <select id="referenceDataTypeSelect" class="form-select" asp-for="Filters.ReferenceDataType" asp-items="Html.GetEnumSelectList<ReferenceDataType>()">
+                    <option value="">All Reference Data Types</option>
                 </select>
-                </div>*@
+            </div>
 
-                @*<div class="col-12">
-                <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="inlineFormCheck">
-                <label class="form-check-label" for="inlineFormCheck">
-                Remember me
-                </label>
-                </div>
-                </div>*@
+            <div class="col-12">
+                <button type="submit" class="btn btn-primary">Filter</button>
+            </div>
 
-                <div class="col-12">
-                    <button type="submit" class="btn btn-primary">Filter</button>
-                </div>
-            </form>
-        </div>
+            <div class="col-12">
+                <a class="btn btn-secondary" asp-action="Index">Clear</a>
+            </div>
+        </form>
     </div>
 </div>
 
 <div class="card m-3">
     <div class="card-header">
         <div class="d-flex justify-content-end">
-            @await Html.PartialAsync("_Paginator", Model)
+            @await Html.PartialAsync("_Paginator")
         </div>
     </div>
+
     <div class="card-body">
         <table class="table table-striped table-hover">
             <thead>
@@ -98,23 +72,10 @@
             </tbody>
         </table>
     </div>
+
     <div class="card-footer">
         <div class="d-flex justify-content-end">
-            @await Html.PartialAsync("_Paginator", Model)
+            @await Html.PartialAsync("_Paginator")
         </div>
     </div>
 </div>
-
-@section Scripts{
-    <script type="text/javascript">
-        $(function () {
-            $("#filterButton").click(function () {
-                if ($("#Filters_ShowFilterPanel").val() === 'False') {
-                    $("#Filters_ShowFilterPanel").val('True');
-                } else {
-                    $("#Filters_ShowFilterPanel").val('False');
-                };
-            });
-        });
-    </script>
-}

@@ -30,7 +30,7 @@ namespace Bookstore.Admin.ViewModel.Inventory
 
         public decimal Price { get; set; }
 
-        public int Quantity { get; set; }
+        public int Quantity { get; set; } = 1;
 
         public IFormFile FrontImage { get; set; }
         public string FrontImageUrl { get; set; }

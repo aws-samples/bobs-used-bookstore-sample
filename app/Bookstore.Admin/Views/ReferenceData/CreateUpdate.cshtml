@@ -4,6 +4,10 @@
 
 <div asp-validation-summary="All"></div>
 
+<div class="d-flex m-3">
+    <h5 class="me-auto">Create / Update Reference Data</h5>
+</div>
+
 <form class="row justify-content-center" method="post">
     <input type="hidden" asp-for="Id" />
 
@@ -19,5 +23,6 @@
         </div>
 
         <button class="btn btn-primary" type="submit">Save</button>
+        <a class="btn btn-secondary" asp-action="Index">Back</a>
     </div>
 </form>

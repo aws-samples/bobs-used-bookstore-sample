@@ -18,7 +18,7 @@ namespace Bookstore.Admin.Controllers
 
         public IActionResult Index(ReferenceDataIndexViewModel model)
         {
-            var referenceDataItems = referenceDataService.GetReferenceData(model.Filters.ReferenceDataTypeFilter);
+            var referenceDataItems = referenceDataService.GetReferenceData(model.Filters.ReferenceDataType);
             
             model.Items = referenceDataItems.ToReferenceDataIndexListItemViewModels();
 

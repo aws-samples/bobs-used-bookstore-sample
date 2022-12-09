@@ -43,12 +43,12 @@ namespace Services
 
             if (!string.IsNullOrWhiteSpace(filters.Name))
             {
-                filterExpressions.Add(x => x.Name.StartsWith(filters.Name));
+                filterExpressions.Add(x => x.Name.Contains(filters.Name));
             }
 
             if (!string.IsNullOrWhiteSpace(filters.Author))
             {
-                filterExpressions.Add(x => x.Author.StartsWith(filters.Author));
+                filterExpressions.Add(x => x.Author.Contains(filters.Author));
             }
 
             if (filters.ConditionId.HasValue)

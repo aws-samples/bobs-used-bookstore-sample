@@ -1,4 +1,4 @@
-﻿using Bookstore.Domain.ReferenceData;
+﻿using Bookstore.Services.Filters;
 using System.Collections.Generic;
 
 namespace Bookstore.Admin.ViewModel.ReferenceData
@@ -17,12 +17,5 @@ namespace Bookstore.Admin.ViewModel.ReferenceData
         public string Text { get; set; }
 
         public string ReferenceDataType { get; set; }
-    }
-
-    public class ReferenceDataFilters
-    {
-        public ReferenceDataType? ReferenceDataTypeFilter { get; set; }
-
-        public bool ShowFilterPanel { get; set; }
     }
 }
