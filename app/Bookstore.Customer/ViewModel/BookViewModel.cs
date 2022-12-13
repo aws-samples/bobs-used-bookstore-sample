@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using Bookstore.Domain.Books;
 
-namespace CustomerSite.Models.ViewModels
+namespace Bookstore.Customer.ViewModel
 {
     public class BookViewModel
     {

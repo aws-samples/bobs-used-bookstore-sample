@@ -1,4 +1,4 @@
-namespace CustomerSite.Models
+namespace Bookstore.Customer.ViewModel
 {
     public class ErrorViewModel
     {

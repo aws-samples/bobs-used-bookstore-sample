@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using CustomerSite.Models.ViewModels;
 using Bookstore.Domain.Offers;
+using Bookstore.Customer.ViewModel;
 
 namespace CustomerSite
 {

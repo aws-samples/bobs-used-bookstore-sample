@@ -1,4 +1,4 @@
-﻿namespace BobsCustomerSite.Models.ViewModels
+﻿namespace Bookstore.Customer.ViewModel
 {
     public class CartViewModel
     {

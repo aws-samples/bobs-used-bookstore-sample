@@ -3,15 +3,14 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Amazon.AspNetCore.Identity.Cognito;
-using Amazon.Extensions.CognitoAuthentication;
-using CustomerSite.Models;
 using Bookstore.Domain.Carts;
 using Bookstore.Domain.Customers;
 using Bookstore.Data.Repository.Interface;
+using Microsoft.AspNetCore.Authorization;
+using Bookstore.Customer.ViewModel;
+using Bookstore.Customer;
 
 namespace CustomerSite.Controllers
 {
@@ -21,94 +20,86 @@ namespace CustomerSite.Controllers
         private readonly IGenericRepository<Cart> _cartRepository;
         private readonly IGenericRepository<Customer> _customerRepository;
         private readonly ILogger<HomeController> _logger;
-        private readonly SignInManager<CognitoUser> _signInManager;
-        private readonly UserManager<CognitoUser> _userManager;
 
         public HomeController(IGenericRepository<CartItem> cartItemRepository,
                               IGenericRepository<Customer> customerRepository,
                               IGenericRepository<Cart> cartRepository,
-                              ILogger<HomeController> logger,
-                              SignInManager<CognitoUser> signInManager,
-                              UserManager<CognitoUser> userManager)
+                              ILogger<HomeController> logger)                              
         {
             _logger = logger;
-            _signInManager = signInManager;
-            _userManager = userManager;
             _cartRepository = cartRepository;
             _cartItemRepository = cartItemRepository;
             _customerRepository = customerRepository;
         }
 
+        [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
-            _logger.LogInformation("In Home Controller Frontend");
-            string ip;
-            if (_signInManager.IsSignedIn(User))
-            {
-                // get customer
-                var user = await _userManager.GetUserAsync(User);
-                var currentCustomer = _customerRepository.Get(user.Attributes[CognitoAttribute.Sub.AttributeName]);
-                // get cart
-                var cart = _cartRepository.Get(s => s.Customer == currentCustomer).FirstOrDefault();
+            //string ip;
 
-                // put cartid in cookie
-                if (!HttpContext.Request.Cookies.ContainsKey("CartId"))
-                {
-                    HttpContext.Response.Cookies.Append("CartId", cart.Cart_Id);
-                }
-                else
-                {
-                    HttpContext.Response.Cookies.Delete("CartId");
-                    HttpContext.Response.Cookies.Append("CartId", cart.Cart_Id);
-                }
+            //if (User.Identity.IsAuthenticated)
+            //{
+            //    // get cart
+            //    var cart = _cartRepository.Get(s => s.Customer.Id == User.GetUserId()).FirstOrDefault();
 
-                // put cart item in user cart
-                var cartItem = _cartItemRepository.Get(c => c.Cart == cart && c.WantToBuy == true);
+            //    // put cartid in cookie
+            //    if (!HttpContext.Request.Cookies.ContainsKey("CartId"))
+            //    {
+            //        HttpContext.Response.Cookies.Append("CartId", cart.Cart_Id);
+            //    }
+            //    else
+            //    {
+            //        HttpContext.Response.Cookies.Delete("CartId");
+            //        HttpContext.Response.Cookies.Append("CartId", cart.Cart_Id);
+            //    }
 
-                foreach (var item in cartItem)
-                {
-                    item.Cart = cart;
-                    _cartItemRepository.Update(item);
-                }
+            //    // put cart item in user cart
+            //    var cartItem = _cartItemRepository.Get(c => c.Cart == cart && c.WantToBuy == true);
 
-                _cartItemRepository.Save();
-            }
-            else
-            {
-                if (!HttpContext.Request.Cookies.ContainsKey("CartIp"))
-                {
-                    ip = Guid.NewGuid().ToString();
-                    HttpContext.Response.Cookies.Append("CartIp", ip);
-                    var id = Guid.NewGuid().ToString();
-                    var cartInfo = new Cart { IP = ip, Cart_Id = id };
-                    _cartRepository.Add(cartInfo);
-                    _cartRepository.Save();
-                }
-                else
-                {
-                    ip = HttpContext.Request.Cookies["CartIp"];
-                }
+            //    foreach (var item in cartItem)
+            //    {
+            //        item.Cart = cart;
+            //        _cartItemRepository.Update(item);
+            //    }
 
-                // put cart id in cookie
-                var currentCart = _cartRepository.Get(s => s.IP == ip).FirstOrDefault();
-                if (currentCart == null)
-                {
-                    var id = Guid.NewGuid().ToString();
-                    currentCart = new Cart { IP = ip, Cart_Id = id };
-                    _cartRepository.Add(currentCart);
-                    _cartRepository.Save();
-                }
+            //    _cartItemRepository.Save();
+            //}
+            //else
+            //{
+            //    if (!HttpContext.Request.Cookies.ContainsKey("CartIp"))
+            //    {
+            //        ip = Guid.NewGuid().ToString();
+            //        HttpContext.Response.Cookies.Append("CartIp", ip);
+            //        var id = Guid.NewGuid().ToString();
+            //        var cartInfo = new Cart { IP = ip, Cart_Id = id };
+            //        _cartRepository.Add(cartInfo);
+            //        _cartRepository.Save();
+            //    }
+            //    else
+            //    {
+            //        ip = HttpContext.Request.Cookies["CartIp"];
+            //    }
 
-                if (!HttpContext.Request.Cookies.ContainsKey("CartId"))
-                {
-                    HttpContext.Response.Cookies.Append("CartId", currentCart.Cart_Id);
-                }
-                else
-                {
-                    HttpContext.Response.Cookies.Delete("CartId");
-                    HttpContext.Response.Cookies.Append("CartId", currentCart.Cart_Id);
-                }
-            }
+            //    // put cart id in cookie
+            //    var currentCart = _cartRepository.Get(s => s.IP == ip).FirstOrDefault();
+            //    if (currentCart == null)
+            //    {
+            //        var id = Guid.NewGuid().ToString();
+            //        currentCart = new Cart { IP = ip, Cart_Id = id };
+            //        _cartRepository.Add(currentCart);
+            //        _cartRepository.Save();
+            //    }
+
+            //    if (!HttpContext.Request.Cookies.ContainsKey("CartId"))
+            //    {
+            //        HttpContext.Response.Cookies.Append("CartId", currentCart.Cart_Id);
+            //    }
+            //    else
+            //    {
+            //        HttpContext.Response.Cookies.Delete("CartId");
+            //        HttpContext.Response.Cookies.Append("CartId", currentCart.Cart_Id);
+            //    }
+            //}
 
             return View();
         }

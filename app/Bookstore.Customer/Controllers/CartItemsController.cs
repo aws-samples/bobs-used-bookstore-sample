@@ -1,19 +1,16 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Amazon.AspNetCore.Identity.Cognito;
-using Amazon.Extensions.CognitoAuthentication;
-using BobsCustomerSite.Models.ViewModels;
-using CustomerSite.Models.ViewModels;
 using Bookstore.Domain.Orders;
 using Bookstore.Domain.Carts;
 using Bookstore.Domain.Books;
 using Bookstore.Domain.Customers;
 using Bookstore.Data.Data;
 using Bookstore.Data.Repository.Interface;
+using Bookstore.Customer;
+using Bookstore.Customer.ViewModel;
 
 namespace CustomerSite.Controllers
 {
@@ -28,7 +25,6 @@ namespace CustomerSite.Controllers
         private readonly IGenericRepository<Order> _orderRepository;
         //private readonly IGenericRepository<OrderStatus> _orderStatusRepository;
         private readonly IGenericRepository<Price> _priceRepository;
-        private readonly UserManager<CognitoUser> _userManager;
 
         public CartItemsController(IGenericRepository<Address> addressRepository,
                                    IGenericRepository<OrderDetail> orderDetailRepository,
@@ -38,11 +34,9 @@ namespace CustomerSite.Controllers
                                    IGenericRepository<Customer> customerRepository,
                                    //IGenericRepository<OrderStatus> orderStatusRepository,
                                    IGenericRepository<CartItem> cartItemRepository,
-                                   ApplicationDbContext context,
-                                   UserManager<CognitoUser> userManager)
+                                   ApplicationDbContext context)
         {
             _context = context;
-            _userManager = userManager;
             _cartItemRepository = cartItemRepository;
             //_orderStatusRepository = orderStatusRepository;
             _customerRepository = customerRepository;
@@ -81,7 +75,7 @@ namespace CustomerSite.Controllers
             var cartItem
                 = _cartItemRepository
                     .Get(c => c.Cart.Cart_Id == id && c.WantToBuy == false,
-                            includeProperties: "Price,Book,Cart")
+                            includeProperties: "Book,Cart")
                     .Select(c => new CartViewModel
                     {
                         BookId = c.Book.Id,
@@ -129,9 +123,6 @@ namespace CustomerSite.Controllers
 
         public async Task<IActionResult> CheckOut(string[] prices, string[] IDs, string[] quantity, string[] bookF, string[] priceF)
         {
-            var user = await _userManager.GetUserAsync(User);
-            var userId = user.Attributes[CognitoAttribute.Sub.AttributeName];
-            var customer = _customerRepository.Get(userId);
             decimal subTotal = 0;
 
             // calculate the total price and put all books in a list
@@ -146,9 +137,9 @@ namespace CustomerSite.Controllers
                 OrderStatus = OrderStatus.Pending,
                 Subtotal = subTotal,
                 Tax = subTotal * (decimal)0.1,
-                Customer = customer,
+                CustomerId = User.GetUserId(),
                 DeliveryDate = DateTime.Now.ToUniversalTime().AddDays(7),
-                CreatedBy = user.Username,
+                CreatedBy = User.Identity.Name,
                 CreatedOn = DateTime.UtcNow,
                 UpdatedOn = DateTime.UtcNow
             };
@@ -179,7 +170,7 @@ namespace CustomerSite.Controllers
                     Quantity = Convert.ToInt32(quantity[i]),
                     Order = recentOrder,
                     IsRemoved = false,
-                    CreatedBy = user.Username,
+                    CreatedBy = User.Identity.Name,
                     CreatedOn = DateTime.UtcNow,
                     UpdatedOn = DateTime.UtcNow
                 };
@@ -201,9 +192,7 @@ namespace CustomerSite.Controllers
 
         public async Task<IActionResult> ConfirmCheckout(int orderId)
         {
-            var user = await _userManager.GetUserAsync(User);
-            var id = user.Attributes[CognitoAttribute.Sub.AttributeName];
-            var customer = _customerRepository.Get(id);
+            var customer = _customerRepository.Get(User.GetUserId());
             var address = _addressRepository.Get(c => c.Customer == customer);
 
             var order = _orderRepository.Get(orderId);
@@ -260,9 +249,7 @@ namespace CustomerSite.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = await _userManager.GetUserAsync(User);
-                var id = user.Attributes[CognitoAttribute.Sub.AttributeName];
-                var customer = _customerRepository.Get(id);
+                var customer = _customerRepository.Get(User.GetUserId());
                 address.Customer = customer;
                 _addressRepository.Add(address);
                 _addressRepository.Save();
@@ -289,7 +276,7 @@ namespace CustomerSite.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult EditAddress(long id, [Bind("Address_Id,AddressLine1,AddressLine2,City,State,Country,ZipCode")] Address address)
         {
-            if (id != address.Address_Id)
+            if (id != address.Id)
                 return NotFound();
 
             if (ModelState.IsValid)
@@ -323,13 +310,11 @@ namespace CustomerSite.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
-            var user = await _userManager.GetUserAsync(User);
-            var userId = user.Attributes[CognitoAttribute.Sub.AttributeName];
             var cartItem = _cartItemRepository
                 .Get(c => c.CartItem_Id == id, includeProperties: "Cart,Cart.Customer")
                 .FirstOrDefault();
 
-            if (cartItem?.Cart.Customer.Customer_Id != userId)
+            if (cartItem?.Cart.Customer.Id != User.GetUserId())
                 return RedirectToAction(nameof(Error));
 
             var trueDelete = _cartItemRepository.Get(id);

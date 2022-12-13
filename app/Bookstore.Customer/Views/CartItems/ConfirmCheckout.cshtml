@@ -1,9 +1,8 @@
-﻿@using CustomerSite.Models.ViewModels
-@model IEnumerable<Bookstore.Domain.Customers.Address>
+﻿@model IEnumerable<Bookstore.Domain.Customers.Address>
 
 @{
     decimal totalprice = 0;
-    foreach (var item in ViewData["order"] as List<OrderDetailViewModel>)
+    foreach (var item in ViewData["order"] as List<Bookstore.Customer.ViewModel.OrderDetailViewModel>)
     {
         totalprice += item.Price * item.Quantity;
     }
@@ -81,7 +80,7 @@
             {
                 <tr>
                     <td>
-                        <input type="radio" id="primary" name="addressID" value="@Html.DisplayFor(modelItem => item.Address_Id)" checked onchange="toggleSubmitButton()"/>
+                        <input type="radio" id="primary" name="addressID" value="@Html.DisplayFor(modelItem => item.Id)" checked onchange="toggleSubmitButton()"/>
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.AddressLine1)
@@ -110,7 +109,7 @@
             {
                 <tr>
                     <td>
-                        <input type="radio" id="primary" name="addressID" value="@Html.DisplayFor(modelItem => item.Address_Id)"/>
+                        <input type="radio" id="primary" name="addressID" value="@Html.DisplayFor(modelItem => item.Id)"/>
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.AddressLine1)
@@ -131,7 +130,7 @@
                         @Html.DisplayFor(modelItem => item.ZipCode)
                     </td>
                     <td>
-                        <a asp-action="EditAddress" asp-route-id="@item.Address_Id">Edit</a>
+                        <a asp-action="EditAddress" asp-route-id="@item.Id">Edit</a>
 
                     </td>
                 </tr>
@@ -175,7 +174,7 @@
     </tr>
     </thead>
     <tbody>
-    @foreach (var item in ViewData["order"] as List<OrderDetailViewModel>)
+    @foreach (var item in ViewData["order"] as List<Bookstore.Customer.ViewModel.OrderDetailViewModel>)
     {
         var total = item.Price * item.Quantity;
         <tr>

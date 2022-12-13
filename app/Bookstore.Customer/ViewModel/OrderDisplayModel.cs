@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Bookstore.Domain.Orders;
 
-namespace CustomerSite.Models.ViewModels
+namespace Bookstore.Customer.ViewModel
 {
     public class OrderDisplayModel
     {

@@ -11,6 +11,8 @@ namespace Bookstore.Customer
 {
     public class LocalAuthenticationHandler : AuthenticationHandler<AuthenticationSchemeOptions>
     {
+        private const string UserId = "FB6135C7-1464-4A72-B74E-4B63D343DD09";
+
         public LocalAuthenticationHandler(IOptionsMonitor<AuthenticationSchemeOptions> options, ILoggerFactory logger, UrlEncoder encoder, ISystemClock clock) : base(options, logger, encoder, clock)
         {
         }
@@ -27,6 +29,7 @@ namespace Bookstore.Customer
             var identity = new ClaimsIdentity("localauth");
 
             identity.AddClaim(new Claim(ClaimTypes.Name, "bookstore user"));
+            identity.AddClaim(new Claim("sub", UserId));
 
             var principal = new ClaimsPrincipal(identity);
 

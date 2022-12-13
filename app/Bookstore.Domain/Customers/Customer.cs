@@ -1,12 +1,7 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
-
-namespace Bookstore.Domain.Customers
+﻿namespace Bookstore.Domain.Customers
 {
-    public class Customer
+    public class Customer : Entity<string>
     {
-        [Key] public string Customer_Id { get; set; }
-
         public string Username { get; set; }
 
         public string FirstName { get; set; }

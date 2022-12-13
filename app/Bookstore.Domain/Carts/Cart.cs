@@ -7,6 +7,7 @@ namespace Bookstore.Domain.Carts
     {
         [Key] public string Cart_Id { get; set; }
 
+        public string? CustomerId { get; set; }
         public Customer? Customer { get; set; }
 
         public string? IP { get; set; }

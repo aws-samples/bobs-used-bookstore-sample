@@ -1,10 +1,4 @@
-﻿@using Amazon.Extensions.CognitoAuthentication
-@using Microsoft.AspNetCore.Identity
-@model IEnumerable<BobsCustomerSite.Models.ViewModels.CartViewModel>
-
-@inject SignInManager<CognitoUser> SignInManager
-@inject UserManager<CognitoUser> UserManager
-@*@model Tuple<IEnumerable<DataModels.Carts.CartItem>, DataModels.Books.Book>*@
+﻿@model IEnumerable<Bookstore.Customer.ViewModel.CartViewModel>
 
 @{
     ViewData["Title"] = "Index";
@@ -115,7 +109,7 @@
                 </tr>
             }
 
-            @if (SignInManager.IsSignedIn(User))
+            @if (User.Identity.IsAuthenticated)
             {
                 <input type="submit" value="checkout" class="btn"/>
             }

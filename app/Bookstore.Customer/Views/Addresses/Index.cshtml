@@ -126,10 +126,9 @@
                                         @Html.DisplayFor(modelItem => item.ZipCode)
                                     </td>
                                     <td>
-                                        <a asp-action="Edit" asp-route-id="@item.Address_Id">Edit</a> |
-
-                                        <a asp-action="Delete" asp-route-id="@item.Address_Id">Delete</a>|
-                                        <a asp-action="SwitchToPrime" asp-route-id="@item.Address_Id">switch</a>
+                                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>|
+                                        <a asp-action="SwitchToPrime" asp-route-id="@item.Id">switch</a>
                                     </td>
                                 </tr>
                             }

@@ -1,16 +1,13 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using AutoMapper;
-using Amazon.AspNetCore.Identity.Cognito;
-using Amazon.Extensions.CognitoAuthentication;
-using CustomerSite.Models.ViewModels;
 using Bookstore.Domain.Customers;
 using Bookstore.Data.Repository.Interface;
 using Services;
 using Bookstore.Domain.ReferenceData;
 using Bookstore.Domain.Offers;
+using Bookstore.Customer;
+using Bookstore.Customer.ViewModel;
 
 namespace CustomerSite.Controllers
 {
@@ -20,19 +17,13 @@ namespace CustomerSite.Controllers
         private readonly IGenericRepository<Customer> _customerRepository;
         private readonly IMapper _mapper;
         private readonly IGenericRepository<Offer> _resaleRepository;
-        private readonly SignInManager<CognitoUser> _signInManager;
-        private readonly UserManager<CognitoUser> _userManager;
         private readonly IReferenceDataService referenceDataService;
 
         public ResaleController(IMapper mapper, 
                                 IGenericRepository<Offer> resaleRepository,
                                 IGenericRepository<Customer> customerRepository,
-                                SignInManager<CognitoUser> signInManager,
-                                UserManager<CognitoUser> userManager,
                                 IReferenceDataService referenceDataService)
         {
-            _signInManager = signInManager;
-            _userManager = userManager;
             _customerRepository = customerRepository;
             _resaleRepository = resaleRepository;
             _mapper = mapper;
@@ -41,17 +32,15 @@ namespace CustomerSite.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var user = await _userManager.GetUserAsync(User);
-            var id = user.Attributes[CognitoAttribute.Sub.AttributeName];
             var resaleBooks
-                = _resaleRepository.Get(c => c.Customer.Customer_Id == id,
-                                        includeProperties: "Customer,ResaleStatus");
+                = _resaleRepository.Get(c => c.Customer.Id == User.GetUserId(),
+                                        includeProperties: "Customer");
             return View(resaleBooks);
         }
 
         public IActionResult Create()
         {
-            if (_signInManager.IsSignedIn(User))
+            if (User.Identity.IsAuthenticated)
             {
                 ViewData["Types"] = referenceDataService.GetReferenceData(ReferenceDataType.BookType);
                 ViewData["Publishers"] = referenceDataService.GetReferenceData(ReferenceDataType.Publisher);
@@ -66,13 +55,11 @@ namespace CustomerSite.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ResaleViewModel resaleViewModel)
         {
-            if (_signInManager.IsSignedIn(User))
+            if (User.Identity.IsAuthenticated)
             {
                 if (ModelState.IsValid)
                 {
-                    var user = await _userManager.GetUserAsync(User);
-                    var id = user.Attributes[CognitoAttribute.Sub.AttributeName];
-                    var customer = _customerRepository.Get(id);
+                    var customer = _customerRepository.Get(User.GetUserId());
                     var resale = _mapper.Map<Offer>(resaleViewModel);
                     resale.Customer = customer;
                     resale.OfferStatus = OfferStatus.PendingApproval;

@@ -1,7 +1,6 @@
-﻿@using CustomerSite.Models.ViewModels
-@{
+﻿@{
     decimal totalprice = 0;
-    foreach (var item in ViewData["order"] as List<OrderDetailViewModel>)
+    foreach (var item in ViewData["order"] as List<Bookstore.Customer.ViewModel.OrderDetailViewModel>)
     {
         totalprice += item.Price * item.Quantity;
     }
@@ -57,7 +56,7 @@
     </tr>
     </thead>
     <tbody>
-    @foreach (var item in ViewData["order"] as List<OrderDetailViewModel>)
+        @foreach (var item in ViewData["order"] as List<Bookstore.Customer.ViewModel.OrderDetailViewModel>)
     {
         var total = item.Price * item.Quantity;
         <tr>

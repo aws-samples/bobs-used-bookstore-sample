@@ -3,13 +3,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using X.PagedList;
-using CustomerSite.Models.ViewModels;
 using Bookstore.Domain.Books;
 using Bookstore.Domain.Carts;
 using Bookstore.Data.Repository.Interface.SearchImplementations;
 using Bookstore.Data.Repository.Interface;
 using System.Linq.Expressions;
 using System.Collections.Generic;
+using Bookstore.Customer.ViewModel;
 
 namespace BobCustomerSite.Controllers
 {
@@ -211,7 +211,7 @@ namespace BobCustomerSite.Controllers
             var book = _bookRepository.Get(bookid);
             //var price = _priceRepository.Get(priceid);
             var cartId = HttpContext.Request.Cookies["CartId"];
-            var cart = _cartRepository.Get(Convert.ToString(cartId));
+            var cart = _cartRepository.Get(cartId);
             var cartItem = new CartItem
             {
                 Book = book,

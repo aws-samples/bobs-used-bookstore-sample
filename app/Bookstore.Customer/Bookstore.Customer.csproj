@@ -9,15 +9,12 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Amazon.AspNetCore.Identity.Cognito" Version="2.2.0" />
-        <PackageReference Include="Amazon.Extensions.CognitoAuthentication" Version="2.2.1" />
         <PackageReference Include="Amazon.Extensions.Configuration.SystemsManager" Version="2.1.0" />
         <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
         <PackageReference Include="AWS.Logger.AspNetCore" Version="3.3.0" />
         <PackageReference Include="AWSSDK.CloudWatchLogs" Version="3.7.2.87" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="6.0.10" />
         <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.6" />
-        <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="5.0.7" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.7" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.6" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.6">
