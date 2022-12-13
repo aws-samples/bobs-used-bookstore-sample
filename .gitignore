@@ -348,3 +348,6 @@ ASALocalRun/
 
 
 # End of https://www.gitignore.io/api/csharp
+/app/Bookstore.Admin/aws-logger-errors.txt
+/app/Bookstore.Admin/wwwroot/images
+/app/Bookstore.Customer/wwwroot/images

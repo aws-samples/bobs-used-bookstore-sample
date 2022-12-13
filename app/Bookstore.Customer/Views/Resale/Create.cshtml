@@ -1,0 +1,107 @@
+﻿@using Bookstore.Domain.Books
+@using Bookstore.Domain.ReferenceData
+
+@model CustomerSite.Models.ViewModels.ResaleViewModel;
+@{
+    var resaleBook = (Bookstore.Domain.Offers.Offer)ViewData["ResaleBooks"];
+
+    var publishers = new SelectList((IEnumerable<ReferenceDataItem>)ViewData["Publishers"], "Id", "Text");
+    var types = new SelectList((IEnumerable<ReferenceDataItem>)ViewData["Types"], "Id", "Text");
+    var conditions = new SelectList((IEnumerable<ReferenceDataItem>)ViewData["Conditions"], "Id", "Text");
+    var genre = new SelectList((IEnumerable<ReferenceDataItem>)ViewData["Genres"], "Id", "Text");
+}
+
+<head>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/googlefont.css">
+    <link rel="stylesheet" href="/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/css/styles.css">
+    <script src="/js/jquery.min.js" defer></script>
+    <script type="text/javascript" src="/js/dropdown.js" defer></script>
+</head>
+
+<div class="panel-body">
+
+    <div>
+        <div>
+            <div>
+                <h1>
+                    Book details
+                </h1>
+                <br/>
+            </div>
+            <form asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label class="main-text form-check-label" asp-for="BookName">Book Name</label>
+                    <input class="main-text form-control bg-light text-dark" placeholder="Name of the book" asp-for="BookName" required/>
+                    <span asp-validation-for="BookName" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label class="main-text form-check-label" asp-for="Author">Author</label>
+                    <input class="main-text form-control bg-light text-dark" asp-for="Author" placeholder="Firstname Lastname" required/>
+                    <span asp-validation-for="Author" class="text-danger"></span>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label class="main-text form-check-label" asp-for="ISBN">ISBN</label>
+                        <input class="main-text form-control bg-light text-dark" asp-for="ISBN" type="text" placeholder="10 or 13 digit ISBN" required/>
+                        <span asp-validation-for="ISBN" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label class="main-text form-check-label">Publisher Name</label>
+                        @Html.DropDownListFor(model => model.PublisherName, publishers, "Please select", new { id = "othersOptionPublisher", @class = "form-control dropdown", required = "required" })
+                        <div id="div_content_publisher" style="display:none">
+                            <br/>
+                            <input class="form-control otherAddPublisherText" asp-for="PublisherName" id="txtNewPublisher" type="text"/>
+                            <input class=" btn otherAddButton" id="btnAddNewPublisher" onClick="buttonFn(this)" type="button" value="Add">
+                        </div>
+                    </div>
+
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label class="main-text form-check-label" asp-for="BookPrice">Book Price</label>
+                        <input class="main-text form-control bg-light text-dark" asp-for="BookPrice" placeholder="$" required/>
+                        <span asp-validation-for="BookPrice" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label class="main-text form-check-label">Book Condition</label><br/>
+                        @Html.DropDownListFor(model => model.ConditionName, conditions, "Please select", new { id = "othersOptionCondition", @class = "form-control dropdown", required = "required" })
+                        <div id="div_content_condition" style="display:none">
+                            <input class="form-control otherAddText" asp-for="ConditionName" id="txtNewCondition" type="text"/>
+                            <input class="btn otherAddButton" id="btnAddNewCondition" type="button" onClick="buttonFn(this)" value="Add"/>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label class="main-text form-check-label">Book Type</label><br/>
+                        @Html.DropDownListFor(model => model.TypeName, types, "Please select", new { id = "othersOptionType", @class = "form-control dropdown", required = "required" })
+                        <div id="div_content_type" style="display:none">
+                            <br/>
+                            <input class="form-control otherAddText" asp-for="TypeName" id="txtNewType" type="text"/>
+                            <input class="btn otherAddButton" id="btnAddNewType" type="button" onClick="buttonFn(this)" value="Add"/>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label class="main-text form-check-label">Book Genre</label><br/>
+                        @Html.DropDownListFor(model => model.GenreName, genre, "Please select", new { id = "othersOptionGenre", @class = "form-control dropdown", required = "required" })
+                        <div id="div_content_genre" style="display:none">
+                            <br/>
+                            <input class="form-control otherAddText" asp-for="GenreName" id="txtNewGenre" type="text"/>
+                            <input class="btn btn-sm otherAddButton" id="btnAddNewGenre" type="button" onClick="buttonFn(this)" value="Add"/>
+                        </div>
+                    </div>
+                </div>
+                <hr class="mt-2 mb-5">
+                <div class="form-group text-center">
+                    <button class="btn btn-lg" type="submit">SUBMIT</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
