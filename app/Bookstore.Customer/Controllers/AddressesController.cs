@@ -6,6 +6,7 @@ using Bookstore.Customer.ViewModel.Addresses;
 using Bookstore.Data.Data;
 using Bookstore.Data.Repository.Interface;
 using Bookstore.Domain.Customers;
+using Bookstore.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,19 +17,22 @@ namespace CustomerSite.Controllers
         private readonly IGenericRepository<Address> _addressRepository;
         private readonly ApplicationDbContext _context;
         private readonly IGenericRepository<Customer> _customerRepository;
+        private readonly ICustomerService customerService;
 
         public AddressesController(IGenericRepository<Address> addressRepository,
                                    IGenericRepository<Customer> customerRepository,
+                                   ICustomerService customerService,
                                    ApplicationDbContext context)
         {
             _context = context;
             _customerRepository = customerRepository;
+            this.customerService = customerService;
             _addressRepository = addressRepository;
         }
 
         public async Task<IActionResult> Index()
         {
-            var temp = _addressRepository.Get(c => c.Customer.Id == User.GetUserId(), includeProperties: "Customer");
+            var temp = _addressRepository.Get(c => c.Customer.Sub == User.GetUserId(), includeProperties: "Customer");
 
             return View(temp);
         }
@@ -44,7 +48,8 @@ namespace CustomerSite.Controllers
         {
             if (ModelState.IsValid)
             {
-                var address = model.ToAddress(User.GetUserId());
+                var customer = customerService.Get(User.GetUserId());
+                var address = model.ToAddress(customer.Id);
 
                 _addressRepository.Add(address);
                 _addressRepository.Save();

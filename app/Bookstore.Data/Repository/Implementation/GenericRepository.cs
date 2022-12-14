@@ -173,5 +173,10 @@ namespace Bookstore.Data.Repository.Implementation
         {
             await context.SaveChangesAsync();
         }
+
+        //public async Task<bool> ExistsAsync<T>(T id)
+        //{
+        //    return await context.Set<TModel>()..AnyAsync(x => x.Id == id);
+        //}
     }
 }

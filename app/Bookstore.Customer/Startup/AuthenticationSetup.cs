@@ -1,4 +1,6 @@
 ﻿using Bookstore.Customer;
+using Bookstore.Domain.Customers;
+using Bookstore.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Builder;
@@ -27,13 +29,14 @@ namespace AdminSite.Startup
 
         private static WebApplicationBuilder ConfigureLocalAuthentication(WebApplicationBuilder builder)
         {
-            builder.Services.AddAuthentication(x =>
+            builder.Services
+                .AddAuthentication(x =>
             {
                 x.AddScheme<LocalAuthenticationHandler>("localauth", null);
-                x.DefaultAuthenticateScheme = "localauth";
+                x.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                x.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
                 x.DefaultChallengeScheme = "localauth";
-                x.DefaultSignOutScheme = "localauth";
-            });
+            }).AddCookie();
 
             return builder;
         }
@@ -61,6 +64,7 @@ namespace AdminSite.Startup
                     };
 
                     x.Events.OnRedirectToIdentityProviderForSignOut = OnRedirectToIdentityProviderForSignOut;
+                    x.Events.OnTokenValidated = SaveCustomerDetails;
                 });
 
             return builder;
@@ -80,6 +84,18 @@ namespace AdminSite.Startup
             context.Properties.Items.Remove(OpenIdConnectDefaults.AuthenticationScheme);
 
             return Task.CompletedTask;
+        }
+
+        private static async Task SaveCustomerDetails(TokenValidatedContext context)
+        {
+            var customerService = context.HttpContext.RequestServices.GetService<ICustomerService>();
+            var customer = new Customer
+            {
+                Sub = context.Principal.GetUserId(),
+                Username = context.Principal.Identity.Name
+            };
+
+            await customerService.SaveAsync(customer);
         }
     }
 }

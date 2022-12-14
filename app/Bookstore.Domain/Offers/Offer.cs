@@ -3,7 +3,7 @@ using Bookstore.Domain.ReferenceData;
 
 namespace Bookstore.Domain.Offers
 {
-    public class Offer : Entity<int>
+    public class Offer : Entity
     {
         public string Author { get; set; }
 

@@ -11,6 +11,7 @@ using Bookstore.Data.Data;
 using Bookstore.Data.Repository.Interface;
 using Bookstore.Customer;
 using Bookstore.Customer.ViewModel;
+using Bookstore.Services;
 
 namespace CustomerSite.Controllers
 {
@@ -21,9 +22,9 @@ namespace CustomerSite.Controllers
         private readonly IGenericRepository<CartItem> _cartItemRepository;
         private readonly ApplicationDbContext _context;
         private readonly IGenericRepository<Customer> _customerRepository;
+        private readonly ICustomerService customerService;
         private readonly IGenericRepository<OrderDetail> _orderDetailRepository;
         private readonly IGenericRepository<Order> _orderRepository;
-        //private readonly IGenericRepository<OrderStatus> _orderStatusRepository;
         private readonly IGenericRepository<Price> _priceRepository;
 
         public CartItemsController(IGenericRepository<Address> addressRepository,
@@ -32,14 +33,14 @@ namespace CustomerSite.Controllers
                                    IGenericRepository<Price> priceRepository,
                                    IGenericRepository<Book> bookRepository,
                                    IGenericRepository<Customer> customerRepository,
-                                   //IGenericRepository<OrderStatus> orderStatusRepository,
+                                   ICustomerService customerService,
                                    IGenericRepository<CartItem> cartItemRepository,
                                    ApplicationDbContext context)
         {
             _context = context;
             _cartItemRepository = cartItemRepository;
-            //_orderStatusRepository = orderStatusRepository;
             _customerRepository = customerRepository;
+            this.customerService = customerService;
             _bookRepository = bookRepository;
             _priceRepository = priceRepository;
             _orderRepository = orderRepository;
@@ -131,13 +132,15 @@ namespace CustomerSite.Controllers
                 subTotal += Convert.ToDecimal(prices[i]) * Convert.ToInt32(quantity[i]);
             }
 
+            var customer = customerService.Get(User.GetUserId());
+
             // create a new order
             var recentOrder = new Order
             {
                 OrderStatus = OrderStatus.Pending,
                 Subtotal = subTotal,
                 Tax = subTotal * (decimal)0.1,
-                CustomerId = User.GetUserId(),
+                CustomerId = customer.Id,
                 DeliveryDate = DateTime.Now.ToUniversalTime().AddDays(7),
                 CreatedBy = User.Identity.Name,
                 CreatedOn = DateTime.UtcNow,
@@ -314,7 +317,7 @@ namespace CustomerSite.Controllers
                 .Get(c => c.CartItem_Id == id, includeProperties: "Cart,Cart.Customer")
                 .FirstOrDefault();
 
-            if (cartItem?.Cart.Customer.Id != User.GetUserId())
+            if (cartItem?.Cart.Customer.Sub != User.GetUserId())
                 return RedirectToAction(nameof(Error));
 
             var trueDelete = _cartItemRepository.Get(id);

@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.Authentication;
+﻿using Bookstore.Services;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System.Security.Claims;
@@ -17,25 +20,35 @@ namespace Bookstore.Customer
         {
         }
 
-        protected override Task<AuthenticateResult> HandleAuthenticateAsync()
+        protected override async Task HandleChallengeAsync(AuthenticationProperties properties)
         {
-            var endpoint = Context.GetEndpoint();
-
-            if (endpoint?.Metadata?.GetMetadata<IAllowAnonymous>() != null)
-            {
-                return Task.FromResult(AuthenticateResult.NoResult());
-            }
-
-            var identity = new ClaimsIdentity("localauth");
+            var identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme);
 
             identity.AddClaim(new Claim(ClaimTypes.Name, "bookstore user"));
             identity.AddClaim(new Claim("sub", UserId));
 
-            var principal = new ClaimsPrincipal(identity);
+            await Context.SignInAsync(new ClaimsPrincipal(identity));
 
-            var authTicket = new AuthenticationTicket(principal, Scheme.Name);
+            await SaveCustomerDetails(Context, identity);
 
-            return Task.FromResult(AuthenticateResult.Success(authTicket));
+            Context.Response.Redirect(properties.RedirectUri);
+        }
+
+        private async Task SaveCustomerDetails(HttpContext context, ClaimsIdentity identity)
+        {
+            var customerService = context.RequestServices.GetService<ICustomerService>();
+            var customer = new Domain.Customers.Customer
+            {
+                Sub = identity.FindFirst("Sub").Value,
+                Username = identity.Name
+            };
+
+            await customerService.SaveAsync(customer);
+        }
+
+        protected override Task<AuthenticateResult> HandleAuthenticateAsync()
+        {
+            return Task.FromResult(AuthenticateResult.NoResult());
         }
     }
 }

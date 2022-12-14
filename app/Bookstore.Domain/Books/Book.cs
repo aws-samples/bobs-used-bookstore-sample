@@ -2,7 +2,7 @@
 
 namespace Bookstore.Domain.Books
 {
-    public class Book : Entity<int>
+    public class Book : Entity
     {
         public string Name { get; set; }
 

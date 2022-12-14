@@ -2,9 +2,9 @@
 
 namespace Bookstore.Domain
 {
-    public class Entity<T>
+    public class Entity
     {
-        public T Id { get; set; }
+        public int Id { get; set; }
 
         public string CreatedBy { get; set; }
 
@@ -17,7 +17,7 @@ namespace Bookstore.Domain
 
         public bool IsNewEntity()
         {
-            return Id != null && Id.Equals(default(T));
+            return Id != 0;
         }
     }
 }

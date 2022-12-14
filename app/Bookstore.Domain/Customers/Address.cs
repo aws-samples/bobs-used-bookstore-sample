@@ -1,6 +1,6 @@
 ﻿namespace Bookstore.Domain.Customers
 {
-    public class Address : Entity<int>
+    public class Address : Entity
     {
         public bool IsPrimary { get; set; }
 
@@ -16,7 +16,7 @@
 
         public string ZipCode { get; set; }
 
-        public string CustomerId { get; set; }
+        public int CustomerId { get; set; }
         public Customer Customer { get; set; }
     }
 }

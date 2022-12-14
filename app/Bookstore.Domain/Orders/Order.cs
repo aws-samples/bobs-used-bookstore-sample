@@ -2,9 +2,9 @@
 
 namespace Bookstore.Domain.Orders
 {
-    public class Order : Entity<int>
+    public class Order : Entity
     {
-        public string CustomerId { get; set; }
+        public int CustomerId { get; set; }
         public Customer Customer { get; set; }
 
         public int? AddressId { get; set; }

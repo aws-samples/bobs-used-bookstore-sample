@@ -33,7 +33,7 @@ namespace CustomerSite.Controllers
         public async Task<IActionResult> Index()
         {
             var resaleBooks
-                = _resaleRepository.Get(c => c.Customer.Id == User.GetUserId(),
+                = _resaleRepository.Get(c => c.Customer.Sub == User.GetUserId(),
                                         includeProperties: "Customer");
             return View(resaleBooks);
         }

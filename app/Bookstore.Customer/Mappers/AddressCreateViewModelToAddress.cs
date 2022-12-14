@@ -5,7 +5,7 @@ namespace Bookstore.Customer.Mappers
 {
     public static class AddressCreateViewModelToAddress
     {
-        public static Address ToAddress(this AddressCreateViewModel model, string customerId)
+        public static Address ToAddress(this AddressCreateViewModel model, int customerId)
         {
             return new Address
             {
