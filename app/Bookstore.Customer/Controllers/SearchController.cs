@@ -10,6 +10,8 @@ using Bookstore.Data.Repository.Interface;
 using System.Linq.Expressions;
 using System.Collections.Generic;
 using Bookstore.Customer.ViewModel;
+using Bookstore.Services;
+using Bookstore.Customer;
 
 namespace BobCustomerSite.Controllers
 {
@@ -17,23 +19,30 @@ namespace BobCustomerSite.Controllers
     public class SearchController : Controller
     {
         private readonly IGenericRepository<Book> _bookRepository;
+        private readonly IShoppingCartService shoppingCartService;
         private readonly IBookSearch _bookSearch;
-        private readonly IGenericRepository<CartItem> _cartItemRepository;
-        private readonly IGenericRepository<Cart> _cartRepository;
+        private readonly IGenericRepository<ShoppingCartItem> _cartItemRepository;
+        private readonly IGenericRepository<ShoppingCart> _cartRepository;
         private readonly IGenericRepository<Condition> _conditionRepository;
         private readonly IGenericRepository<Price> _priceRepository;
         private readonly IPriceSearch _priceSearch;
 
+        public IShoppingCartClientManager ShoppingCartClientManager { get; }
+
         public SearchController(IBookSearch bookSearch,
                                 IPriceSearch priceSearch,
                                 IGenericRepository<Condition> conditionRepository,
-                                IGenericRepository<CartItem> cartItemRepository,
-                                IGenericRepository<Cart> cartRepository,
+                                IGenericRepository<ShoppingCartItem> cartItemRepository,
+                                IGenericRepository<ShoppingCart> cartRepository,
                                 IGenericRepository<Price> priceRepository,
-                                IGenericRepository<Book> bookRepository)
+                                IGenericRepository<Book> bookRepository,
+                                IShoppingCartService shoppingCartService,
+                                IShoppingCartClientManager shoppingCartClientManager)
         {
             _priceRepository = priceRepository;
             _bookRepository = bookRepository;
+            this.shoppingCartService = shoppingCartService;
+            ShoppingCartClientManager = shoppingCartClientManager;
             _cartRepository = cartRepository;
             _cartItemRepository = cartItemRepository;
             _conditionRepository = conditionRepository;
@@ -41,10 +50,6 @@ namespace BobCustomerSite.Controllers
             _bookSearch = bookSearch;
         }
 
-        // Load Search results page
-        // SortBy - value to sort results by
-        // searchString - user's search query
-        // page - page for results
         public async Task<IActionResult> Index(string sortBy, string searchString, int? page)
         {
             if (!string.IsNullOrEmpty(sortBy))
@@ -154,7 +159,6 @@ namespace BobCustomerSite.Controllers
             return View();
         }
 
-        // Load book details page
         public async Task<IActionResult> DetailAsync(long id, string sortBy)
         {
             if (!string.IsNullOrEmpty(sortBy))
@@ -206,24 +210,13 @@ namespace BobCustomerSite.Controllers
             return View(book.FirstOrDefault());
         }
 
-        public IActionResult AddtoCartitem(int bookid)
+        public async Task<IActionResult> AddItemToShoppingCart(int bookId)
         {
-            var book = _bookRepository.Get(bookid);
-            //var price = _priceRepository.Get(priceid);
-            var cartId = HttpContext.Request.Cookies["CartId"];
-            var cart = _cartRepository.Get(cartId);
-            var cartItem = new CartItem
-            {
-                Book = book,
-                //Price = price,
-                Cart = cart,
-                WantToBuy = true,
-                CartItem_Id = Guid.NewGuid().ToString()
-            };
+            var shoppingCartClientId = ShoppingCartClientManager.GetShoppingCartClientId();
 
-            _cartItemRepository.Add(cartItem);
-            _cartItemRepository.Save();
-            return RedirectToAction("Detail", "Search", new { id = bookid });
+            await shoppingCartService.AddAsync(shoppingCartClientId, bookId, 1);
+
+            return RedirectToAction("Index", "Search");
         }
 
         public IActionResult AddtoWishList(long bookid, long priceid)
@@ -232,7 +225,7 @@ namespace BobCustomerSite.Controllers
             var price = _priceRepository.Get(priceid);
             var cartId = HttpContext.Request.Cookies["CartId"];
             var cart = _cartRepository.Get(Convert.ToString(cartId));
-            var cartItem = new CartItem { Book = book, /*Price = price,*/ Cart = cart, CartItem_Id = Guid.NewGuid().ToString() };
+            var cartItem = new ShoppingCartItem { Book = book, ShoppingCart = cart };
 
             _cartItemRepository.Add(cartItem);
             _cartItemRepository.Save();

@@ -16,14 +16,14 @@ namespace CustomerSite.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly IGenericRepository<CartItem> _cartItemRepository;
-        private readonly IGenericRepository<Cart> _cartRepository;
+        private readonly IGenericRepository<ShoppingCartItem> _cartItemRepository;
+        private readonly IGenericRepository<ShoppingCart> _cartRepository;
         private readonly IGenericRepository<Customer> _customerRepository;
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(IGenericRepository<CartItem> cartItemRepository,
+        public HomeController(IGenericRepository<ShoppingCartItem> cartItemRepository,
                               IGenericRepository<Customer> customerRepository,
-                              IGenericRepository<Cart> cartRepository,
+                              IGenericRepository<ShoppingCart> cartRepository,
                               ILogger<HomeController> logger)                              
         {
             _logger = logger;

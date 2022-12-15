@@ -5,24 +5,21 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
-using System.Security.Claims;
-using System.Threading.Tasks;
 
 namespace Bookstore.Customer.Controllers
 {
     public class AuthenticationController : Controller
     {
         private IWebHostEnvironment webHostEnvironment;
-        private const string UserId = "FB6135C7-1464-4A72-B74E-4B63D343DD09";
 
         public AuthenticationController(IWebHostEnvironment webHostEnvironment)
         {
             this.webHostEnvironment = webHostEnvironment;
         }
 
-        public async Task<IActionResult> Login()
+        public IActionResult Login(string redirectUri = null)
         {
-            return Challenge(new AuthenticationProperties { RedirectUri = Request.GetTypedHeaders().Referer.ToString() });
+            return Challenge(new AuthenticationProperties { RedirectUri = redirectUri ?? Request.GetTypedHeaders().Referer.ToString() });
         }
 
         public IActionResult LogOut()

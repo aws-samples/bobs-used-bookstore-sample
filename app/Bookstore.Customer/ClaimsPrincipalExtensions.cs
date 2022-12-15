@@ -6,7 +6,7 @@ namespace Bookstore.Customer
     {
         public static string GetUserId(this ClaimsPrincipal claimsPrincipal)
         {
-            return claimsPrincipal.FindFirst("sub").Value;
+            return claimsPrincipal.FindFirst("sub")?.Value;
         }
     }
 }

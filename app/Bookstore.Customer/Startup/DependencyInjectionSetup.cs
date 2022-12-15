@@ -19,6 +19,7 @@ namespace Bookstore.Customer.Startup
     {
         public static WebApplicationBuilder ConfigureDependencyInjection(this WebApplicationBuilder builder)
         {
+            builder.Services.AddHttpContextAccessor();
             builder.Services.AddTransient<ISearchDatabaseCalls, SearchDatabaseCalls>();
             builder.Services.AddTransient<IExpressionFunction, ExpressionFunction>();
             builder.Services.AddTransient<IRekognitionNPollyRepository, RekognitionNPollyRepository>();
@@ -29,10 +30,11 @@ namespace Bookstore.Customer.Startup
             builder.Services.AddTransient<IReferenceDataService, ReferenceDataService>();
             builder.Services.AddTransient<IOfferService, OfferService>();
             builder.Services.AddTransient<ICustomerService, CustomerService>();
+            builder.Services.AddTransient<IShoppingCartService, ShoppingCartService>();
+            builder.Services.AddTransient<IShoppingCartClientManager, ShoppingCartClientManager>();
             builder.Services.AddTransient<IBookSearch, BookSearchRepository>();
             builder.Services.AddTransient<IPriceSearch, PriceSearchRepository>();
             builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
-            builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             if (builder.Environment.IsDevelopment())
             {

@@ -12,35 +12,43 @@ using Bookstore.Data.Repository.Interface;
 using Bookstore.Customer;
 using Bookstore.Customer.ViewModel;
 using Bookstore.Services;
+using Bookstore.Customer.ViewModel.ShoppingCart;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CustomerSite.Controllers
 {
-    public class CartItemsController : Controller
+    public class ShoppingCartController : Controller
     {
         private readonly IGenericRepository<Address> _addressRepository;
         private readonly IGenericRepository<Book> _bookRepository;
-        private readonly IGenericRepository<CartItem> _cartItemRepository;
+        private readonly IGenericRepository<ShoppingCartItem> _cartItemRepository;
         private readonly ApplicationDbContext _context;
         private readonly IGenericRepository<Customer> _customerRepository;
         private readonly ICustomerService customerService;
+        private readonly IShoppingCartClientManager shoppingCartClientManager;
+        private readonly IShoppingCartService shoppingCartService;
         private readonly IGenericRepository<OrderDetail> _orderDetailRepository;
         private readonly IGenericRepository<Order> _orderRepository;
         private readonly IGenericRepository<Price> _priceRepository;
 
-        public CartItemsController(IGenericRepository<Address> addressRepository,
+        public ShoppingCartController(IGenericRepository<Address> addressRepository,
                                    IGenericRepository<OrderDetail> orderDetailRepository,
                                    IGenericRepository<Order> orderRepository,
                                    IGenericRepository<Price> priceRepository,
                                    IGenericRepository<Book> bookRepository,
                                    IGenericRepository<Customer> customerRepository,
                                    ICustomerService customerService,
-                                   IGenericRepository<CartItem> cartItemRepository,
+                                   IShoppingCartClientManager shoppingCartClientManager,
+                                   IShoppingCartService shoppingCartService,
+                                   IGenericRepository<ShoppingCartItem> cartItemRepository,
                                    ApplicationDbContext context)
         {
             _context = context;
             _cartItemRepository = cartItemRepository;
             _customerRepository = customerRepository;
             this.customerService = customerService;
+            this.shoppingCartClientManager = shoppingCartClientManager;
+            this.shoppingCartService = shoppingCartService;
             _bookRepository = bookRepository;
             _priceRepository = priceRepository;
             _orderRepository = orderRepository;
@@ -50,79 +58,24 @@ namespace CustomerSite.Controllers
 
         public IActionResult Index()
         {
-            var id = Convert.ToString(HttpContext.Request.Cookies["CartId"]);
-
-            var cartItem
-                = _cartItemRepository
-                    .Get(c => c.Cart.Cart_Id == id && c.WantToBuy == true,
-                            includeProperties: "Book,Cart")
-                    .Select(c => new CartViewModel
-                    {
-                        BookId = c.Book.Id,
-                        Url = c.Book.FrontImageUrl,
-                        Prices = c.Book.Price,
-                        BookName = c.Book.Name,
-                        CartItem_Id = c.CartItem_Id,
-                        Quantity = c.Book.Quantity,
-                        //PriceId = c.Price.Price_Id
-                    });
-
-            return View(cartItem);
-        }
-
-        public IActionResult WishListIndex()
-        {
-            var id = Convert.ToString(HttpContext.Request.Cookies["CartId"]);
-            var cartItem
-                = _cartItemRepository
-                    .Get(c => c.Cart.Cart_Id == id && c.WantToBuy == false,
-                            includeProperties: "Book,Cart")
-                    .Select(c => new CartViewModel
-                    {
-                        BookId = c.Book.Id,
-                        Url = c.Book.FrontImageUrl,
-                        //Prices = c.Price.ItemPrice,
-                        BookName = c.Book.Name,
-                        CartItem_Id = c.CartItem_Id,
-                        //Quantity = c.Price.Quantity,
-                        //PriceId = c.Price.Price_Id
-                    });
-
-            return View(cartItem);
-        }
-
-        [HttpPost]
-        public IActionResult MoveToCart(string id)
-        {
-            var cartItem = _cartItemRepository.Get(id);
-            if (cartItem == null)
-                return NotFound();
-
-            cartItem.WantToBuy = true;
-            _cartItemRepository.Update(cartItem);
-            _cartItemRepository.Save();
-
-            return RedirectToAction("WishListIndex");
-        }
-
-        [HttpPost]
-        public IActionResult AllMoveToCart()
-        {
-            var id = Convert.ToString(HttpContext.Request.Cookies["CartId"]);
-
-            var cartItem = _cartItemRepository.Get(c => c.Cart.Cart_Id == id && c.WantToBuy == false);
-
-            foreach (var item in cartItem)
+            var shoppingCartClientId = shoppingCartClientManager.GetShoppingCartClientId();
+            var shoppingCartItems = shoppingCartService.GetShoppingCartItems(shoppingCartClientId);
+            var viewModels = shoppingCartItems.Select(c => new CartViewModel
             {
-                item.WantToBuy = true;
-                _cartItemRepository.Update(item);
-                _cartItemRepository.Save();
-            }
+                BookId = c.Book.Id,
+                Url = c.Book.FrontImageUrl,
+                Prices = c.Book.Price,
+                BookName = c.Book.Name,
+                CartItem_Id = c.Id,
+                Quantity = c.Quantity
+            });
 
-            return RedirectToAction("WishListIndex");
+            return View(viewModels);
         }
 
-        public async Task<IActionResult> CheckOut(string[] prices, string[] IDs, string[] quantity, string[] bookF, string[] priceF)
+        [HttpPost]
+        [Authorize]
+        public IActionResult Index(string[] prices, string[] IDs, string[] quantity, string[] bookF, string[] priceF)
         {
             decimal subTotal = 0;
 
@@ -190,7 +143,60 @@ namespace CustomerSite.Controllers
             }
 
             _cartItemRepository.Save();
+
             return RedirectToAction(nameof(ConfirmCheckout), new { OrderId = orderId });
+        }
+
+        public IActionResult WishListIndex()
+        {
+            var id = Convert.ToInt32(HttpContext.Request.Cookies["CartId"]);
+            var cartItem
+                = _cartItemRepository
+                    .Get(c => c.ShoppingCart.Id == id && c.WantToBuy == false,
+                            includeProperties: "Book,ShoppingCart")
+                    .Select(c => new CartViewModel
+                    {
+                        BookId = c.Book.Id,
+                        Url = c.Book.FrontImageUrl,
+                        //Prices = c.Price.ItemPrice,
+                        BookName = c.Book.Name,
+                        CartItem_Id = c.Id,
+                        //Quantity = c.Price.Quantity,
+                        //PriceId = c.Price.Price_Id
+                    });
+
+            return View(cartItem);
+        }
+
+        [HttpPost]
+        public IActionResult MoveToCart(string id)
+        {
+            var cartItem = _cartItemRepository.Get(id);
+            if (cartItem == null)
+                return NotFound();
+
+            cartItem.WantToBuy = true;
+            _cartItemRepository.Update(cartItem);
+            _cartItemRepository.Save();
+
+            return RedirectToAction("WishListIndex");
+        }
+
+        [HttpPost]
+        public IActionResult AllMoveToCart()
+        {
+            var id = Convert.ToInt32(HttpContext.Request.Cookies["CartId"]);
+
+            var cartItem = _cartItemRepository.Get(c => c.ShoppingCart.Id == id && c.WantToBuy == false);
+
+            foreach (var item in cartItem)
+            {
+                item.WantToBuy = true;
+                _cartItemRepository.Update(item);
+                _cartItemRepository.Save();
+            }
+
+            return RedirectToAction("WishListIndex");
         }
 
         public async Task<IActionResult> ConfirmCheckout(int orderId)
@@ -293,36 +299,17 @@ namespace CustomerSite.Controllers
             return View(address);
         }
 
-        public async Task<IActionResult> Delete(string id)
+        public IActionResult Delete(int id)
         {
-            if (string.IsNullOrEmpty(id))
-                return NotFound();
-
-            var cartItem = await _context
-                .CartItem
-                .FirstOrDefaultAsync(m => m.CartItem_Id == id);
-
-            if (cartItem == null)
-                return NotFound();
-
-            return View(cartItem);
+            return View(new ShoppingCartItemDeleteViewModel {  Id = id });
         }
 
         [HttpPost]
-        [ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(string id)
+        public async Task<IActionResult> Delete(ShoppingCartItemDeleteViewModel model)
         {
-            var cartItem = _cartItemRepository
-                .Get(c => c.CartItem_Id == id, includeProperties: "Cart,Cart.Customer")
-                .FirstOrDefault();
+            var shoppingCartClientId = shoppingCartClientManager.GetShoppingCartClientId();
 
-            if (cartItem?.Cart.Customer.Sub != User.GetUserId())
-                return RedirectToAction(nameof(Error));
-
-            var trueDelete = _cartItemRepository.Get(id);
-            _cartItemRepository.Remove(trueDelete);
-            _cartItemRepository.Save();
+            await shoppingCartService.DeleteShoppingCartItemAsync(shoppingCartClientId, model.Id);
 
             return RedirectToAction(nameof(Index));
         }
