@@ -63,25 +63,10 @@
             }
             else
             {
-                <button type="submit" class="btn">Check Out</button>
+                <a class="btn" asp-action="Index" asp-controller="Checkout">Check Out</a>
             }
 
             <table class="table">
-                @*<thead>
-                    <tr>
-                        <th>
-                            Cover
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(Model => Model.BookName)
-                        </th>
-                        <th>
-                            &nbsp;@Html.DisplayNameFor(Model => Model.Prices) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Quantity
-                        </th>
-
-                        <th></th>
-                    </tr>
-                </thead>*@
                 <tbody>
                     @foreach (var item in Model)
                     {

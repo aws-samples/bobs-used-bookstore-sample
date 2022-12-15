@@ -5,7 +5,7 @@ namespace Bookstore.Customer
 {
     public interface IShoppingCartClientManager
     {
-        string GetShoppingCartClientId();
+        string GetShoppingCartId();
     }
 
     public class ShoppingCartClientManager : IShoppingCartClientManager
@@ -19,7 +19,7 @@ namespace Bookstore.Customer
             context = httpContextAccessor.HttpContext;
         }
 
-        public string GetShoppingCartClientId()
+        public string GetShoppingCartId()
         {
             var cookieOptions = new CookieOptions
             {
@@ -31,7 +31,7 @@ namespace Bookstore.Customer
 
             if (string.IsNullOrWhiteSpace(shoppingCartClientId))
             {
-                shoppingCartClientId = context.User.Identity.IsAuthenticated ? context.User.GetUserId() : Guid.NewGuid().ToString();
+                shoppingCartClientId = context.User.Identity.IsAuthenticated ? context.User.GetSub() : Guid.NewGuid().ToString();
             }
 
             context.Response.Cookies.Append(CookieKey, shoppingCartClientId, cookieOptions);

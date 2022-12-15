@@ -43,7 +43,7 @@ namespace Bookstore.Customer
                 Username = identity.Name
             };
 
-            await customerService.SaveAsync(customer);
+            await customerService.SaveCustomerAsync(customer);
         }
 
         protected override Task<AuthenticateResult> HandleAuthenticateAsync()

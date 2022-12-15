@@ -1,61 +1,36 @@
-﻿@model Bookstore.Customer.ViewModel.PaginationModel
+﻿@model Bookstore.Customer.ViewModel.Search.SearchIndexViewModel
 @{
     ViewData["Title"] = "Search for books";
 }
 
-<head>
-    <meta charset="UTF-8">
-    <title>>Book Store</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <meta name="theme-color" content="#03a6f3">
-    <link rel="stylesheet" href="/css/bootstrap.min.css">
-
-    <link rel="stylesheet" href="/css/googlefont.css">
-    <link rel="stylesheet" href="/css/font-awesome.min.css">
-
-    <link rel="stylesheet" href="/css/styles.css">
-
-    <script src="js/jquery.min.js" defer></script>
-    <script src="js/bootstrap.min.js" defer></script>
-    <script src="js/custom.js" defer></script>
-
-</head>
-
 <h2>Search for Books</h2>
-<br/>
+<br />
 
 <form asp-controller="Search" asp-action="Index" method="get">
-
     <div class="form-row">
         <div class="form-group col-md-6">
-            <input class="form-control" type="text" name="SearchString" value="@ViewBag.currentFilter"/>
+            <input class="form-control" type="text" name="SearchString" asp-for="SearchString" />
             <button type="submit" class="btn btn-primary" value="Search">Search</button>
         </div>
 
         <div class="form-group col-md-6">
-            <select id="selectId" class="form-control" name="SortBy">
+            <select id="selectId" class="form-control" name="SortBy" asp-for="SortBy">
                 <option value="Name">Name</option>
-                <option value="Genre">Genre</option>
-                <option value="Type">Type</option>
                 <option value="PriceAsc">Price (ascending)</option>
                 <option value="PriceDesc">Price (descending)</option>
             </select>
         </div>
-
     </div>
-
 </form>
 
-@if (Model != null && Model.Count == 0)
+@if (Model.Books.Count == 0)
 {
     <h3>
         No results found.
     </h3>
 }
-else if (Model != null)
+else
 {
-    <body>
-
     <section class="static about-sec">
         <div class="container">
             <h2>Search Results:</h2>
@@ -63,12 +38,12 @@ else if (Model != null)
             <div class="recent-book-sec">
                 <div class="row">
 
-                    @foreach (var item in Model.Data)
+                    @foreach (var item in Model.Books)
                     {
                         <div class="col-md-3">
                             <div class="item text-center">
                                 <a asp-controller="Search" asp-action="Detail" asp-route-id="@item.BookId">
-                                    <img src="@Html.DisplayFor(modelItem => item.Url)" alt="img" class="book_image_size" onerror="this.onerror=null;this.src='/images/default_c.jpg';" style="width: 135px;height: 200px;">
+                                    <img src="@Html.DisplayFor(modelItem => item.ImageUrl)" alt="img" class="book_image_size" onerror="this.onerror=null;this.src='/images/default_c.jpg';" style="width: 135px;height: 200px;">
                                 </a>
                                 <center>
                                     <p class="text-dark">@Html.DisplayFor(modelitem => item.BookName)</p>
@@ -76,7 +51,7 @@ else if (Model != null)
                                 @if (item.Quantity > 0)
                                 {
                                     <h6>
-                                        <span class="price">$@item.MinPrice </span>
+                                        <span class="price">$@item.Price </span>
                                     </h6>
                                 }
                                 else
@@ -84,27 +59,16 @@ else if (Model != null)
                                     <h6>Out Of Stock</h6>
                                 }
                                 <div class="hover">
-
                                 </div>
-
                             </div>
-
                         </div>
                     }
                 </div>
             </div>
 
             <div>
-                <ul class="pagination">
-                    @for (var i = 1; i <= (int)Math.Ceiling(Model.Count / 10.0); i++)
-                    {
-                        <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
-                            <a asp-route-page="@i" asp-route-sortBy="@ViewBag.CurrentSort" asp-route-searchstring="@ViewBag.currentFilter" class="page-link">@i</a>
-                        </li>
-                    }
-                </ul>
+                <partial name="_paginator" />
             </div>
         </div>
     </section>
-    </body>
 }

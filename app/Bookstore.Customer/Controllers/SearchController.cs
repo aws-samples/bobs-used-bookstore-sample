@@ -7,11 +7,11 @@ using Bookstore.Domain.Books;
 using Bookstore.Domain.Carts;
 using Bookstore.Data.Repository.Interface.SearchImplementations;
 using Bookstore.Data.Repository.Interface;
-using System.Linq.Expressions;
-using System.Collections.Generic;
 using Bookstore.Customer.ViewModel;
 using Bookstore.Services;
 using Bookstore.Customer;
+using Services;
+using Bookstore.Customer.Mappers;
 
 namespace BobCustomerSite.Controllers
 {
@@ -19,6 +19,7 @@ namespace BobCustomerSite.Controllers
     public class SearchController : Controller
     {
         private readonly IGenericRepository<Book> _bookRepository;
+        private readonly IInventoryService inventoryService;
         private readonly IShoppingCartService shoppingCartService;
         private readonly IBookSearch _bookSearch;
         private readonly IGenericRepository<ShoppingCartItem> _cartItemRepository;
@@ -36,11 +37,13 @@ namespace BobCustomerSite.Controllers
                                 IGenericRepository<ShoppingCart> cartRepository,
                                 IGenericRepository<Price> priceRepository,
                                 IGenericRepository<Book> bookRepository,
+                                IInventoryService inventoryService,
                                 IShoppingCartService shoppingCartService,
                                 IShoppingCartClientManager shoppingCartClientManager)
         {
             _priceRepository = priceRepository;
             _bookRepository = bookRepository;
+            this.inventoryService = inventoryService;
             this.shoppingCartService = shoppingCartService;
             ShoppingCartClientManager = shoppingCartClientManager;
             _cartRepository = cartRepository;
@@ -50,113 +53,11 @@ namespace BobCustomerSite.Controllers
             _bookSearch = bookSearch;
         }
 
-        public async Task<IActionResult> Index(string sortBy, string searchString, int? page)
+        public async Task<IActionResult> Index(string searchString, string sortBy = "Name", int pageIndex = 1, int pageSize = 10)
         {
-            if (!string.IsNullOrEmpty(sortBy))
-                ViewBag.CurrentSort = sortBy;
+            var books = inventoryService.GetBooks(searchString, sortBy, pageIndex, pageSize);
 
-            if (string.IsNullOrEmpty(searchString))
-            {
-                var prices = _priceRepository.GetAll();
-
-                var books = _bookRepository.Get(new List<Expression<Func<Book, bool>>>(), includeProperties: "Genre,BookType,Publisher, Condition")
-                    .Select(b => new BookViewModel
-                    {
-                        BookId = b.Id,
-                        BookName = b.Name,
-                        ISBN = b.ISBN,
-                        Author = b.Author,
-                        GenreName = b.Genre.Text,
-                        TypeName = b.BookType.Text,
-                        PublisherName = b.Publisher.Text,
-                        Url = b.FrontImageUrl,
-                        MinPrice = b.Price,
-                        Quantity = b.Quantity
-                        //Prices = prices.Where(p => p.Book.Id == b.Id).ToList(),
-                        //MinPrice = prices.Where(p => p.Book.Id == b.Id).FirstOrDefault().ItemPrice
-                    });
-
-                var pageSize = 10;
-                var currentPage = page ?? 1;
-
-                return View(new PaginationModel
-                {
-                    Count = books.Count(),
-                    Data = await books.Skip((currentPage - 1) * pageSize).Take(pageSize).ToListAsync(),
-                    CurrentPage = currentPage,
-                    PageSize = pageSize,
-                    CurrentFilter = searchString
-                });
-            }
-
-            ViewBag.currentFilter = searchString;
-
-            if (!string.IsNullOrEmpty(searchString))
-            {
-                var pageSize = 10;
-                var currentPage = page ?? 1;
-                ViewBag.currentFilter = searchString;
-                var pricesQuery = _priceSearch.GetPricebySearch(searchString).OrderBy(d => d.ItemPrice);
-                if (pricesQuery != null)
-                {
-                    var booksQuery = _bookSearch.GetBooksbySearch(searchString)
-                       .Select(b => new BookViewModel
-                       {
-                           BookId = b.Id,
-                           BookName = b.Name,
-                           ISBN = b.ISBN,
-                           Author = b.Author,
-                           GenreName = b.Genre.Text,
-                           TypeName = b.BookType.Text,
-                           PublisherName = b.Publisher.Text,
-                           Url = b.FrontImageUrl,
-                           Prices = pricesQuery.Where(p => p.Book.Id == b.Id).ToList(),
-                           MinPrice = pricesQuery.Where(p => p.Book.Id == b.Id).FirstOrDefault().ItemPrice
-                       });
-
-                    // sort query
-                    switch (ViewBag.CurrentSort)
-                    {
-                        case "Name":
-                            booksQuery = booksQuery.OrderByDescending(b => b.BookName).ToList();
-                            break;
-                        case "Genre":
-                            booksQuery = booksQuery.OrderBy(b => b.GenreName).ToList();
-                            break;
-                        case "Type":
-                            booksQuery = booksQuery.OrderBy(b => b.TypeName).ToList();
-                            break;
-                        case "PriceAsc":
-                            booksQuery = booksQuery.OrderBy(b => b.MinPrice).ToList();
-                            break;
-                        case "PriceDesc":
-                            booksQuery = booksQuery.OrderByDescending(b => b.MinPrice).ToList();
-                            break;
-                        default:
-                            booksQuery = booksQuery.OrderBy(b => b.BookName).ToList();
-                            break;
-                    }
-                    return View(new PaginationModel
-                    {
-                        Count = booksQuery == null ? 0 : booksQuery.Count(),
-                        Data = await booksQuery.Skip((currentPage - 1) * pageSize).Take(pageSize).ToListAsync(),
-                        CurrentPage = currentPage,
-                        PageSize = pageSize,
-                        CurrentFilter = searchString
-                    });
-                }
-
-
-                return View(new PaginationModel
-                {
-                    Count = 0,
-                    CurrentPage = currentPage,
-                    PageSize = pageSize,
-                    CurrentFilter = searchString
-                });
-            }
-
-            return View();
+            return View(books.ToSearchIndexViewModel());
         }
 
         public async Task<IActionResult> DetailAsync(long id, string sortBy)
@@ -212,7 +113,7 @@ namespace BobCustomerSite.Controllers
 
         public async Task<IActionResult> AddItemToShoppingCart(int bookId)
         {
-            var shoppingCartClientId = ShoppingCartClientManager.GetShoppingCartClientId();
+            var shoppingCartClientId = ShoppingCartClientManager.GetShoppingCartId();
 
             await shoppingCartService.AddAsync(shoppingCartClientId, bookId, 1);
 

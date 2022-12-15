@@ -18,7 +18,7 @@ namespace Bookstore.Admin.Mappers.Orders
                 State = order.Address.State,
                 ZipCode = order.Address.ZipCode,
                 Country = order.Address.Country,
-                Subtotal = order.Subtotal,
+                Subtotal = order.SubTotal,
                 Tax = order.Tax,
                 OrderDate = order.CreatedOn,
                 DeliveryDate = order.DeliveryDate                  

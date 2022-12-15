@@ -6,7 +6,7 @@ namespace Bookstore.Admin.Mappers.Orders
 {
     public static class OrderDetailsListToOrderDetailsViewModelMapper
     {
-        public static OrderDetailsViewModel AddOrderDetails(this OrderDetailsViewModel model, IEnumerable<OrderDetail> orderDetails)
+        public static OrderDetailsViewModel AddOrderDetails(this OrderDetailsViewModel model, IEnumerable<OrderItem> orderDetails)
         {
             foreach (var orderItem in orderDetails)
             {

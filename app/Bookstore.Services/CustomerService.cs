@@ -1,6 +1,7 @@
 ﻿using Bookstore.Data.Repository.Interface;
 using Bookstore.Domain.Customers;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -12,16 +13,24 @@ namespace Bookstore.Services
 
         Customer Get(string sub);
 
-        Task SaveAsync(Customer customer);
+        Address GetAddress(string sub, int id);
+
+        IEnumerable<Address> GetAddresses(string sub);
+
+        Task SaveAddressAsync(Address address, string sub);
+
+        Task SaveCustomerAsync(Customer customer);
     }
 
     public class CustomerService : ICustomerService
     {
         private readonly IGenericRepository<Customer> customerRepository;
+        private readonly IGenericRepository<Address> addressRepository;
 
-        public CustomerService(IGenericRepository<Customer> customerRepository)
+        public CustomerService(IGenericRepository<Customer> customerRepository, IGenericRepository<Address> AddressRepository)
         {
             this.customerRepository = customerRepository;
+            addressRepository = AddressRepository;
         }
 
         public Customer Get(int id)
@@ -34,7 +43,28 @@ namespace Bookstore.Services
             return customerRepository.Get2(x => x.Sub == sub).SingleOrDefault();
         }
 
-        public async Task SaveAsync(Customer customer)
+        public Address GetAddress(string sub, int id)
+        {
+            return addressRepository.Get2(x => x.Customer.Sub == sub && x.Id == id).SingleOrDefault();
+        }
+
+        public IEnumerable<Address> GetAddresses(string sub)
+        {
+            return addressRepository.Get2(x => x.Customer.Sub == sub);
+        }
+
+        public async Task SaveAddressAsync(Address address, string sub)
+        {
+            var customer = customerRepository.Get2(x => x.Sub == sub).Single();
+
+            address.Customer = customer;
+
+            addressRepository.AddOrUpdate(address);
+
+            await addressRepository.SaveAsync();
+        }
+
+        public async Task SaveCustomerAsync(Customer customer)
         {
             var existingCustomer = customerRepository.Get2(x => x.Sub == customer.Sub).FirstOrDefault();
 

@@ -1,6 +1,4 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using Bookstore.Customer;
+﻿using Bookstore.Customer;
 using Bookstore.Customer.Mappers;
 using Bookstore.Customer.ViewModel.Addresses;
 using Bookstore.Data.Data;
@@ -8,18 +6,19 @@ using Bookstore.Data.Repository.Interface;
 using Bookstore.Domain.Customers;
 using Bookstore.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace CustomerSite.Controllers
 {
-    public class AddressesController : Controller
+    public class AddressController : Controller
     {
         private readonly IGenericRepository<Address> _addressRepository;
         private readonly ApplicationDbContext _context;
         private readonly IGenericRepository<Customer> _customerRepository;
         private readonly ICustomerService customerService;
 
-        public AddressesController(IGenericRepository<Address> addressRepository,
+        public AddressController(IGenericRepository<Address> addressRepository,
                                    IGenericRepository<Customer> customerRepository,
                                    ICustomerService customerService,
                                    ApplicationDbContext context)
@@ -30,11 +29,11 @@ namespace CustomerSite.Controllers
             _addressRepository = addressRepository;
         }
 
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            var temp = _addressRepository.Get(c => c.Customer.Sub == User.GetUserId(), includeProperties: "Customer");
+            var addresses = customerService.GetAddresses(User.GetSub());
 
-            return View(temp);
+            return View(addresses);
         }
 
         public IActionResult Create()
@@ -44,59 +43,39 @@ namespace CustomerSite.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(AddressCreateViewModel model)
+        public async Task<IActionResult> Create(AddressCreateUpdateViewModel model)
         {
-            if (ModelState.IsValid)
-            {
-                var customer = customerService.Get(User.GetUserId());
-                var address = model.ToAddress(customer.Id);
+            if (!ModelState.IsValid) return View(model);
 
-                _addressRepository.Add(address);
-                _addressRepository.Save();
+            await customerService.SaveAddressAsync(model.ToAddress(), User.GetSub());
 
-                return RedirectToAction(nameof(Index));
-            }
-
-            return View(model);
+            return RedirectToAction("Index", "Checkout");
         }
 
-        public IActionResult Edit(long? id)
+        public IActionResult Update(int id)
         {
-            if (id == null)
-                return NotFound();
+            var address = customerService.GetAddress(User.GetSub(), id);
 
-            var address = _addressRepository.Get(id);
-            if (address == null)
-                return NotFound();
+            if (address == null) return NotFound();
 
-            return View(address);
+            return View(address.ToAddressCreateUpdateViewModel());
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(long id, [Bind("Address_Id,AddressLine1,AddressLine2,City,State,Country,ZipCode")] Address address)
+        public async Task<IActionResult> Update(AddressCreateUpdateViewModel model)
         {
-            if (id != address.Id)
-                return NotFound();
+            if (!ModelState.IsValid) return View(model);
 
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _addressRepository.Update(address);
-                    _addressRepository.Save();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (_addressRepository.Get(address.Id) == null)
-                        return NotFound();
-                    throw;
-                }
+            var address = customerService.GetAddress(User.GetSub(), model.Id);
 
-                return RedirectToAction(nameof(Index));
-            }
+            if (address == null) return NotFound();
 
-            return View(address);
+            model.ToAddress(address);
+
+            await customerService.SaveAddressAsync(address, User.GetSub());
+
+            return RedirectToAction("Index", "Checkout");
         }
 
         public IActionResult Delete(long? id)
@@ -126,7 +105,7 @@ namespace CustomerSite.Controllers
         public async Task<IActionResult> SwitchToPrime(long id)
         {
             //change origin to not prime
-            var customer = _customerRepository.Get(User.GetUserId());
+            var customer = _customerRepository.Get(User.GetSub());
             var addresses
                 = from c in _context.Address
                   where c.Customer == customer && c.IsPrimary == true

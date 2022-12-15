@@ -33,7 +33,7 @@ namespace CustomerSite.Controllers
         public async Task<IActionResult> Index()
         {
             var resaleBooks
-                = _resaleRepository.Get(c => c.Customer.Sub == User.GetUserId(),
+                = _resaleRepository.Get(c => c.Customer.Sub == User.GetSub(),
                                         includeProperties: "Customer");
             return View(resaleBooks);
         }
@@ -59,7 +59,7 @@ namespace CustomerSite.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    var customer = _customerRepository.Get(User.GetUserId());
+                    var customer = _customerRepository.Get(User.GetSub());
                     var resale = _mapper.Map<Offer>(resaleViewModel);
                     resale.Customer = customer;
                     resale.OfferStatus = OfferStatus.PendingApproval;

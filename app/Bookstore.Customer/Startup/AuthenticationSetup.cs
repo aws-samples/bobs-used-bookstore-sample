@@ -91,11 +91,11 @@ namespace AdminSite.Startup
             var customerService = context.HttpContext.RequestServices.GetService<ICustomerService>();
             var customer = new Customer
             {
-                Sub = context.Principal.GetUserId(),
+                Sub = context.Principal.GetSub(),
                 Username = context.Principal.Identity.Name
             };
 
-            await customerService.SaveAsync(customer);
+            await customerService.SaveCustomerAsync(customer);
         }
     }
 }

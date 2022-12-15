@@ -1,6 +1,8 @@
-﻿@model Bookstore.Domain.Customers.Address
+﻿@model Bookstore.Customer.ViewModel.Addresses.AddressCreateUpdateViewModel
 
-@{ ViewData["Title"] = "Create"; }
+@{
+    ViewData["Title"] = "Create";
+}
 
 <html lang="en">
 <head>
@@ -18,6 +20,7 @@
     <link rel="stylesheet" href="/css/font-awesome.min.css">
 
     <link rel="stylesheet" href="/css/styles.css">
+
 </head>
 <body>
 <h1>Create Address</h1><br/>
@@ -26,7 +29,7 @@
         <button class="btn btn-secondary" type="submit">Back to List</button>
     </form>
 </div>
-<form asp-action="AddAddressAtCheckout">
+<form asp-action="Create">
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
     <div class="form-group">
@@ -116,7 +119,6 @@
 
     <center>
         <div class="form-group">
-
             <input type="submit" value="Create" class="btn"/>
         </div>
     </center>
