@@ -12,15 +12,11 @@ namespace BobCustomerSite.Controllers
     {
         private readonly IInventoryService inventoryService;
         private readonly IShoppingCartService shoppingCartService;
-        private readonly IShoppingCartClientManager shoppingCartClientManager;
 
-        public SearchController(IInventoryService inventoryService,
-                                IShoppingCartService shoppingCartService,
-                                IShoppingCartClientManager shoppingCartClientManager)
+        public SearchController(IInventoryService inventoryService, IShoppingCartService shoppingCartService)
         {
             this.inventoryService = inventoryService;
             this.shoppingCartService = shoppingCartService;
-            this.shoppingCartClientManager = shoppingCartClientManager;
         }
 
         public IActionResult Index(string searchString, string sortBy = "Name", int pageIndex = 1, int pageSize = 10)
@@ -39,18 +35,14 @@ namespace BobCustomerSite.Controllers
 
         public async Task<IActionResult> AddItemToShoppingCart(int bookId)
         {
-            var shoppingCartClientId = shoppingCartClientManager.GetShoppingCartId();
-
-            await shoppingCartService.AddToShoppingCartAsync(shoppingCartClientId, bookId, 1);
+            await shoppingCartService.AddToShoppingCartAsync(HttpContext.GetShoppingCartId(), bookId, 1);
 
             return RedirectToAction("Index", "Search");
         }
 
         public async Task<IActionResult> AddItemToWishlist(int bookId)
         {
-            var shoppingCartClientId = shoppingCartClientManager.GetShoppingCartId();
-
-            await shoppingCartService.AddToWishlistAsync(shoppingCartClientId, bookId);
+            await shoppingCartService.AddToWishlistAsync(HttpContext.GetShoppingCartId(), bookId);
 
             return RedirectToAction("Index", "Search");
         }

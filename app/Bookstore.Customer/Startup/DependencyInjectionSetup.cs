@@ -31,7 +31,6 @@ namespace Bookstore.Customer.Startup
             builder.Services.AddTransient<IOfferService, OfferService>();
             builder.Services.AddTransient<ICustomerService, CustomerService>();
             builder.Services.AddTransient<IShoppingCartService, ShoppingCartService>();
-            builder.Services.AddTransient<IShoppingCartClientManager, ShoppingCartClientManager>();
             builder.Services.AddTransient<IBookSearch, BookSearchRepository>();
             builder.Services.AddTransient<IPriceSearch, PriceSearchRepository>();
             builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));

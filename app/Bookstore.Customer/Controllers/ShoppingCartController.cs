@@ -26,7 +26,6 @@ namespace CustomerSite.Controllers
         private readonly ApplicationDbContext _context;
         private readonly IGenericRepository<Customer> _customerRepository;
         private readonly ICustomerService customerService;
-        private readonly IShoppingCartClientManager shoppingCartClientManager;
         private readonly IShoppingCartService shoppingCartService;
         private readonly IGenericRepository<OrderItem> _orderDetailRepository;
         private readonly IGenericRepository<Order> _orderRepository;
@@ -39,7 +38,6 @@ namespace CustomerSite.Controllers
                                    IGenericRepository<Book> bookRepository,
                                    IGenericRepository<Customer> customerRepository,
                                    ICustomerService customerService,
-                                   IShoppingCartClientManager shoppingCartClientManager,
                                    IShoppingCartService shoppingCartService,
                                    IGenericRepository<ShoppingCartItem> cartItemRepository,
                                    ApplicationDbContext context)
@@ -48,7 +46,6 @@ namespace CustomerSite.Controllers
             _cartItemRepository = cartItemRepository;
             _customerRepository = customerRepository;
             this.customerService = customerService;
-            this.shoppingCartClientManager = shoppingCartClientManager;
             this.shoppingCartService = shoppingCartService;
             _bookRepository = bookRepository;
             _priceRepository = priceRepository;
@@ -59,8 +56,7 @@ namespace CustomerSite.Controllers
 
         public IActionResult Index()
         {
-            var shoppingCartClientId = shoppingCartClientManager.GetShoppingCartId();
-            var shoppingCartItems = shoppingCartService.GetShoppingCartItems(shoppingCartClientId);
+            var shoppingCartItems = shoppingCartService.GetShoppingCartItems(HttpContext.GetShoppingCartId());
             var viewModels = shoppingCartItems.Select(c => new CartViewModel
             {
                 BookId = c.Book.Id,
@@ -76,13 +72,9 @@ namespace CustomerSite.Controllers
 
         public IActionResult WishListIndex()
         {
-            var id = Convert.ToInt32(HttpContext.Request.Cookies["CartId"]);
-
-            var shoppingCartId = shoppingCartClientManager.GetShoppingCartId();
-
             var cartItem
                 = _cartItemRepository
-                    .Get(c => c.ShoppingCart.CorrelationId == shoppingCartId && c.WantToBuy == false,
+                    .Get(c => c.ShoppingCart.CorrelationId == HttpContext.GetShoppingCartId() && c.WantToBuy == false,
                             includeProperties: "Book,ShoppingCart")
                     .Select(c => new CartViewModel
                     {
@@ -136,9 +128,7 @@ namespace CustomerSite.Controllers
         [HttpPost]
         public async Task<IActionResult> Delete(ShoppingCartItemDeleteViewModel model)
         {
-            var shoppingCartClientId = shoppingCartClientManager.GetShoppingCartId();
-
-            await shoppingCartService.DeleteShoppingCartItemAsync(shoppingCartClientId, model.Id);
+            await shoppingCartService.DeleteShoppingCartItemAsync(HttpContext.GetShoppingCartId(), model.Id);
 
             return RedirectToAction(nameof(Index));
         }

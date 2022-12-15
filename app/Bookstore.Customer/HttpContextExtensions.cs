@@ -3,24 +3,12 @@ using System;
 
 namespace Bookstore.Customer
 {
-    public interface IShoppingCartClientManager
+    public static class HttpContextExtensions
     {
-        string GetShoppingCartId();
-    }
-
-    public class ShoppingCartClientManager : IShoppingCartClientManager
-    {
-        private const string CookieKey = "ShoppingCartId";
-
-        private readonly HttpContext context;
-
-        public ShoppingCartClientManager(IHttpContextAccessor httpContextAccessor)
+        public static string GetShoppingCartId(this HttpContext context)
         {
-            context = httpContextAccessor.HttpContext;
-        }
+            var CookieKey = "ShoppingCartId";
 
-        public string GetShoppingCartId()
-        {
             var cookieOptions = new CookieOptions
             {
                 Expires = DateTime.Now.AddYears(1),

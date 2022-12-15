@@ -106,7 +106,7 @@ namespace Bookstore.Services
 
         public async Task<int> CreateOrderAsync(string shoppingCartId, string sub, int selectedAddressId)
         {
-            var shoppingCartItems = shoppingCartItemRepository.Get2(x => x.ShoppingCart.CorrelationId == shoppingCartId);
+            var shoppingCartItems = shoppingCartItemRepository.Get2(x => x.ShoppingCart.CorrelationId == shoppingCartId && x.WantToBuy == true);
             var customer = customerRepository.Get2(x => x.Sub == sub).Single();
 
             var order = new Order

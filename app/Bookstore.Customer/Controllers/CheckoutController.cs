@@ -13,17 +13,14 @@ namespace Bookstore.Customer.Controllers
     public class CheckoutController : Controller
     {
         private readonly ICustomerService customerService;
-        private readonly IShoppingCartClientManager shoppingCartClientManager;
         private readonly IShoppingCartService shoppingCartService;
         private readonly IOrderService orderService;
 
         public CheckoutController(ICustomerService customerService,
-                                  IShoppingCartClientManager shoppingCartClientManager,
                                   IShoppingCartService shoppingCartService,
                                   IOrderService orderService)
         {
             this.customerService = customerService;
-            this.shoppingCartClientManager = shoppingCartClientManager;
             this.shoppingCartService = shoppingCartService;
             this.orderService = orderService;
         }
@@ -31,8 +28,7 @@ namespace Bookstore.Customer.Controllers
         public IActionResult Index()
         {
             var addresses = customerService.GetAddresses(User.GetSub());
-            var shoppingCartClientId = shoppingCartClientManager.GetShoppingCartId();
-            var shoppingCartItems = shoppingCartService.GetShoppingCartItems(shoppingCartClientId);
+            var shoppingCartItems = shoppingCartService.GetShoppingCartItems(HttpContext.GetShoppingCartId());
             var viewModel = new CheckoutIndexViewModel
             {
                 Addresses = addresses.ToShoppingCartCheckoutAddressViewModels(),
@@ -45,9 +41,7 @@ namespace Bookstore.Customer.Controllers
         [HttpPost]
         public async Task<IActionResult> Index(CheckoutIndexViewModel model)
         {
-            var shoppingCartId = shoppingCartClientManager.GetShoppingCartId();
-
-            var orderId = await orderService.CreateOrderAsync(shoppingCartId, User.GetSub(), model.SelectedAddressId);
+            var orderId = await orderService.CreateOrderAsync(HttpContext.GetShoppingCartId(), User.GetSub(), model.SelectedAddressId);
 
             return RedirectToAction("OrderPlaced", new { orderId });
         }
