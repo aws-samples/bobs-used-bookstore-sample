@@ -37,17 +37,18 @@ else
 
             <div class="recent-book-sec">
                 <div class="row">
-
                     @foreach (var item in Model.Books)
                     {
                         <div class="col-md-3">
                             <div class="item text-center">
-                                <a asp-controller="Search" asp-action="Detail" asp-route-id="@item.BookId">
+                                <a asp-controller="Search" asp-action="Details" asp-route-id="@item.BookId">
                                     <img src="@Html.DisplayFor(modelItem => item.ImageUrl)" alt="img" class="book_image_size" onerror="this.onerror=null;this.src='/images/default_c.jpg';" style="width: 135px;height: 200px;">
                                 </a>
+
                                 <center>
                                     <p class="text-dark">@Html.DisplayFor(modelitem => item.BookName)</p>
                                 </center>
+
                                 @if (item.Quantity > 0)
                                 {
                                     <h6>
@@ -58,6 +59,7 @@ else
                                 {
                                     <h6>Out Of Stock</h6>
                                 }
+
                                 <div class="hover">
                                 </div>
                             </div>

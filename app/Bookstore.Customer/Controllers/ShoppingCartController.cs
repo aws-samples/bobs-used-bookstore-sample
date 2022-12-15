@@ -77,9 +77,12 @@ namespace CustomerSite.Controllers
         public IActionResult WishListIndex()
         {
             var id = Convert.ToInt32(HttpContext.Request.Cookies["CartId"]);
+
+            var shoppingCartId = shoppingCartClientManager.GetShoppingCartId();
+
             var cartItem
                 = _cartItemRepository
-                    .Get(c => c.ShoppingCart.Id == id && c.WantToBuy == false,
+                    .Get(c => c.ShoppingCart.CorrelationId == shoppingCartId && c.WantToBuy == false,
                             includeProperties: "Book,ShoppingCart")
                     .Select(c => new CartViewModel
                     {
@@ -88,7 +91,6 @@ namespace CustomerSite.Controllers
                         //Prices = c.Price.ItemPrice,
                         BookName = c.Book.Name,
                         CartItem_Id = c.Id,
-                        //Quantity = c.Price.Quantity,
                         //PriceId = c.Price.Price_Id
                     });
 

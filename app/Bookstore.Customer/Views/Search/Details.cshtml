@@ -1,4 +1,4 @@
-﻿@model Bookstore.Customer.ViewModel.BookViewModel
+﻿@model Bookstore.Customer.ViewModel.Search.SearchDetailsViewModel
 
 <head>
     <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -67,10 +67,11 @@ else
                 </div>
             </div>
         </div>
+
         <div class="row">
             <div class="col">
                 <a class="btn" asp-action="AddItemToShoppingCart" asp-route-bookid="@Model.BookId">Add to cart</a>
-                <input type="submit" class="btn" value="Add to WishList" />
+                <a class="btn" asp-action="AddItemToWishlist" asp-route-bookid="@Model.BookId">Add to wishlist</a>
             </div>
         </div>
     </div>
