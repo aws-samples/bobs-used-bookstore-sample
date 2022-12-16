@@ -118,11 +118,16 @@
                         <img src="@item.ImageUrl" height="80" width="50" onerror="this.onerror=null;this.src='/images/default_c.jpg';" />
                     </td>
                     <td>
-                        @item.BookName
+                        <span class="@(item.OutOfStock ? "text-danger" : "")">@item.BookName</span>
+
+                        @if (item.OutOfStock)
+                        {
+                            <p class="text-danger"><small>Out of stock</small></p>
+                        }
                     </td>
 
                     <td>
-                        $@item.Price
+                        <span style="@(item.OutOfStock ? "text-decoration: line-through;":"")">$@item.Price</span>
                     </td>
                 </tr>
             }

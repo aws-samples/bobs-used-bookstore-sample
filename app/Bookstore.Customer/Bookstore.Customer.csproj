@@ -26,10 +26,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="Views\Static\" />
-    </ItemGroup>
-
-    <ItemGroup>
         <None Include="wwwroot\images\AgeOfDevas.png" />
     </ItemGroup>
 

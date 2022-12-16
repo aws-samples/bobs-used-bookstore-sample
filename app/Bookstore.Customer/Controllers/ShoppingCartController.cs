@@ -1,12 +1,9 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Bookstore.Customer;
-using Bookstore.Customer.ViewModel;
 using Bookstore.Services;
-using Bookstore.Customer.ViewModel.ShoppingCart;
+using Bookstore.Customer.Mappers;
 
-namespace CustomerSite.Controllers
+namespace Bookstore.Customer.Controllers
 {
     public class ShoppingCartController : Controller
     {
@@ -22,17 +19,8 @@ namespace CustomerSite.Controllers
         public IActionResult Index()
         {
             var shoppingCartItems = shoppingCartService.GetShoppingCartItems(HttpContext.GetShoppingCartId());
-            var viewModels = shoppingCartItems.Select(c => new CartViewModel
-            {
-                BookId = c.Book.Id,
-                Url = c.Book.FrontImageUrl,
-                Prices = c.Book.Price,
-                BookName = c.Book.Name,
-                CartItem_Id = c.Id,
-                Quantity = c.Quantity
-            });
 
-            return View(viewModels);
+            return View(shoppingCartItems.ToShoppingCartIndexViewModel());
         }
 
         [HttpPost]

@@ -13,6 +13,8 @@ namespace Bookstore.Services
         Task AddToWishlistAsync(string shoppingCartCorrelationId, int bookId);
 
         Task DeleteShoppingCartItemAsync(string shoppingCartCorrelationId, int id);
+
+        ShoppingCart GetShoppingCart(string shoppingCartCorrelationId);
         
         IEnumerable<ShoppingCartItem> GetShoppingCartItems(string shoppingCartCorrelationId);
         
@@ -77,6 +79,15 @@ namespace Bookstore.Services
             shoppingCartItemRepository.Remove(shoppingCartItem);
 
             await shoppingCartItemRepository.SaveAsync();
+        }
+
+        public ShoppingCart GetShoppingCart(string shoppingCartCorrelationId)
+        {
+            var shoppingCart = shoppingCartRepository.Get2(x => x.CorrelationId == shoppingCartCorrelationId).Single();
+
+            shoppingCart.Items = shoppingCartItemRepository.Get2(x => x.ShoppingCart.CorrelationId == shoppingCartCorrelationId && x.WantToBuy == true, includeProperties: x => x.Book);
+
+            return shoppingCart;
         }
 
         public IEnumerable<ShoppingCartItem> GetShoppingCartItems(string shoppingCartCorrelationId)

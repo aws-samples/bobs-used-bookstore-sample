@@ -1,11 +1,9 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
-
 namespace Bookstore.Customer.ViewModel.Checkout
 {
     public class CheckoutIndexViewModel
     {
-        public decimal Total => ShoppingCartItems.Sum(x => x.Price);
+        public decimal Total { get; set; }
 
         public List<CheckoutAddressViewModel> Addresses { get; set; } = new List<CheckoutAddressViewModel>();
 
@@ -40,5 +38,7 @@ namespace Bookstore.Customer.ViewModel.Checkout
         public decimal Price { get; set; }
 
         public string ImageUrl { get; set; }
+
+        public bool OutOfStock { get; set; }
     }
 }

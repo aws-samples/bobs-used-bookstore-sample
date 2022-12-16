@@ -106,7 +106,7 @@ namespace Bookstore.Services
 
         public async Task<int> CreateOrderAsync(string shoppingCartId, string sub, int selectedAddressId)
         {
-            var shoppingCartItems = shoppingCartItemRepository.Get2(x => x.ShoppingCart.CorrelationId == shoppingCartId && x.WantToBuy == true);
+            var shoppingCartItems = shoppingCartItemRepository.Get2(x => x.ShoppingCart.CorrelationId == shoppingCartId && x.WantToBuy == true, null, x => x.Book);
             var customer = customerRepository.Get2(x => x.Sub == sub).Single();
 
             var order = new Order
@@ -120,7 +120,7 @@ namespace Bookstore.Services
             await orderRepository.AddAsync(order);
             await orderRepository.SaveAsync();
 
-            shoppingCartItems.ToList().ForEach(async x =>
+            shoppingCartItems.Where(x => x.Book.Quantity > 0).ToList().ForEach(async x =>
             {
                 var orderItem = new OrderItem
                 {
@@ -134,7 +134,7 @@ namespace Bookstore.Services
 
             await orderItemRepository.SaveAsync();
 
-            shoppingCartItems.ToList().ForEach(x =>
+            shoppingCartItems.Where(x => x.Book.Quantity > 0).ToList().ForEach(x =>
             {
                 var book = bookRepository.Get(x.BookId);
 

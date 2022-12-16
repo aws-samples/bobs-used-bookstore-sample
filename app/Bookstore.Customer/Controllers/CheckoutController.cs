@@ -27,13 +27,9 @@ namespace Bookstore.Customer.Controllers
 
         public IActionResult Index()
         {
+            var shoppingCart = shoppingCartService.GetShoppingCart(HttpContext.GetShoppingCartId());
             var addresses = customerService.GetAddresses(User.GetSub());
-            var shoppingCartItems = shoppingCartService.GetShoppingCartItems(HttpContext.GetShoppingCartId());
-            var viewModel = new CheckoutIndexViewModel
-            {
-                Addresses = addresses.ToShoppingCartCheckoutAddressViewModels(),
-                ShoppingCartItems = shoppingCartItems.ToShoppingCartCheckoutItemViewModels()
-            };
+            var viewModel = shoppingCart.ToCheckoutIndexViewModel(addresses);
 
             return View(viewModel);
         }
