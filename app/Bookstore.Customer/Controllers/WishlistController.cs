@@ -29,6 +29,8 @@ namespace CustomerSite.Controllers
         {
             await shoppingCartService.MoveWishlistItemToShoppingCartAsync(HttpContext.GetShoppingCartId(), shoppingCartItemId);
 
+            this.SetNotification("Item moved to shopping cart.");
+
             return RedirectToAction("Index");
         }
 
@@ -37,6 +39,8 @@ namespace CustomerSite.Controllers
         {
             await shoppingCartService.MoveAllWishlistItemsToShoppingCartAsync(HttpContext.GetShoppingCartId());
 
+            this.SetNotification("All items moved to shopping cart.");
+
             return RedirectToAction("Index");
         }
 
@@ -44,6 +48,8 @@ namespace CustomerSite.Controllers
         public async Task<IActionResult> Delete(int shoppingCartItemId)
         {
             await shoppingCartService.DeleteShoppingCartItemAsync(HttpContext.GetShoppingCartId(), shoppingCartItemId);
+
+            this.SetNotification("Item removed from wishlist.");
 
             return RedirectToAction(nameof(Index));
         }

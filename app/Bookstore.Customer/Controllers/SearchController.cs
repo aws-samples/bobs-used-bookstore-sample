@@ -37,12 +37,16 @@ namespace BobCustomerSite.Controllers
         {
             await shoppingCartService.AddToShoppingCartAsync(HttpContext.GetShoppingCartId(), bookId, 1);
 
+            this.SetNotification("Item added to shopping cart.");
+
             return RedirectToAction("Index", "Search");
         }
 
         public async Task<IActionResult> AddItemToWishlist(int bookId)
         {
             await shoppingCartService.AddToWishlistAsync(HttpContext.GetShoppingCartId(), bookId);
+
+            this.SetNotification("Item added to wishlist.");
 
             return RedirectToAction("Index", "Search");
         }

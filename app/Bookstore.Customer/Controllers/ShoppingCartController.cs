@@ -34,16 +34,13 @@ namespace CustomerSite.Controllers
 
             return View(viewModels);
         }
-                
-        public IActionResult Delete(int id)
-        {
-            return View(new ShoppingCartItemDeleteViewModel {  Id = id });
-        }
 
         [HttpPost]
-        public async Task<IActionResult> Delete(ShoppingCartItemDeleteViewModel model)
+        public async Task<IActionResult> Delete(int shoppingCartItemId)
         {
-            await shoppingCartService.DeleteShoppingCartItemAsync(HttpContext.GetShoppingCartId(), model.Id);
+            await shoppingCartService.DeleteShoppingCartItemAsync(HttpContext.GetShoppingCartId(), shoppingCartItemId);
+
+            this.SetNotification("Item removed from shopping cart.");
 
             return RedirectToAction(nameof(Index));
         }
