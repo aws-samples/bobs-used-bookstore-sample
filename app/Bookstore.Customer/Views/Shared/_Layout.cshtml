@@ -3,155 +3,157 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Bob's Used Bookstore</title>
-    <link rel="stylesheet" href="/css/bootstrap.min.css"/>
-    <link rel="stylesheet" href="/css/site.css"/>
+    <link rel="stylesheet" href="/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/css/site.css" />
     <link rel="stylesheet" href="/css/googlefont.css">
     <link rel="stylesheet" href="/css/font-awesome.min.css">
     <link rel="stylesheet" href="/css/styles.css">
-
-    <script src="/js/jquery.min.js" defer></script>
-    <script src="/js/bootstrap.min.js" defer></script>
-    <script src="/js/site.js" asp-append-version="true" defer></script>
 </head>
+
 <body>
-<header>
-    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-        <div class="container-fluid">
-            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Bob's Used Bookstore</a>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container-fluid">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Bob's Used Bookstore</a>
 
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                    aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
 
-            <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
-                <ul class="navbar-nav flex-grow-1">
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                    </li>
-                    @if (User.Identity.IsAuthenticated)
-                    {
+                <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
+                    <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Orders" asp-action="Index">View Orders</a>
-                        </li>
-                    }
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Search" asp-action="Index">Search Books</a>
-                    </li>
-                    @if (User.Identity.IsAuthenticated)
-                    {
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Resale" asp-action="Index">Sell Books</a>
-                        </li>
-                    }
-                    <li>
-                        <p> </p>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="ShoppingCart" asp-action="WishListIndex">Wish List</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="ShoppingCart" asp-action="Index">Cart</a>
-                    </li>
-                </ul>
-            </div>
-            <div class="navbar-collapse collapse">
-                <partial name="_LoginPartial"/>
-            </div>
-        </div>
-    </nav>
-</header>
-
-<div class="container">
-    <main role="main" class="pb-3">
-        @RenderBody()
-    </main>
-</div>
-
-<footer>
-    <div class="container">
-        <div class="row">
-            <div class="col-md-4">
-                <div class="address">
-                    <h4>Our Address</h4>
-                    <h6>
-                        808 Bobby Boblovard
-                    </h6>
-                    <h6>Call : 808-123-4567</h6>
-                    <h6>Email : BobsUsedBooks@BobsUsedBooks.com</h6>
-                </div>
-                <div class="timing">
-                    <h4>Timing</h4>
-                    <h6>Mon - Fri: 8am - 10pm</h6>
-                    <h6> Saturday: 10am - 8pm</h6>
-                    <h6> Sunday: 11am - 5pm</h6>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="navigation">
-                    <h4>Navigation</h4>
-                    <ul>
-                        <li>
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
-                        <li>
+                        <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
-                        <li>
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Orders" asp-action="Index">View Orders</a>
-                        </li>
-                        <li>
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Orders" asp-action="Index">View Orders</a>
+                            </li>
+                        }
+                        <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Search" asp-action="Index">Search Books</a>
                         </li>
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Resale" asp-action="Index">Sell Books</a>
+                            </li>
+                        }
                         <li>
-                            <a class="nav-link text-dark" asp-area="" asp-controller="CartItems" asp-action="Index">Cart</a>
+                            <p> </p>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Wishlist" asp-action="Index">Wish List</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="ShoppingCart" asp-action="Index">Cart</a>
                         </li>
                     </ul>
                 </div>
-
+                <div class="navbar-collapse collapse">
+                    <partial name="_LoginPartial" />
+                </div>
             </div>
-            <div class="col-md-5">
-                <div class="form">
-                    <h3>Contact us</h3>
-                    <h6>
-                        Our team is ready to respond as soon as possibly during business hours
-                    </h6>
-                    <form>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <input placeholder="Name" required>
+        </nav>
+    </header>
+
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="address">
+                        <h4>Our Address</h4>
+                        <h6>
+                            808 Bobby Boblovard
+                        </h6>
+                        <h6>Call : 808-123-4567</h6>
+                        <h6>Email : BobsUsedBooks@BobsUsedBooks.com</h6>
+                    </div>
+                    <div class="timing">
+                        <h4>Timing</h4>
+                        <h6>Mon - Fri: 8am - 10pm</h6>
+                        <h6> Saturday: 10am - 8pm</h6>
+                        <h6> Sunday: 11am - 5pm</h6>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="navigation">
+                        <h4>Navigation</h4>
+                        <ul>
+                            <li>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            </li>
+                            <li>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            </li>
+                            <li>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Orders" asp-action="Index">View Orders</a>
+                            </li>
+                            <li>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Search" asp-action="Index">Search Books</a>
+                            </li>
+                            <li>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="CartItems" asp-action="Index">Cart</a>
+                            </li>
+                        </ul>
+                    </div>
+
+                </div>
+                <div class="col-md-5">
+                    <div class="form">
+                        <h3>Contact us</h3>
+                        <h6>
+                            Our team is ready to respond as soon as possibly during business hours
+                        </h6>
+                        <form>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <input placeholder="Name" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <input type="email" placeholder="Email" required>
+                                </div>
+                                <div class="col-md-12">
+                                    <textarea placeholder="Messege"></textarea>
+                                </div>
+                                <div class="col-md-12">
+                                    <button class="btn black">Alright, Submit</button>
+                                </div>
                             </div>
-                            <div class="col-md-6">
-                                <input type="email" placeholder="Email" required>
-                            </div>
-                            <div class="col-md-12">
-                                <textarea placeholder="Messege"></textarea>
-                            </div>
-                            <div class="col-md-12">
-                                <button class="btn black">Alright, Submit</button>
-                            </div>
-                        </div>
-                    </form>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="container">
-        <br/>
-        &copy;
-        <span id="year">
-            <script src="/js/layout.js"></script>
-        </span>
-        - Bookstore - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-    </div>
+        <div class="container">
+            <br />
+            &copy;
+            <span id="year">
+                <script src="/js/layout.js"></script>
+            </span>
+            - Bookstore - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
 
-</footer>
-@RenderSection("Scripts", false)
+    </footer>
+
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/site.js" asp-append-version="true"></script>
+
+    @RenderSection("Scripts", false)
 </body>
 </html>
