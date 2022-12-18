@@ -1,5 +1,5 @@
 {
-  "app": "dotnet run --project src/BookstoreInfra/BookstoreInfrastructure.csproj",
+  "app": "dotnet run --project src/BookstoreCoreInfra/BookstoreCoreInfra.csproj",
   "watch": {
     "include": [
       "**"
