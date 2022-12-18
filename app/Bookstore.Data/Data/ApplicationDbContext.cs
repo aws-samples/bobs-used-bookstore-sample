@@ -33,9 +33,9 @@ namespace Bookstore.Data.Data
         public DbSet<Price> Price { get; set; }
         public DbSet<Publisher> Publisher { get; set; }
         public DbSet<BookType> Type { get; set; }
-        public DbSet<Cart> Cart { get; set; }
-        public DbSet<CartItem> CartItem { get; set; }
-        public DbSet<OrderDetail> OrderDetail { get; set; }
+        public DbSet<ShoppingCart> ShoppingCart { get; set; }
+        public DbSet<ShoppingCartItem> ShoppingCartItem { get; set; }
+        public DbSet<OrderItem> OrderItem { get; set; }
         public DbSet<Offer> Offer { get; set; }
         public DbSet<ReferenceDataItem> ReferenceData { get; set; }
     }

@@ -16,7 +16,9 @@ namespace Services
     {
         Book GetBook(int id);
 
-        PaginatedList<Book> GetBooks(InventoryFilters filters, int index, int count);
+        PaginatedList<Book> GetBooks(InventoryFilters filters, int pageIndex, int pageSize);
+
+        PaginatedList<Book> GetBooks(string searchString, string sortBy, int pageIndex, int pageSize);
 
         Task SaveAsync(Book book, IFormFile frontPhoto, IFormFile backPhoto, IFormFile leftPhoto, IFormFile rightPhoto, string userName);
     }
@@ -37,7 +39,7 @@ namespace Services
             return bookRepository.Get2(x => x.Id == id, null, x => x.Genre, y => y.Publisher, x => x.BookType, x => x.Condition).SingleOrDefault();
         }
 
-        public PaginatedList<Book> GetBooks(InventoryFilters filters, int index, int count)
+        public PaginatedList<Book> GetBooks(InventoryFilters filters, int pageIndex, int pageSize)
         {
             var filterExpressions = new List<Expression<Func<Book, bool>>>();
 
@@ -72,7 +74,34 @@ namespace Services
             }
 
             return bookRepository
-                .GetPaginated(filterExpressions, y => y.OrderBy(x => x.CreatedOn), index, count, x => x.Genre, y => y.Publisher, x => x.BookType, x => x.Condition);
+                .GetPaginated(filterExpressions, y => y.OrderBy(x => x.CreatedOn), pageIndex, pageSize, x => x.Genre, y => y.Publisher, x => x.BookType, x => x.Condition);
+        }
+
+        public PaginatedList<Book> GetBooks(string searchString, string sortBy, int pageIndex, int pageSize)
+        {
+            var sortByExpressions = new Dictionary<string, Func<IQueryable<Book>, IOrderedQueryable<Book>>>
+            {
+                { "Name", x => x.OrderBy(y => y.Name) },
+                { "PriceAsc", x => x.OrderBy(y => y.Price) },
+                { "PriceDesc", x => x.OrderByDescending(y => y.Price) }
+            };
+
+            Expression<Func<Book, bool>> filter = null;
+
+            if (!string.IsNullOrWhiteSpace(searchString)) 
+            {
+                filter = b => b.Name.Contains(searchString) ||
+                               b.Genre.Text.Contains(searchString) ||
+                               b.BookType.Text.Contains(searchString) ||
+                               b.ISBN.Contains(searchString) ||
+                               b.Publisher.Text.Contains(searchString);
+            };
+
+            return bookRepository.GetPaginated(filter,
+                                               sortByExpressions[sortBy],
+                                               pageIndex,
+                                               pageSize,
+                                               book => book.Genre, book => book.BookType, book => book.Publisher);
         }
 
         public async Task SaveAsync(Book book, IFormFile frontImage, IFormFile backImage, IFormFile leftImage, IFormFile rightImage, string userName)

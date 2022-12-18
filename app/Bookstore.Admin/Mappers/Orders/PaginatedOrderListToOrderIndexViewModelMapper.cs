@@ -20,7 +20,7 @@ namespace Bookstore.Admin.Mappers.Orders
                     OrderStatus = order.OrderStatus,
                     OrderDate = order.CreatedOn,
                     DeliveryDate = order.DeliveryDate,
-                    Total = order.Subtotal + order.Tax
+                    Total = order.Total
                 });
             }
 

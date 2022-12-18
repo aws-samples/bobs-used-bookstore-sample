@@ -6,7 +6,7 @@ namespace Bookstore.Domain
     {
         public int Id { get; set; }
 
-        public string CreatedBy { get; set; }
+        public string CreatedBy { get; set; } = "System";
 
         public DateTime CreatedOn { get; set; } = DateTime.UtcNow;
 
@@ -17,7 +17,7 @@ namespace Bookstore.Domain
 
         public bool IsNewEntity()
         {
-            return Id == 0;
+            return Id != 0;
         }
     }
 }
