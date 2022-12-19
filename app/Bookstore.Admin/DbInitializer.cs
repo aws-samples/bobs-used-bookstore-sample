@@ -1,6 +1,6 @@
 ﻿using Amazon.S3;
 using Amazon.S3.Transfer;
-using Bookstore.Data.Data;
+using Bookstore.Data;
 using Bookstore.Domain.Books;
 using System;
 using System.IO;

@@ -1,7 +1,7 @@
 ﻿using Amazon.Polly;
 using Amazon.Rekognition;
 using Amazon.S3;
-using Bookstore.Data.Data;
+using Bookstore.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;

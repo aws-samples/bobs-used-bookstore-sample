@@ -3,12 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using Bookstore.Data.Data;
-using Bookstore.Data.Repository.Interface;
 using Bookstore.Domain;
 using Microsoft.EntityFrameworkCore;
 
-namespace Bookstore.Data.Repository.Implementation
+namespace Bookstore.Data
 {
     public class GenericRepository<TModel> : IGenericRepository<TModel> where TModel : class
     {
@@ -21,11 +19,6 @@ namespace Bookstore.Data.Repository.Implementation
             dbSet = context.Set<TModel>();
         }
 
-        public void Add(TModel entity)
-        {
-            context.Set<TModel>().Add(entity);
-        }
-
         public async Task AddAsync(TModel entity)
         {
             await context.Set<TModel>().AddAsync(entity);
@@ -33,20 +26,10 @@ namespace Bookstore.Data.Repository.Implementation
 
         public void AddOrUpdate(TModel entity)
         {
-             context.Set<TModel>().Update(entity);
+            context.Set<TModel>().Update(entity);
         }
 
         public TModel Get(int id)
-        {
-            return context.Set<TModel>().Find(id);
-        }
-
-        public TModel Get(long? id)
-        {
-            return context.Set<TModel>().Find(id);
-        }
-
-        public TModel Get(string id)
         {
             return context.Set<TModel>().Find(id);
         }
@@ -75,41 +58,6 @@ namespace Bookstore.Data.Repository.Implementation
 
         public IEnumerable<TModel> Get(Expression<Func<TModel, bool>> filter = null,
             Func<IQueryable<TModel>, IOrderedQueryable<TModel>> orderBy = null,
-            string includeProperties = "")
-        {
-            var filters = new List<Expression<Func<TModel, bool>>>();
-
-            if (filter != null)
-            {
-                filters.Add(filter);
-            }
-
-            return Get(filters, orderBy, includeProperties);
-        }
-
-        public IEnumerable<TModel> Get(List<Expression<Func<TModel, bool>>> filters,
-            Func<IQueryable<TModel>, IOrderedQueryable<TModel>> orderBy = null,
-            string includeProperties = "")
-        {
-            IQueryable<TModel> query = dbSet;
-
-            filters.ForEach(x => query = query.Where(x));
-
-            foreach (var includeProperty in includeProperties.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
-            {
-                query = query.Include(includeProperty.Trim());
-            }
-
-            if (orderBy != null)
-            {
-                return orderBy(query).ToList();
-            }
-
-            return query.ToList();
-        }
-
-        public IEnumerable<TModel> Get2(Expression<Func<TModel, bool>> filter = null,
-            Func<IQueryable<TModel>, IOrderedQueryable<TModel>> orderBy = null,
             params Expression<Func<TModel, object>>[] includeProperties)
         {
             IQueryable<TModel> query = dbSet;
@@ -135,7 +83,7 @@ namespace Bookstore.Data.Repository.Implementation
         {
             var filters = new List<Expression<Func<TModel, bool>>>();
 
-            if(filter != null)
+            if (filter != null)
             {
                 filters.Add(filter);
             }
@@ -162,11 +110,6 @@ namespace Bookstore.Data.Repository.Implementation
             }
 
             return PaginatedList<TModel>.Create(query, pageIndex, pageSize);
-        }
-
-        public void Save()
-        {
-            context.SaveChanges();
         }
 
         public async Task SaveAsync()

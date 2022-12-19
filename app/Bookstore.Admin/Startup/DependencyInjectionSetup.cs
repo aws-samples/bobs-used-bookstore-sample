@@ -1,16 +1,9 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
-using Bookstore.Data.Repository.Implementation;
-using Bookstore.Data.Repository.Interface.InventoryInterface;
-using Bookstore.Data.Repository.Implementation.SearchImplementation;
-using Bookstore.Data.Repository.Interface.NotificationsInterface;
-using Bookstore.Data.Repository.Implementation.InventoryImplementation;
-using Bookstore.Data.Repository.Interface.SearchImplementations;
-using Bookstore.Data.Repository.Interface;
-using Bookstore.Data.Repository.Implementation.NotificationsImplementation;
 using Services;
 using Microsoft.Extensions.Hosting;
 using Bookstore.Services;
+using Bookstore.Data;
 
 namespace AdminSite.Startup
 {
@@ -18,11 +11,6 @@ namespace AdminSite.Startup
     {
         public static WebApplicationBuilder ConfigureDependencyInjection(this WebApplicationBuilder builder)
         {
-            builder.Services.AddTransient<ISearchDatabaseCalls, SearchDatabaseCalls>();
-            builder.Services.AddTransient<IExpressionFunction, ExpressionFunction>();
-            builder.Services.AddTransient<IRekognitionNPollyRepository, RekognitionNPollyRepository>();
-            builder.Services.AddTransient<ISearchRepository, SearchRepository>();
-            builder.Services.AddTransient<INotifications, Notifications>();
             builder.Services.AddTransient<IInventoryService, InventoryService>();
             builder.Services.AddTransient<IOrderService, OrderService>();
             builder.Services.AddTransient<IReferenceDataService, ReferenceDataService>();

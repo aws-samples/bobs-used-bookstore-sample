@@ -24,11 +24,11 @@
 </head>
 <body>
 <h1>Create Address</h1><br/>
+
 <div class="col-md-12 text-right">
-    <form asp-controller="Addresses" asp-action="Index" method="get">
-        <button class="btn btn-secondary" type="submit">Back to List</button>
-    </form>
+    <a class="btn btn-secondary" asp-action="Index" asp-controller="Checkout">Back To Checkout</a>
 </div>
+
 <form asp-action="Create">
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 

@@ -7,10 +7,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Bookstore.Domain.Carts;
 using Bookstore.Domain.Customers;
-using Bookstore.Data.Repository.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Bookstore.Customer.ViewModel;
 using Bookstore.Customer;
+using Bookstore.Data;
 
 namespace CustomerSite.Controllers
 {

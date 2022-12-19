@@ -1,4 +1,4 @@
-﻿using Bookstore.Data.Data;
+﻿using Bookstore.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;

@@ -1,4 +1,4 @@
-﻿using Bookstore.Data.Repository.Interface;
+﻿using Bookstore.Data;
 using Bookstore.Domain;
 using Bookstore.Domain.Books;
 using Bookstore.Services;
@@ -36,7 +36,7 @@ namespace Services
 
         public Book GetBook(int id)
         {
-            return bookRepository.Get2(x => x.Id == id, null, x => x.Genre, y => y.Publisher, x => x.BookType, x => x.Condition).SingleOrDefault();
+            return bookRepository.Get(x => x.Id == id, null, x => x.Genre, y => y.Publisher, x => x.BookType, x => x.Condition).SingleOrDefault();
         }
 
         public PaginatedList<Book> GetBooks(InventoryFilters filters, int pageIndex, int pageSize)

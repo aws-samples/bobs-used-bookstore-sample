@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
 using BookType = Bookstore.Domain.Books.BookType;
 
-namespace Bookstore.Data.Data
+namespace Bookstore.Data
 {
     public class ApplicationDbContext : DbContext
     {

@@ -1,4 +1,4 @@
-﻿using Bookstore.Data.Repository.Interface;
+﻿using Bookstore.Data;
 using Bookstore.Domain.Customers;
 using System;
 using System.Collections.Generic;
@@ -40,22 +40,22 @@ namespace Bookstore.Services
 
         public Customer Get(string sub)
         {
-            return customerRepository.Get2(x => x.Sub == sub).SingleOrDefault();
+            return customerRepository.Get(x => x.Sub == sub).SingleOrDefault();
         }
 
         public Address GetAddress(string sub, int id)
         {
-            return addressRepository.Get2(x => x.Customer.Sub == sub && x.Id == id).SingleOrDefault();
+            return addressRepository.Get(x => x.Customer.Sub == sub && x.Id == id).SingleOrDefault();
         }
 
         public IEnumerable<Address> GetAddresses(string sub)
         {
-            return addressRepository.Get2(x => x.Customer.Sub == sub);
+            return addressRepository.Get(x => x.Customer.Sub == sub);
         }
 
         public async Task SaveAddressAsync(Address address, string sub)
         {
-            var customer = customerRepository.Get2(x => x.Sub == sub).Single();
+            var customer = customerRepository.Get(x => x.Sub == sub).Single();
 
             address.Customer = customer;
 
@@ -66,7 +66,7 @@ namespace Bookstore.Services
 
         public async Task SaveCustomerAsync(Customer customer)
         {
-            var existingCustomer = customerRepository.Get2(x => x.Sub == customer.Sub).FirstOrDefault();
+            var existingCustomer = customerRepository.Get(x => x.Sub == customer.Sub).FirstOrDefault();
 
             if (existingCustomer == null) existingCustomer = new Customer();
 

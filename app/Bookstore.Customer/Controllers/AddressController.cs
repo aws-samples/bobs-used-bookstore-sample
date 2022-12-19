@@ -1,8 +1,7 @@
 ﻿using Bookstore.Customer;
 using Bookstore.Customer.Mappers;
 using Bookstore.Customer.ViewModel.Addresses;
-using Bookstore.Data.Data;
-using Bookstore.Data.Repository.Interface;
+using Bookstore.Data;
 using Bookstore.Domain.Customers;
 using Bookstore.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -78,14 +77,11 @@ namespace CustomerSite.Controllers
             return RedirectToAction("Index", "Checkout");
         }
 
-        public IActionResult Delete(long? id)
+        public IActionResult Delete(int id)
         {
-            if (id == null)
-                return NotFound();
-
             var address = _addressRepository.Get(id);
-            if (address == null)
-                return NotFound();
+
+            if (address == null) return NotFound();
 
             return View(address);
         }
@@ -93,19 +89,21 @@ namespace CustomerSite.Controllers
         [HttpPost]
         [ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public IActionResult DeleteConfirmed(long id)
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var address = _addressRepository.Get(id);
+
             _addressRepository.Remove(address);
-            _addressRepository.Save();
+
+            await _addressRepository.SaveAsync();
 
             return RedirectToAction(nameof(Index));
         }
 
-        public async Task<IActionResult> SwitchToPrime(long id)
+        public async Task<IActionResult> SwitchToPrime(int id)
         {
             //change origin to not prime
-            var customer = _customerRepository.Get(User.GetSub());
+            var customer = _customerRepository.Get(x => x.Sub == User.GetSub());
             var addresses
                 = from c in _context.Address
                   where c.Customer == customer && c.IsPrimary == true

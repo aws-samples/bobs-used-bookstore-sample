@@ -1,4 +1,4 @@
-﻿using Bookstore.Data.Repository.Interface;
+﻿using Bookstore.Data;
 using Bookstore.Domain.Carts;
 using System.Collections.Generic;
 using System.Linq;
@@ -48,7 +48,7 @@ namespace Bookstore.Services
 
         private async Task AddToShoppingCartAsync(string shoppingCartCorrelationId, int bookId, int quantity, bool wantToBuy)
         {
-            var shoppingCart = shoppingCartRepository.Get2(x => x.CorrelationId == shoppingCartCorrelationId).SingleOrDefault();
+            var shoppingCart = shoppingCartRepository.Get(x => x.CorrelationId == shoppingCartCorrelationId).SingleOrDefault();
 
             if (shoppingCart == null)
             {
@@ -74,7 +74,7 @@ namespace Bookstore.Services
 
         public async Task DeleteShoppingCartItemAsync(string shoppingCartCorrelationId, int id)
         {
-            var shoppingCartItem = shoppingCartItemRepository.Get2(x => x.ShoppingCart.CorrelationId ==shoppingCartCorrelationId && x.Id == id).SingleOrDefault();
+            var shoppingCartItem = shoppingCartItemRepository.Get(x => x.ShoppingCart.CorrelationId ==shoppingCartCorrelationId && x.Id == id).SingleOrDefault();
 
             shoppingCartItemRepository.Remove(shoppingCartItem);
 
@@ -83,26 +83,26 @@ namespace Bookstore.Services
 
         public ShoppingCart GetShoppingCart(string shoppingCartCorrelationId)
         {
-            var shoppingCart = shoppingCartRepository.Get2(x => x.CorrelationId == shoppingCartCorrelationId).Single();
+            var shoppingCart = shoppingCartRepository.Get(x => x.CorrelationId == shoppingCartCorrelationId).Single();
 
-            shoppingCart.Items = shoppingCartItemRepository.Get2(x => x.ShoppingCart.CorrelationId == shoppingCartCorrelationId && x.WantToBuy == true, includeProperties: x => x.Book);
+            shoppingCart.Items = shoppingCartItemRepository.Get(x => x.ShoppingCart.CorrelationId == shoppingCartCorrelationId && x.WantToBuy == true, includeProperties: x => x.Book);
 
             return shoppingCart;
         }
 
         public IEnumerable<ShoppingCartItem> GetShoppingCartItems(string shoppingCartCorrelationId)
         {
-            return shoppingCartItemRepository.Get2(x => x.ShoppingCart.CorrelationId == shoppingCartCorrelationId && x.WantToBuy == true, includeProperties: x => x.Book);
+            return shoppingCartItemRepository.Get(x => x.ShoppingCart.CorrelationId == shoppingCartCorrelationId && x.WantToBuy == true, includeProperties: x => x.Book);
         }
 
         public IEnumerable<ShoppingCartItem> GetWishlistItems(string shoppingCartCorrelationId)
         {
-            return shoppingCartItemRepository.Get2(x => x.ShoppingCart.CorrelationId == shoppingCartCorrelationId && x.WantToBuy == false, includeProperties: x => x.Book);
+            return shoppingCartItemRepository.Get(x => x.ShoppingCart.CorrelationId == shoppingCartCorrelationId && x.WantToBuy == false, includeProperties: x => x.Book);
         }
 
         public async Task MoveWishlistItemToShoppingCartAsync(string shoppingCartCorrelationId, int shoppingCartItemId)
         {
-            var wishlistItem = shoppingCartItemRepository.Get2(x => x.ShoppingCart.CorrelationId == shoppingCartCorrelationId && x.Id == shoppingCartItemId).SingleOrDefault();
+            var wishlistItem = shoppingCartItemRepository.Get(x => x.ShoppingCart.CorrelationId == shoppingCartCorrelationId && x.Id == shoppingCartItemId).SingleOrDefault();
 
             if (wishlistItem == null) return;
 
@@ -115,7 +115,7 @@ namespace Bookstore.Services
 
         public async Task MoveAllWishlistItemsToShoppingCartAsync(string shoppingCartCorrelationId)
         {
-            var wishlistItems = shoppingCartItemRepository.Get2(x => x.ShoppingCart.CorrelationId == shoppingCartCorrelationId && x.WantToBuy == false);
+            var wishlistItems = shoppingCartItemRepository.Get(x => x.ShoppingCart.CorrelationId == shoppingCartCorrelationId && x.WantToBuy == false);
 
             wishlistItems.ToList().ForEach(x => {
                 x.WantToBuy = true;

@@ -1,4 +1,4 @@
-﻿using Bookstore.Data.Repository.Interface;
+﻿using Bookstore.Data;
 using Bookstore.Domain.Books;
 using Bookstore.Domain.ReferenceData;
 using System;
@@ -29,8 +29,8 @@ namespace Services
         public IEnumerable<ReferenceDataItem> GetReferenceData(ReferenceDataType? referenceDataType = null)
         {
             return referenceDataType.HasValue ?
-             referenceDataRepository.Get2(x => x.DataType == referenceDataType) :
-             referenceDataRepository.Get2();
+             referenceDataRepository.Get(x => x.DataType == referenceDataType) :
+             referenceDataRepository.Get();
         }
 
         public ReferenceDataItem GetReferenceDataItem(int id)

@@ -1,4 +1,4 @@
-﻿using Bookstore.Data.Repository.Interface;
+﻿using Bookstore.Data;
 using Bookstore.Domain;
 using Bookstore.Domain.Customers;
 using Bookstore.Domain.Offers;
@@ -69,12 +69,12 @@ namespace Bookstore.Services
 
         public IEnumerable<Offer> GetOffers(string sub)
         {
-            return offerRepository.Get2(x => x.Customer.Sub == sub, null, x => x.BookType, x => x.Genre, x => x.Condition, x => x.Publisher);
+            return offerRepository.Get(x => x.Customer.Sub == sub, null, x => x.BookType, x => x.Genre, x => x.Condition, x => x.Publisher);
         }
 
         public Offer GetOffer(int id)
         {
-            return offerRepository.Get2(x => x.Id == id, null, x => x.Customer).SingleOrDefault();
+            return offerRepository.Get(x => x.Id == id, null, x => x.Customer).SingleOrDefault();
         }
 
         public async Task SaveOfferAsync(Offer offer, string userName)
@@ -90,7 +90,7 @@ namespace Bookstore.Services
 
         public async Task CreateOfferAsync(Offer offer, string sub)
         {
-            var customer = customerRepository.Get2(x => x.Sub == sub).Single();
+            var customer = customerRepository.Get(x => x.Sub == sub).Single();
 
             offer.Customer = customer;
 

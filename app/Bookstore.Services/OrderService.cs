@@ -1,4 +1,4 @@
-﻿using Bookstore.Data.Repository.Interface;
+﻿using Bookstore.Data;
 using Bookstore.Domain;
 using Bookstore.Domain.Books;
 using Bookstore.Domain.Carts;
@@ -66,9 +66,9 @@ namespace Bookstore.Services
 
         public IEnumerable<Order> GetOrders(string sub)
         {
-            var orders = orderRepository.Get2(x => x.Customer.Sub == sub);
+            var orders = orderRepository.Get(x => x.Customer.Sub == sub);
             var orderIds = orders.Select(x => x.Id);
-            var orderItems = orderItemRepository.Get2(x => orderIds.Contains(x.OrderId), null, x => x.Book);
+            var orderItems = orderItemRepository.Get(x => orderIds.Contains(x.OrderId), null, x => x.Book);
 
             orders.ToList().ForEach(x =>
             {
@@ -80,8 +80,8 @@ namespace Bookstore.Services
 
         public Order GetOrder(int id)
         {
-            var order = orderRepository.Get2(x => x.Id == id, null, x => x.Customer, x => x.Address).SingleOrDefault();
-            var orderItems = orderItemRepository.Get2(x => x.Order.Id == id, null, x => x.Book, x => x.Book.BookType, x => x.Book.Condition, x => x.Book.Genre, x => x.Book.Publisher);
+            var order = orderRepository.Get(x => x.Id == id, null, x => x.Customer, x => x.Address).SingleOrDefault();
+            var orderItems = orderItemRepository.Get(x => x.Order.Id == id, null, x => x.Book, x => x.Book.BookType, x => x.Book.Condition, x => x.Book.Genre, x => x.Book.Publisher);
 
             order.OrderItems = orderItems;
 
@@ -90,7 +90,7 @@ namespace Bookstore.Services
 
         public IEnumerable<OrderItem> GetOrderDetails(int id)
         {
-            return orderItemRepository.Get2(x => x.Order.Id == id, null, x => x.Book, x => x.Book.BookType, x => x.Book.Condition, x => x.Book.Genre, x => x.Book.Publisher);
+            return orderItemRepository.Get(x => x.Order.Id == id, null, x => x.Book, x => x.Book.BookType, x => x.Book.Condition, x => x.Book.Genre, x => x.Book.Publisher);
         }
 
         public async Task SaveOrderAsync(Order order, string userName)
@@ -106,8 +106,8 @@ namespace Bookstore.Services
 
         public async Task<int> CreateOrderAsync(string shoppingCartId, string sub, int selectedAddressId)
         {
-            var shoppingCartItems = shoppingCartItemRepository.Get2(x => x.ShoppingCart.CorrelationId == shoppingCartId && x.WantToBuy == true, null, x => x.Book);
-            var customer = customerRepository.Get2(x => x.Sub == sub).Single();
+            var shoppingCartItems = shoppingCartItemRepository.Get(x => x.ShoppingCart.CorrelationId == shoppingCartId && x.WantToBuy == true, null, x => x.Book);
+            var customer = customerRepository.Get(x => x.Sub == sub).Single();
 
             var order = new Order
             {
@@ -153,7 +153,7 @@ namespace Bookstore.Services
 
         public async Task CancelOrderAsync(int orderId, string sub)
         {
-            var order = orderRepository.Get2(x => x.Id == orderId && x.Customer.Sub == sub).SingleOrDefault();
+            var order = orderRepository.Get(x => x.Id == orderId && x.Customer.Sub == sub).SingleOrDefault();
 
             if (order == null) return;
 
