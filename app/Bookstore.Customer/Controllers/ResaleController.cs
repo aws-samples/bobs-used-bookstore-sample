@@ -1,76 +1,54 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using AutoMapper;
-using Bookstore.Domain.Customers;
-using Bookstore.Data.Repository.Interface;
 using Services;
-using Bookstore.Domain.ReferenceData;
-using Bookstore.Domain.Offers;
 using Bookstore.Customer;
-using Bookstore.Customer.ViewModel;
+using Bookstore.Services;
+using Bookstore.Customer.Mappers;
+using Microsoft.AspNetCore.Authorization;
+using Bookstore.Customer.ViewModel.Resale;
 
 namespace CustomerSite.Controllers
 {
+    [Authorize]
     public class ResaleController : Controller
     {
-        private const string ResaleStatusPending = "Pending Approval";
-        private readonly IGenericRepository<Customer> _customerRepository;
-        private readonly IMapper _mapper;
-        private readonly IGenericRepository<Offer> _resaleRepository;
         private readonly IReferenceDataService referenceDataService;
+        private readonly IOfferService offerService;
 
-        public ResaleController(IMapper mapper, 
-                                IGenericRepository<Offer> resaleRepository,
-                                IGenericRepository<Customer> customerRepository,
-                                IReferenceDataService referenceDataService)
+        public ResaleController(IReferenceDataService referenceDataService, IOfferService offerService)
         {
-            _customerRepository = customerRepository;
-            _resaleRepository = resaleRepository;
-            _mapper = mapper;
             this.referenceDataService = referenceDataService;
+            this.offerService = offerService;
         }
 
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            var resaleBooks
-                = _resaleRepository.Get(c => c.Customer.Sub == User.GetSub(),
-                                        includeProperties: "Customer");
-            return View(resaleBooks);
+            var offers = offerService.GetOffers(User.GetSub());
+
+            return View(offers.ToResaleIndexViewModel());
         }
 
         public IActionResult Create()
         {
-            if (User.Identity.IsAuthenticated)
-            {
-                ViewData["Types"] = referenceDataService.GetReferenceData(ReferenceDataType.BookType);
-                ViewData["Publishers"] = referenceDataService.GetReferenceData(ReferenceDataType.Publisher);
-                ViewData["Genres"] = referenceDataService.GetReferenceData(ReferenceDataType.Genre);
-                ViewData["Conditions"] = referenceDataService.GetReferenceData(ReferenceDataType.Condition);
-                return View();
-            }
-            return NotFound("You must be signed in.");
+            var viewModel = new ResaleCreateViewModel();
+            var referenceData = referenceDataService.GetReferenceData();
+
+            viewModel.PopulateReferenceData(referenceData);
+
+            return View(viewModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(ResaleViewModel resaleViewModel)
+        public async Task<IActionResult> Create(ResaleCreateViewModel resaleViewModel)
         {
-            if (User.Identity.IsAuthenticated)
-            {
-                if (ModelState.IsValid)
-                {
-                    var customer = _customerRepository.Get(User.GetSub());
-                    var resale = _mapper.Map<Offer>(resaleViewModel);
-                    resale.Customer = customer;
-                    resale.OfferStatus = OfferStatus.PendingApproval;
-                    _resaleRepository.Add(resale);
-                    _resaleRepository.Save();
-                    return RedirectToAction(nameof(Index));
-                }
+            if (!ModelState.IsValid) return View();
 
-                return View();
-            }
-            return NotFound("You must be signed in.");
+            var offer = resaleViewModel.ToOffer();
+
+            await offerService.CreateOfferAsync(offer, User.GetSub());
+
+            return RedirectToAction(nameof(Index));
         }
     }
 }

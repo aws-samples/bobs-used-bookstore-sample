@@ -1,5 +1,6 @@
 ﻿using Bookstore.Data.Repository.Interface;
 using Bookstore.Domain;
+using Bookstore.Domain.Customers;
 using Bookstore.Domain.Offers;
 using Bookstore.Services.Filters;
 using System;
@@ -17,15 +18,21 @@ namespace Bookstore.Services
         Offer GetOffer(int id);
 
         Task SaveOfferAsync(Offer offer, string userName);
+
+        IEnumerable<Offer> GetOffers(string sub);
+
+        Task CreateOfferAsync(Offer offer, string sub);
     }
 
     public class OfferService : IOfferService
     {
         private readonly IGenericRepository<Offer> offerRepository;
+        private readonly IGenericRepository<Customer> customerRepository;
 
-        public OfferService(IGenericRepository<Offer> offerRepository)
+        public OfferService(IGenericRepository<Offer> offerRepository, IGenericRepository<Customer> customerRepository)
         {
             this.offerRepository = offerRepository;
+            this.customerRepository = customerRepository;
         }
 
         public PaginatedList<Offer> GetOffers(OfferFilters filters, int index, int count)
@@ -60,6 +67,11 @@ namespace Bookstore.Services
             return offerRepository.GetPaginated(filterExpressions, pageIndex: index, pageSize: count, includeProperties: x => x.Customer);
         }
 
+        public IEnumerable<Offer> GetOffers(string sub)
+        {
+            return offerRepository.Get2(x => x.Customer.Sub == sub, null, x => x.BookType, x => x.Genre, x => x.Condition, x => x.Publisher);
+        }
+
         public Offer GetOffer(int id)
         {
             return offerRepository.Get2(x => x.Id == id, null, x => x.Customer).SingleOrDefault();
@@ -72,6 +84,17 @@ namespace Bookstore.Services
             offer.UpdatedOn = DateTime.UtcNow;
 
             offerRepository.AddOrUpdate(offer);
+
+            await offerRepository.SaveAsync();
+        }
+
+        public async Task CreateOfferAsync(Offer offer, string sub)
+        {
+            var customer = customerRepository.Get2(x => x.Sub == sub).Single();
+
+            offer.Customer = customer;
+
+            await offerRepository.AddAsync(offer);
 
             await offerRepository.SaveAsync();
         }
