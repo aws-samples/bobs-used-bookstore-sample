@@ -181,6 +181,7 @@ public class CoreResourceStack : Stack
         var userPoolCustomerClient
             = userPoolCustomer.AddClient("BobsBookstorePoolCustomerClient", new UserPoolClientProps
             {
+                UserPool = userPoolCustomer,
                 GenerateSecret = false,
                 ReadAttributes = new ClientAttributes()
                     .WithCustomAttributes("AddressLine1", "AddressLine2", "City", "State", "Country", "ZipCode")
@@ -209,6 +210,7 @@ public class CoreResourceStack : Stack
 
         var userPoolAdminClient = userPoolAdmin.AddClient("BobsBookstorePoolAdminClient", new UserPoolClientProps
         {
+            UserPool = userPoolAdmin,
             GenerateSecret = false
         });
 
