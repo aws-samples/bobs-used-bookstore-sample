@@ -39,8 +39,8 @@ namespace Bookstore.Services
         private readonly IGenericRepository<Book> bookRepository;
 
         public OrderService(
-            IGenericRepository<Order> orderRepository, 
-            IGenericRepository<OrderItem> orderItemRepository, 
+            IGenericRepository<Order> orderRepository,
+            IGenericRepository<OrderItem> orderItemRepository,
             IGenericRepository<ShoppingCartItem> shoppingCartItemRepository,
             IGenericRepository<Customer> customerRepository,
             IGenericRepository<Book> bookRepository)
@@ -61,7 +61,16 @@ namespace Bookstore.Services
                 filterExpressions.Add(x => x.OrderStatus == filters.OrderStatusFilter);
             }
 
-            return orderRepository.GetPaginated(filterExpressions, pageIndex: pageIndex, pageSize: pageSize, includeProperties: new Expression<Func<Order, object>>[] { x => x.Customer });
+            var orders = orderRepository.GetPaginated(filterExpressions, pageIndex: pageIndex, pageSize: pageSize, includeProperties: new Expression<Func<Order, object>>[] { x => x.Customer });
+            var orderIds = orders.Select(x => x.Id);
+            var orderItems = orderItemRepository.Get(x => orderIds.Contains(x.OrderId), null, x => x.Book);
+
+            orders.ToList().ForEach(x =>
+            {
+                x.OrderItems = orderItems.Where(y => y.OrderId == x.Id);
+            });
+
+            return orders;
         }
 
         public IEnumerable<Order> GetOrders(string sub)

@@ -53,7 +53,7 @@
                         <td>@order.CustomerName</td>
                         <td>@order.OrderStatus</td>
                         <td>@order.OrderDate</td>
-                        <td>@order.DeliveryDate</td>
+                        <td>@order.DeliveryDate.ToShortDateString()</td>
                         <td>@order.Total.ToString("C")</td>
                         <td>
                             <a class="card-link" asp-controller="Orders" asp-action="Details" asp-route-id="@order.Id">View</a>
