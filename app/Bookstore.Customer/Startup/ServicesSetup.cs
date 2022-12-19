@@ -2,7 +2,6 @@
 using Amazon.Rekognition;
 using Amazon.S3;
 using Bookstore.Data.Data;
-using CustomerSite;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -21,7 +20,6 @@ namespace Bookstore.Customer.Startup
             builder.Services.AddAWSService<IAmazonRekognition>();
             builder.Services.AddDefaultAWSOptions(builder.Configuration.GetAWSOptions());
             builder.Services.AddDbContext<ApplicationDbContext>(option => option.UseSqlServer(builder.Configuration.GetConnectionString("BookstoreDbDefaultConnection")));
-            builder.Services.AddAutoMapper(x => x.AddProfile<AutoMapperProfile>());
             builder.Services.AddSession();
 
             return builder;
