@@ -5,12 +5,13 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Bob's Used Bookstore</title>
+    <title>@ViewData["Title"] - Bob's Used Books</title>
     <link rel="stylesheet" href="/css/bootstrap.min.css" />
     <link rel="stylesheet" href="/css/site.css" />
     <link rel="stylesheet" href="/css/googlefont.css">
     <link rel="stylesheet" href="/css/font-awesome.min.css">
     <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/custom-style.css">
 </head>
 
 <body>
@@ -29,28 +30,28 @@
                         @if (User.Identity.IsAuthenticated)
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Orders" asp-action="Index">View Orders</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Orders" asp-action="Index">My Orders</a>
                             </li>
                         }
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Search" asp-action="Index">Search Books</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Search" asp-action="Index">Search</a>
                         </li>
                         @if (User.Identity.IsAuthenticated)
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Resale" asp-action="Index">Sell Books</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Resale" asp-action="Index">Resell my Books</a>
                             </li>
                         }
                         <li>
                             <p> </p>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Wishlist" asp-action="Index">Wish List</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Wishlist" asp-action="Index">My Wish List</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="ShoppingCart" asp-action="Index">Cart</a>
                         </li>
-                    </ul>
+                    </>
                 </div>
                 <div class="navbar-collapse collapse">
                     <partial name="_LoginPartial" />
@@ -71,17 +72,18 @@
                 <div class="col-md-4">
                     <div class="address">
                         <h4>Our Address</h4>
+                        <!-- sample data! -->
                         <h6>
-                            808 Bobby Boblovard
+                            123 Any Street, Any Town, USA
                         </h6>
-                        <h6>Call : 808-123-4567</h6>
-                        <h6>Email : BobsUsedBooks@BobsUsedBooks.com</h6>
+                        <h6>Call: 555-0100</h6>
+                        <h6>Email: staff@BobsUsedBooks.com</h6>
                     </div>
                     <div class="timing">
-                        <h4>Timing</h4>
+                        <h4>Store Hours</h4>
                         <h6>Mon - Fri: 8am - 10pm</h6>
-                        <h6> Saturday: 10am - 8pm</h6>
-                        <h6> Sunday: 11am - 5pm</h6>
+                        <h6>Saturday: 10am - 8pm</h6>
+                        <h6>Sunday: 11am - 5pm</h6>
                     </div>
                 </div>
                 <div class="col-md-3">
@@ -107,6 +109,7 @@
                     </div>
 
                 </div>
+                <!-- while a real store would have a contact form, this sample does not
                 <div class="col-md-5">
                     <div class="form">
                         <h3>Contact us</h3>
@@ -125,12 +128,13 @@
                                     <textarea placeholder="Messege"></textarea>
                                 </div>
                                 <div class="col-md-12">
-                                    <button class="btn black">Alright, Submit</button>
+                                    <button class="btn black">Send</button>
                                 </div>
                             </div>
                         </form>
                     </div>
                 </div>
+                -->
             </div>
         </div>
         <div class="container">
@@ -139,7 +143,7 @@
             <span id="year">
                 <script src="/js/layout.js"></script>
             </span>
-            - Bookstore - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            - Bob's Used Books - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
 
     </footer>
@@ -147,6 +151,7 @@
     <script src="/js/jquery.min.js"></script>
     <script src="/js/bootstrap.min.js"></script>
     <script src="/js/site.js" asp-append-version="true"></script>
+    <script src="/js/custom.js"></script>
 
     @RenderSection("Scripts", false)
 </body>
