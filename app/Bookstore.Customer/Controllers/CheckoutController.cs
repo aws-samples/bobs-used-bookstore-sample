@@ -39,24 +39,14 @@ namespace Bookstore.Customer.Controllers
         {
             var orderId = await orderService.CreateOrderAsync(HttpContext.GetShoppingCartId(), User.GetSub(), model.SelectedAddressId);
 
-            return RedirectToAction("OrderPlaced", new { orderId });
+            return RedirectToAction("Finished", new { orderId });
         }
 
-        public IActionResult OrderPlaced(int orderId)
+        public IActionResult Finished(int orderId)
         {
             var order = orderService.GetOrder(orderId);
 
-            var orderItemViewModels = order.OrderItems.Select(c => new OrderDetailViewModel
-            {
-                Bookname = c.Book.Name,
-                Url = c.Book.FrontImageUrl,
-                Price = c.Book.Price,
-                Quantity = c.Quantity
-            });
-
-            ViewData["order"] = orderItemViewModels.ToList();
-
-            return View();
+            return View(order.ToCheckoutFinishedViewModel());
         }
     }
 }

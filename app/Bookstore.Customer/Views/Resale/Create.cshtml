@@ -43,12 +43,6 @@
                 <select class="form-control mb-3" asp-for="SelectedPublisherId" asp-items="Model.Publishers" required>
                     <option value="">Select the publisher</option>
                 </select>
-
-                @*<div id="div_content_publisher" style="display:none">
-                    <br />
-                    <input class="form-control otherAddPublisherText" asp-for="PublisherName" id="txtNewPublisher" type="text" />
-                    <input class=" btn otherAddButton" id="btnAddNewPublisher" onClick="buttonFn(this)" type="button" value="Add">
-                </div>*@
             </div>
 
         </div>
@@ -64,11 +58,6 @@
                 <select class="form-control mb-3" asp-for="SelectedConditionId" asp-items="Model.Conditions" required>
                     <option value="">Select the book condition</option>
                 </select>
-
-                @*<div id="div_content_condition" style="display:none">
-                    <input class="form-control otherAddText" asp-for="ConditionName" id="txtNewCondition" type="text" />
-                    <input class="btn otherAddButton" id="btnAddNewCondition" type="button" onClick="buttonFn(this)" value="Add" />
-                </div>*@
             </div>
         </div>
 
@@ -79,12 +68,6 @@
                 <select class="form-control mb-3" asp-for="SelectedBookTypeId" asp-items="Model.BookTypes" required>
                     <option value="">Select the book type</option>
                 </select>
-
-                @*<div id="div_content_type" style="display:none">
-                    <br />
-                    <input class="form-control otherAddText" asp-for="TypeName" id="txtNewType" type="text" />
-                    <input class="btn otherAddButton" id="btnAddNewType" type="button" onClick="buttonFn(this)" value="Add" />
-                </div>*@
             </div>
 
             <div class="form-group col-md-6">
@@ -93,12 +76,6 @@
                 <select class="form-control mb-3" asp-for="SelectedGenreId" asp-items="Model.Genres" required>
                     <option value="">Select the genre</option>
                 </select>
-
-                @*<div id="div_content_genre" style="display:none">
-                    <br />
-                    <input class="form-control otherAddText" asp-for="GenreName" id="txtNewGenre" type="text" />
-                    <input class="btn btn-sm otherAddButton" id="btnAddNewGenre" type="button" onClick="buttonFn(this)" value="Add" />
-                </div>*@
             </div>
         </div>
 
