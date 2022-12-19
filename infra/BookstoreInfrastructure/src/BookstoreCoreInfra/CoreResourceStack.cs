@@ -10,11 +10,10 @@ using Amazon.CDK.AWS.SSM;
 using Amazon.CDK.AWS.Logs;
 using Constructs;
 
-namespace BookstoreInfra;
+namespace BookstoreCoreInfra;
 
-// Defines the core resources that make up the BobsBookstore application. Resources
-// used to deploy the front- and back-end applications are defined in separate
-// stacks to allow targeting different compute options (Elastic Beanstalk, EC2, ECS, etc.)
+// Defines the core resources that make up the BobsBookstore application when deployed to the
+// AWS Cloud.
 public class CoreResourceStack : Stack
 {
     private const string customerParameterNameRoot = "BobsUsedBookCustomerStore";
@@ -25,18 +24,21 @@ public class CoreResourceStack : Stack
     private const string adminLogGroupName = "BobsBookstoreAdminLogs";
     private const string customerLogGroupName = "BobsBookstoreCustomerLogs";
 
-
     internal CoreResourceStack(Construct scope, string id, IStackProps props = null) : base(scope, id, props)
     {
         // Create a new vpc spanning two AZs and with public and private subnets
         // to host the application resources
         var vpc = new Vpc(this, "BobsBookstoreVpc", new VpcProps
         {
-            Cidr = "10.0.0.0/16",
+            IpAddresses = IpAddresses.Cidr("10.0.0.0/16"),
+            // Cap at 2 AZs in case we are deployed to a region with only 2
             MaxAzs = 2,
-            SubnetConfiguration = new[]
+            // Reduce the number of NAT gateways to 1 (the default is to create 1 gateway per AZ - more
+            // than we need for this sample)
+            NatGateways = 1,
+            SubnetConfiguration = new []
             {
-                new()
+                new SubnetConfiguration
                 {
                     CidrMask = 24,
                     SubnetType = SubnetType.PUBLIC,
@@ -45,20 +47,23 @@ public class CoreResourceStack : Stack
                 new SubnetConfiguration
                 {
                     CidrMask = 24,
-                    SubnetType = SubnetType.PRIVATE_WITH_NAT,
+                    SubnetType = SubnetType.PRIVATE_WITH_EGRESS,
                     Name = "BookstorePrivateSubnet"
                 }
             }
         });
 
         // Create a Microsoft SQL Server database instance, on default port, and placed
-        // into a private subnet
+        // into a private subnet so that it cannot be accessed from the public internet
         var db = new DatabaseInstance(this, "BookstoreSqlDb", new DatabaseInstanceProps
         {
             Vpc = vpc,
             VpcSubnets = new SubnetSelection
             {
-                SubnetType = SubnetType.PRIVATE_WITH_NAT
+                // Allow the RDS database egress-only access to the internet; we could also
+                // use an Isolated subnet, which would block internet access at both ingress
+                // and egress levels.
+                SubnetType = SubnetType.PRIVATE_WITH_EGRESS
             },
             // SQL Server 2017 Express Edition, in conjunction with a db.t2.micro instance type,
             // fits inside the free tier for new accounts
@@ -70,30 +75,42 @@ public class CoreResourceStack : Stack
 
             InstanceIdentifier = bookstoreDbInstance,
 
-            // as this is a sample app, turn off automated backups to avoid any storage costs
-            // of automated backup snapshots and it helps the stack launch a little faster by
-            // avoiding an initial backup
+            // As this is a sample app, turn off automated backups to avoid any storage costs
+            // of automated backup snapshots. It also helps the stack launch a little faster by
+            // avoiding an initial backup.
             BackupRetention = Duration.Seconds(0)
         });
 
-        // This secret, in Secrets Manager, holds the auto-generated database credentials
-        new StringParameter(this, "BobsBookstoreDbSecret", new StringParameterProps
+        // This secret, in Secrets Manager, holds the auto-generated database credentials. Note
+        // that the secret will have a random string suffix; to enable the apps to recover the
+        // data, we will later create a Systems Manager parameter, with fixed name, that points
+        // at the secret in Secrets Manager.
+        _ = new StringParameter(this, "BobsBookstoreDbSecret", new StringParameterProps
         {
             ParameterName = $"/{bookstoreDbInstance}/dbsecretsname",
             StringValue = db.Secret.SecretName
         });
 
-        // An S3 bucket stores the book cover images
-        var bookstoreBucket = new Bucket(this, "BobsBookstoreBucket");
+        // A non-publicly accessible Amazon S3 bucket is used to store the cover
+        // images for books. As this is a sample application, configure the bucket
+        // to be deleted (EVEN IF IT CONTAINS DATA - BEWARE) when the stack is deleted
+        // to avoid storage charges
+        var bookstoreBucket = new Bucket(this, "BobsBookstoreBucket", new BucketProps
+        {
+            // !DO NOT USE THESE SETTINGS FOR PRODUCTION DEPLOYMENTS - YOU WILL LOSE DATA
+            // WHEN THE STACK IS DELETED!
+            AutoDeleteObjects = true,
+            RemovalPolicy = RemovalPolicy.DESTROY
+        });
 
-        // Grant access to the bucket to CloudFront
+        // Access to the bucket is only granted to traffic coming a CloudFront distribution
         var cloudfrontOAI = new OriginAccessIdentity(this, "cloudfront-OAI");
 
         var policyProps = new PolicyStatementProps
         {
-            Actions = new[] { "s3:GetObject" },
-            Resources = new[] { bookstoreBucket.ArnForObjects("*") },
-            Principals = new[]
+            Actions = new [] { "s3:GetObject" },
+            Resources = new [] { bookstoreBucket.ArnForObjects("*") },
+            Principals = new []
             {
                 new CanonicalUserPrincipal
                 (
@@ -104,10 +121,12 @@ public class CoreResourceStack : Stack
 
         bookstoreBucket.AddToResourcePolicy(new PolicyStatement(policyProps));
 
-        // Front the bucket with a CloudFront distribution
+        // Place a CloudFront distribution in front of the storage bucket. Access to objects
+        // in the bucket will be made using the distribution url suffixed with the object's
+        // key path only.
         var distProps = new CloudFrontWebDistributionProps
         {
-            OriginConfigs = new[]
+            OriginConfigs = new []
             {
                 new SourceConfiguration
                 {
@@ -116,7 +135,7 @@ public class CoreResourceStack : Stack
                         S3BucketSource = bookstoreBucket,
                         OriginAccessIdentity = cloudfrontOAI
                     },
-                    Behaviors = new[]
+                    Behaviors = new []
                     {
                         new Behavior
                         {
@@ -128,13 +147,13 @@ public class CoreResourceStack : Stack
                 }
             },
             // Require HTTPS between viewer and CloudFront; CloudFront to
-            // origin will use HTTP but could also be set to require HTTPS
+            // origin (the bucket) will use HTTP but could also be set to require HTTPS
             ViewerProtocolPolicy = ViewerProtocolPolicy.REDIRECT_TO_HTTPS
         };
 
         var distribution = new CloudFrontWebDistribution(this, "SiteDistribution", distProps);
 
-        // The customer user pool is where user registrations on the site will be held
+        // The customer user pool holds registrations on the customer-facing website
         var userPoolCustomer = new UserPool(this, "BobsBookstoreCustomerUserPool", new UserPoolProps
         {
             UserPoolName = customerUserPoolName,
@@ -158,13 +177,11 @@ public class CoreResourceStack : Stack
             }
         });
 
-        // The pool client will allow our front-end to permit user registration. Note that we cannot
-        // recover the client secret here, so some post-processing or initial start-up code in the
-        // application is needed to recover the secret and make it into a Parameter Store entry that
-        // we can recover at runtime.
+        // The pool client will allow our front-end to permit user registration.
         var userPoolCustomerClient
             = userPoolCustomer.AddClient("BobsBookstorePoolCustomerClient", new UserPoolClientProps
             {
+                UserPool = userPoolCustomer,
                 GenerateSecret = false,
                 ReadAttributes = new ClientAttributes()
                     .WithCustomAttributes("AddressLine1", "AddressLine2", "City", "State", "Country", "ZipCode")
@@ -176,7 +193,7 @@ public class CoreResourceStack : Stack
                     })
             });
 
-        // User pool for Bookstore staff
+        // The admin site, used by bookstore staff, has its own user pool
         var userPoolAdmin = new UserPool(this, "BobsBookstoreAdminUserPool", new UserPoolProps
         {
             UserPoolName = adminUserPoolName,
@@ -193,12 +210,16 @@ public class CoreResourceStack : Stack
 
         var userPoolAdminClient = userPoolAdmin.AddClient("BobsBookstorePoolAdminClient", new UserPoolClientProps
         {
+            UserPool = userPoolAdmin,
             GenerateSecret = false
         });
 
-        // The app also needs to retrieve the database password, etc, posted automatically
-        // to Secrets Manager, and, to enable deployment using CodeDeploy, add the relevant
-        // service role
+        // Create an application role for the admin website, seeded with the Systems Manager
+        // permissions allowing future management from Systems Manager and remote access
+        // from the console. Also add the CodeDeploy service role allowing deployments through
+        // CodeDeploy if we wish. The trust relationship to EC2 enables the running application
+        // to obtain temporary, auto-rotating credentials for calls to service APIs made by the
+        // AWS SDK for .NET, without needing to place credentials onto the compute host.
         var adminAppRole = new Role(this, "AdminBookstoreApplicationRole", new RoleProps
         {
             AssumedBy = new ServicePrincipal("ec2.amazonaws.com"),
@@ -257,13 +278,14 @@ public class CoreResourceStack : Stack
             }
         }));
 
-        // Provide permission to allow access to Rekognition for processing uploaded
-        // book images
+        // Provide permission to allow access to Amazon Rekognition for processing uploaded
+        // book images. Credentials for the calls will be provided courtesy of the application
+        // role defined above, and the trust relationship with EC2.
         adminAppRole.AddToPolicy(new PolicyStatement(new PolicyStatementProps
         {
             Effect = Effect.ALLOW,
-            Actions = new[] { "rekognition:DetectModerationLabels" },
-            Resources = new[] { "*" }
+            Actions = new [] { "rekognition:DetectModerationLabels" },
+            Resources = new [] { "*" }
         }));
 
         // Add permissions for the app to retrieve the database password in Secrets Manager
@@ -272,47 +294,45 @@ public class CoreResourceStack : Stack
         // Add permissions to the app to access the S3 bucket
         bookstoreBucket.GrantReadWrite(adminAppRole);
 
-        //Create the log group for Cloudwatch logs
-        CfnLogGroup cfnAdminLogGroup = new CfnLogGroup(this, "BobsBookstoreAdminLogGroup", new CfnLogGroupProps
+        // Create an Amazon CloudWatch log group for the admin website
+        _ = new CfnLogGroup(this, "BobsBookstoreAdminLogGroup", new CfnLogGroupProps
         {
             LogGroupName = adminLogGroupName
-
         });
 
-        //add permissions to write logs
+        // Add permissions to write logs
         adminAppRole.AddToPolicy(new PolicyStatement(new PolicyStatementProps
         {
             Effect = Effect.ALLOW,
-            Actions = new[] {
+            Actions = new [] {
                 "logs:DescribeLogGroups",
                 "logs:CreateLogGroup",
                 "logs:CreateLogStream"
             },
-            Resources = new[] {
+            Resources = new [] {
                 "arn:aws:logs:*:*:log-group:*"
-               
             }
         }));
 
         adminAppRole.AddToPolicy(new PolicyStatement(new PolicyStatementProps
         {
             Effect = Effect.ALLOW,
-            Actions = new[] {
+            Actions = new [] {
                 "logs:PutLogEvents",
             },
-            Resources = new[] {
+            Resources = new [] {
                 "arn:aws:logs:*:*:log-group:*:log-stream:*",
-
             }
         }));
-        //add permissions to send email
+
+        // Add permissions to send email via Amazon SES's API
         adminAppRole.AddToPolicy(new PolicyStatement(new PolicyStatementProps
         {
             Effect = Effect.ALLOW,
-            Actions = new[] {
+            Actions = new [] {
                 "ses:SendEmail"
             },
-            Resources = new[] {
+            Resources = new [] {
                 "*"
             },
             Conditions = new Dictionary<string, object>
@@ -320,15 +340,16 @@ public class CoreResourceStack : Stack
                 {"StringEquals",
                 new Dictionary<string, object> {{ "ses:ApiVersion", "2" } }
             }
-
         }
         }));
-        
 
+        // As with the admin website, create an application role scoping permissions for service
+        // API calls and resources needed by the customer-facing website, and providing temporary
+        // credentials via a trust relationship
         var customerAppRole = new Role(this, "CustomerBookstoreApplicationRole", new RoleProps
         {
             AssumedBy = new ServicePrincipal("ec2.amazonaws.com"),
-            ManagedPolicies = new[]
+            ManagedPolicies = new []
             {
                 ManagedPolicy.FromAwsManagedPolicyName("AmazonSSMManagedInstanceCore"),
                 ManagedPolicy.FromAwsManagedPolicyName("service-role/AWSCodeDeployRole")
@@ -340,8 +361,8 @@ public class CoreResourceStack : Stack
         customerAppRole.AddToPolicy(new PolicyStatement(new PolicyStatementProps
         {
             Effect = Effect.ALLOW,
-            Actions = new[] { "ssm:GetParametersByPath" },
-            Resources = new[]
+            Actions = new [] { "ssm:GetParametersByPath" },
+            Resources = new []
             {
                 Arn.Format(new ArnComponents
                 {
@@ -363,7 +384,7 @@ public class CoreResourceStack : Stack
         customerAppRole.AddToPolicy(new PolicyStatement(new PolicyStatementProps
         {
             Effect = Effect.ALLOW,
-            Actions = new[]
+            Actions = new []
             {
                 "cognito-idp:AdminListGroupsForUser",
                 "cognito-idp:AdminGetUser",
@@ -372,7 +393,7 @@ public class CoreResourceStack : Stack
                 "cognito-idp:ListUsers"
             },
 
-            Resources = new[]
+            Resources = new []
             {
                 Arn.Format(new ArnComponents
                 {
@@ -389,43 +410,40 @@ public class CoreResourceStack : Stack
         // Add permissions to the app to access the S3 bucket
         bookstoreBucket.GrantReadWrite(customerAppRole);
 
-        //Create the log group for Cloudwatch logs
-        CfnLogGroup cfnCustomerLogGroup = new CfnLogGroup(this, "BobsBookstoreCustomerLogGroup", new CfnLogGroupProps
+        // Create a separate log group for the customer site
+        _ = new CfnLogGroup(this, "BobsBookstoreCustomerLogGroup", new CfnLogGroupProps
         {
             LogGroupName = customerLogGroupName
-
         });
 
-        //add permissions to write logs
+        // Add permissions to write logs
         customerAppRole.AddToPolicy(new PolicyStatement(new PolicyStatementProps
         {
             Effect = Effect.ALLOW,
-            Actions = new[] {
+            Actions = new [] {
                 "logs:DescribeLogGroups",
                 "logs:CreateLogGroup",
                 "logs:PutLogEvents",
                 "logs:CreateLogStream"
             },
-            Resources = new[] {
+            Resources = new [] {
                 $"arn:aws:logs:*:*:log-group:*",
-              
             }
         }));
+
         customerAppRole.AddToPolicy(new PolicyStatement(new PolicyStatementProps
         {
             Effect = Effect.ALLOW,
-            Actions = new[] {
-
+            Actions = new [] {
                 "logs:PutLogEvents",
             },
-            Resources = new[] {
+            Resources = new [] {
                 $"arn:aws:logs:*:*:log-group:*:log-stream:*",
-             
             }
         }));
 
         // Create an instance profile wrapping the role, which can be used later when the app
-        // is deployed to Elastic Beanstalk or EC2 compute targets
+        // is deployed to Elastic Beanstalk or EC2 compute hosts
         _ = new CfnInstanceProfile(this, "AdminBobsBookstoreInstanceProfile", new CfnInstanceProfileProps
         {
             Roles = new[] { adminAppRole.RoleName}
@@ -436,11 +454,15 @@ public class CoreResourceStack : Stack
         });
 
         // Store data such as the CloudFront distribution domain, S3 bucket name, and user pools
-        // for the web apps in Parameter Store, using a */AWS/* format key path. This will
-        // allow us to read all the parameters, in one pass, in the front-end and back-end apps
-        // using the aws-dotnet-extensions-configuration package, which will add the values to the
-        // app's configuration at runtime just as if they were statically held in appsettings.json.
-        _ = new[]
+        // for the web apps in Systems Manager Parameter Store, using a */AWS/* format key path.
+        // This will allow us to read all the parameters, in one pass, in the customer-facing and
+        // admin app using the AWS-DotNet-Extensions-Configuration package
+        // (https://github.com/aws/aws-dotnet-extensions-configuration). This package reads all
+        // parameters beneath a parameter key root and injects them into the app's configuration at
+        // runtime, just as if they were statically held in appsettings.json. This is why the
+        // application roles defined above need permissions to call the ssm:GetParametersByPath
+        // action.
+        _ = new []
         {
             new(this, "CDN", new StringParameterProps
             {
@@ -478,7 +500,5 @@ public class CoreResourceStack : Stack
                 StringValue = userPoolCustomerClient.UserPoolClientId
             })
         };
-
-        
     }
 }
