@@ -5,13 +5,13 @@ using AdminSite.Startup;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.ConfigureConfiguration();
+
 builder.ConfigureServices();
 
 builder.ConfigureAuthentication();
 
 builder.ConfigureDependencyInjection();
-
-builder.ConfigureConfiguration();
 
 var app = builder.Build();
 
