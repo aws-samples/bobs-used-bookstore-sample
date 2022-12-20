@@ -36,7 +36,7 @@ public class CoreResourceStack : Stack
     private const string customerSiteLogGroupName = "BobsBookstoreCustomerLogs";
 
     private const string customerSiteUserPoolCallbackUrlRoot = "https://localhost:4001";
-    private const string adminSiteUserPoolCallbackUrlRoot = "https://localhost:5001";
+    private const string adminSiteUserPoolCallbackUrlRoot = "https://localhost:7000";
 
     private const double DatabasePort = 1433;
 
@@ -245,6 +245,7 @@ public class CoreResourceStack : Stack
             = customerUserPool.AddClient("BobsBookstorePoolCustomerClient", new UserPoolClientProps
             {
                 UserPool = customerUserPool,
+                PreventUserExistenceErrors = true,
                 GenerateSecret = false,
                 ReadAttributes = new ClientAttributes()
                     .WithCustomAttributes("AddressLine1", "AddressLine2", "City", "State", "Country", "ZipCode")
@@ -260,12 +261,15 @@ public class CoreResourceStack : Stack
                 {
                     UserPoolClientIdentityProvider.COGNITO
                 },
+                AuthFlows = new AuthFlow
+                {
+                    UserPassword = true
+                },
                 OAuth = new OAuthSettings
                 {
                     Flows = new OAuthFlows
                     {
-                        AuthorizationCodeGrant = true,
-                        ImplicitCodeGrant = true
+                        AuthorizationCodeGrant = true
                     },
                     Scopes = new []
                     {
@@ -341,16 +345,20 @@ public class CoreResourceStack : Stack
         {
             UserPool = adminSiteUserPool,
             GenerateSecret = false,
+            PreventUserExistenceErrors = true,
             SupportedIdentityProviders = new []
             {
                 UserPoolClientIdentityProvider.COGNITO
+            },
+            AuthFlows = new AuthFlow
+            {
+                UserPassword = true
             },
             OAuth = new OAuthSettings
             {
                 Flows = new OAuthFlows
                 {
-                    AuthorizationCodeGrant = true,
-                    ImplicitCodeGrant = true
+                    AuthorizationCodeGrant = true
                 },
                 Scopes = new []
                 {
