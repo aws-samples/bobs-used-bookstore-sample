@@ -24,6 +24,8 @@ namespace AdminSite.Startup
             _cognitoClientId = builder.Configuration["Authentication:Cognito:ClientId"];
             _cognitoAppSignOutUrl = builder.Configuration["Authentication:Cognito:AppSignOutUrl"];
 
+            // For the 'Development' profile we fake authentication. For 'Test' and 'Production'
+            // profiles we use Amazon Cognito's Hosted UI
             return builder.Environment.IsDevelopment() ? ConfigureLocalAuthentication(builder) : ConfigureCognitoAuthentication(builder);
         }
 
