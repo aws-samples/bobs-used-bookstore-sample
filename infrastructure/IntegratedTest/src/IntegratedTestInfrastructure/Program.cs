@@ -1,13 +1,13 @@
 ﻿using Amazon.CDK;
 
-namespace LocalTestInfrastructure;
+namespace IntegratedTestInfrastructure;
 
 internal sealed class Program
 {
     public static void Main(string[] args)
     {
         var app = new App();
-        _ = new LocalTestStack(app, "BobsUsedBooksLocalTest", new StackProps
+        _ = new LocalTestStack(app, "BobsUsedBooksIntegratedTest", new StackProps
         {
             // if no explicit region is set on synth/deployment, or set in environment variables,
             // default to US West (Oregon)

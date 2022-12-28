@@ -8,7 +8,7 @@ using Amazon.CDK.AWS.S3;
 using Amazon.CDK.AWS.SSM;
 using Amazon.CDK.AWS.Logs;
 
-namespace LocalTestInfrastructure;
+namespace IntegratedTestInfrastructure;
 
 // Defines the minimal AWS Cloud resources for the bookstore's admin and customer-facing
 // applications so that when using the "AdminSite Integrated" and "" launch profiles, the
@@ -32,10 +32,10 @@ namespace LocalTestInfrastructure;
 // the applications are deployed to compute hosts on AWS, need permissions to call the
 // ssm:GetParametersByPath action.
 //
-public class LocalTestStack : Stack
+public class IntegratedTestStack : Stack
 {
     // -Test- in the parameter key roots maps to the ASP.NET Core environment in use
-    // when using the "AdminSite Integrated" or "CustomerSite Integrated" launch profiles 
+    // when using the "AdminSite Integrated" or "CustomerSite Integrated" launch profiles
     private const string customerSiteParametersRoot = "BobsUsedBooks-Test-CustomerSite";
     private const string adminSiteParametersRoot = "BobsUsedBooks-Test-AdminSite";
 
@@ -55,7 +55,7 @@ public class LocalTestStack : Stack
         //
         // NOTE: As this is a sample application the bucket is configured to be deleted when
         // the stack is deleted to avoid charges on an unused resource - EVEN IF IT CONTAINS DATA
-        // - BEWARE! 
+        // - BEWARE!
         //
         var bookstoreBucket = new Bucket(this, "CoverImages-Bucket", new BucketProps
         {
