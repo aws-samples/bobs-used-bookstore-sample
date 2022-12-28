@@ -47,7 +47,7 @@ public class IntegratedTestStack : Stack
     private const string adminSiteLogGroupName = "BobsBooks-Test-AdminSiteLogs";
     private const string adminSiteUserPoolCallbackUrlRoot = "https://localhost:5000";
 
-    internal LocalTestStack(Construct scope, string id, IStackProps props = null) : base(scope, id, props)
+    internal IntegratedTestStack(Construct scope, string id, IStackProps props = null) : base(scope, id, props)
     {
         //=========================================================================================
         // A non-publicly accessible Amazon S3 bucket is used to store the cover

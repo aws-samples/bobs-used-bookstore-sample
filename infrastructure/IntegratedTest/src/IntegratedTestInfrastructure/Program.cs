@@ -7,7 +7,7 @@ internal sealed class Program
     public static void Main(string[] args)
     {
         var app = new App();
-        _ = new LocalTestStack(app, "BobsUsedBooksIntegratedTest", new StackProps
+        _ = new IntegratedTestStack(app, "BobsUsedBooksIntegratedTest", new StackProps
         {
             // if no explicit region is set on synth/deployment, or set in environment variables,
             // default to US West (Oregon)
