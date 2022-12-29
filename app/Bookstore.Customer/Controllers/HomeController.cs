@@ -116,7 +116,7 @@ namespace CustomerSite.Controllers
 
         public IActionResult Cart()
         {
-            return RedirectToAction("Index", "CartItems");
+            return RedirectToAction("Index", "ShoppingCart");
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

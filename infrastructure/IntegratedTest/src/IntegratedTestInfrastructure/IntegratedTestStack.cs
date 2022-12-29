@@ -40,11 +40,11 @@ public class IntegratedTestStack : Stack
     private const string adminSiteParametersRoot = "BobsUsedBooks-Test-AdminSite";
 
     private const string customerSiteUserPoolName = "BobsUsedBooks-Test-CustomerPool";
-    private const string customerSiteLogGroupName = "BobsBooks-Test-CustomerSiteLogs";
+    private const string customerSiteLogGroupName = "BobsUsedBooks-Test-CustomerSiteLogs";
     private const string customerSiteUserPoolCallbackUrlRoot = "https://localhost:4001";
 
-    private const string adminSiteUserPoolName = "BobsBooks-Test-AdminPool";
-    private const string adminSiteLogGroupName = "BobsBooks-Test-AdminSiteLogs";
+    private const string adminSiteUserPoolName = "BobsUsedBooks-Test-AdminPool";
+    private const string adminSiteLogGroupName = "BobsUsedBooks-Test-AdminSiteLogs";
     private const string adminSiteUserPoolCallbackUrlRoot = "https://localhost:5000";
 
     internal IntegratedTestStack(Construct scope, string id, IStackProps props = null) : base(scope, id, props)
