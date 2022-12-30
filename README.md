@@ -68,9 +68,9 @@ Once the CDK deployment has completed:
 
 In integrated mode, both applications use Amazon Cognito user pools for user authentication.
 
-For the admin site you will need to create a user, representing bookstore staff, in the user pool for the admin site, as follows.
+For the admin site you will need to create a user, representing bookstore staff, in the user pool for the admin site. When creating the fictional staff user, you can elect to have a temporary password auto-generated for you, and an email sent to a valid email address with the password. Alternatively, you can choose to not have an email sent, and set the temporary password yourself. Either way, on first login to the admin application, you will be asked to change the temporary password.
 
-**Note:** screenshots in the text below are taken from the new Cognito console experience. If you are running the older experience you may encounter some differences, however the instructional flow holds true.
+**Note:** The instructions below set the Create User options to (a) have the password emailed to a real email address, and (b) have the password be auto-generated. The screenshots are taken from the new Cognito console experience. If you are running the older experience you may encounter some differences, however the instructional flow holds true.
 
 1. Sign into the AWS Management Console and proceed to the Amazon Cognito dashboard.
 
@@ -86,9 +86,11 @@ For the admin site you will need to create a user, representing bookstore staff,
 
 1. Select **Create user**
 
-1. Complete the User name and Email address fields. You can also mark the email as verified for this sample. You can set a password yourself, or have a temporary password generated which you will be prompted to change on login.
+1. Select the **Send an email invitation** option. Be sure to enter a real email address later! Alternatively, you can leave this option at "do not email" and set a temporary password yourself later on the form.
 
-    **Note:** As the password will be auto-generated and mailed to the user, **be sure to use a real email address to which you have access**!
+1. Complete the User name and Email address fields. You can also mark the email as verified for this sample. Whether you auto-generate the password (and have it emailed), or set a temporary password, you will be asked to change it on first login to the admin application.
+
+    **Note:** For auto-generated passwords, be sure to set the options to have it emailed to you and **be sure to use a real email address to which you have access**!
 
     ![Set user details](./media/cognito-admin-user.png)
 
@@ -102,7 +104,15 @@ For the admin site you will need to create a user, representing bookstore staff,
 
 1. Sign in using the username and password you just created.
 
-You can now access features in the admin application as if you were a staff member of the bookstore, for example to process customer orders, maintain stock, and more.
+    ![Initial sign-in](./media/admin_app_sign-in.png)
+
+1. Because you signed in with a temporary password you are prompted to update it.
+
+    ![Change password](./media/admin_app_sign-in_password_update.png)
+
+You are then signed into the application and placed at the _Orders_ view. You can now access features in the admin application as if you were a staff member of the bookstore, for example to process customer orders, maintain stock, and more.
+
+![Order view in Admin app](./media/admin_app_post_sign-in.png)
 
 **Note:** In the customer application, end-users register themselves so as to be more similar to a real-world shopping experience. The process starts using the _Log in_ option on the customer application's toolbar.
 
@@ -112,7 +122,7 @@ Although minimal resources are created to support the _Integrated_ launch profil
 
 To delete resources, either:
 
-1. Navigate to the CloudFormation dashboard in the AWS Management Console, select the stack, and delete it.
+1. Navigate to the CloudFormation dashboard in the AWS Management Console, select the _BobsUsedBooksIntegratedTest_ stack, and delete it.
 
 1. Or, in a command-line shell, set the working folder to be the _infrastructure/IntegratedTest_ folder of the repository and run the command `cdk destroy`. If you supplied `--profile` and/or `--region` parameters to the CDK when instantiating the stack, be sure to provide the same ones on deletion, otherwise the CDK command will error out complaining that the stack cannot be found.
 
