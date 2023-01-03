@@ -1,4 +1,4 @@
-﻿namespace Bookstore.Customer.ViewModel.Addresses
+﻿namespace Bookstore.Customer.ViewModel.Address
 {
     public class AddressCreateUpdateViewModel
     {

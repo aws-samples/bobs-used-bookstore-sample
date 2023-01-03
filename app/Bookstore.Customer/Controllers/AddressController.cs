@@ -1,6 +1,6 @@
 ﻿using Bookstore.Customer;
 using Bookstore.Customer.Mappers;
-using Bookstore.Customer.ViewModel.Addresses;
+using Bookstore.Customer.ViewModel.Address;
 using Bookstore.Data;
 using Bookstore.Domain.Customers;
 using Bookstore.Services;
@@ -32,7 +32,7 @@ namespace CustomerSite.Controllers
         {
             var addresses = customerService.GetAddresses(User.GetSub());
 
-            return View(addresses);
+            return View(addresses.ToAddressIndexViewModel());
         }
 
         public IActionResult Create()

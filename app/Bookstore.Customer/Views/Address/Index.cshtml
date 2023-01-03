@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Bookstore.Domain.Customers.Address>
+﻿@model Bookstore.Customer.ViewModel.Address.AddressIndexViewModel
 
 @{ ViewData["Title"] = "Index"; }
 
@@ -51,22 +51,22 @@
                                 Address Line 2
                             </th>
                             <th scope="col">
-                                @Html.DisplayNameFor(model => model.City)
+                                City
                             </th>
                             <th scope="col">
-                                @Html.DisplayNameFor(model => model.State)
+                                State
                             </th>
                             <th scope="col">
-                                @Html.DisplayNameFor(model => model.Country)
+                                Country
                             </th>
                             <th scope="col">
-                                @Html.DisplayNameFor(model => model.ZipCode)
+                                Zipcode
                             </th>
                             <th scope="col">Action</th>
                         </tr>
                         </thead>
                         <tbody>
-                        @foreach (var item in Model)
+                        @foreach (var item in Model.Items)
                         {
                             @if (item.IsPrimary)
                             {
@@ -99,7 +99,7 @@
                             }
                         }
 
-                        @foreach (var item in Model)
+                        @foreach (var item in Model.Items)
                         {
                             @if (item.IsPrimary == false)
                             {
