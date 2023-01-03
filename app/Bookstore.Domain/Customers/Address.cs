@@ -2,8 +2,6 @@
 {
     public class Address : Entity
     {
-        public bool IsPrimary { get; set; }
-
         public string AddressLine1 { get; set; }
 
         public string? AddressLine2 { get; set; }

@@ -77,46 +77,14 @@ namespace CustomerSite.Controllers
             return RedirectToAction("Index", "Checkout");
         }
 
-        public IActionResult Delete(int id)
-        {
-            var address = _addressRepository.Get(id);
-
-            if (address == null) return NotFound();
-
-            return View(address);
-        }
-
         [HttpPost]
-        [ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             var address = _addressRepository.Get(id);
 
             _addressRepository.Remove(address);
 
             await _addressRepository.SaveAsync();
-
-            return RedirectToAction(nameof(Index));
-        }
-
-        public async Task<IActionResult> SwitchToPrime(int id)
-        {
-            //change origin to not prime
-            var customer = _customerRepository.Get(x => x.Sub == User.GetSub());
-            var addresses
-                = from c in _context.Address
-                  where c.Customer == customer && c.IsPrimary == true
-                  select c;
-            foreach (var item in addresses)
-            {
-                item.IsPrimary = false;
-            }
-
-            // change to prime
-            var address = await _context.Address.FindAsync(id);
-            address.IsPrimary = true;
-            await _context.SaveChangesAsync();
 
             return RedirectToAction(nameof(Index));
         }

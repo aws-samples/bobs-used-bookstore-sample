@@ -22,7 +22,5 @@ namespace Bookstore.Customer.ViewModel.Address
         public string Country { get; set; }
 
         public string ZipCode { get; set; }
-
-        public bool IsPrimary { get; set; }
     }
 }

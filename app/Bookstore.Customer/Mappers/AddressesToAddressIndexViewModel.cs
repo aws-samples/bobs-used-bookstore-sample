@@ -18,7 +18,6 @@ namespace Bookstore.Customer.Mappers
                     City = x.City,
                     Country = x.Country,
                     Id = x.Id,
-                    IsPrimary = x.IsPrimary,
                     State = x.State,
                     ZipCode = x.ZipCode
                 }).ToList()
