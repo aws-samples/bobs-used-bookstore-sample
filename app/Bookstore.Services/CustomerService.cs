@@ -19,6 +19,8 @@ namespace Bookstore.Services
 
         Task SaveAddressAsync(Address address, string sub);
 
+        Task DeleteAddressAsync(string sub, int id);
+
         Task SaveCustomerAsync(Customer customer);
     }
 
@@ -45,12 +47,12 @@ namespace Bookstore.Services
 
         public Address GetAddress(string sub, int id)
         {
-            return addressRepository.Get(x => x.Customer.Sub == sub && x.Id == id).SingleOrDefault();
+            return addressRepository.Get(x => x.Customer.Sub == sub && x.Id == id && x.IsActive == true).SingleOrDefault();
         }
 
         public IEnumerable<Address> GetAddresses(string sub)
         {
-            return addressRepository.Get(x => x.Customer.Sub == sub);
+            return addressRepository.Get(x => x.Customer.Sub == sub && x.IsActive == true);
         }
 
         public async Task SaveAddressAsync(Address address, string sub)
@@ -58,8 +60,20 @@ namespace Bookstore.Services
             var customer = customerRepository.Get(x => x.Sub == sub).Single();
 
             address.Customer = customer;
+            address.IsActive = true;
 
             addressRepository.AddOrUpdate(address);
+
+            await addressRepository.SaveAsync();
+        }
+
+        public async Task DeleteAddressAsync(string sub, int id)
+        {
+            var address = addressRepository.Get(x => x.Customer.Sub == sub && x.Id == id).SingleOrDefault();
+
+            if (address == null) return;
+
+            address.IsActive = false;
 
             await addressRepository.SaveAsync();
         }

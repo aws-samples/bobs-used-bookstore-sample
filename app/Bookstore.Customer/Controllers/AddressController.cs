@@ -80,11 +80,7 @@ namespace CustomerSite.Controllers
         [HttpPost]
         public async Task<IActionResult> Delete(int id)
         {
-            var address = _addressRepository.Get(id);
-
-            _addressRepository.Remove(address);
-
-            await _addressRepository.SaveAsync();
+            await customerService.DeleteAddressAsync(User.GetSub(), id);
 
             return RedirectToAction(nameof(Index));
         }
