@@ -78,7 +78,7 @@
                             @Html.DisplayFor(modelItem => address.ZipCode)
                         </td>
                         <td>
-                            <a asp-action="Update" asp-controller="Address" asp-route-id="@address.Id">Edit</a>
+                            <a asp-action="Update" asp-controller="Address" asp-route-id="@address.Id" asp-route-returnUrl="@Url.Action()">Edit</a>
                         </td>
                     </tr>
                 }
@@ -98,7 +98,7 @@
 
     <div>
         <p style="text-align: center">
-            <a asp-action="Create" asp-controller="Address">Add address</a>
+            <a asp-action="Create" asp-controller="Address" asp-route-returnUrl="@Url.Action()">Add address</a>
         </p>
     </div>
 

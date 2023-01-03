@@ -23,9 +23,14 @@ namespace CustomerSite.Controllers
             return View(addresses.ToAddressIndexViewModel());
         }
 
-        public IActionResult Create()
+        public IActionResult Create(string returnUrl)
         {
-            return View();
+            var model = new AddressCreateUpdateViewModel
+            {
+                ReturnUrl = returnUrl
+            };
+
+            return View("CreateUpdate", model);
         }
 
         [HttpPost]
@@ -36,16 +41,18 @@ namespace CustomerSite.Controllers
 
             await customerService.SaveAddressAsync(model.ToAddress(), User.GetSub());
 
-            return RedirectToAction("Index", "Checkout");
+            return Redirect(model.ReturnUrl);
         }
 
-        public IActionResult Update(int id)
+        public IActionResult Update(int id, string returnUrl)
         {
             var address = customerService.GetAddress(User.GetSub(), id);
 
-            if (address == null) return NotFound();
+            var model = address.ToAddressCreateUpdateViewModel();
 
-            return View(address.ToAddressCreateUpdateViewModel());
+            model.ReturnUrl = returnUrl;
+
+            return View("CreateUpdate", model);
         }
 
         [HttpPost]
@@ -62,7 +69,7 @@ namespace CustomerSite.Controllers
 
             await customerService.SaveAddressAsync(address, User.GetSub());
 
-            return RedirectToAction("Index", "Checkout");
+            return Redirect(model.ReturnUrl);
         }
 
         [HttpPost]

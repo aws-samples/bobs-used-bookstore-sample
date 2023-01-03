@@ -25,9 +25,7 @@
 <body>
     <h1>Your Addresses</h1>
     <div class="col-md-12 text-right">
-        <form asp-controller="Address" asp-action="Create" method="get">
-            <button class="btn" type="submit">Create New Address</button>
-        </form>
+        <a class="btn" asp-action="Create" asp-route-returnUrl="@Url.Action()">Create New Address</a>
     </div>
 
     <div class="container">
@@ -85,7 +83,7 @@
                                             @Html.DisplayFor(modelItem => item.ZipCode)
                                         </td>
                                         <td>
-                                            <a asp-action="Update" asp-route-id="@item.Id">Edit</a> |
+                                            <a asp-action="Update" asp-route-id="@item.Id" asp-route-returnUrl="@Url.Action()">Edit</a> |
                                             <a asp-action="Delete" data-toggle="modal" data-target="#confirmDeleteModal" data-addressId="@item.Id">Delete</a>
                                         </td>
                                     </tr>

@@ -22,13 +22,9 @@
 </head>
 
 <body>
-    <h1>Edit Address</h1>
+    <h1>Create / Update Address</h1>
     <br />
-    <div class="col-md-12 text-right">
-        <form asp-controller="Address" asp-action="Index" method="get">
-            <button class="btn btn-secondary" type="submit">Back to List</button>
-        </form>
-    </div>
+
     <form method="post">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
@@ -119,8 +115,8 @@
 
         <center>
             <div class="form-group">
-
                 <input type="submit" value="Save" class="btn" />
+                <a class="btn" href="@Model.ReturnUrl">Cancel</a>
             </div>
         </center>
     </form>
