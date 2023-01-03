@@ -1,31 +1,19 @@
 ﻿using Bookstore.Customer;
 using Bookstore.Customer.Mappers;
 using Bookstore.Customer.ViewModel.Address;
-using Bookstore.Data;
-using Bookstore.Domain.Customers;
 using Bookstore.Services;
 using Microsoft.AspNetCore.Mvc;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace CustomerSite.Controllers
 {
     public class AddressController : Controller
     {
-        private readonly IGenericRepository<Address> _addressRepository;
-        private readonly ApplicationDbContext _context;
-        private readonly IGenericRepository<Customer> _customerRepository;
         private readonly ICustomerService customerService;
 
-        public AddressController(IGenericRepository<Address> addressRepository,
-                                   IGenericRepository<Customer> customerRepository,
-                                   ICustomerService customerService,
-                                   ApplicationDbContext context)
+        public AddressController(ICustomerService customerService)
         {
-            _context = context;
-            _customerRepository = customerRepository;
             this.customerService = customerService;
-            _addressRepository = addressRepository;
         }
 
         public IActionResult Index()
