@@ -1,5 +1,5 @@
 {
-  "app": "dotnet run --project src/IntegratedTestInfrastructure/IntegratedTestInfrastructure.csproj",
+  "app": "dotnet run --project src/SharedInfrastructure/SharedInfrastructure.csproj",
   "watch": {
     "include": [
       "**"

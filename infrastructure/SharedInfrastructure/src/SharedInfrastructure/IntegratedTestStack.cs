@@ -8,7 +8,7 @@ using Amazon.CDK.AWS.S3;
 using Amazon.CDK.AWS.SSM;
 using Amazon.CDK.AWS.Logs;
 
-namespace IntegratedTestInfrastructure;
+namespace SharedInfrastructure.IntegratedTest;
 
 // Defines the minimal AWS Cloud resources for the bookstore's admin and customer-facing
 // applications so that when using the "AdminSite Integrated" and "" launch profiles, the
@@ -34,17 +34,19 @@ namespace IntegratedTestInfrastructure;
 //
 public class IntegratedTestStack : Stack
 {
+    private const string EnvStageName = "Test";
+
     // -Test- in the parameter key roots maps to the ASP.NET Core environment in use
     // when using the "AdminSite Integrated" or "CustomerSite Integrated" launch profiles
-    private const string customerSiteParametersRoot = "BobsUsedBooks-Test-CustomerSite";
-    private const string adminSiteParametersRoot = "BobsUsedBooks-Test-AdminSite";
+    private string customerSiteParametersRoot = $"BobsUsedBooks-{EnvStageName}-CustomerSite";
+    private string adminSiteParametersRoot = $"BobsUsedBooks-{EnvStageName}-AdminSite";
 
-    private const string customerSiteUserPoolName = "BobsUsedBooks-Test-CustomerPool";
-    private const string customerSiteLogGroupName = "BobsUsedBooks-Test-CustomerSiteLogs";
+    private string customerSiteUserPoolName = $"BobsUsedBooks-{EnvStageName}-CustomerPool";
+    private string customerSiteLogGroupName = $"BobsUsedBooks-{EnvStageName}-CustomerSiteLogs";
     private const string customerSiteUserPoolCallbackUrlRoot = "https://localhost:4001";
 
-    private const string adminSiteUserPoolName = "BobsUsedBooks-Test-AdminPool";
-    private const string adminSiteLogGroupName = "BobsUsedBooks-Test-AdminSiteLogs";
+    private string adminSiteUserPoolName = $"BobsUsedBooks-{EnvStageName}-AdminPool";
+    private string adminSiteLogGroupName = $"BobsUsedBooks-{EnvStageName}-AdminSiteLogs";
     private const string adminSiteUserPoolCallbackUrlRoot = "https://localhost:5000";
 
     internal IntegratedTestStack(Construct scope, string id, IStackProps props = null) : base(scope, id, props)

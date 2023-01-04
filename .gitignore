@@ -2,6 +2,9 @@
 .cdk.staging
 cdk.out
 
+# user-specific CDK files
+cdk.context.json
+
 # Created by AWS deployment tools
 aws-beanstalk-tools-defaults.json
 aws-ecs-tools-defaults.json
