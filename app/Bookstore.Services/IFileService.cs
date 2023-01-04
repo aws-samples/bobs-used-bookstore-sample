@@ -7,6 +7,6 @@ namespace Bookstore.Services
     {
         public Task<string> SaveAsync(IFormFile file);
         
-        public void Delete(string filePath);
+        public Task DeleteAsync(string filePath);
     }
 }
