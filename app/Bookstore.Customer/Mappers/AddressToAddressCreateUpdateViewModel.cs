@@ -1,4 +1,4 @@
-﻿using Bookstore.Customer.ViewModel.Addresses;
+﻿using Bookstore.Customer.ViewModel.Address;
 using Bookstore.Domain.Customers;
 
 namespace Bookstore.Customer.Mappers

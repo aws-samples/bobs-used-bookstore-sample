@@ -12,14 +12,13 @@ namespace Bookstore.Customer.Mappers
         {
             var result = new CheckoutIndexViewModel();
 
-            result.Addresses =  addresses.Select(x => new CheckoutAddressViewModel
+            result.Addresses = addresses.Select(x => new CheckoutAddressViewModel
             {
                 Id = x.Id,
                 AddressLine1 = x.AddressLine1,
                 AddressLine2 = x.AddressLine2,
                 City = x.City,
                 Country = x.Country,
-                IsPrimary = x.IsPrimary,
                 State = x.State,
                 ZipCode = x.ZipCode
             }).ToList();

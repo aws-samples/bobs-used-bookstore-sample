@@ -2,8 +2,6 @@
 {
     public class Address : Entity
     {
-        public bool IsPrimary { get; set; }
-
         public string AddressLine1 { get; set; }
 
         public string? AddressLine2 { get; set; }
@@ -18,5 +16,7 @@
 
         public int CustomerId { get; set; }
         public Customer Customer { get; set; }
+
+        public bool IsActive { get; set; }
     }
 }

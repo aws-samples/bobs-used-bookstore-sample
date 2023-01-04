@@ -5,7 +5,7 @@ namespace Bookstore.Customer.ViewModel.Orders
 {
     public class OrderIndexViewModel
     {
-        public List<OrderIndexItemViewModel> OrderItems { get; set; }
+        public List<OrderIndexItemViewModel> OrderItems { get; set; } = new List<OrderIndexItemViewModel>();
     }
 
     public class OrderIndexItemViewModel
