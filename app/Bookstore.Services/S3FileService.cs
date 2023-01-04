@@ -10,7 +10,7 @@ namespace Bookstore.Services
 {
     public class S3FileService : IFileService
     {
-        private readonly IConfiguration configuration;        
+        private readonly IConfiguration configuration;
         private readonly TransferUtility transferUtility;
 
         public S3FileService(IConfiguration configuration)
@@ -22,7 +22,8 @@ namespace Bookstore.Services
         public async Task DeleteAsync(string filePath)
         {
             var bucketName = configuration["AWS:BucketName"];
-            var request = new DeleteObjectRequest { 
+            var request = new DeleteObjectRequest
+            {
                 BucketName = bucketName,
                 Key = Path.GetFileName(filePath)
             };
@@ -32,29 +33,22 @@ namespace Bookstore.Services
 
         public async Task<string> SaveAsync(IFormFile file)
         {
-            try
+            if (file == null) return null;
+
+            var bucketName = configuration["AWS:BucketName"];
+            var fileName = $"{Path.GetFileNameWithoutExtension(Path.GetRandomFileName())}{Path.GetExtension(file.FileName)}";
+            var cloudFrontDomain = configuration["AWS:CloudFrontDomain"];
+
+            var request = new TransferUtilityUploadRequest
             {
-                if (file == null) return null;
+                BucketName = bucketName,
+                InputStream = file.OpenReadStream(),
+                Key = fileName
+            };
 
-                var bucketName = configuration["AWS:BucketName"];
-                var fileName = $"{Path.GetFileNameWithoutExtension(Path.GetRandomFileName())}{Path.GetExtension(file.FileName)}";
-                var cloudFrontDomain = configuration["AWS:CloudFrontDomain"];
+            await transferUtility.UploadAsync(request);
 
-                var request = new TransferUtilityUploadRequest
-                {
-                    BucketName = bucketName,
-                    InputStream = file.OpenReadStream(),
-                    Key = fileName
-                };
-
-                await transferUtility.UploadAsync(request);
-
-                return $"{cloudFrontDomain}/{fileName}";
-            }
-            catch (System.Exception ex)
-            {
-                return "";
-            }
+            return $"{cloudFrontDomain}/{fileName}";
         }
     }
 }
