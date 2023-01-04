@@ -128,25 +128,25 @@ namespace Services
 
             if (frontImage != null)
             {
-                fileUploadService.Delete(book.FrontImageUrl);
+                await fileUploadService.DeleteAsync(book.FrontImageUrl);
                 book.FrontImageUrl = frontImageUploadTask.Result;
             }
 
             if (backImage != null)
             {
-                fileUploadService.Delete(book.BackImageUrl);
+                await fileUploadService.DeleteAsync(book.BackImageUrl);
                 book.BackImageUrl = backImageUploadTask.Result;
             }
 
             if (leftImage != null)
             {
-                fileUploadService.Delete(book.LeftImageUrl);
+                await fileUploadService.DeleteAsync(book.LeftImageUrl);
                 book.LeftImageUrl = leftImageUploadTask.Result;
             }
 
             if (rightImage != null)
             {
-                fileUploadService.Delete(book.RightImageUrl);
+                await fileUploadService.DeleteAsync(book.RightImageUrl);
                 book.RightImageUrl = rightImageUploadTask.Result;
             }
         }

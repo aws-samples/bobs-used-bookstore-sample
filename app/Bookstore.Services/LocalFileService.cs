@@ -14,7 +14,7 @@ namespace Bookstore.Services
             this.environment = environment;
         }
 
-        public void Delete(string filePath)
+        public async Task DeleteAsync(string filePath)
         {
             if (File.Exists(filePath)) File.Delete(filePath);
         }
