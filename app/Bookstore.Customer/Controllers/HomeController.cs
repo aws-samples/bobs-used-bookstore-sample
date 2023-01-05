@@ -6,9 +6,9 @@ using Bookstore.Customer.ViewModel;
 
 namespace CustomerSite.Controllers
 {
+    [AllowAnonymous]
     public class HomeController : Controller
     {
-        [AllowAnonymous]
         public IActionResult Index()
         {
             return View();

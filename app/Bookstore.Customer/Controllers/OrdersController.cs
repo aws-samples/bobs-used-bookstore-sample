@@ -7,7 +7,6 @@ using Bookstore.Customer.Mappers;
 
 namespace CustomerSite.Controllers
 {
-    [Authorize]
     public class OrdersController : Controller
     {
         private readonly IOrderService orderService;

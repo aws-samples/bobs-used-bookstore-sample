@@ -9,7 +9,6 @@ using Bookstore.Customer.ViewModel.Resale;
 
 namespace CustomerSite.Controllers
 {
-    [Authorize]
     public class ResaleController : Controller
     {
         private readonly IReferenceDataService referenceDataService;

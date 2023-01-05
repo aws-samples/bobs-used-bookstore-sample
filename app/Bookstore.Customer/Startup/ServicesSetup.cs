@@ -13,6 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Text.Json;
 using System;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Authorization;
 
 namespace Bookstore.Customer.Startup
 {
@@ -20,7 +21,12 @@ namespace Bookstore.Customer.Startup
     {
         public static WebApplicationBuilder ConfigureServices(this WebApplicationBuilder builder)
         {
-            builder.Services.AddControllersWithViews(x => x.Filters.Add(new AutoValidateAntiforgeryTokenAttribute()));
+            builder.Services.AddControllersWithViews(x =>
+            {
+                x.Filters.Add(new AuthorizeFilter());
+                x.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
+            });
+
             builder.Services.AddAWSService<IAmazonS3>();
             builder.Services.AddAWSService<IAmazonPolly>();
             builder.Services.AddAWSService<IAmazonRekognition>();

@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 
 namespace Bookstore.Customer.Controllers
 {
-    [Authorize]
     public class CheckoutController : Controller
     {
         private readonly ICustomerService customerService;

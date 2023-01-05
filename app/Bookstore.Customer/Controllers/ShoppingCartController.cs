@@ -2,9 +2,11 @@
 using Microsoft.AspNetCore.Mvc;
 using Bookstore.Services;
 using Bookstore.Customer.Mappers;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Bookstore.Customer.Controllers
 {
+    [AllowAnonymous]
     public class ShoppingCartController : Controller
     {
         private readonly ICustomerService customerService;

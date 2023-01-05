@@ -4,10 +4,11 @@ using Bookstore.Services;
 using Bookstore.Customer;
 using Services;
 using Bookstore.Customer.Mappers;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BobCustomerSite.Controllers
 {
-
+    [AllowAnonymous]
     public class SearchController : Controller
     {
         private readonly IInventoryService inventoryService;
