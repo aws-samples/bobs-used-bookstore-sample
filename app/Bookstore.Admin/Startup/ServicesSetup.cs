@@ -14,6 +14,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Text.Json;
 using System;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Authorization;
 
 namespace AdminSite.Startup
 {
@@ -21,7 +22,12 @@ namespace AdminSite.Startup
     {
         public static WebApplicationBuilder ConfigureServices(this WebApplicationBuilder builder)
         {
-            builder.Services.AddControllersWithViews(x => x.Filters.Add(new AutoValidateAntiforgeryTokenAttribute()));
+            builder.Services.AddControllersWithViews(x =>
+            {
+                x.Filters.Add(new AuthorizeFilter());
+                x.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
+            });
+
             builder.Services.AddAWSService<IAmazonS3>();
             builder.Services.AddAWSService<IAmazonPolly>();
             builder.Services.AddAWSService<IAmazonRekognition>();
@@ -70,7 +76,7 @@ namespace AdminSite.Startup
                 {
                     // deployed mode using credentials/region inferred on host
                     secretsManagerClient = new AmazonSecretsManagerClient();
-                }    
+                }
                 var response = secretsManagerClient.GetSecretValueAsync(new GetSecretValueRequest
                 {
                     SecretId = configuration[DbSecretsParameterName]
