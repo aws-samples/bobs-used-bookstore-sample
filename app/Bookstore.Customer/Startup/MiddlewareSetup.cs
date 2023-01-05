@@ -35,7 +35,6 @@ namespace Bookstore.Customer.Startup
                 endpoints.MapControllerRoute(
                     "default",
                     "{controller=Home}/{action=Index}/{id?}");
-                endpoints.MapRazorPages();
             });
 
             // Create the database

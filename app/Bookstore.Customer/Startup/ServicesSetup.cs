@@ -20,7 +20,6 @@ namespace Bookstore.Customer.Startup
         public static WebApplicationBuilder ConfigureServices(this WebApplicationBuilder builder)
         {
             builder.Services.AddControllersWithViews();
-            builder.Services.AddRazorPages(); //TODO I think this can be removed
             builder.Services.AddAWSService<IAmazonS3>();
             builder.Services.AddAWSService<IAmazonPolly>();
             builder.Services.AddAWSService<IAmazonRekognition>();
