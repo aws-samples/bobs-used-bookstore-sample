@@ -6,22 +6,24 @@
 
 <partial name="_Notification" />
 
-<h1>Wishlist</h1>
+<div class="panel-body">
 
-<br />
+    <h1>Wishlist</h1>
 
-<form method="post">
-    <table class="table">
-        <thead>
+    <br />
+
+    <form method="post">
+        <table class="table">
+            <thead>
             <tr>
                 <th>Cover</th>
                 <th>Book name</th>
                 <th>Price</th>
                 <th></th>
             </tr>
-        </thead>
+            </thead>
 
-        <tbody>
+            <tbody>
             @foreach (var item in Model.WishlistItems)
             {
                 <tr>
@@ -43,29 +45,30 @@
                     </td>
                 </tr>
             }
-        </tbody>
-    </table>
+            </tbody>
+        </table>
 
-    <button type="submit" class="btn" asp-action="MoveAllItemsToShoppingCart">Move all items to shopping cart</button>
-</form>
+        <button type="submit" class="btn" asp-action="MoveAllItemsToShoppingCart">Move all items to shopping cart</button>
+    </form>
 
-<div id="confirmDeleteModal" class="modal" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Remove Wishlist Item?</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <p>Are you sure you want to remove this item from your wishlist?</p>
-            </div>
-            <div class="modal-footer">
-                <form method="post">
-                    <button id="confirmDeleteButton" type="submit" class="btn btn-primary" asp-action="Delete">Yes, Remove</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">No, Don't Remove</button>
-                </form>
+    <div id="confirmDeleteModal" class="modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Remove Wishlist Item?</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to remove this item from your wishlist?</p>
+                </div>
+                <div class="modal-footer">
+                    <form method="post">
+                        <button id="confirmDeleteButton" type="submit" class="btn btn-primary" asp-action="Delete">Yes, Remove</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">No, Don't Remove</button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>

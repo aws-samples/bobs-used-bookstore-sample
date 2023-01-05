@@ -4,16 +4,17 @@
     ViewData["Title"] = "Orders";
 }
 
-<h1>Your Orders</h1>
+<div class="panel-body">
+    <h1>Your Orders</h1>
 
-@if (!Model.OrderItems.Any())
-{
-    <h2>No Orders Found.</h2>
-}
-else
-{
-    <table class="table table-hover mt-5">
-        <thead>
+    @if (!Model.OrderItems.Any())
+    {
+        <h2>No Orders Found.</h2>
+    }
+    else
+    {
+        <table class="table table-hover mt-5">
+            <thead>
             <tr>
                 <th>
                     Total Cost
@@ -26,8 +27,8 @@ else
                 </th>
                 <th></th>
             </tr>
-        </thead>
-        <tbody>
+            </thead>
+            <tbody>
             @foreach (var item in Model.OrderItems)
             {
                 <tr>
@@ -49,6 +50,7 @@ else
                     </td>
                 </tr>
             }
-        </tbody>
-    </table>
-}
+            </tbody>
+        </table>
+    }
+</div>

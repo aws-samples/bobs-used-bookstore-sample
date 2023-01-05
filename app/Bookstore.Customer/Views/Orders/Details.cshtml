@@ -4,34 +4,35 @@
     ViewData["Title"] = "Details";
 }
 
-<h1>Order: #@Model.OrderId</h1>
+<div class="panel-body">
+    <h1>Order: #@Model.OrderId</h1>
 
-<div class="container mt-1">
-    <h5>Status: @Model.OrderStatus</h5>
+    <div class="container mt-1">
+        <h5>Status: @Model.OrderStatus</h5>
 
-    @if (Model.DeliveryDate == DateTime.MinValue)
-    {
-        <h5>Delivery Date: Unknown</h5>
-    }
-    else
-    {
-        <h5>Delivery Date: @Model.DeliveryDate</h5>
-    }
-    <h5>Total cost: @Model.Total.ToString("C")</h5>
-</div>
+        @if (Model.DeliveryDate == DateTime.MinValue)
+        {
+            <h5>Delivery Date: Unknown</h5>
+        }
+        else
+        {
+            <h5>Delivery Date: @Model.DeliveryDate</h5>
+        }
+        <h5>Total cost: @Model.Total.ToString("C")</h5>
+    </div>
 
-<div class="container mt-5">
-    <h2>Your Order:</h2>
+    <div class="container mt-5">
+        <h2>Your Order:</h2>
 
-    <table class="table table-hover mt-5">
-        <thead>
+        <table class="table table-hover mt-5">
+            <thead>
             <tr>
                 <th cope="col">Cover</th>
                 <th scope="col">Title</th>
                 <th scope="col">Price</th>
             </tr>
-        </thead>
-        <tbody>
+            </thead>
+            <tbody>
             @foreach (var book in Model.OrderItems)
             {
                 <tr>
@@ -46,8 +47,9 @@
                     <td>$@book.Price</td>
                 </tr>
             }
-        </tbody>
-    </table>
+            </tbody>
+        </table>
 
-    <a class="btn" asp-action="Index">Back</a>
+        <a class="btn" asp-action="Index">Back</a>
+    </div>
 </div>
