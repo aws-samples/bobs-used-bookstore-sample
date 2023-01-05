@@ -10,8 +10,11 @@ namespace AdminSite.Startup
     {
         public static async Task<WebApplication> ConfigureMiddlewareAsync(this WebApplication app)
         {
-            // Configure the HTTP request pipeline.
-            if (!app.Environment.IsDevelopment())
+            if (app.Environment.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
+            else
             {
                 app.UseExceptionHandler("/Error");
 
