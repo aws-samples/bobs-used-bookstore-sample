@@ -29,14 +29,7 @@ namespace Bookstore.Customer.Startup
             app.MapDefaultControllerRoute();
             app.UseSession();
             app.UseAuthorization();
-
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllerRoute(
-                    "default",
-                    "{controller=Home}/{action=Index}/{id?}");
-            });
-
+            
             // Create the database
             using (var scope = app.Services.CreateAsyncScope())
             {
