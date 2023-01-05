@@ -4,25 +4,7 @@
     ViewData["Title"] = "Index";
 }
 
-
-<html lang="en">
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
-
-    <title>Log in</title>
-
-    <link href="/css/sb-admin-2.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/css/googlefont.css">
-    <link rel="stylesheet" href="/css/font-awesome.min.css">
-    <link rel="stylesheet" href="/css/styles.css">
-</head>
-
-<body>
+<div class="panel-body">
     <h1>Your Addresses</h1>
     <div class="col-md-12 text-right">
         <a class="btn" asp-action="Create" asp-route-returnUrl="@Url.Action()">Create New Address</a>
@@ -133,5 +115,4 @@
             });
         </script>
     }
-</body>
-</html>
+</div>

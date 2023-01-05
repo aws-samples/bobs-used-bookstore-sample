@@ -4,23 +4,8 @@
     ViewData["Title"] = "Index";
 }
 
-<head>
-    <meta charset="UTF-8">
-    <title>>Book Store</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#03a6f3">
-    <link rel="stylesheet" href="/css/bootstrap.min.css">
+<div class="panel-body">
 
-    <link rel="stylesheet" href="/css/googlefont.css">
-    <link rel="stylesheet" href="/css/font-awesome.min.css">
-
-    <link rel="stylesheet" href="/css/styles.css">
-    <link href="css/Line.css" rel="stylesheet">
-    <link rel="stylesheet" href="/css/custom-style.css">
-    <script src="/js/cartitems.js" defer></script>
-</head>
-
-<body>
     <partial name="_Notification" />
 
     <p style="text-align: center">
@@ -109,20 +94,22 @@
             </div>
         </div>
     </div>
+</div>
 
-    @section Scripts {
-        <script type="text/javascript">
-            $(function () {
+@section Scripts {
+    <script src="/js/cartitems.js" defer></script>
 
-                $('#confirmDeleteModal').on('show.bs.modal', function (event) {
-                    var modal = $(this);
-                    var formAction = modal.find('#confirmDeleteButton').attr("formaction");
-                    var shoppingCartItemId = $(event.relatedTarget).data('shoppingcartitemid');
+    <script type="text/javascript">
+        $(function () {
 
-                    modal.find('#confirmDeleteButton').attr("formaction", formAction + "?shoppingCartItemId=" + shoppingCartItemId);
-                });
+            $('#confirmDeleteModal').on('show.bs.modal', function (event) {
+                var modal = $(this);
+                var formAction = modal.find('#confirmDeleteButton').attr("formaction");
+                var shoppingCartItemId = $(event.relatedTarget).data('shoppingcartitemid');
 
+                modal.find('#confirmDeleteButton').attr("formaction", formAction + "?shoppingCartItemId=" + shoppingCartItemId);
             });
-        </script>
-    }
-</body>
+
+        });
+    </script>
+}
