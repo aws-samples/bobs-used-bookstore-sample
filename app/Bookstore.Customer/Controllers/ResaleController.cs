@@ -39,7 +39,6 @@ namespace CustomerSite.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ResaleCreateViewModel resaleViewModel)
         {
             if (!ModelState.IsValid) return View();

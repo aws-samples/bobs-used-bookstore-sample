@@ -34,7 +34,6 @@ namespace CustomerSite.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(AddressCreateUpdateViewModel model)
         {
             if (!ModelState.IsValid) return View(model);
@@ -56,7 +55,6 @@ namespace CustomerSite.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Update(AddressCreateUpdateViewModel model)
         {
             if (!ModelState.IsValid) return View(model);
