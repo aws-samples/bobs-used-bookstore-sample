@@ -12,6 +12,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Text.Json;
 using System;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Authorization;
 
 namespace Bookstore.Customer.Startup
 {
@@ -19,12 +21,15 @@ namespace Bookstore.Customer.Startup
     {
         public static WebApplicationBuilder ConfigureServices(this WebApplicationBuilder builder)
         {
-            builder.Services.AddControllersWithViews();
-            builder.Services.AddRazorPages(); //TODO I think this can be removed
+            builder.Services.AddControllersWithViews(x =>
+            {
+                x.Filters.Add(new AuthorizeFilter());
+                x.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
+            });
+
             builder.Services.AddAWSService<IAmazonS3>();
             builder.Services.AddAWSService<IAmazonPolly>();
             builder.Services.AddAWSService<IAmazonRekognition>();
-
             builder.Services.AddDefaultAWSOptions(builder.Configuration.GetAWSOptions());
 
             var connString = GetDatabaseConnectionString(builder.Configuration);

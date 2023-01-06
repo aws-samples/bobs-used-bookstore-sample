@@ -94,7 +94,9 @@ namespace AdminSite.Startup
             var customer = new Customer
             {
                 Sub = context.Principal.GetSub(),
-                Username = context.Principal.Identity.Name
+                Username = context.Principal.Identity.Name,
+                FirstName = context.Principal.FindFirst("given_name").Value,
+                LastName = context.Principal.FindFirst("family_name").Value
             };
 
             await customerService.SaveCustomerAsync(customer);

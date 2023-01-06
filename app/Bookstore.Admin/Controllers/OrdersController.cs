@@ -8,7 +8,6 @@ using Bookstore.Services.Filters;
 
 namespace AdminSite.Controllers
 {
-    [Authorize]
     public class OrdersController : Controller
     {
         private readonly IOrderService orderService;

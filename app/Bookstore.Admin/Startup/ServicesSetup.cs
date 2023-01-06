@@ -7,14 +7,14 @@ using Amazon.Translate;
 using Bookstore.Data;
 using Bookstore.Domain.AdminUser;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Text.Json;
 using System;
-using System.Runtime.CompilerServices;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Authorization;
 
 namespace AdminSite.Startup
 {
@@ -22,7 +22,12 @@ namespace AdminSite.Startup
     {
         public static WebApplicationBuilder ConfigureServices(this WebApplicationBuilder builder)
         {
-            builder.Services.AddControllersWithViews();
+            builder.Services.AddControllersWithViews(x =>
+            {
+                x.Filters.Add(new AuthorizeFilter());
+                x.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
+            });
+
             builder.Services.AddAWSService<IAmazonS3>();
             builder.Services.AddAWSService<IAmazonPolly>();
             builder.Services.AddAWSService<IAmazonRekognition>();
@@ -71,7 +76,7 @@ namespace AdminSite.Startup
                 {
                     // deployed mode using credentials/region inferred on host
                     secretsManagerClient = new AmazonSecretsManagerClient();
-                }    
+                }
                 var response = secretsManagerClient.GetSecretValueAsync(new GetSecretValueRequest
                 {
                     SecretId = configuration[DbSecretsParameterName]

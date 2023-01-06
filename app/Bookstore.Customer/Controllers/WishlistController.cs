@@ -3,9 +3,11 @@ using Microsoft.AspNetCore.Mvc;
 using Bookstore.Customer;
 using Bookstore.Services;
 using Bookstore.Customer.Mappers;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CustomerSite.Controllers
 {
+    [AllowAnonymous]
     public class WishlistController : Controller
     {
         private readonly ICustomerService customerService;

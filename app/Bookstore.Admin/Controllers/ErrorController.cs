@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Diagnostics;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AdminSite.Controllers
 {
+    [AllowAnonymous]
     public class ErrorController : Controller
     {
         [Route("/Error/Index/{code:int}")]
