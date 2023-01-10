@@ -32,9 +32,9 @@ Launch profiles, contained in the respective application's launchSettings.json f
 
 ![Launch profiles for the customer web app](./media/vs_customer_launch_profiles.png)
 
-To run the applications using the _Integrated_ profile a set of AWS resources need to be provisioned. This is achieved using Infrastructure as Code (IaC) with an [AWS Cloud Development Kit (CDK)](https://aws.amazon.com/cdk) application contained in the _infrastructure_ folder of the repository. The project in the _src_ subfolder can be deployed using the CDK's command-line tooling to instantiate the required resources.
+To run the applications using the _Integrated_ profile a minimal set of AWS resources need to be provisioned. This is achieved using Infrastructure as Code (IaC) with an [AWS Cloud Development Kit (CDK)](https://aws.amazon.com/cdk) application contained in the _infrastructure/SharedInfrastructure_ folder of the repository. The project in the _infrastructure/SharedInfrastructure/src_ subfolder can be deployed using the CDK's command-line tooling to instantiate the required resources.
 
-**Note 1:** the CDK application does not create and configure all the resources that would be needed to support the sample web applications when fully deployed to the cloud. We have plans to add further CDK projects to achieve this in future. For now, the applications should be run locally on developer workstations, using Microsoft Windows, making use of minimal cloud resources.
+**Note 1:** the CDK application in the _infrastructure/SharedInfrastructure/src_ folder creates minimal resources needed for debugging using the _Integrated_ launch profiles *or* a full set of resources equating to a "production" deployment. See the [deployment README](./infrastructure/SharedInfrastructure/README.md) file for more details.
 
 **Note 2:** the sample applications make use of **localdb** for database connectivity. Therefore, Microsoft Windows is currently required to run these samples.
 
@@ -50,7 +50,7 @@ When running under the _local_ profiles, both applications will use a **localdb*
 
 ### Running and debugging with the _Integrated_ launch profiles
 
-Prior to using the _Integrated_ launch profiles for the web applications you need to perform a deployment of the single CDK infrastructure stack, to create and configure a minimum set of AWS resources that each application will use. To deploy the minimal cloud infrastructure needed to support running the applications using the _Integrated_ profiles, see the [README](./infrastructure/LocalTest/README.md) file.
+Prior to using the _Integrated_ launch profiles for the web applications you need to perform a deployment of the single CDK infrastructure stack, to create and configure a minimum set of AWS resources that each application will use. To deploy the minimal cloud infrastructure needed to support running the applications using the _Integrated_ profiles, see the [deployment README](./infrastructure/SharedInfrastructure/README.md) file.
 
 Once the CDK deployment has completed:
 
@@ -122,9 +122,9 @@ Although minimal resources are created to support the _Integrated_ launch profil
 
 To delete resources, either:
 
-1. Navigate to the CloudFormation dashboard in the AWS Management Console, select the _BobsUsedBooksIntegratedTest_ stack, and delete it.
+1. Navigate to the CloudFormation dashboard in the AWS Management Console, select the stack you want to delete (_BookstoreIntegratedTest_ or _BookstoreProduction_) and delete it.
 
-1. Or, in a command-line shell, set the working folder to be the _infrastructure/IntegratedTest_ folder of the repository and run the command `cdk destroy`. If you supplied `--profile` and/or `--region` parameters to the CDK when instantiating the stack, be sure to provide the same ones on deletion, otherwise the CDK command will error out complaining that the stack cannot be found.
+1. Or, in a command-line shell, set the working folder to be the _infrastructure/SharedInfrastructure_ folder of the repository and run the command `cdk destroy <stack-name>`, replacing `<stack-name>` with either _BookstoreIntegratedTest_ or _BookstoreProduction_ depending on which stack you created earlier. If you supplied `--profile` parameter to the CDK when instantiating the stack, be sure to provide the same ones on deletion, otherwise the CDK command will error out complaining that the stack cannot be found.
 
 Finally, remove the user pools:
 

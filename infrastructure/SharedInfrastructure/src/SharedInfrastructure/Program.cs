@@ -1,6 +1,8 @@
 ﻿using Amazon.CDK;
+using SharedInfrastructure.IntegratedTest;
+using SharedInfrastructure.Production;
 
-namespace IntegratedTestInfrastructure;
+namespace SharedInfrastructure;
 
 internal sealed class Program
 {
@@ -21,7 +23,10 @@ internal sealed class Program
     {
         var app = new App();
 
-        _ = new IntegratedTestStack(app, "BobsUsedBooksIntegratedTest", new StackProps { Env = MakeEnv() });
+        var env = MakeEnv();
+
+        var integratedTestStack = new IntegratedTestStack(app, "BookstoreIntegratedTest", new StackProps { Env = env });
+        var productionStack = new ProductionStack(app, "BookstoreProduction", new StackProps { Env = env });
 
         app.Synth();
     }
