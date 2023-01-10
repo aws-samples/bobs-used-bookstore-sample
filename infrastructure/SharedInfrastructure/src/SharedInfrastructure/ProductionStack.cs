@@ -64,7 +64,7 @@ public class ProductionStack : Stack
             // Cap at 2 AZs in case we are deployed to a region with only 2
             MaxAzs = 2,
             // We do not need a NAT gateway for this sample application, so remove to reduce cost
-            NatGateways = 0,
+            NatGateways = 1,
             SubnetConfiguration = new[]
             {
                 new SubnetConfiguration
@@ -76,7 +76,7 @@ public class ProductionStack : Stack
                 new SubnetConfiguration
                 {
                     CidrMask = 24,
-                    SubnetType = SubnetType.PRIVATE_ISOLATED,
+                    SubnetType = SubnetType.PRIVATE_WITH_EGRESS,
                     Name = "BookstorePrivateSubnet"
                 }
             }
@@ -118,6 +118,10 @@ public class ProductionStack : Stack
         dbSG.AddIngressRule(adminSiteSG, Port.Tcp(DatabasePort), "Admin app to SQL Server");
         dbSG.AddIngressRule(customerSiteSG, Port.Tcp(DatabasePort), "Customer app to SQL Server");
 
+        // This rule permits access from AppRunner deployments where AppRunner has been configured to use
+        // the default security group when accessing the vpc.
+        dbSG.AddIngressRule(Peer.SecurityGroupId(vpc.VpcDefaultSecurityGroup), Port.Tcp(DatabasePort), "AppRunner VpcConnector to SQL Server");
+
         var db = new DatabaseInstance(this, "BookstoreSqlDb", new DatabaseInstanceProps
         {
             Vpc = vpc,
@@ -125,7 +129,7 @@ public class ProductionStack : Stack
             {
                 // We do not need egress connectivity to the internet for this sample. This
                 // eliminates the need for a NAT gateway.
-                SubnetType = SubnetType.PRIVATE_ISOLATED
+                SubnetType = SubnetType.PRIVATE_WITH_EGRESS
             },
             // SQL Server 2017 Express Edition, in conjunction with a db.t2.micro instance type,
             // fits inside the free tier for new accounts
@@ -239,7 +243,7 @@ public class ProductionStack : Stack
         //=========================================================================================
         // Configure a Cognito user pool for the customer web site, to hold customer registrations.
         //
-        var customerUserPool = new UserPool(this, "CustomerSiteUserPool", new UserPoolProps
+        var customerUserPool = new UserPool(this, "CustomerUserPool", new UserPoolProps
         {
             UserPoolName = customerSiteUserPoolName,
             SelfSignUpEnabled = true,
@@ -264,7 +268,7 @@ public class ProductionStack : Stack
         // The pool client controls user registration and sign-in from the customer-facing website.
         // The pool will use Cognito's Hosted UI for sign-in, which requires a HTTPS callback url.
         var customerUserPoolClient
-            = customerUserPool.AddClient("CustomerSiteUserPoolClient", new UserPoolClientProps
+            = customerUserPool.AddClient("CustomerPoolClient", new UserPoolClientProps
             {
                 UserPool = customerUserPool,
                 PreventUserExistenceErrors = true,
@@ -312,7 +316,7 @@ public class ProductionStack : Stack
                 }
             });
 
-        var customerUserPoolDomain = customerUserPool.AddDomain("CustomerSiteUserPoolDomain", new UserPoolDomainOptions
+        var customerUserPoolDomain = customerUserPool.AddDomain("CustomerPoolDomain", new UserPoolDomainOptions
         {
             CognitoDomain = new CognitoDomainOptions
             {
@@ -350,7 +354,7 @@ public class ProductionStack : Stack
         //=========================================================================================
         // The admin site, used by bookstore staff, has its own user pool
         //
-        var adminSiteUserPool = new UserPool(this, "AdminSiteUserPool", new UserPoolProps
+        var adminSiteUserPool = new UserPool(this, "AdminUserPool", new UserPoolProps
         {
             UserPoolName = adminSiteUserPoolName,
             SelfSignUpEnabled = false,
@@ -365,7 +369,7 @@ public class ProductionStack : Stack
         });
 
         // As with the customer pool, the admin pool uses Hosted UI and so requires a HTTPS callback url
-        var adminSiteUserPoolClient = adminSiteUserPool.AddClient("AdminSiteUserPoolClient", new UserPoolClientProps
+        var adminSiteUserPoolClient = adminSiteUserPool.AddClient("AdminPoolClient", new UserPoolClientProps
         {
             UserPool = adminSiteUserPool,
             GenerateSecret = false,
@@ -402,7 +406,7 @@ public class ProductionStack : Stack
             }
         });
 
-        var adminSiteUserPoolDomain = adminSiteUserPool.AddDomain("AdminSiteUserPoolDomain", new UserPoolDomainOptions
+        var adminSiteUserPoolDomain = adminSiteUserPool.AddDomain("AdminPoolDomain", new UserPoolDomainOptions
         {
             CognitoDomain = new CognitoDomainOptions
             {
@@ -444,7 +448,7 @@ public class ProductionStack : Stack
         // CodeDeploy if we wish. The trust relationship to EC2 enables the running application
         // to obtain temporary, auto-rotating credentials for calls to service APIs made by the
         // AWS SDK for .NET, without needing to place credentials onto the compute host.
-        var adminAppRole = new Role(this, "AdminBookstoreApplicationRole", new RoleProps
+        var adminAppRole = new Role(this, "AdminApplicationRole", new RoleProps
         {
             AssumedBy = new CompositePrincipal(
                 new ServicePrincipal("ec2.amazonaws.com"),
@@ -598,7 +602,7 @@ public class ProductionStack : Stack
         // As with the admin website, create an application role scoping permissions for service
         // API calls and resources needed by the customer-facing website, and providing temporary
         // credentials via a trust relationship
-        var customerAppRole = new Role(this, "CustomerBookstoreApplicationRole", new RoleProps
+        var customerAppRole = new Role(this, "CustomerApplicationRole", new RoleProps
         {
             AssumedBy = new ServicePrincipal("ec2.amazonaws.com"),
             ManagedPolicies = new []
@@ -700,11 +704,11 @@ public class ProductionStack : Stack
 
         // Create instance profiles wrapping the roles, which can be used later when the app
         // is deployed to Elastic Beanstalk or EC2 compute hosts
-        _ = new CfnInstanceProfile(this, "AdminBobsBookstoreInstanceProfile", new CfnInstanceProfileProps
+        _ = new CfnInstanceProfile(this, "AdminRoleInstanceProfile", new CfnInstanceProfileProps
         {
             Roles = new [] { adminAppRole.RoleName}
         });
-        _ = new CfnInstanceProfile(this, "CustomerBobsBookstoreInstanceProfile", new CfnInstanceProfileProps
+        _ = new CfnInstanceProfile(this, "CustomerRoleInstanceProfile", new CfnInstanceProfileProps
         {
             Roles = new [] { customerAppRole.RoleName}
         });

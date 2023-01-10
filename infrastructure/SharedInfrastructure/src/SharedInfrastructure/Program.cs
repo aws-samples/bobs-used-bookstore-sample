@@ -25,8 +25,8 @@ internal sealed class Program
 
         var env = MakeEnv();
 
-        var integratedTestStack = new IntegratedTestStack(app, "IntegratedTestInfra", new StackProps { Env = env });
-        var productionStack = new ProductionStack(app, "ProductionInfra", new StackProps { Env = env });
+        var integratedTestStack = new IntegratedTestStack(app, "BookstoreIntegratedTest", new StackProps { Env = env });
+        var productionStack = new ProductionStack(app, "BookstoreProduction", new StackProps { Env = env });
 
         app.Synth();
     }

@@ -51,14 +51,18 @@ namespace Bookstore.Customer.Startup
             // the secret.
             const string DbSecretsParameterName = "dbsecretsname";
 
-            string connString = configuration.GetConnectionString("BookstoreDbDefaultConnection");
+            var connString = configuration.GetConnectionString("BookstoreDbDefaultConnection");
             if (!string.IsNullOrEmpty(connString))
             {
+                Console.WriteLine("Using localdb connection string");
                 return connString;
             }
 
             try
             {
+                var dbSecretId = configuration[DbSecretsParameterName];
+                Console.WriteLine($"Reading db credentials from secret {dbSecretId}");
+
                 // Read the db secrets posted into Secrets Manager by the CDK. The secret provides the host,
                 // port, userid, and password, which we format into the final connection string for SQL Server.
                 // For this code to work locally, appsettings.json must contain an AWS object with profile and
@@ -78,7 +82,7 @@ namespace Bookstore.Customer.Startup
                 }
                 var response = secretsManagerClient.GetSecretValueAsync(new GetSecretValueRequest
                 {
-                    SecretId = configuration[DbSecretsParameterName]
+                    SecretId = dbSecretId
                 }).Result;
 
                 var dbSecrets = JsonSerializer.Deserialize<DbSecrets>(response.SecretString, new JsonSerializerOptions
