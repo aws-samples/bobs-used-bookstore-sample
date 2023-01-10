@@ -43,7 +43,7 @@ public class IntegratedTestStack : Stack
 
     private string customerSiteUserPoolName = $"BobsUsedBooks-{EnvStageName}-CustomerPool";
     private string customerSiteLogGroupName = $"BobsUsedBooks-{EnvStageName}-CustomerSiteLogs";
-    private const string customerSiteUserPoolCallbackUrlRoot = "https://localhost:4001";
+    private const string customerSiteUserPoolCallbackUrlRoot = "https://localhost:4000";
 
     private string adminSiteUserPoolName = $"BobsUsedBooks-{EnvStageName}-AdminPool";
     private string adminSiteLogGroupName = $"BobsUsedBooks-{EnvStageName}-AdminSiteLogs";
