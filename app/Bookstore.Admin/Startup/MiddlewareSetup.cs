@@ -1,5 +1,6 @@
 ﻿using Bookstore.Data;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Threading.Tasks;
@@ -10,8 +11,24 @@ namespace AdminSite.Startup
     {
         public static async Task<WebApplication> ConfigureMiddlewareAsync(this WebApplication app)
         {
-            // Configure the HTTP request pipeline.
-            if (!app.Environment.IsDevelopment())
+            //app.UseForwardedHeaders(new ForwardedHeadersOptions
+            //{
+            //    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+            //});
+
+            //app.UseForwardedHeaders();
+
+            app.Use((context, next) =>
+            {
+                context.Request.Scheme = "https";
+                return next(context);
+            });
+
+            if (app.Environment.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
+            else
             {
                 app.UseExceptionHandler("/Error");
 

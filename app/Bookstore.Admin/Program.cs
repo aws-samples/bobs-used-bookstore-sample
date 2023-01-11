@@ -4,6 +4,8 @@ using Microsoft.Extensions.Hosting;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.ConfigureLogging();
+
 builder.ConfigureConfiguration();
 
 builder.ConfigureServices();
@@ -11,8 +13,6 @@ builder.ConfigureServices();
 builder.ConfigureAuthentication();
 
 builder.ConfigureDependencyInjection();
-
-builder.ConfigureLogging();
 
 var app = builder.Build();
 
