@@ -1,15 +1,12 @@
 ﻿using Bookstore.Customer.Mappers;
-using Bookstore.Customer.ViewModel;
 using Bookstore.Customer.ViewModel.Checkout;
 using Bookstore.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Bookstore.Customer.Controllers
 {
-    [Authorize]
     public class CheckoutController : Controller
     {
         private readonly ICustomerService customerService;

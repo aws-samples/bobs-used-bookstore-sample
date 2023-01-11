@@ -12,6 +12,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Text.Json;
 using System;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Authorization;
 
 namespace Bookstore.Customer.Startup
 {
@@ -19,12 +21,15 @@ namespace Bookstore.Customer.Startup
     {
         public static WebApplicationBuilder ConfigureServices(this WebApplicationBuilder builder)
         {
-            builder.Services.AddControllersWithViews();
-            builder.Services.AddRazorPages(); //TODO I think this can be removed
+            builder.Services.AddControllersWithViews(x =>
+            {
+                x.Filters.Add(new AuthorizeFilter());
+                x.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
+            });
+
             builder.Services.AddAWSService<IAmazonS3>();
             builder.Services.AddAWSService<IAmazonPolly>();
             builder.Services.AddAWSService<IAmazonRekognition>();
-
             builder.Services.AddDefaultAWSOptions(builder.Configuration.GetAWSOptions());
 
             var connString = GetDatabaseConnectionString(builder.Configuration);
@@ -46,14 +51,18 @@ namespace Bookstore.Customer.Startup
             // the secret.
             const string DbSecretsParameterName = "dbsecretsname";
 
-            string connString = configuration.GetConnectionString("BookstoreDbDefaultConnection");
+            var connString = configuration.GetConnectionString("BookstoreDbDefaultConnection");
             if (!string.IsNullOrEmpty(connString))
             {
+                Console.WriteLine("Using localdb connection string");
                 return connString;
             }
 
             try
             {
+                var dbSecretId = configuration[DbSecretsParameterName];
+                Console.WriteLine($"Reading db credentials from secret {dbSecretId}");
+
                 // Read the db secrets posted into Secrets Manager by the CDK. The secret provides the host,
                 // port, userid, and password, which we format into the final connection string for SQL Server.
                 // For this code to work locally, appsettings.json must contain an AWS object with profile and
@@ -73,7 +82,7 @@ namespace Bookstore.Customer.Startup
                 }
                 var response = secretsManagerClient.GetSecretValueAsync(new GetSecretValueRequest
                 {
-                    SecretId = configuration[DbSecretsParameterName]
+                    SecretId = dbSecretId
                 }).Result;
 
                 var dbSecrets = JsonSerializer.Deserialize<DbSecrets>(response.SecretString, new JsonSerializerOptions

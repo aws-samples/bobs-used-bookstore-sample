@@ -1,7 +1,6 @@
 ﻿using Bookstore.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -24,8 +23,10 @@ namespace Bookstore.Customer
         {
             var identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme);
 
-            identity.AddClaim(new Claim(ClaimTypes.Name, "bookstore user"));
+            identity.AddClaim(new Claim(ClaimTypes.Name, "bookstoreuser"));
             identity.AddClaim(new Claim("sub", UserId));
+            identity.AddClaim(new Claim("given_name", "Bookstore"));
+            identity.AddClaim(new Claim("family_name", "User"));
 
             await Context.SignInAsync(new ClaimsPrincipal(identity));
 
@@ -40,7 +41,9 @@ namespace Bookstore.Customer
             var customer = new Domain.Customers.Customer
             {
                 Sub = identity.FindFirst("Sub").Value,
-                Username = identity.Name
+                Username = identity.Name,
+                FirstName = identity.FindFirst("given_name").Value,
+                LastName = identity.FindFirst("family_name").Value
             };
 
             await customerService.SaveCustomerAsync(customer);

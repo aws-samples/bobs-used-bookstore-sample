@@ -4,15 +4,14 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace AdminSite.Controllers
 {
+    [AllowAnonymous]
     public class HomeController : Controller
     {
-        [AllowAnonymous]
         public IActionResult Index()
         {
             return View();
         }
 
-        [AllowAnonymous]
         public IActionResult Privacy()
         {
             return View();

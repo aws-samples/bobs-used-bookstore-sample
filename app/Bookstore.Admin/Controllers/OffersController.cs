@@ -10,7 +10,6 @@ using Bookstore.Admin.Mappers.Inventory;
 
 namespace Bookstore.Admin.Controllers
 {
-    [Authorize]
     public class OffersController : Controller
     {
         private readonly IOfferService offerService;

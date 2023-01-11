@@ -10,14 +10,20 @@ namespace Bookstore.Customer.Startup
     {
         public static async Task<WebApplication> ConfigureMiddlewareAsync(this WebApplication app)
         {
+            app.Use((context, next) =>
+            {
+                context.Request.Scheme = "https";
+                return next(context);
+            });
+            
             if (app.Environment.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
             else
             {
-                app.UseDeveloperExceptionPage();
-                //app.UseExceptionHandler("/Home/Error");
+                app.UseExceptionHandler("/Home/Error");
+
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
@@ -26,18 +32,10 @@ namespace Bookstore.Customer.Startup
             app.UseStaticFiles();
             app.UseRouting();
             app.UseAuthentication();
+            app.UseAuthorization();
             app.MapDefaultControllerRoute();
             app.UseSession();
-            app.UseAuthorization();
-
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllerRoute(
-                    "default",
-                    "{controller=Home}/{action=Index}/{id?}");
-                endpoints.MapRazorPages();
-            });
-
+            
             // Create the database
             using (var scope = app.Services.CreateAsyncScope())
             {

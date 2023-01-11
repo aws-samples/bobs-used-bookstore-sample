@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -17,6 +18,7 @@ namespace Bookstore.Customer.Controllers
             this.webHostEnvironment = webHostEnvironment;
         }
 
+        [AllowAnonymous]
         public IActionResult Login(string redirectUri = null)
         {
             return Challenge(new AuthenticationProperties { RedirectUri = redirectUri ?? Request.GetTypedHeaders().Referer.ToString() });

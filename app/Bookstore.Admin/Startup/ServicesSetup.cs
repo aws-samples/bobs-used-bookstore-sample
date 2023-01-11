@@ -7,14 +7,14 @@ using Amazon.Translate;
 using Bookstore.Data;
 using Bookstore.Domain.AdminUser;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Text.Json;
 using System;
-using System.Runtime.CompilerServices;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Authorization;
 
 namespace AdminSite.Startup
 {
@@ -22,7 +22,12 @@ namespace AdminSite.Startup
     {
         public static WebApplicationBuilder ConfigureServices(this WebApplicationBuilder builder)
         {
-            builder.Services.AddControllersWithViews();
+            builder.Services.AddControllersWithViews(x =>
+            {
+                x.Filters.Add(new AuthorizeFilter());
+                x.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
+            });
+
             builder.Services.AddAWSService<IAmazonS3>();
             builder.Services.AddAWSService<IAmazonPolly>();
             builder.Services.AddAWSService<IAmazonRekognition>();
@@ -47,14 +52,18 @@ namespace AdminSite.Startup
             // the secret.
             const string DbSecretsParameterName = "dbsecretsname";
 
-            string connString = configuration.GetConnectionString("BookstoreDbDefaultConnection");
+            var connString = configuration.GetConnectionString("BookstoreDbDefaultConnection");
             if (!string.IsNullOrEmpty(connString))
             {
+                Console.WriteLine("Using localdb connection string");
                 return connString;
             }
 
             try
             {
+                var dbSecretId = configuration[DbSecretsParameterName];
+                Console.WriteLine($"Reading db credentials from secret {dbSecretId}");
+                
                 // Read the db secrets posted into Secrets Manager by the CDK. The secret provides the host,
                 // port, userid, and password, which we format into the final connection string for SQL Server.
                 // For this code to work locally, appsettings.json must contain an AWS object with profile and
@@ -71,10 +80,10 @@ namespace AdminSite.Startup
                 {
                     // deployed mode using credentials/region inferred on host
                     secretsManagerClient = new AmazonSecretsManagerClient();
-                }    
+                }
                 var response = secretsManagerClient.GetSecretValueAsync(new GetSecretValueRequest
                 {
-                    SecretId = configuration[DbSecretsParameterName]
+                    SecretId = dbSecretId
                 }).Result;
 
                 var dbSecrets = JsonSerializer.Deserialize<DbSecrets>(response.SecretString, new JsonSerializerOptions

@@ -11,19 +11,12 @@ namespace AdminSite.Startup
     {
         public static async Task<WebApplication> ConfigureMiddlewareAsync(this WebApplication app)
         {
-            //app.UseForwardedHeaders(new ForwardedHeadersOptions
-            //{
-            //    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
-            //});
-
-            //app.UseForwardedHeaders();
-
             app.Use((context, next) =>
             {
                 context.Request.Scheme = "https";
                 return next(context);
             });
-
+            
             if (app.Environment.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

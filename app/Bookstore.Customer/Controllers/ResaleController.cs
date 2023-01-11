@@ -9,7 +9,6 @@ using Bookstore.Customer.ViewModel.Resale;
 
 namespace CustomerSite.Controllers
 {
-    [Authorize]
     public class ResaleController : Controller
     {
         private readonly IReferenceDataService referenceDataService;
@@ -39,7 +38,6 @@ namespace CustomerSite.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ResaleCreateViewModel resaleViewModel)
         {
             if (!ModelState.IsValid) return View();
