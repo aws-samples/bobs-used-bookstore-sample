@@ -604,7 +604,11 @@ public class ProductionStack : Stack
         // credentials via a trust relationship
         var customerAppRole = new Role(this, "CustomerApplicationRole", new RoleProps
         {
-            AssumedBy = new ServicePrincipal("ec2.amazonaws.com"),
+            AssumedBy = new CompositePrincipal(
+                new ServicePrincipal("ec2.amazonaws.com"),
+                new ServicePrincipal("tasks.apprunner.amazonaws.com"),
+                new ServicePrincipal("ecs-tasks.amazonaws.com")
+            ),
             ManagedPolicies = new []
             {
                 ManagedPolicy.FromAwsManagedPolicyName("AmazonSSMManagedInstanceCore"),
