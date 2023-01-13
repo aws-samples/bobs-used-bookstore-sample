@@ -21,6 +21,8 @@ namespace Bookstore.Services
 
         public async Task DeleteAsync(string filePath)
         {
+            if (string.IsNullOrWhiteSpace(filePath)) return;
+
             var bucketName = configuration["AWS:BucketName"];
             var request = new DeleteObjectRequest
             {
