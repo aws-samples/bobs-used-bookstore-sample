@@ -25,9 +25,13 @@ internal sealed class Program
 
         var env = MakeEnv();
 
+        var coreStack = new CoreStack(app, "BookstoreCore", new StackProps { Env = env });
+        var networkStack = new NetworkStack(app, "BookstoreNetwork", new StackProps { Env = env });
+        var databaseStack = new DatabaseStack(app, "BookstoreDatabase", new DatabaseStackProps { Env = env, Vpc = networkStack.Vpc });
+        var ec2Stack = new EC2ComputeStack(app, "BookstoreEc2Instances", new EC2ComputeStackProps { Env = env, Vpc = networkStack.Vpc, Database = databaseStack.Database, ImageBucket = coreStack.ImageBucket });
+
         var integratedTestStack = new IntegratedTestStack(app, "BookstoreIntegratedTest", new StackProps { Env = env });
         var productionStack = new ProductionStack(app, "BookstoreProduction", new StackProps { Env = env });
-        var ec2ProductionStack = new EC2ProductionStack(app, "EC2ProductionStack", new StackProps { Env = env });
 
         app.Synth();
     }

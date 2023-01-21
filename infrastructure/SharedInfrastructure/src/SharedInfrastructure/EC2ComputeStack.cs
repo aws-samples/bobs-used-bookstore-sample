@@ -5,7 +5,12 @@ using Amazon.CDK.AWS.EC2;
 using Amazon.CDK.AWS.IAM;
 using Amazon.CDK.AWS.SSM;
 using Amazon.CDK.AWS.S3.Assets;
-using Amazon.CDK.AWS.SES.Actions;
+using Amazon.CDK.AWS.RDS;
+using Amazon.CDK.AWS.S3;
+using Amazon.CDK.AWS.Logs;
+using Amazon.CDK.AWS.StepFunctions.Tasks;
+using Amazon.CDK.CustomResources;
+using System.Collections.Generic;
 
 namespace SharedInfrastructure.Production;
 
@@ -35,9 +40,9 @@ public class EC2ComputeStackProps : StackProps
 {
     public IVpc Vpc { get; set; }
 
-    public ISecurityGroup AdminAppSecurityGroup { get; set; }
+    public DatabaseInstance Database { get; set; }
 
-    public Role AdminAppRole { get; set; }
+    public Bucket ImageBucket { get; set; }
 }
 
 public class EC2ComputeStack : Stack
@@ -49,7 +54,10 @@ public class EC2ComputeStack : Stack
     private string adminSiteParametersRoot = $"BobsUsedBooks-{EnvStageName}-AdminSite";
     private string adminSiteUserPoolName = $"BobsUsedBooks-{EnvStageName}-AdminPool";
     private const string adminSiteUserPoolCallbackUrlRoot = "http://localhost:5000";
+    private string bookstoreDbCredentialsParameter = $"BobsUsedBooks-{EnvStageName}-DbSettings";
+    private string adminSiteLogGroupName = $"BobsUsedBooks-{EnvStageName}-AdminSiteLogs";
 
+    private Role AdminAppRole;
     private Asset ServerConfigScriptAsset;
     private Asset AdminAppAsset;
     private Asset SslConfigAsset;
@@ -59,7 +67,9 @@ public class EC2ComputeStack : Stack
 
     internal EC2ComputeStack(Construct scope, string id, EC2ComputeStackProps props) : base(scope, id, props)
     {
-        UploadAssetsToS3(props);
+        CreateAdminAppRole(props);
+
+        UploadAssetsToS3();
 
         CreateEc2Instance(props);
 
@@ -68,37 +78,147 @@ public class EC2ComputeStack : Stack
         CreateAdminAppCognitoUserPool(props);
     }
 
-    internal void UploadAssetsToS3(EC2ComputeStackProps props)
+    internal void CreateAdminAppRole(EC2ComputeStackProps props)
+    {
+        //=========================================================================================
+        // Create an application role for the admin website, seeded with the Systems Manager
+        // permissions allowing future management from Systems Manager and remote access
+        // from the console. Also add the CodeDeploy service role allowing deployments through
+        // CodeDeploy if we wish. The trust relationship to EC2 enables the running application
+        // to obtain temporary, auto-rotating credentials for calls to service APIs made by the
+        // AWS SDK for .NET, without needing to place credentials onto the compute host.
+        AdminAppRole = new Role(this, "AdminApplicationRole", new RoleProps
+        {
+            AssumedBy = new CompositePrincipal(new ServicePrincipal("ec2.amazonaws.com")),
+            ManagedPolicies = new[]
+            {
+                ManagedPolicy.FromAwsManagedPolicyName("AmazonSSMManagedInstanceCore"),
+                ManagedPolicy.FromAwsManagedPolicyName("service-role/AWSCodeDeployRole")
+            }
+        });
+
+        // Access to read parameters by path is not in the AmazonSSMManagedInstanceCore
+        // managed policy
+        AdminAppRole.AddToPolicy(new PolicyStatement(new PolicyStatementProps
+        {
+            Effect = Effect.ALLOW,
+            Actions = new[] { "ssm:GetParametersByPath" },
+            Resources = new[]
+            {
+                Arn.Format(new ArnComponents
+                {
+                    Service = "ssm",
+                    Resource = "parameter",
+                    ResourceName = $"{bookstoreDbCredentialsParameter}/*"
+                }, this),
+
+                Arn.Format(new ArnComponents
+                {
+                    Service = "ssm",
+                    Resource = "parameter",
+                    ResourceName = $"{adminSiteParametersRoot}/*"
+                }, this)
+            }
+        }));
+        
+        // Provide permission to allow access to Amazon Rekognition for processing uploaded
+        // book images. Credentials for the calls will be provided courtesy of the application
+        // role defined above, and the trust relationship with EC2.
+        AdminAppRole.AddToPolicy(new PolicyStatement(new PolicyStatementProps
+        {
+            Effect = Effect.ALLOW,
+            Actions = new[] { "rekognition:DetectModerationLabels" },
+            Resources = new[] { "*" }
+        }));
+
+        // Add permissions for the app to retrieve the database password in Secrets Manager
+        //db.Secret.GrantRead(adminAppRole);
+        AdminAppRole.AddToPolicy(new PolicyStatement(new PolicyStatementProps
+        {
+            Effect = Effect.ALLOW,
+            Actions = new[]
+            {
+                "secretsmanager:DescribeSecret",
+                "secretsmanager:GetSecretValue"
+            },
+            Resources = new[]
+            {
+                "*"
+                //$"arn:aws:secretsmanager:{Region}:{Account}:secret:{db.Secret.SecretName}-??????"
+            }
+        }));
+
+        // Add permissions to the app to access the S3 image bucket
+        props.ImageBucket.GrantReadWrite(AdminAppRole);
+
+        // Create an Amazon CloudWatch log group for the admin website
+        _ = new LogGroup(this, "BobsBookstoreAdminAppLogGroup", new LogGroupProps
+        {
+            LogGroupName = adminSiteLogGroupName,
+            RemovalPolicy = RemovalPolicy.DESTROY
+        });
+
+        // Add permissions to write logs
+        AdminAppRole.AddToPolicy(new PolicyStatement(new PolicyStatementProps
+        {
+            Effect = Effect.ALLOW,
+            Actions = new[]
+            {
+                "logs:DescribeLogGroups",
+                "logs:CreateLogGroup",
+                "logs:CreateLogStream"
+            },
+            Resources = new[]
+            {
+                "arn:aws:logs:*:*:log-group:*"
+            }
+        }));
+
+        AdminAppRole.AddToPolicy(new PolicyStatement(new PolicyStatementProps
+        {
+            Effect = Effect.ALLOW,
+            Actions = new[]
+            {
+                "logs:PutLogEvents",
+            },
+            Resources = new[]
+            {
+                "arn:aws:logs:*:*:log-group:*:log-stream:*",
+            }
+        }));
+    }
+
+    internal void UploadAssetsToS3()
     {
         ServerConfigScriptAsset = new Asset(this, "ServerConfigScriptAsset", new AssetProps
         {
             Path = "configure_ec2_admin_app.sh"
         });
-        ServerConfigScriptAsset.GrantRead(props.AdminAppRole);
+        ServerConfigScriptAsset.GrantRead(AdminAppRole);
 
         AdminAppAsset = new Asset(this, "AdminAppAsset", new AssetProps
         {
             Path = "../../app/Bookstore.Admin/bin/Release/net6.0/publish"
         });
-        AdminAppAsset.GrantRead(props.AdminAppRole);
+        AdminAppAsset.GrantRead(AdminAppRole);
 
         SslConfigAsset = new Asset(this, "ApacheSSLConfigAsset", new AssetProps
         {
             Path = "ssl.conf"
         });
-        SslConfigAsset.GrantRead(props.AdminAppRole);
+        SslConfigAsset.GrantRead(AdminAppRole);
 
         AdminAppVirtualHostConfigAsset = new Asset(this, "AdminAppVirtualHostConfigAsset", new AssetProps
         {
             Path = "bookstoreadmin.conf"
         });
-        AdminAppVirtualHostConfigAsset.GrantRead(props.AdminAppRole);
+        AdminAppVirtualHostConfigAsset.GrantRead(AdminAppRole);
 
         KestrelServiceAsset = new Asset(this, "KestrelServiceAsset", new AssetProps
         {
             Path = "bookstoreadmin.service"
         });
-        KestrelServiceAsset.GrantRead(props.AdminAppRole);
+        KestrelServiceAsset.GrantRead(AdminAppRole);
     }
 
     internal void CreateEc2Instance(EC2ComputeStackProps props)
@@ -109,14 +229,24 @@ public class EC2ComputeStack : Stack
             Owners = new[] { "amazon" }
         });
 
-        Instance = new Instance_(this, "WebServer", new InstanceProps
+        var adminAppSG = new SecurityGroup(this, "AdminAppSecurityGroup", new SecurityGroupProps
+        {
+            Vpc = props.Vpc,
+            Description = "Allow HTTP access to sample app admin website",
+            AllowAllOutbound = true
+        });
+        adminAppSG.AddIngressRule(Peer.AnyIpv4(), Port.Tcp(80), "HTTP access");
+        adminAppSG.AddIngressRule(Peer.AnyIpv4(), Port.Tcp(443), "HTTPS access");
+        adminAppSG.Connections.AllowTo(props.Database, Port.Tcp(1433), "Database");
+
+        Instance = new Instance_(this, "WebServer", new Amazon.CDK.AWS.EC2.InstanceProps
         {
             Vpc = props.Vpc,
             VpcSubnets = new SubnetSelection { SubnetType = SubnetType.PUBLIC },
-            SecurityGroup = props.AdminAppSecurityGroup,
+            SecurityGroup = adminAppSG,
             InstanceType = InstanceType.Of(InstanceClass.BURSTABLE3, InstanceSize.SMALL),
             MachineImage = ami,
-            Role = props.AdminAppRole
+            Role = AdminAppRole
         });
     }
 
@@ -174,6 +304,35 @@ public class EC2ComputeStack : Stack
             },
             AutoVerify = new AutoVerifiedAttrs { Email = true },
             RemovalPolicy = RemovalPolicy.DESTROY
+        });
+
+        // Create default admin user for testing
+        _ = new AwsCustomResource(this, "CreateAdminUser", new AwsCustomResourceProps
+        {
+            OnCreate = new AwsSdkCall
+            {
+                Service = "CognitoIdentityServiceProvider",
+                Action = "adminCreateUser",
+                Parameters = new Dictionary<string, string>
+                {
+                    { "UserPoolId", adminSiteUserPool.UserPoolId },
+                    { "Username", "admin" },
+                    { "TemporaryPassword", "P@ssword1" },
+                    { "MessageAction", "SUPPRESS" }
+                },                
+                PhysicalResourceId = PhysicalResourceId.Of("bobsbookstoreadminuser")
+            },
+            OnDelete = new AwsSdkCall
+            {
+                Service = "CognitoIdentityServiceProvider",
+                Action = "adminDeleteUser",
+                Parameters = new Dictionary<string, string>
+                {
+                    { "UserPoolId", adminSiteUserPool.UserPoolId },
+                    { "Username", "admin" }
+                }
+            },
+            Policy = AwsCustomResourcePolicy.FromSdkCalls(new SdkCallsPolicyOptions { Resources = AwsCustomResourcePolicy.ANY_RESOURCE })
         });
 
         // As with the customer pool, the admin pool uses Hosted UI and so requires a HTTPS callback url
@@ -251,7 +410,7 @@ public class EC2ComputeStack : Stack
             })
         };
 
-        props.AdminAppRole.AddToPolicy(new PolicyStatement(new PolicyStatementProps
+        AdminAppRole.AddToPolicy(new PolicyStatement(new PolicyStatementProps
         {
             Effect = Effect.ALLOW,
             Actions = new[]
