@@ -8,9 +8,6 @@ using Amazon.CDK.AWS.S3.Assets;
 using Amazon.CDK.AWS.RDS;
 using Amazon.CDK.AWS.S3;
 using Amazon.CDK.AWS.Logs;
-using Amazon.CDK.AWS.StepFunctions.Tasks;
-using Amazon.CDK.CustomResources;
-using System.Collections.Generic;
 
 namespace SharedInfrastructure.Production;
 
@@ -43,20 +40,12 @@ public class EC2ComputeStackProps : StackProps
     public DatabaseInstance Database { get; set; }
 
     public Bucket ImageBucket { get; set; }
+
+    public UserPool AdminAppUserPool { get; set; }
 }
 
 public class EC2ComputeStack : Stack
 {
-    private const string EnvStageName = "Production";
-
-    // -Test- in the parameter key roots maps to the ASP.NET Core environment in use
-    // when using the "AdminSite Integrated" or "CustomerSite Integrated" launch profiles
-    private string adminSiteParametersRoot = $"BobsUsedBooks-{EnvStageName}-AdminSite";
-    private string adminSiteUserPoolName = $"BobsUsedBooks-{EnvStageName}-AdminPool";
-    private const string adminSiteUserPoolCallbackUrlRoot = "http://localhost:5000";
-    private string bookstoreDbCredentialsParameter = $"BobsUsedBooks-{EnvStageName}-DbSettings";
-    private string adminSiteLogGroupName = $"BobsUsedBooks-{EnvStageName}-AdminSiteLogs";
-
     private Role AdminAppRole;
     private Asset ServerConfigScriptAsset;
     private Asset AdminAppAsset;
@@ -75,7 +64,7 @@ public class EC2ComputeStack : Stack
 
         ConfigureUserData();
 
-        CreateAdminAppCognitoUserPool(props);
+        CreateAdminAppCognitoUserPoolClient(props);
     }
 
     internal void CreateAdminAppRole(EC2ComputeStackProps props)
@@ -105,18 +94,18 @@ public class EC2ComputeStack : Stack
             Actions = new[] { "ssm:GetParametersByPath" },
             Resources = new[]
             {
-                Arn.Format(new ArnComponents
-                {
-                    Service = "ssm",
-                    Resource = "parameter",
-                    ResourceName = $"{bookstoreDbCredentialsParameter}/*"
-                }, this),
+                //Arn.Format(new ArnComponents
+                //{
+                //    Service = "ssm",
+                //    Resource = "parameter",
+                //    ResourceName = $"{bookstoreDbCredentialsParameter}/*"
+                //}, this),
 
                 Arn.Format(new ArnComponents
                 {
                     Service = "ssm",
                     Resource = "parameter",
-                    ResourceName = $"{adminSiteParametersRoot}/*"
+                    ResourceName = $"{Constants.AppName}/*"
                 }, this)
             }
         }));
@@ -152,9 +141,9 @@ public class EC2ComputeStack : Stack
         props.ImageBucket.GrantReadWrite(AdminAppRole);
 
         // Create an Amazon CloudWatch log group for the admin website
-        _ = new LogGroup(this, "BobsBookstoreAdminAppLogGroup", new LogGroupProps
+        _ = new LogGroup(this, $"{Constants.AppName}LogGroup", new LogGroupProps
         {
-            LogGroupName = adminSiteLogGroupName,
+            LogGroupName = Constants.AppName,
             RemovalPolicy = RemovalPolicy.DESTROY
         });
 
@@ -192,7 +181,7 @@ public class EC2ComputeStack : Stack
     {
         ServerConfigScriptAsset = new Asset(this, "ServerConfigScriptAsset", new AssetProps
         {
-            Path = "configure_ec2_admin_app.sh"
+            Path = "src/SharedInfrastructure/EC2Artifacts/configure_ec2_admin_app.sh"
         });
         ServerConfigScriptAsset.GrantRead(AdminAppRole);
 
@@ -204,19 +193,19 @@ public class EC2ComputeStack : Stack
 
         SslConfigAsset = new Asset(this, "ApacheSSLConfigAsset", new AssetProps
         {
-            Path = "ssl.conf"
+            Path = "src/SharedInfrastructure/EC2Artifacts/ssl.conf"
         });
         SslConfigAsset.GrantRead(AdminAppRole);
 
         AdminAppVirtualHostConfigAsset = new Asset(this, "AdminAppVirtualHostConfigAsset", new AssetProps
         {
-            Path = "bookstoreadmin.conf"
+            Path = "src/SharedInfrastructure/EC2Artifacts/bookstoreadmin.conf"
         });
         AdminAppVirtualHostConfigAsset.GrantRead(AdminAppRole);
 
         KestrelServiceAsset = new Asset(this, "KestrelServiceAsset", new AssetProps
         {
-            Path = "bookstoreadmin.service"
+            Path = "src/SharedInfrastructure/EC2Artifacts/bookstoreadmin.service"
         });
         KestrelServiceAsset.GrantRead(AdminAppRole);
     }
@@ -229,7 +218,7 @@ public class EC2ComputeStack : Stack
             Owners = new[] { "amazon" }
         });
 
-        var adminAppSG = new SecurityGroup(this, "AdminAppSecurityGroup", new SecurityGroupProps
+        var adminAppSG = new SecurityGroup(this, $"{Constants.AppName}AppSecurityGroup", new SecurityGroupProps
         {
             Vpc = props.Vpc,
             Description = "Allow HTTP access to sample app admin website",
@@ -289,56 +278,12 @@ public class EC2ComputeStack : Stack
         });
     }
 
-    internal void CreateAdminAppCognitoUserPool(EC2ComputeStackProps props)
+    internal void CreateAdminAppCognitoUserPoolClient(EC2ComputeStackProps props)
     {
-        var adminSiteUserPool = new UserPool(this, "AdminUserPool", new UserPoolProps
-        {
-            UserPoolName = adminSiteUserPoolName,
-            SelfSignUpEnabled = false,
-            StandardAttributes = new StandardAttributes
-            {
-                Email = new StandardAttribute
-                {
-                    Required = true
-                }
-            },
-            AutoVerify = new AutoVerifiedAttrs { Email = true },
-            RemovalPolicy = RemovalPolicy.DESTROY
-        });
-
-        // Create default admin user for testing
-        _ = new AwsCustomResource(this, "CreateAdminUser", new AwsCustomResourceProps
-        {
-            OnCreate = new AwsSdkCall
-            {
-                Service = "CognitoIdentityServiceProvider",
-                Action = "adminCreateUser",
-                Parameters = new Dictionary<string, string>
-                {
-                    { "UserPoolId", adminSiteUserPool.UserPoolId },
-                    { "Username", "admin" },
-                    { "TemporaryPassword", "P@ssword1" },
-                    { "MessageAction", "SUPPRESS" }
-                },                
-                PhysicalResourceId = PhysicalResourceId.Of("bobsbookstoreadminuser")
-            },
-            OnDelete = new AwsSdkCall
-            {
-                Service = "CognitoIdentityServiceProvider",
-                Action = "adminDeleteUser",
-                Parameters = new Dictionary<string, string>
-                {
-                    { "UserPoolId", adminSiteUserPool.UserPoolId },
-                    { "Username", "admin" }
-                }
-            },
-            Policy = AwsCustomResourcePolicy.FromSdkCalls(new SdkCallsPolicyOptions { Resources = AwsCustomResourcePolicy.ANY_RESOURCE })
-        });
-
         // As with the customer pool, the admin pool uses Hosted UI and so requires a HTTPS callback url
-        var adminSiteUserPoolClient = adminSiteUserPool.AddClient("AdminPoolClient", new UserPoolClientProps
+        var Ec2UserPoolClient = new UserPoolClient(this, "EC2Client", new UserPoolClientProps
         {
-            UserPool = adminSiteUserPool,
+            UserPool = props.AdminAppUserPool,
             GenerateSecret = false,
             PreventUserExistenceErrors = true,
             SupportedIdentityProviders = new[]
@@ -364,73 +309,22 @@ public class EC2ComputeStack : Stack
                 },
                 CallbackUrls = new[]
                 {
-                    $"{adminSiteUserPoolCallbackUrlRoot}/signin-oidc",
                     $"https://{Instance.InstancePublicDnsName}/signin-oidc"
                 },
                 LogoutUrls = new[]
                 {
-                    $"{adminSiteUserPoolCallbackUrlRoot}/",
                     $"https://{Instance.InstancePublicDnsName}/"
                 }
             }
         });
 
-        var adminSiteUserPoolDomain = adminSiteUserPool.AddDomain("AdminPoolDomain", new UserPoolDomainOptions
-        {
-            CognitoDomain = new CognitoDomainOptions
-            {
-                // The prefix must be unique across the AWS Region in which the pool is created
-                DomainPrefix = $"bobs-bookstore-admin-test-{Account}"
-            }
-        });
-
-        adminSiteUserPoolDomain.SignInUrl(adminSiteUserPoolClient, new SignInUrlOptions
-        {
-            RedirectUri = $"{adminSiteUserPoolCallbackUrlRoot}/signin-oidc"
-        });
-
         _ = new[]
         {
-            new StringParameter(this, "AdminSiteUserPoolClientId", new StringParameterProps
+            new StringParameter(this, "EC2ClientId", new StringParameterProps
             {
-                ParameterName = $"/{adminSiteParametersRoot}/Authentication/Cognito/ClientId",
-                StringValue = adminSiteUserPoolClient.UserPoolClientId
-            }),
-
-            new StringParameter(this, "AdminSiteUserPoolMetadataAddress", new StringParameterProps
-            {
-                ParameterName = $"/{adminSiteParametersRoot}/Authentication/Cognito/MetadataAddress",
-                StringValue = $"https://cognito-idp.{Region}.amazonaws.com/{adminSiteUserPool.UserPoolId}/.well-known/openid-configuration"
-            }),
-
-            new StringParameter(this, "AdminSiteUserPoolCognitoDomain", new StringParameterProps
-            {
-                ParameterName = $"/{adminSiteParametersRoot}/Authentication/Cognito/CognitoDomain",
-                StringValue = adminSiteUserPoolDomain.BaseUrl()
+                ParameterName = $"/{Constants.AppName}/Authentication/Cognito/EC2ClientId",
+                StringValue = Ec2UserPoolClient.UserPoolClientId
             })
         };
-
-        AdminAppRole.AddToPolicy(new PolicyStatement(new PolicyStatementProps
-        {
-            Effect = Effect.ALLOW,
-            Actions = new[]
-            {
-                "cognito-idp:AdminListGroupsForUser",
-                "cognito-idp:AdminGetUser",
-                "cognito-idp:DescribeUserPool",
-                "cognito-idp:DescribeUserPoolClient",
-                "cognito-idp:ListUsers"
-            },
-
-            Resources = new[]
-            {
-                Arn.Format(new ArnComponents
-                {
-                    Service = "cognito-idp",
-                    Resource = "userpool",
-                    ResourceName = adminSiteUserPool.UserPoolId
-                }, this)
-            }
-        }));
     }
 }

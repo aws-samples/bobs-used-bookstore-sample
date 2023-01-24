@@ -4,20 +4,26 @@ using Amazon.CDK.AWS.S3;
 using Amazon.CDK.AWS.SSM;
 using Amazon.CDK.AWS.CloudFront;
 using Amazon.CDK.AWS.IAM;
+using Amazon.CDK.AWS.Cognito;
+using Amazon.CDK.CustomResources;
+using System.Collections.Generic;
 
 namespace SharedInfrastructure.Production;
 
 public class CoreStack : Stack
 {
-    private const string EnvStageName = "Production";
-    private string adminSiteParametersRoot = $"BobsUsedBooks-{EnvStageName}-AdminSite";
+    private const string userPoolCallbackUrlRoot = "https://localhost:5000";
 
     public Bucket ImageBucket { get; private set; }
+
+    public UserPool AdminAppUserPool { get; private set; }
 
     internal CoreStack(Construct scope, string id, IStackProps props = null) : base(scope, id, props)
     {
         CreateImageS3Bucket();
         CreateCloudFrontDistribution();
+        CreateCognitoUserPools();
+        CreateUserPoolClient();
     }
 
     internal void CreateImageS3Bucket()
@@ -40,7 +46,7 @@ public class CoreStack : Stack
 
         _ = new StringParameter(this, "CoverImages-BucketName", new StringParameterProps
         {
-            ParameterName = $"/{adminSiteParametersRoot}/AWS/BucketName",
+            ParameterName = $"/{Constants.AppName}/AWS/BucketName",
             StringValue = ImageBucket.BucketName
         });
     }
@@ -100,8 +106,131 @@ public class CoreStack : Stack
 
         _ = new StringParameter(this, "CoverImages-Distribution", new StringParameterProps
         {
-            ParameterName = $"/{adminSiteParametersRoot}/AWS/CloudFrontDomain",
+            ParameterName = $"/{Constants.AppName}/AWS/CloudFrontDomain",
             StringValue = $"https://{distribution.DistributionDomainName}"
         });
+    }
+
+    internal void CreateCognitoUserPools()
+    {
+        AdminAppUserPool = new UserPool(this, "AdminUserPool", new UserPoolProps
+        {
+            UserPoolName = Constants.AppName,
+            SelfSignUpEnabled = false,
+            StandardAttributes = new StandardAttributes
+            {
+                Email = new StandardAttribute
+                {
+                    Required = true
+                }
+            },
+            AutoVerify = new AutoVerifiedAttrs { Email = true },
+            RemovalPolicy = RemovalPolicy.DESTROY
+        });
+
+        // Create default admin user for testing
+        _ = new AwsCustomResource(this, "CreateAdminUser", new AwsCustomResourceProps
+        {
+            OnCreate = new AwsSdkCall
+            {
+                Service = "CognitoIdentityServiceProvider",
+                Action = "adminCreateUser",
+                Parameters = new Dictionary<string, string>
+                {
+                    { "UserPoolId", AdminAppUserPool.UserPoolId },
+                    { "Username", "admin" },
+                    { "TemporaryPassword", "P@ssword1" },
+                    { "MessageAction", "SUPPRESS" }
+                },
+                PhysicalResourceId = PhysicalResourceId.Of($"{Constants.AppName}AdminUser")
+            },
+            OnDelete = new AwsSdkCall
+            {
+                Service = "CognitoIdentityServiceProvider",
+                Action = "adminDeleteUser",
+                Parameters = new Dictionary<string, string>
+                {
+                    { "UserPoolId", AdminAppUserPool.UserPoolId },
+                    { "Username", "admin" }
+                }
+            },
+            Policy = AwsCustomResourcePolicy.FromSdkCalls(new SdkCallsPolicyOptions { Resources = AwsCustomResourcePolicy.ANY_RESOURCE })
+        });
+    }
+
+    internal void CreateUserPoolClient()
+    {
+        // As with the customer pool, the admin pool uses Hosted UI and so requires a HTTPS callback url
+        var IntegratedTestClient = new UserPoolClient(this, "LocalClient", new UserPoolClientProps
+        {
+            UserPool = AdminAppUserPool,
+            GenerateSecret = false,
+            PreventUserExistenceErrors = true,
+            SupportedIdentityProviders = new[]
+            {
+                UserPoolClientIdentityProvider.COGNITO
+            },
+            AuthFlows = new AuthFlow
+            {
+                UserPassword = true
+            },
+            OAuth = new OAuthSettings
+            {
+                Flows = new OAuthFlows
+                {
+                    AuthorizationCodeGrant = true
+                },
+                Scopes = new[]
+                {
+                    OAuthScope.OPENID,
+                    OAuthScope.EMAIL,
+                    OAuthScope.COGNITO_ADMIN,
+                    OAuthScope.PROFILE
+                },
+                CallbackUrls = new[]
+                {
+                    $"{userPoolCallbackUrlRoot}/signin-oidc"
+                },
+                LogoutUrls = new[]
+                {
+                    $"{userPoolCallbackUrlRoot}/"
+                }
+            }
+        });
+
+        var adminSiteUserPoolDomain = AdminAppUserPool.AddDomain($"{Constants.AppName}UserPoolDomain", new UserPoolDomainOptions
+        {
+            CognitoDomain = new CognitoDomainOptions
+            {
+                // The prefix must be unique across the AWS Region in which the pool is created
+                DomainPrefix = $"bobs-bookstore-{Account}"
+            }
+        });
+
+        adminSiteUserPoolDomain.SignInUrl(IntegratedTestClient, new SignInUrlOptions
+        {
+            RedirectUri = $"{userPoolCallbackUrlRoot}/signin-oidc"
+        });
+
+        _ = new[]
+        {
+            new StringParameter(this, "AdminSiteUserPoolClientId", new StringParameterProps
+            {
+                ParameterName = $"/{Constants.AppName}/Authentication/Cognito/LocalClientId",
+                StringValue = IntegratedTestClient.UserPoolClientId
+            }),
+
+            new StringParameter(this, "AdminSiteUserPoolMetadataAddress", new StringParameterProps
+            {
+                ParameterName = $"/{Constants.AppName}/Authentication/Cognito/MetadataAddress",
+                StringValue = $"https://cognito-idp.{Region}.amazonaws.com/{AdminAppUserPool.UserPoolId}/.well-known/openid-configuration"
+            }),
+
+            new StringParameter(this, "AdminSiteUserPoolCognitoDomain", new StringParameterProps
+            {
+                ParameterName = $"/{Constants.AppName}/Authentication/Cognito/CognitoDomain",
+                StringValue = adminSiteUserPoolDomain.BaseUrl()
+            })
+        };
     }
 }

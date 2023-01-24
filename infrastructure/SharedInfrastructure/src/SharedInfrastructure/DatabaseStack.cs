@@ -14,7 +14,6 @@ public class DatabaseStackProps : StackProps
 public class DatabaseStack : Stack
 {
     private const int DatabasePort = 1433;
-    private readonly string bookstoreDbCredentialsParameter = "BobsUsedBooks-Production-DbSettings";
 
     public DatabaseInstance Database { get; set; }
 
@@ -26,7 +25,7 @@ public class DatabaseStack : Stack
             Description = "Allow access to the SQL Server instance from the admin and customer website instances",
         });
 
-        Database = new DatabaseInstance(this, "BookstoreSqlDb", new DatabaseInstanceProps
+        Database = new DatabaseInstance(this, $"{Constants.AppName}SqlDb", new DatabaseInstanceProps
         {
             Vpc = props.Vpc,
             VpcSubnets = new SubnetSelection
@@ -48,7 +47,7 @@ public class DatabaseStack : Stack
             },
             InstanceType = InstanceType.Of(InstanceClass.BURSTABLE2, InstanceSize.MICRO),
 
-            InstanceIdentifier = bookstoreDbCredentialsParameter,
+            InstanceIdentifier = $"{Constants.AppName}Database",
 
             // As this is a sample app, turn off automated backups to avoid any storage costs
             // of automated backup snapshots. It also helps the stack launch a little faster by
@@ -59,9 +58,9 @@ public class DatabaseStack : Stack
         // The secret, in Secrets Manager, holds the auto-generated database credentials. Because
         // the secret name will have a random string suffix, we add a deterministic parameter in
         // Systems Manager to contain the actual secret name.
-        _ = new StringParameter(this, "BobsBookstoreDbSecret", new StringParameterProps
+        _ = new StringParameter(this, $"{Constants.AppName}DbSecret", new StringParameterProps
         {
-            ParameterName = $"/{bookstoreDbCredentialsParameter}/dbsecretsname",
+            ParameterName = $"/{Constants.AppName}/dbsecretsname",
             StringValue = Database.Secret.SecretName
         });
     }
