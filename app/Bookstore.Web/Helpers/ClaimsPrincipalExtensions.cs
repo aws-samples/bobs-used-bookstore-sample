@@ -1,6 +1,6 @@
 ﻿using System.Security.Claims;
 
-namespace Bookstore.Web
+namespace Bookstore.Web.Helpers
 {
     public static class ClaimsPrincipalExtensions
     {

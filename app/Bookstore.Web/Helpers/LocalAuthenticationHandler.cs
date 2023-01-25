@@ -9,7 +9,7 @@ using System.Security.Claims;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 
-namespace Bookstore.Web
+namespace Bookstore.Web.Helpers
 {
     public class LocalAuthenticationHandler : AuthenticationHandler<AuthenticationSchemeOptions>
     {
@@ -27,13 +27,15 @@ namespace Bookstore.Web
             identity.AddClaim(new Claim("sub", UserId));
             identity.AddClaim(new Claim("given_name", "Bookstore"));
             identity.AddClaim(new Claim("family_name", "User"));
-            identity.AddClaim(new Claim("cognito:groups", "Administrator"));
+            identity.AddClaim(new Claim(ClaimTypes.Role, "Administrators"));
 
             await Context.SignInAsync(new ClaimsPrincipal(identity));
 
             await SaveCustomerDetails(Context, identity);
 
-            Context.Response.Redirect(properties.RedirectUri);
+            var redirectUrl = properties.RedirectUri ?? $"{Context.Request.Scheme}://{Context.Request.Host}{Context.Request.Path}{Context.Request.QueryString}";
+
+            Context.Response.Redirect(redirectUrl);
         }
 
         private async Task SaveCustomerDetails(HttpContext context, ClaimsIdentity identity)

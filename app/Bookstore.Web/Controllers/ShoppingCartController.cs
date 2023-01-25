@@ -2,8 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Bookstore.Services;
 using Microsoft.AspNetCore.Authorization;
-using Bookstore.Web;
 using Bookstore.Web.Mappers;
+using Bookstore.Web.Helpers;
 
 namespace Bookstore.Web.Controllers
 {

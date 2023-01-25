@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using System;
 
-namespace Bookstore.Web
+namespace Bookstore.Web.Helpers
 {
     public static class HttpContextExtensions
     {
