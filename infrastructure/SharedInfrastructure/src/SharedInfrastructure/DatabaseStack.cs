@@ -22,7 +22,7 @@ public class DatabaseStack : Stack
         var dbSG = new SecurityGroup(this, "DatabaseSecurityGroup", new SecurityGroupProps
         {
             Vpc = props.Vpc,
-            Description = "Allow access to the SQL Server instance from the admin and customer website instances",
+            Description = "Allow access to the SQL Server instance from the website",
         });
 
         Database = new DatabaseInstance(this, $"{Constants.AppName}SqlDb", new DatabaseInstanceProps

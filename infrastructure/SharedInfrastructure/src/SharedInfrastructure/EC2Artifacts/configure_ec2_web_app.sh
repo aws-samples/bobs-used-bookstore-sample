@@ -49,26 +49,24 @@ sudo ./make-dummy-cert localhost.crt
 cp $APACHE_SSL_CONFIG_FILE /etc/httpd/conf.d/ssl.conf
 
 # Add Bookstore Admin App Virtual Host Config
-cp $VIRTUAL_HOST_CONFIG /etc/httpd/conf.d/bookstoreadmin.conf
+cp $VIRTUAL_HOST_CONFIG /etc/httpd/conf.d/bobsbookstore.conf
 
 # Restart Apache
 sudo systemctl restart httpd
 
-# Install bookstore admin app into the /var/www/bookstoreadmin directory
-mkdir -p /var/www/bookstoreadmin
-cp $SAMPLE_APP /var/www/bookstoreadmin/bookstoreadminapp.zip
-cd /var/www/bookstoreadmin
-unzip bookstoreadminapp.zip
-rm bookstoreadminapp.zip
+# Install bookstore admin app into the /var/www/bobsbookstore directory
+mkdir -p /var/www/bobsbookstore
+cp $SAMPLE_APP /var/www/bobsbookstore/bobsbookstore.zip
+cd /var/www/bobsbookstore
+unzip bobsbookstore.zip
+rm bobsbookstore.zip
 sudo usermod -a -G apache ec2-user
 sudo chown ec2-user:apache /var/www
 sudo chmod 2775 /var/www && find /var/www -type d -exec sudo chmod 2775 {} \;
 find /var/www -type f -exec sudo chmod 0664 {} \;
 
 # Install the Kestrel Service
-cp $KESTREL_SERVICE /etc/systemd/system/bookstoreadmin.service
-sudo systemctl enable bookstoreadmin.service
-sudo systemctl start bookstoreadmin.service
-sudo systemctl status bookstoreadmin.service
-
-echo "Custom configuration for sample application complete."
+cp $KESTREL_SERVICE /etc/systemd/system/bobsbookstore.service
+sudo systemctl enable bobsbookstore.service
+sudo systemctl start bobsbookstore.service
+sudo systemctl status bobsbookstore.service

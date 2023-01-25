@@ -34,7 +34,7 @@ internal sealed class Program
             Vpc = networkStack.Vpc, 
             Database = databaseStack.Database, 
             ImageBucket = coreStack.ImageBucket,
-            AdminAppUserPool= coreStack.AdminAppUserPool
+            WebAppUserPool= coreStack.WebAppUserPool
         });
 
         app.Synth();

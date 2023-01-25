@@ -7,22 +7,8 @@ using Amazon.CDK.AWS.IAM;
 using Amazon.CDK.AWS.Cognito;
 using Amazon.CDK.CustomResources;
 using System.Collections.Generic;
-using Amazon.JSII.Runtime.Deputy;
-using static Amazon.CDK.AWS.Cognito.CfnUserPoolUser;
 
 namespace SharedInfrastructure.Production;
-
-[JsiiByValue("aws-cdk-lib.aws_cognito.CfnUserPoolUser.AttributeTypeProperty")]
-public class UserAttributeTypeProperty : IAttributeTypeProperty
-{
-    [JsiiOptional]
-    [JsiiProperty("Name", "{\"primitive\":\"string\"}", true, false)]
-    public string? Name { get; set; }
-
-    [JsiiOptional]
-    [JsiiProperty("Value", "{\"primitive\":\"string\"}", true, false)]
-    public string? Value { get; set; }
-}
 
 public class CoreStack : Stack
 {
@@ -30,17 +16,17 @@ public class CoreStack : Stack
 
     public Bucket ImageBucket { get; private set; }
 
-    public UserPool AdminAppUserPool { get; private set; }
+    public UserPool WebAppUserPool { get; private set; }
 
-    private CfnUserPoolGroup AdminGroup;
+    private CfnUserPoolGroup CognitoAdminUserGroup;
 
     internal CoreStack(Construct scope, string id, IStackProps props = null) : base(scope, id, props)
     {
         CreateImageS3Bucket();
         CreateCloudFrontDistribution();
         CreateCognitoUserPool();
-        CreateCognitoUserGroup();
-        CreateDefaultUser();
+        CreateCognitoAdministratorsUserGroup();
+        CreateDefaultAdminUser();
         CreateUserPoolClient();
     }
 
@@ -131,7 +117,7 @@ public class CoreStack : Stack
 
     internal void CreateCognitoUserPool()
     {
-        AdminAppUserPool = new UserPool(this, "AdminUserPool", new UserPoolProps
+        WebAppUserPool = new UserPool(this, $"{Constants.AppName}UserPool", new UserPoolProps
         {
             UserPoolName = Constants.AppName,
             SelfSignUpEnabled = true,
@@ -146,17 +132,17 @@ public class CoreStack : Stack
         });
     }
 
-    internal void CreateCognitoUserGroup()
+    internal void CreateCognitoAdministratorsUserGroup()
     {
-        AdminGroup = new CfnUserPoolGroup(this, "AdministratorsGroup", new CfnUserPoolGroupProps
+        CognitoAdminUserGroup = new CfnUserPoolGroup(this, "AdministratorsGroup", new CfnUserPoolGroupProps
         {
-            UserPoolId = AdminAppUserPool.UserPoolId,
+            UserPoolId = WebAppUserPool.UserPoolId,
             GroupName = "Administrators",
             Precedence = 0
         });
     }
 
-    internal void CreateDefaultUser()
+    internal void CreateDefaultAdminUser()
     {
         const string UserName = "admin";
 
@@ -169,7 +155,7 @@ public class CoreStack : Stack
                 Action = "adminCreateUser",
                 Parameters = new Dictionary<string, string>
                 {
-                    { "UserPoolId", AdminAppUserPool.UserPoolId },
+                    { "UserPoolId", WebAppUserPool.UserPoolId },
                     { "Username", UserName },
                     { "TemporaryPassword", "P@ssword1" },
                     { "MessageAction", "SUPPRESS" }
@@ -182,7 +168,7 @@ public class CoreStack : Stack
                 Action = "adminDeleteUser",
                 Parameters = new Dictionary<string, string>
                 {
-                    { "UserPoolId", AdminAppUserPool.UserPoolId },
+                    { "UserPoolId", WebAppUserPool.UserPoolId },
                     { "Username", UserName }
                 }
             },
@@ -191,9 +177,9 @@ public class CoreStack : Stack
 
         var adminUserAttachment = new CfnUserPoolUserToGroupAttachment(this, "AttachAdminUserToAdministratorsGroup", new CfnUserPoolUserToGroupAttachmentProps
         {
-            GroupName = AdminGroup.GroupName,
+            GroupName = CognitoAdminUserGroup.GroupName,
             Username = UserName,
-            UserPoolId = AdminAppUserPool.UserPoolId
+            UserPoolId = WebAppUserPool.UserPoolId
         });
 
         adminUserAttachment.Node.AddDependency(defaultUser);
@@ -201,10 +187,9 @@ public class CoreStack : Stack
 
     internal void CreateUserPoolClient()
     {
-        // As with the customer pool, the admin pool uses Hosted UI and so requires a HTTPS callback url
         var localClient = new UserPoolClient(this, "LocalClient", new UserPoolClientProps
         {
-            UserPool = AdminAppUserPool,
+            UserPool = WebAppUserPool,
             GenerateSecret = false,
             PreventUserExistenceErrors = true,
             ReadAttributes = new ClientAttributes()
@@ -246,12 +231,12 @@ public class CoreStack : Stack
             }
         });
 
-        var adminSiteUserPoolDomain = AdminAppUserPool.AddDomain($"{Constants.AppName}UserPoolDomain", new UserPoolDomainOptions
+        var adminSiteUserPoolDomain = WebAppUserPool.AddDomain($"{Constants.AppName}UserPoolDomain", new UserPoolDomainOptions
         {
             CognitoDomain = new CognitoDomainOptions
             {
                 // The prefix must be unique across the AWS Region in which the pool is created
-                DomainPrefix = $"bobsbookstore-{Account}"
+                DomainPrefix = $"{Constants.AppName.ToLower()}-{Account}"
             }
         });
 
@@ -262,19 +247,19 @@ public class CoreStack : Stack
 
         _ = new[]
         {
-            new StringParameter(this, "AdminSiteUserPoolClientId", new StringParameterProps
+            new StringParameter(this, "UserPoolLocalClientId", new StringParameterProps
             {
                 ParameterName = $"/{Constants.AppName}/Authentication/Cognito/LocalClientId",
                 StringValue = localClient.UserPoolClientId
             }),
 
-            new StringParameter(this, "AdminSiteUserPoolMetadataAddress", new StringParameterProps
+            new StringParameter(this, "UserPoolMetadataAddress", new StringParameterProps
             {
                 ParameterName = $"/{Constants.AppName}/Authentication/Cognito/MetadataAddress",
-                StringValue = $"https://cognito-idp.{Region}.amazonaws.com/{AdminAppUserPool.UserPoolId}/.well-known/openid-configuration"
+                StringValue = $"https://cognito-idp.{Region}.amazonaws.com/{WebAppUserPool.UserPoolId}/.well-known/openid-configuration"
             }),
 
-            new StringParameter(this, "AdminSiteUserPoolCognitoDomain", new StringParameterProps
+            new StringParameter(this, "UserPoolCognitoDomain", new StringParameterProps
             {
                 ParameterName = $"/{Constants.AppName}/Authentication/Cognito/CognitoDomain",
                 StringValue = adminSiteUserPoolDomain.BaseUrl()
