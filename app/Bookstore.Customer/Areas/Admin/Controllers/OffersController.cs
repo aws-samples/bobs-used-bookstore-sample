@@ -10,8 +10,7 @@ using Bookstore.Web.Areas.Admin.Mappers.Offers;
 
 namespace Bookstore.Web.Areas.Admin.Controllers
 {
-    [Area("Admin")]
-    public class OffersController : Controller
+    public class OffersController : AdminAreaControllerBase
     {
         private readonly IOfferService offerService;
         private readonly IReferenceDataService referenceDataService;

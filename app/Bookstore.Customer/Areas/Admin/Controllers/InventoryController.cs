@@ -1,6 +1,5 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authorization;
 using Services;
 using Bookstore.Services.Filters;
 using Bookstore.Web.Areas.Admin.Mappers.Inventory;
@@ -8,8 +7,7 @@ using Bookstore.Web.Areas.Admin.Models.Inventory;
 
 namespace Bookstore.Web.Areas.Admin.Controllers
 {
-    [Area("Admin")]
-    public class InventoryController : Controller
+    public class InventoryController : AdminAreaControllerBase
     {
         private readonly IInventoryService inventoryService;
         private readonly IReferenceDataService referenceDataService;

@@ -5,8 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Bookstore.Web.Areas.Admin.Controllers
 {
     [AllowAnonymous]
-    [Area("Admin")]
-    public class ErrorController : Controller
+    public class ErrorController : AdminAreaControllerBase
     {
         [Route("/Error/Index/{code:int}")]
         public IActionResult Index(int code)

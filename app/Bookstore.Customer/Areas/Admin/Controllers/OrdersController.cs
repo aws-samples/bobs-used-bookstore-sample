@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Bookstore.Services;
 using Bookstore.Services.Filters;
@@ -8,8 +7,7 @@ using Bookstore.Web.Areas.Admin.Mappers.Orders;
 
 namespace Bookstore.Web.Areas.Admin.Controllers
 {
-    [Area("Admin")]
-    public class OrdersController : Controller
+    public class OrdersController : AdminAreaControllerBase
     {
         private readonly IOrderService orderService;
 

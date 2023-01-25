@@ -7,8 +7,7 @@ using System.Threading.Tasks;
 
 namespace Bookstore.Web.Areas.Admin.Controllers
 {
-    [Area("Admin")]
-    public class ReferenceDataController : Controller
+    public class ReferenceDataController : AdminAreaControllerBase
     {
         private readonly IReferenceDataService referenceDataService;
 

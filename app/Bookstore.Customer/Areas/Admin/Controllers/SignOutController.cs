@@ -7,8 +7,7 @@ using Microsoft.Extensions.Hosting;
 
 namespace Bookstore.Web.Areas.Admin.Controllers
 {
-    [Area("Admin")]
-    public class SignOutController : Controller
+    public class SignOutController : AdminAreaControllerBase
     {
         private IWebHostEnvironment webHostEnvironment;
 

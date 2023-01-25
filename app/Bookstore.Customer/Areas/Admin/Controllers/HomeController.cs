@@ -1,12 +1,10 @@
-﻿using System.Diagnostics;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 
 namespace Bookstore.Web.Areas.Admin.Controllers
 {
     [AllowAnonymous]
-    [Area("Admin")]
-    public class HomeController : Controller
+    public class HomeController : AdminAreaControllerBase
     {
         public IActionResult Index()
         {
