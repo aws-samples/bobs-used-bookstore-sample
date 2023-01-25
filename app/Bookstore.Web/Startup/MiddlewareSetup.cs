@@ -33,13 +33,12 @@ namespace Bookstore.Web.Startup
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
-            //app.MapDefaultControllerRoute();
             app.UseSession();
 
             app.MapAreaControllerRoute(
                 name: "Admin",
                 areaName: "Admin",
-                pattern: "Admin/{controller=Home}/{action=Index}/{id?}");
+                pattern: "Admin/{controller=Orders}/{action=Index}/{id?}");
 
             app.MapControllerRoute(
                 name: "default",

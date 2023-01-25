@@ -4,7 +4,11 @@
         Hello @User.Identity.Name!
     </span>
 
-    <a class="nav-link" asp-area="Admin" asp-action="LogOut" asp-controller="SignOut">Logout</a>
+    <div class="hstack gap-2">
+        <a class="nav-link" asp-area="" asp-action="Index" asp-controller="Home">Customer Portal</a>
+        <div class="vr"></div>
+        <a class="nav-link" asp-area="Admin" asp-action="LogOut" asp-controller="SignOut">Logout</a>
+    </div>
 }
 else
 {
