@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Bookstore.Customer.ViewModel.Checkout
+namespace Bookstore.Web.ViewModel.Checkout
 {
     public class CheckoutFinishedViewModel
     {

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Bookstore.Customer.ViewModel
+namespace Bookstore.Web.ViewModel
 {
     public abstract class PaginatedViewModel
     {

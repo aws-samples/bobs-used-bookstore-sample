@@ -1,10 +1,10 @@
-﻿using Bookstore.Customer.ViewModel.Resale;
-using Bookstore.Domain;
+﻿using Bookstore.Domain;
 using Bookstore.Domain.Offers;
+using Bookstore.Web.ViewModel.Resale;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Bookstore.Customer.Mappers
+namespace Bookstore.Web.Mappers
 {
     public static class OffersToResaleIndexViewModelMapper
     {

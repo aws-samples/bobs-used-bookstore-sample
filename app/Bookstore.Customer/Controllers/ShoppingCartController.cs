@@ -1,10 +1,11 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Bookstore.Services;
-using Bookstore.Customer.Mappers;
 using Microsoft.AspNetCore.Authorization;
+using Bookstore.Web;
+using Bookstore.Web.Mappers;
 
-namespace Bookstore.Customer.Controllers
+namespace Bookstore.Web.Controllers
 {
     [AllowAnonymous]
     public class ShoppingCartController : Controller

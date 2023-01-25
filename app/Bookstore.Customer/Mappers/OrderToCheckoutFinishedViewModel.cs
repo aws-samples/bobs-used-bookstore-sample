@@ -1,8 +1,8 @@
-﻿using Bookstore.Customer.ViewModel.Checkout;
-using Bookstore.Domain.Orders;
+﻿using Bookstore.Domain.Orders;
+using Bookstore.Web.ViewModel.Checkout;
 using System.Linq;
 
-namespace Bookstore.Customer.Mappers
+namespace Bookstore.Web.Mappers
 {
     public static class OrderToCheckoutFinishedViewModel
     {

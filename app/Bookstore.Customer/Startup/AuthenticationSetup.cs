@@ -1,5 +1,4 @@
-﻿using Bookstore.Customer;
-using Bookstore.Domain.Customers;
+﻿using Bookstore.Domain.Customers;
 using Bookstore.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
@@ -10,8 +9,26 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Threading.Tasks;
 
-namespace AdminSite.Startup
+namespace Bookstore.Web.Startup
 {
+    public static class CognitoClientIdHelper
+    {
+        public static string GetClientId(WebApplicationBuilder builder)
+        {
+            switch (builder.Configuration["AWS:Service"])
+            {
+                case "EC2":
+                    return builder.Configuration["Authentication:Cognito:EC2ClientId"];
+
+                case "AppRunner":
+                    return builder.Configuration["Authentication:Cognito:AppRunnerClientId"];
+
+                default:
+                    return builder.Configuration["Authentication:Cognito:LocalClientId"];
+            }
+        }
+    }
+
     public static class AuthenticationSetup
     {
         private static string _cognitoDomain;
@@ -21,7 +38,7 @@ namespace AdminSite.Startup
         public static WebApplicationBuilder ConfigureAuthentication(this WebApplicationBuilder builder)
         {
             _cognitoDomain = builder.Configuration["Authentication:Cognito:CognitoDomain"];
-            _cognitoClientId = builder.Configuration["Authentication:Cognito:ClientId"];
+            _cognitoClientId = CognitoClientIdHelper.GetClientId(builder);
             _cognitoAppSignOutUrl = builder.Configuration["Authentication:Cognito:AppSignOutUrl"];
 
             // For the 'Development' profile we fake authentication. For 'Test' and 'Production'
@@ -59,10 +76,11 @@ namespace AdminSite.Startup
                 {
                     x.ResponseType = builder.Configuration["Authentication:Cognito:ResponseType"];
                     x.MetadataAddress = builder.Configuration["Authentication:Cognito:MetadataAddress"];
-                    x.ClientId = builder.Configuration["Authentication:Cognito:ClientId"];
+                    x.ClientId = CognitoClientIdHelper.GetClientId(builder);
                     x.TokenValidationParameters = new TokenValidationParameters
                     {
-                        NameClaimType = "cognito:username"
+                        NameClaimType = "cognito:username",
+                        RoleClaimType = "cognito:groups"
                     };
 
                     x.Events.OnRedirectToIdentityProviderForSignOut = OnRedirectToIdentityProviderForSignOut;

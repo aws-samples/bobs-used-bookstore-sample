@@ -1,11 +1,11 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Bookstore.Customer;
 using Bookstore.Services;
-using Bookstore.Customer.Mappers;
 using Microsoft.AspNetCore.Authorization;
+using Bookstore.Web;
+using Bookstore.Web.Mappers;
 
-namespace CustomerSite.Controllers
+namespace Bookstore.Web.Controllers
 {
     [AllowAnonymous]
     public class WishlistController : Controller
@@ -18,7 +18,7 @@ namespace CustomerSite.Controllers
             this.customerService = customerService;
             this.shoppingCartService = shoppingCartService;
         }
-                
+
         public IActionResult Index()
         {
             var wishlistItems = shoppingCartService.GetWishlistItems(HttpContext.GetShoppingCartId());

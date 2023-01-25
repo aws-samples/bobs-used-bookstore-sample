@@ -1,0 +1,12 @@
+@if (User.Identity.IsAuthenticated)
+{
+    <span class="navbar-text me-2">
+        Hello @User.Identity.Name!
+    </span>
+
+    <a class="nav-link" asp-area="Admin" asp-action="LogOut" asp-controller="SignOut">Logout</a>
+}
+else
+{
+    <a class="nav-link" asp-area="Admin" asp-action="Index" asp-controller="Orders">Log In</a>
+}

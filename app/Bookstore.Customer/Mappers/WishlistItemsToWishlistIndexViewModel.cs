@@ -1,9 +1,9 @@
-﻿using Bookstore.Customer.ViewModel.Wishlist;
-using Bookstore.Domain.Carts;
+﻿using Bookstore.Domain.Carts;
+using Bookstore.Web.ViewModel.Wishlist;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Bookstore.Customer.Mappers
+namespace Bookstore.Web.Mappers
 {
     public static class WishlistItemsToWishlistIndexViewModel
     {

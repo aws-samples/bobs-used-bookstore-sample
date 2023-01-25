@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel;
 
-namespace Bookstore.Customer.ViewModel.Search
+namespace Bookstore.Web.ViewModel.Search
 {
     public class SearchDetailsViewModel
     {

@@ -1,0 +1,38 @@
+﻿@{
+    ViewData["Title"] = "Error";
+}
+
+<head>
+    <link rel="stylesheet" href="/css/Error/index.css"/>
+</head>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="error-template err-text">
+                <h1>
+                    Oops!
+                </h1>
+                <h2 class="err-text">
+                    Error Code @ViewData["StatusCode"]
+
+                </h2>
+                <div class="err-text">
+
+                    Sorry, an error has occurred
+                </div>
+                <div class="error-actions">
+                    <a href="javascript:history.go(-1)" class="errbutton" style="color:white;">
+                        <span class=" text-white "></span>
+                        Take Me Back
+                    </a>
+                    <a asp-action="Index" asp-controller="Home" class="errbutton" style="color:white;">
+                        <span class=" text-white err-text"></span>
+                        Home
+                    </a>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

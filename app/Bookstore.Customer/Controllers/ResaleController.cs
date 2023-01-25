@@ -1,13 +1,12 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Services;
-using Bookstore.Customer;
 using Bookstore.Services;
-using Bookstore.Customer.Mappers;
 using Microsoft.AspNetCore.Authorization;
-using Bookstore.Customer.ViewModel.Resale;
+using Bookstore.Web.Mappers;
+using Bookstore.Web.ViewModel.Resale;
 
-namespace CustomerSite.Controllers
+namespace Bookstore.Web.Controllers
 {
     public class ResaleController : Controller
     {

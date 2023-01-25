@@ -1,4 +1,4 @@
-namespace Bookstore.Customer.ViewModel
+namespace Bookstore.Web.ViewModel
 {
     public class ErrorViewModel
     {

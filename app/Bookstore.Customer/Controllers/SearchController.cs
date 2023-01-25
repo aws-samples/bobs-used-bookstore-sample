@@ -1,12 +1,11 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Bookstore.Services;
-using Bookstore.Customer;
 using Services;
-using Bookstore.Customer.Mappers;
 using Microsoft.AspNetCore.Authorization;
+using Bookstore.Web.Mappers;
 
-namespace BobCustomerSite.Controllers
+namespace Bookstore.Web.Controllers
 {
     [AllowAnonymous]
     public class SearchController : Controller

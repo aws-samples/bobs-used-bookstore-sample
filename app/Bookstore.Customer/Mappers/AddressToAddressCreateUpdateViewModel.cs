@@ -1,7 +1,7 @@
-﻿using Bookstore.Customer.ViewModel.Address;
-using Bookstore.Domain.Customers;
+﻿using Bookstore.Domain.Customers;
+using Bookstore.Web.ViewModel.Address;
 
-namespace Bookstore.Customer.Mappers
+namespace Bookstore.Web.Mappers
 {
     public static class AddressToAddressCreateUpdateViewModel
     {

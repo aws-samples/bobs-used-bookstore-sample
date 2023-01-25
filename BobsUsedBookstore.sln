@@ -11,13 +11,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bookstore.Data", "app\Books
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataMigrations", "app\DataMigrations\DataMigrations.csproj", "{0A973E48-856B-4538-ABA9-0A21A838E51F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bookstore.Customer", "app\Bookstore.Customer\Bookstore.Customer.csproj", "{4244350E-F76D-43A4-B015-923477F2CAB7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bookstore.Web", "app\Bookstore.Customer\Bookstore.Web.csproj", "{4244350E-F76D-43A4-B015-923477F2CAB7}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bookstore.Domain", "app\Bookstore.Domain\Bookstore.Domain.csproj", "{045475FA-ACF7-480D-821B-AB96A71AD8AB}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CloudInfrastructure", "CloudInfrastructure", "{A048AA24-0669-4136-88B9-D275812BA302}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharedInfrastructure", "infrastructure\SharedInfrastructure\src\SharedInfrastructure\SharedInfrastructure.csproj", "{DF8B2064-BAB0-4B80-9A2A-BB38E0362843}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharedInfrastructure", "infrastructure\SharedInfrastructure\src\SharedInfrastructure\SharedInfrastructure.csproj", "{DF8B2064-BAB0-4B80-9A2A-BB38E0362843}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

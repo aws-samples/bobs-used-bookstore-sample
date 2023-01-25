@@ -5,7 +5,7 @@ using Microsoft.Extensions.Hosting;
 using Bookstore.Services;
 using Bookstore.Data;
 
-namespace Bookstore.Customer.Startup
+namespace Bookstore.Web.Startup
 {
     public static class DependencyInjectionSetup
     {

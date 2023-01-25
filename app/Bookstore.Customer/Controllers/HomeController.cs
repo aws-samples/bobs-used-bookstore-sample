@@ -2,9 +2,9 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using Bookstore.Customer.ViewModel;
+using Bookstore.Web.ViewModel;
 
-namespace CustomerSite.Controllers
+namespace Bookstore.Web.Controllers
 {
     [AllowAnonymous]
     public class HomeController : Controller

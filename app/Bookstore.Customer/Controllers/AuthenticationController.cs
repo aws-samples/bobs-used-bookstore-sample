@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
 
-namespace Bookstore.Customer.Controllers
+namespace Bookstore.Web.Controllers
 {
     public class AuthenticationController : Controller
     {

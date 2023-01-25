@@ -1,11 +1,11 @@
-﻿using Bookstore.Customer.ViewModel.Resale;
-using Bookstore.Domain.Offers;
+﻿using Bookstore.Domain.Offers;
+using Bookstore.Web.ViewModel.Resale;
 
-namespace Bookstore.Customer.Mappers
+namespace Bookstore.Web.Mappers
 {
     public static class OfferCreateViewModelToOfferMapper
     {
-        public static Offer ToOffer(this ResaleCreateViewModel model) 
+        public static Offer ToOffer(this ResaleCreateViewModel model)
         {
             return new Offer
             {

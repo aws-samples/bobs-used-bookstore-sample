@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
 
-namespace Bookstore.Customer.ViewModel.Resale
+namespace Bookstore.Web.ViewModel.Resale
 {
     public class ResaleCreateViewModel
     {

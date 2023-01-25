@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace Bookstore.Customer.ViewModel.ShoppingCart
+namespace Bookstore.Web.ViewModel.ShoppingCart
 {
     public class ShoppingCartIndexViewModel
     {
@@ -24,7 +24,7 @@ namespace Bookstore.Customer.ViewModel.ShoppingCart
 
         public int StockLevel { get; set; }
 
-        public bool HasLowStockLevels { get;set; }
+        public bool HasLowStockLevels { get; set; }
 
         public bool IsOutOfStock { get; set; }
     }

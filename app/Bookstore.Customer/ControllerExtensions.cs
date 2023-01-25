@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace Bookstore.Customer
+namespace Bookstore.Web
 {
     public static class ControllerExtensions
     {

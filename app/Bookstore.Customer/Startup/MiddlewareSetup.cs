@@ -4,7 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Threading.Tasks;
 
-namespace Bookstore.Customer.Startup
+namespace Bookstore.Web.Startup
 {
     public static class MiddlewareSetup
     {
@@ -15,7 +15,7 @@ namespace Bookstore.Customer.Startup
                 context.Request.Scheme = "https";
                 return next(context);
             });
-            
+
             if (app.Environment.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -33,9 +33,18 @@ namespace Bookstore.Customer.Startup
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
-            app.MapDefaultControllerRoute();
+            //app.MapDefaultControllerRoute();
             app.UseSession();
-            
+
+            app.MapAreaControllerRoute(
+                name: "Admin",
+                areaName: "Admin",
+                pattern: "Admin/{controller=Home}/{action=Index}/{id?}");
+
+            app.MapControllerRoute(
+                name: "default",
+                pattern: "{controller=Home}/{action=Index}/{id?}");
+
             // Create the database
             using (var scope = app.Services.CreateAsyncScope())
             {

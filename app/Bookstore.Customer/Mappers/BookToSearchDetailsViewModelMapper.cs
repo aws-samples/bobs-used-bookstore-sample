@@ -1,7 +1,7 @@
-﻿using Bookstore.Customer.ViewModel.Search;
-using Bookstore.Domain.Books;
+﻿using Bookstore.Domain.Books;
+using Bookstore.Web.ViewModel.Search;
 
-namespace Bookstore.Customer.Mappers
+namespace Bookstore.Web.Mappers
 {
     public static class BookToSearchDetailsViewModelMapper
     {

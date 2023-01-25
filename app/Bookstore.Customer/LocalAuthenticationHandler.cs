@@ -9,7 +9,7 @@ using System.Security.Claims;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 
-namespace Bookstore.Customer
+namespace Bookstore.Web
 {
     public class LocalAuthenticationHandler : AuthenticationHandler<AuthenticationSchemeOptions>
     {
@@ -27,6 +27,7 @@ namespace Bookstore.Customer
             identity.AddClaim(new Claim("sub", UserId));
             identity.AddClaim(new Claim("given_name", "Bookstore"));
             identity.AddClaim(new Claim("family_name", "User"));
+            identity.AddClaim(new Claim("cognito:groups", "Administrator"));
 
             await Context.SignInAsync(new ClaimsPrincipal(identity));
 

@@ -1,9 +1,9 @@
-﻿using Bookstore.Customer.ViewModel.Search;
-using Bookstore.Domain;
+﻿using Bookstore.Domain;
 using Bookstore.Domain.Books;
+using Bookstore.Web.ViewModel.Search;
 using System.Linq;
 
-namespace Bookstore.Customer.Mappers
+namespace Bookstore.Web.Mappers
 {
     public static class BooksToSearchIndexViewModelMapper
     {
@@ -15,11 +15,11 @@ namespace Bookstore.Customer.Mappers
             {
                 result.Books.Add(new SearchIndexItemViewModel
                 {
-                    BookId= book.Id,
-                    BookName= book.Name,
+                    BookId = book.Id,
+                    BookName = book.Name,
                     ImageUrl = book.FrontImageUrl,
-                    Price= book.Price,
-                    Quantity= book.Quantity
+                    Price = book.Price,
+                    Quantity = book.Quantity
                 });
             }
 

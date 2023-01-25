@@ -7,9 +7,7 @@ namespace AdminSite.Startup
     {
         public static WebApplicationBuilder ConfigureConfiguration(this WebApplicationBuilder builder)
         {
-            var appSettingsRootKey = $"/BobsBookstore/";
-
-            builder.Configuration.AddSystemsManager(appSettingsRootKey, optional: false);
+            builder.Configuration.AddSystemsManager("/BobsBookstore/", optional: false);
 
 
             //if (!builder.Environment.IsDevelopment())

@@ -1,10 +1,10 @@
-﻿using Bookstore.Customer.ViewModel.Resale;
-using Bookstore.Domain.ReferenceData;
+﻿using Bookstore.Domain.ReferenceData;
+using Bookstore.Web.ViewModel.Resale;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Bookstore.Customer.Mappers
+namespace Bookstore.Web.Mappers
 {
     public static class ReferenceDataToResaleCreateViewModelMapper
     {

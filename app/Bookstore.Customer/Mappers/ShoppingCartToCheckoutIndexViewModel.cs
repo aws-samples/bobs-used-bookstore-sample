@@ -1,10 +1,10 @@
-﻿using Bookstore.Customer.ViewModel.Checkout;
-using Bookstore.Domain.Carts;
+﻿using Bookstore.Domain.Carts;
 using Bookstore.Domain.Customers;
+using Bookstore.Web.ViewModel.Checkout;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Bookstore.Customer.Mappers
+namespace Bookstore.Web.Mappers
 {
     public static class ShoppingCartToCheckoutIndexViewModel
     {

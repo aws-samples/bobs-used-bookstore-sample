@@ -15,7 +15,7 @@ using System;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
 
-namespace Bookstore.Customer.Startup
+namespace Bookstore.Web.Startup
 {
     public static class ServicesSetup
     {

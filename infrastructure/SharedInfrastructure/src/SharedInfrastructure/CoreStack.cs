@@ -7,8 +7,22 @@ using Amazon.CDK.AWS.IAM;
 using Amazon.CDK.AWS.Cognito;
 using Amazon.CDK.CustomResources;
 using System.Collections.Generic;
+using Amazon.JSII.Runtime.Deputy;
+using static Amazon.CDK.AWS.Cognito.CfnUserPoolUser;
 
 namespace SharedInfrastructure.Production;
+
+[JsiiByValue("aws-cdk-lib.aws_cognito.CfnUserPoolUser.AttributeTypeProperty")]
+public class UserAttributeTypeProperty : IAttributeTypeProperty
+{
+    [JsiiOptional]
+    [JsiiProperty("Name", "{\"primitive\":\"string\"}", true, false)]
+    public string? Name { get; set; }
+
+    [JsiiOptional]
+    [JsiiProperty("Value", "{\"primitive\":\"string\"}", true, false)]
+    public string? Value { get; set; }
+}
 
 public class CoreStack : Stack
 {
@@ -18,11 +32,15 @@ public class CoreStack : Stack
 
     public UserPool AdminAppUserPool { get; private set; }
 
+    private CfnUserPoolGroup AdminGroup;
+
     internal CoreStack(Construct scope, string id, IStackProps props = null) : base(scope, id, props)
     {
         CreateImageS3Bucket();
         CreateCloudFrontDistribution();
-        CreateCognitoUserPools();
+        CreateCognitoUserPool();
+        CreateCognitoUserGroup();
+        CreateDefaultUser();
         CreateUserPoolClient();
     }
 
@@ -111,25 +129,39 @@ public class CoreStack : Stack
         });
     }
 
-    internal void CreateCognitoUserPools()
+    internal void CreateCognitoUserPool()
     {
         AdminAppUserPool = new UserPool(this, "AdminUserPool", new UserPoolProps
         {
             UserPoolName = Constants.AppName,
-            SelfSignUpEnabled = false,
+            SelfSignUpEnabled = true,
             StandardAttributes = new StandardAttributes
             {
-                Email = new StandardAttribute
-                {
-                    Required = true
-                }
+                Email = new StandardAttribute { Required = true },
+                FamilyName = new StandardAttribute { Required = true },
+                GivenName = new StandardAttribute { Required = true }
             },
             AutoVerify = new AutoVerifiedAttrs { Email = true },
             RemovalPolicy = RemovalPolicy.DESTROY
         });
+    }
+
+    internal void CreateCognitoUserGroup()
+    {
+        AdminGroup = new CfnUserPoolGroup(this, "AdministratorsGroup", new CfnUserPoolGroupProps
+        {
+            UserPoolId = AdminAppUserPool.UserPoolId,
+            GroupName = "Administrators",
+            Precedence = 0
+        });
+    }
+
+    internal void CreateDefaultUser()
+    {
+        const string UserName = "admin";
 
         // Create default admin user for testing
-        _ = new AwsCustomResource(this, "CreateAdminUser", new AwsCustomResourceProps
+        var defaultUser = new AwsCustomResource(this, "CreateAdminUser", new AwsCustomResourceProps
         {
             OnCreate = new AwsSdkCall
             {
@@ -138,7 +170,7 @@ public class CoreStack : Stack
                 Parameters = new Dictionary<string, string>
                 {
                     { "UserPoolId", AdminAppUserPool.UserPoolId },
-                    { "Username", "admin" },
+                    { "Username", UserName },
                     { "TemporaryPassword", "P@ssword1" },
                     { "MessageAction", "SUPPRESS" }
                 },
@@ -151,21 +183,37 @@ public class CoreStack : Stack
                 Parameters = new Dictionary<string, string>
                 {
                     { "UserPoolId", AdminAppUserPool.UserPoolId },
-                    { "Username", "admin" }
+                    { "Username", UserName }
                 }
             },
             Policy = AwsCustomResourcePolicy.FromSdkCalls(new SdkCallsPolicyOptions { Resources = AwsCustomResourcePolicy.ANY_RESOURCE })
         });
+
+        var adminUserAttachment = new CfnUserPoolUserToGroupAttachment(this, "AttachAdminUserToAdministratorsGroup", new CfnUserPoolUserToGroupAttachmentProps
+        {
+            GroupName = AdminGroup.GroupName,
+            Username = UserName,
+            UserPoolId = AdminAppUserPool.UserPoolId
+        });
+
+        adminUserAttachment.Node.AddDependency(defaultUser);
     }
 
     internal void CreateUserPoolClient()
     {
         // As with the customer pool, the admin pool uses Hosted UI and so requires a HTTPS callback url
-        var IntegratedTestClient = new UserPoolClient(this, "LocalClient", new UserPoolClientProps
+        var localClient = new UserPoolClient(this, "LocalClient", new UserPoolClientProps
         {
             UserPool = AdminAppUserPool,
             GenerateSecret = false,
             PreventUserExistenceErrors = true,
+            ReadAttributes = new ClientAttributes()
+                    .WithStandardAttributes(new StandardAttributesMask
+                    {
+                        GivenName = true,
+                        FamilyName = true,
+                        Email = true
+                    }),
             SupportedIdentityProviders = new[]
             {
                 UserPoolClientIdentityProvider.COGNITO
@@ -203,11 +251,11 @@ public class CoreStack : Stack
             CognitoDomain = new CognitoDomainOptions
             {
                 // The prefix must be unique across the AWS Region in which the pool is created
-                DomainPrefix = $"bobs-bookstore-{Account}"
+                DomainPrefix = $"bobsbookstore-{Account}"
             }
         });
 
-        adminSiteUserPoolDomain.SignInUrl(IntegratedTestClient, new SignInUrlOptions
+        adminSiteUserPoolDomain.SignInUrl(localClient, new SignInUrlOptions
         {
             RedirectUri = $"{userPoolCallbackUrlRoot}/signin-oidc"
         });
@@ -217,7 +265,7 @@ public class CoreStack : Stack
             new StringParameter(this, "AdminSiteUserPoolClientId", new StringParameterProps
             {
                 ParameterName = $"/{Constants.AppName}/Authentication/Cognito/LocalClientId",
-                StringValue = IntegratedTestClient.UserPoolClientId
+                StringValue = localClient.UserPoolClientId
             }),
 
             new StringParameter(this, "AdminSiteUserPoolMetadataAddress", new StringParameterProps

@@ -1,9 +1,9 @@
-﻿using Bookstore.Customer.ViewModel.ShoppingCart;
-using Bookstore.Domain.Carts;
+﻿using Bookstore.Domain.Carts;
+using Bookstore.Web.ViewModel.ShoppingCart;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Bookstore.Customer.Mappers
+namespace Bookstore.Web.Mappers
 {
     public static class ShoppingCartItemsToShoppingCartIndexViewModelMapper
     {

@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel;
+using Bookstore.Web.ViewModel;
 
-namespace Bookstore.Customer.ViewModel.Search
+namespace Bookstore.Web.ViewModel.Search
 {
     public class SearchIndexViewModel : PaginatedViewModel
     {
@@ -21,24 +22,24 @@ namespace Bookstore.Customer.ViewModel.Search
         [DefaultValue("Title")]
         public string BookName { get; set; }
 
-        [DefaultValue("Publisher not found")] 
+        [DefaultValue("Publisher not found")]
         public string PublisherName { get; set; }
-        
-        [DefaultValue("No Author")] 
+
+        [DefaultValue("No Author")]
         public string Author { get; set; }
 
-        [Display(Name = "Genre")] 
+        [Display(Name = "Genre")]
         public string GenreName { get; set; }
 
-        [Display(Name = "Type")] 
+        [Display(Name = "Type")]
         public string TypeName { get; set; }
 
-        [Display(Name = "Condition")] 
+        [Display(Name = "Condition")]
         public string ConditionName { get; set; }
 
         public string ImageUrl { get; set; }
 
-        [Display(Name = "$$")] 
+        [Display(Name = "$$")]
         public decimal Price { get; set; }
 
         public int Quantity { get; set; }

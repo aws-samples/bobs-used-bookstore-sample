@@ -1,11 +1,11 @@
-﻿using Bookstore.Customer;
-using Bookstore.Customer.Mappers;
-using Bookstore.Customer.ViewModel.Address;
-using Bookstore.Services;
+﻿using Bookstore.Services;
+using Bookstore.Web;
+using Bookstore.Web.Mappers;
+using Bookstore.Web.ViewModel.Address;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
-namespace CustomerSite.Controllers
+namespace Bookstore.Web.Controllers
 {
     public class AddressController : Controller
     {

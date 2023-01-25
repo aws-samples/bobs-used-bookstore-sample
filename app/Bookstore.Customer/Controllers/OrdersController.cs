@@ -1,11 +1,10 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Bookstore.Customer;
 using Microsoft.AspNetCore.Authorization;
 using Bookstore.Services;
-using Bookstore.Customer.Mappers;
+using Bookstore.Web.Mappers;
 
-namespace CustomerSite.Controllers
+namespace Bookstore.Web.Controllers
 {
     public class OrdersController : Controller
     {

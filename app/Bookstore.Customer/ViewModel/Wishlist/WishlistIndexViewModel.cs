@@ -1,7 +1,7 @@
 ﻿using Microsoft.Build.Evaluation;
 using System.Collections.Generic;
 
-namespace Bookstore.Customer.ViewModel.Wishlist
+namespace Bookstore.Web.ViewModel.Wishlist
 {
     public class WishlistIndexViewModel
     {

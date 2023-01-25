@@ -1,10 +1,10 @@
-﻿using Bookstore.Customer.ViewModel.Orders;
-using Bookstore.Domain;
+﻿using Bookstore.Domain;
 using Bookstore.Domain.Orders;
+using Bookstore.Web.ViewModel.Orders;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Bookstore.Customer.Mappers
+namespace Bookstore.Web.Mappers
 {
     public static class OrdersToOrderIndexViewModelMapper
     {
