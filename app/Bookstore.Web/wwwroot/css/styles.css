@@ -302,6 +302,7 @@ header .cart .quntity {
 }
 
 .recomended-sec h2 {
+    z-index: 1;
     display: inline-block;
     font-size: 30px;
     padding: 0 15px;

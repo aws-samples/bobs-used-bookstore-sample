@@ -38,9 +38,9 @@
                     </td>
                     <td>
                         <div class="hstack gap-2">
-                            <button type="submit" class="nav-link" asp-action="MoveToShoppingCart" asp-route-shoppingCartItemId="@item.ShoppingCartItemId">Move to shopping cart</button>
+                            <button type="submit" class="btn btn-link" asp-action="MoveToShoppingCart" asp-route-shoppingCartItemId="@item.ShoppingCartItemId">Move to shopping cart</button>
                             <div class="vr"></div>
-                            <button type="button" class="nav-link" data-toggle="modal" data-target="#confirmDeleteModal" data-shoppingCartItemId="@item.ShoppingCartItemId">Remove</button>
+                            <button type="button" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" data-shoppingCartItemId="@item.ShoppingCartItemId">Remove</button>
                         </div>
                     </td>
                 </tr>
@@ -51,14 +51,12 @@
         <button type="submit" class="btn" asp-action="MoveAllItemsToShoppingCart">Move all items to shopping cart</button>
     </form>
 
-    <div id="confirmDeleteModal" class="modal" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
+    <div id="confirmDeleteModal" class="modal" tabindex="-1">
+        <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Remove Wishlist Item?</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <p>Are you sure you want to remove this item from your wishlist?</p>
@@ -66,7 +64,7 @@
                 <div class="modal-footer">
                     <form method="post">
                         <button id="confirmDeleteButton" type="submit" class="btn btn-primary" asp-action="Delete">Yes, Remove</button>
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">No, Don't Remove</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No, Don't Remove</button>
                     </form>
                 </div>
             </div>

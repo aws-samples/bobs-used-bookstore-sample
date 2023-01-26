@@ -6,22 +6,24 @@
 <div class="panel-body">
     <partial name="_Notification" />
 
-    <h2>Search for Books</h2>
-    <br />
-
+    <h2 class="mb-3">Search for Books</h2>
+    
     <form asp-controller="Search" asp-action="Index" method="get">
-        <div class="form-row">
-            <div class="form-group col-md-6">
+        <div class="row">
+            <div class="col-7">
                 <input class="form-control" type="text" name="SearchString" asp-for="SearchString" />
-                <button type="submit" class="btn btn-primary" value="Search">Search</button>
             </div>
 
-            <div class="form-group col-md-6">
-                <select id="selectId" class="form-control" name="SortBy" asp-for="SortBy">
+            <div class="col-4">
+                <select id="selectId" class="form-select" name="SortBy" asp-for="SortBy">
                     <option value="Name">Name</option>
                     <option value="PriceAsc">Price (ascending)</option>
                     <option value="PriceDesc">Price (descending)</option>
                 </select>
+            </div>
+
+            <div class="col-1">
+                <button type="submit" class="btn btn-primary" value="Search">Search</button>
             </div>
         </div>
     </form>
@@ -36,7 +38,7 @@
     {
         <section class="static about-sec">
             <div class="container">
-                <h2>Search Results:</h2>
+                <h2>Search Results</h2>
 
                 <div class="recent-book-sec">
                     <div class="row">
