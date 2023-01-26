@@ -23,24 +23,18 @@ namespace Bookstore.Services
         {
             if (file == null) return null;
 
-            var adminAppImageFolder = Path.Combine(environment.WebRootPath, "images");
-            var customerAppImageFolder = adminAppImageFolder.Replace("Bookstore.Admin", "Bookstore.Customer");
+            var imageFolder = Path.Combine(environment.WebRootPath, "images");
             var filename = $"{Path.GetFileNameWithoutExtension(Path.GetRandomFileName())}{Path.GetExtension(file.FileName)}";
 
-            await SaveAsync(file, adminAppImageFolder, filename);
-            await SaveAsync(file, customerAppImageFolder, filename);
+            if (!Directory.Exists(imageFolder)) Directory.CreateDirectory(imageFolder);
 
-            return $"/images/{filename}";
-        }
-
-        private async Task SaveAsync(IFormFile file, string foldername, string filename)
-        {
-            if (!Directory.Exists(foldername)) Directory.CreateDirectory(foldername);
-
-            using var filestream = new FileStream(Path.Combine(foldername, filename), FileMode.OpenOrCreate);
+            using var filestream = new FileStream(Path.Combine(imageFolder, filename), FileMode.OpenOrCreate);
 
             await file.CopyToAsync(filestream);
+
             await filestream.FlushAsync();
+
+            return $"/images/{filename}";
         }
     }
 }
