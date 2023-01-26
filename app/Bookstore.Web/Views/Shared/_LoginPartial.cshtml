@@ -1,9 +1,7 @@
 ﻿@if (User.Identity.IsAuthenticated)
 {
     <div class="hstack gap-2">
-        <a class="nav-link text-dark" asp-controller="Address" asp-action="Index">Hello @User.Identity.Name!</a>
-
-        <div class="vr"></div>
+        <a class="nav-link text-dark me-2" asp-controller="Address" asp-action="Index">Hello @User.Identity.Name!</a>
 
         @if (User.IsInRole("Administrators"))
         {
