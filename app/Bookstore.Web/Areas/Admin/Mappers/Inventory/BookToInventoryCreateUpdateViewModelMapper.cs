@@ -10,15 +10,12 @@ namespace Bookstore.Web.Areas.Admin.Mappers.Inventory
             var result = new InventoryCreateUpdateViewModel
             {
                 Author = book.Author,
-                BackImageUrl = book.BackImageUrl,
-                FrontImageUrl = book.FrontImageUrl,
+                CoverImageUrl = book.CoverImageUrl,
                 Id = book.Id,
                 ISBN = book.ISBN,
-                LeftImageUrl = book.LeftImageUrl,
                 Name = book.Name,
                 Price = book.Price,
                 Quantity = book.Quantity,
-                RightImageUrl = book.RightImageUrl,
                 SelectedBookTypeId = book.BookType.Id,
                 SelectedConditionId = book.Condition.Id,
                 SelectedGenreId = book.Genre.Id,

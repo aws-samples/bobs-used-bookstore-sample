@@ -24,13 +24,7 @@ namespace Bookstore.Domain.Books
         public ReferenceDataItem? Condition { get; set; }
         public int? ConditionId { get; set; }
 
-        public string? FrontImageUrl { get; set; }
-
-        public string? BackImageUrl { get; set; }
-
-        public string? LeftImageUrl { get; set; }
-
-        public string? RightImageUrl { get; set; }
+        public string? CoverImageUrl { get; set; }
 
         public string? Summary { get; set; }
 

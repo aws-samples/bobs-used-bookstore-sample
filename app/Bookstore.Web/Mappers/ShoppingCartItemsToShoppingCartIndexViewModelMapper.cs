@@ -14,7 +14,7 @@ namespace Bookstore.Web.Mappers
                 ShoppingCartItems = shoppingCartItems.Select(c => new ShoppingCartIndexItemViewModel
                 {
                     BookId = c.Book.Id,
-                    ImageUrl = c.Book.FrontImageUrl,
+                    ImageUrl = c.Book.CoverImageUrl,
                     Price = c.Book.Price,
                     BookName = c.Book.Name,
                     ShoppingCartItemId = c.Id,

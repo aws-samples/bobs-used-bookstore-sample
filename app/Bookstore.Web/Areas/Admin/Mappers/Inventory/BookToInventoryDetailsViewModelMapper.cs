@@ -12,6 +12,7 @@ namespace Bookstore.Web.Areas.Admin.Mappers.Inventory
                 Author = book.Author,
                 BookType = book.BookType.Text,
                 Condition = book.Condition?.Text,
+                CoverImageUrl= book.CoverImageUrl,
                 Genre = book.Genre.Text,
                 Id = book.Id,
                 ISBN = book.ISBN,
@@ -22,11 +23,6 @@ namespace Bookstore.Web.Areas.Admin.Mappers.Inventory
                 Summary = book.Summary,
                 Year = book.Year.GetValueOrDefault()
             };
-
-            if (!string.IsNullOrWhiteSpace(book.FrontImageUrl)) result.Images.Add(book.FrontImageUrl);
-            if (!string.IsNullOrWhiteSpace(book.BackImageUrl)) result.Images.Add(book.BackImageUrl);
-            if (!string.IsNullOrWhiteSpace(book.LeftImageUrl)) result.Images.Add(book.LeftImageUrl);
-            if (!string.IsNullOrWhiteSpace(book.RightImageUrl)) result.Images.Add(book.RightImageUrl);
 
             return result;
         }

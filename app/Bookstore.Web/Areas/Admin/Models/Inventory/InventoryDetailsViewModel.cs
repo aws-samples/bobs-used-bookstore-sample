@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Bookstore.Web.Areas.Admin.Models.Inventory
+﻿namespace Bookstore.Web.Areas.Admin.Models.Inventory
 {
     public class InventoryDetailsViewModel
     {
@@ -20,7 +18,7 @@ namespace Bookstore.Web.Areas.Admin.Models.Inventory
 
         public string Condition { get; set; }
 
-        public IList<string> Images { get; set; } = new List<string>();
+        public string CoverImageUrl { get; set; }
 
         public string Summary { get; set; }
 

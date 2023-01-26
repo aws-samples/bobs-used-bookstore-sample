@@ -17,7 +17,7 @@ namespace Bookstore.Web.Mappers
                 {
                     BookId = book.Id,
                     BookName = book.Name,
-                    ImageUrl = book.FrontImageUrl,
+                    ImageUrl = book.CoverImageUrl,
                     Price = book.Price,
                     Quantity = book.Quantity
                 });

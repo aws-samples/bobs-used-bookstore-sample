@@ -16,7 +16,7 @@ namespace Bookstore.Web.Mappers
                 GenreName = book.Genre.Text,
                 TypeName = book.BookType.Text,
                 ConditionName = book.Condition.Text,
-                Url = book.FrontImageUrl,
+                Url = book.CoverImageUrl,
                 MinPrice = book.Price,
                 Quantity = book.Quantity,
                 BookId = book.Id,

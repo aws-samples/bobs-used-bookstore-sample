@@ -53,13 +53,7 @@ namespace Bookstore.Web.Areas.Admin.Controllers
 
             var book = model.ToBook();
 
-            await inventoryService.SaveAsync(
-                book,
-                model.FrontImage,
-                model.BackImage,
-                model.LeftImage,
-                model.RightImage,
-                User.Identity.Name);
+            await inventoryService.SaveAsync(book, model.CoverImage, User.Identity.Name);
 
             return RedirectToAction("Index");
         }
@@ -82,13 +76,7 @@ namespace Bookstore.Web.Areas.Admin.Controllers
 
             model.ToBook(book);
 
-            await inventoryService.SaveAsync(
-                book,
-                model.FrontImage,
-                model.BackImage,
-                model.LeftImage,
-                model.RightImage,
-                User.Identity.Name);
+            await inventoryService.SaveAsync(book, model.CoverImage, User.Identity.Name);
 
             return RedirectToAction("Index");
         }

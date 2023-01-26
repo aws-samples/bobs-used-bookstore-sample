@@ -20,7 +20,7 @@ namespace Services
 
         PaginatedList<Book> GetBooks(string searchString, string sortBy, int pageIndex, int pageSize);
 
-        Task SaveAsync(Book book, IFormFile frontPhoto, IFormFile backPhoto, IFormFile leftPhoto, IFormFile rightPhoto, string userName);
+        Task SaveAsync(Book book, IFormFile frontPhoto, string userName);
     }
 
     public class InventoryService : IInventoryService
@@ -104,9 +104,9 @@ namespace Services
                                                book => book.Genre, book => book.BookType, book => book.Publisher);
         }
 
-        public async Task SaveAsync(Book book, IFormFile frontImage, IFormFile backImage, IFormFile leftImage, IFormFile rightImage, string userName)
+        public async Task SaveAsync(Book book, IFormFile frontImage, string userName)
         {
-            await UpdateImagesAsync(book, frontImage, backImage, leftImage, rightImage);
+            await UpdateImageAsync(book, frontImage);
 
             if (book.IsNewEntity()) book.CreatedBy = userName;
 
@@ -117,37 +117,14 @@ namespace Services
             await bookRepository.SaveAsync();
         }
 
-        private async Task UpdateImagesAsync(Book book, IFormFile frontImage, IFormFile backImage, IFormFile leftImage, IFormFile rightImage)
+        private async Task UpdateImageAsync(Book book, IFormFile frontImage)
         {
-            var frontImageUploadTask = fileUploadService.SaveAsync(frontImage);
-            var backImageUploadTask = fileUploadService.SaveAsync(backImage);
-            var leftImageUploadTask = fileUploadService.SaveAsync(leftImage);
-            var rightImageUploadTask = fileUploadService.SaveAsync(rightImage);
-
-            await Task.WhenAll(frontImageUploadTask, backImageUploadTask, leftImageUploadTask, rightImageUploadTask);
+            var imageUrl = await fileUploadService.SaveAsync(frontImage);
 
             if (frontImage != null)
             {
-                await fileUploadService.DeleteAsync(book.FrontImageUrl);
-                book.FrontImageUrl = frontImageUploadTask.Result;
-            }
-
-            if (backImage != null)
-            {
-                await fileUploadService.DeleteAsync(book.BackImageUrl);
-                book.BackImageUrl = backImageUploadTask.Result;
-            }
-
-            if (leftImage != null)
-            {
-                await fileUploadService.DeleteAsync(book.LeftImageUrl);
-                book.LeftImageUrl = leftImageUploadTask.Result;
-            }
-
-            if (rightImage != null)
-            {
-                await fileUploadService.DeleteAsync(book.RightImageUrl);
-                book.RightImageUrl = rightImageUploadTask.Result;
+                await fileUploadService.DeleteAsync(book.CoverImageUrl);
+                book.CoverImageUrl = imageUrl;
             }
         }
     }

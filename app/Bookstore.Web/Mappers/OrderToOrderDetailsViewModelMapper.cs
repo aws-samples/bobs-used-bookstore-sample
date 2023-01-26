@@ -21,7 +21,7 @@ namespace Bookstore.Web.Mappers
             {
                 BookId = x.BookId,
                 BookName = x.Book.Name,
-                ImageUrl = x.Book.FrontImageUrl,
+                ImageUrl = x.Book.CoverImageUrl,
                 Price = x.Book.Price
             }).ToList();
 

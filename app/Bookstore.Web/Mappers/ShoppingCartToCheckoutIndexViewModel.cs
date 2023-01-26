@@ -26,7 +26,7 @@ namespace Bookstore.Web.Mappers
             result.ShoppingCartItems = shoppingCart.Items.Select(x => new CheckoutItemViewModel
             {
                 BookName = x.Book.Name,
-                ImageUrl = x.Book.FrontImageUrl,
+                ImageUrl = x.Book.CoverImageUrl,
                 Price = x.Book.Price,
                 OutOfStock = x.Book.Quantity <= 0
             }).ToList();

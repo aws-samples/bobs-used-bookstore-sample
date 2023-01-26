@@ -32,17 +32,8 @@ namespace Bookstore.Web.Areas.Admin.Models.Inventory
 
         public int Quantity { get; set; } = 1;
 
-        public IFormFile FrontImage { get; set; }
-        public string FrontImageUrl { get; set; }
-
-        public IFormFile BackImage { get; set; }
-        public string BackImageUrl { get; set; }
-
-        public IFormFile LeftImage { get; set; }
-        public string LeftImageUrl { get; set; }
-
-        public IFormFile RightImage { get; set; }
-        public string RightImageUrl { get; set; }
+        public IFormFile CoverImage { get; set; }
+        public string CoverImageUrl { get; set; }
 
         public string Summary { get; set; }
     }

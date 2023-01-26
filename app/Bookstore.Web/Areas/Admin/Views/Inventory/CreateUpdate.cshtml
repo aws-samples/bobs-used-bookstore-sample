@@ -75,27 +75,9 @@
     <div class="row justify-content-center">
         <div class="col-8">
             <div class="mb-3">
-                <label asp-for="FrontImage" class="form-label">Front Image</label>
-                <input asp-for="FrontImage" class="form-control mb-3">
-                <img src="@Model.FrontImageUrl" class="img-thumbnail @(string.IsNullOrWhiteSpace(Model.FrontImageUrl) ? "d-none" : "")" />
-            </div>
-
-            <div class="mb-3">
-                <label asp-for="BackImage" class="form-label">Back Image</label>
-                <input asp-for="BackImage" class="form-control mb-3">
-                <img src="@Model.BackImageUrl" class="img-thumbnail @(string.IsNullOrWhiteSpace(Model.BackImageUrl) ? "d-none" : "")" />
-            </div>
-
-            <div class="mb-3">
-                <label asp-for="LeftImage" class="form-label">Left Image</label>
-                <input asp-for="LeftImage" class="form-control mb-3">
-                <img src="@Model.LeftImageUrl" class="img-thumbnail @(string.IsNullOrWhiteSpace(Model.LeftImageUrl) ? "d-none" : "")" />
-            </div>
-
-            <div class="mb-3">
-                <label asp-for="RightImage" class="form-label">Right Image</label>
-                <input asp-for="RightImage" class="form-control mb-3">
-                <img src="@Model.RightImageUrl" class="img-thumbnail @(string.IsNullOrWhiteSpace(Model.RightImageUrl) ? "d-none" : "")" />
+                <label class="form-label">Cover Image</label>
+                <input asp-for="CoverImage" class="form-control mb-3">
+                <img src="@Model.CoverImageUrl" class="img-thumbnail @(string.IsNullOrWhiteSpace(Model.CoverImageUrl) ? "d-none" : "")" />
             </div>
         </div>
     </div>
