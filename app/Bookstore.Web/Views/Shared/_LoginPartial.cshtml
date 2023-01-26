@@ -1,25 +1,19 @@
-﻿<ul class="navbar-nav">
-    @if (User.Identity.IsAuthenticated)
-    {
-        <li class="nav-item">
-            <a class="nav-link text-dark" asp-controller="Address" asp-action="Index" style="padding-top: 0.8rem">Hello @User.Identity.Name!</a>
-        </li>
+﻿@if (User.Identity.IsAuthenticated)
+{
+    <div class="hstack gap-2">
+        <a class="nav-link text-dark" asp-controller="Address" asp-action="Index">Hello @User.Identity.Name!</a>
+
+        <div class="vr"></div>
 
         @if (User.IsInRole("Administrators"))
         {
-            <li class="nav-item">
-                <a class="nav-link text-dark" asp-area="Admin" asp-controller="Orders" asp-action="Index" style="padding-top: 0.8rem">Admin Portal</a>
-            </li>
+            <a class="nav-link text-dark" asp-area="Admin" asp-controller="Orders" asp-action="Index">Admin Portal</a>
+            <div class="vr"></div>
         }
-
-        <li class="nav-item">
-            <a class="nav-link btn btn-link text-dark" asp-controller="Authentication" asp-action="LogOut">Logout</a>
-        </li>
-    }
-    else
-    {
-        <li class="nav-item">
-            <a class="nav-link text-dark" asp-controller="Authentication" asp-action="Login">Log in</a>
-        </li>
-    }
-</ul>
+        <a class="nav-link text-dark" asp-controller="Authentication" asp-action="LogOut">Logout</a>
+    </div>
+}
+else
+{
+    <a class="nav-link text-dark" asp-controller="Authentication" asp-action="Login">Log in</a>
+}

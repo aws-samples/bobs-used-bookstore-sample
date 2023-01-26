@@ -1,6 +1,4 @@
-﻿using Bookstore.Domain.Books;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel;
 
 namespace Bookstore.Web.ViewModel.Search
