@@ -29,7 +29,6 @@ namespace Bookstore.Web.ViewModel.Search
 
         [Display(Name = "Condition")] public string ConditionName { get; set; }
 
-        public List<Price> Prices { get; set; }
         public string Url { get; set; }
 
         [Display(Name = "$$")] public decimal MinPrice { get; set; }
