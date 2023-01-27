@@ -27,10 +27,10 @@ namespace Bookstore.Web.Startup
                 x.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
             });
 
+            builder.Services.AddDefaultAWSOptions(builder.Configuration.GetAWSOptions());
             builder.Services.AddAWSService<IAmazonS3>();
             builder.Services.AddAWSService<IAmazonPolly>();
             builder.Services.AddAWSService<IAmazonRekognition>();
-            builder.Services.AddDefaultAWSOptions(builder.Configuration.GetAWSOptions());
 
             var connString = GetDatabaseConnectionString(builder.Configuration);
             builder.Services.AddDbContext<ApplicationDbContext>(option => option.UseSqlServer(connString));

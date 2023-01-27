@@ -7,30 +7,7 @@ namespace Bookstore.Web.Startup
     {
         public static WebApplicationBuilder ConfigureConfiguration(this WebApplicationBuilder builder)
         {
-            builder.Configuration.AddSystemsManager("/BobsBookstore/", optional: false);
-
-            //var dbSettingsRootKey = $"/BobsUsedBooks-{builder.Environment.EnvironmentName}-DbSettings/";
-            //var appSettingsRootKey = $"/BobsUsedBooks-{builder.Environment.EnvironmentName}-CustomerSite/";
-
-            //if (!builder.Environment.IsDevelopment())
-            //{
-            //    Console.WriteLine($"Configuring settings injection from root key {appSettingsRootKey}");
-
-            //    // This root contains subkeys related to the storage bucket and CloudFront distribution
-            //    // the bucket must be accessed through, plus Cognito user pool data
-            //    builder.Configuration.AddSystemsManager(appSettingsRootKey, optional: true);
-
-            //    // local and integrated debug profiles use a localdb instance
-            //    if (builder.Environment.IsProduction())
-            //    {
-            //        Console.WriteLine($"Production environment, adding db settings injection from root key {dbSettingsRootKey}");
-
-            //        // This root contains a subkey, dbsecretsname, that contains the name of the Secrets Manager
-            //        // secret with the RDS database credentials. In production, we read these to build
-            //        // the connection string at runtime instead of storing sensitive info in appsettings.
-            //        builder.Configuration.AddSystemsManager(dbSettingsRootKey, optional: false);
-            //    }
-            //}
+            builder.Configuration.AddSystemsManager("/BobsBookstore/", optional: true);
 
             return builder;
         }
