@@ -1,8 +1,8 @@
 # 'Bob's Used Books' Sample Application
 
-_Bob's Used Books_ is a sample application, built on ASP.NET Core, that aims to represent a real-world bookstore. It is a monolithic n-tier application with an ASP.NET Core MVC front end and a Microsoft SQL Server database backend.
+_Bob's Used Books_ is a sample application, built on ASP.NET Core 6.0, that aims to represent a real-world bookstore. It is a monolithic n-tier application with an ASP.NET Core MVC front end and a Microsoft SQL Server database backend.
 
-The front end web application contains a customer portal and an administration portal. The customer portal enables customers to browse the store's stock of used books being offered for sale, select and add them to a shopping cart, and work through a fictional check-out process. Store customers can also offer their own books for resale through the website.
+The MVC application contains a customer portal and an administration portal. The customer portal enables customers to browse the store's stock of used books being offered for sale, select and add them to a shopping cart, and work through a fictional check-out process. Store customers can also offer their own books for resale through the website.
 
 ![Customer portal home page](./media/customer_app_home.png)
 
@@ -11,6 +11,15 @@ The administration portal is used to maintain the stocks of books available in t
 ![Admin web app home page](./media/admin_app_home.png)
 
 In its current state the application illustrates an in-progress "lift and shift" from on-premises to AWS, with partial modernization to use some AWS services. As the sample application progresses over time we have plans to add further modernization examples including (but not limited to) changes such as database modernization and refactoring to microservices.
+
+## Prerequisites
+
+To run and debug the application locally you need the following:
+* An IDE that supports .NET 6.0: [Visual Studio 2022](https://visualstudio.microsoft.com/vs/) or [JetBrains Rider](https://www.jetbrains.com/rider/)
+
+To deploy the application to AWS you need the following:
+* An AWS IAM User with an attached _AdministratorAccess_ policy
+* The [AWS Cloud Development Kit (CDK)](https://docs.aws.amazon.com/cdk/v2/guide/getting_started.html)
 
 ## Running the sample application
 
@@ -26,7 +35,7 @@ You can run and debug the web application from the repository codebase without n
 * Secrets management for the database credentials using [Amazon Secrets Manager](https://aws.amazon.com/secrets-manager).
 * Application configuration parameters retrieved at runtime from [AWS Systems Manager](https://aws.amazon.com/systems-manager) Parameter Store.
 
-Launch profiles, contained in the application's launchSettings.json file, are used to determine whether you are running the application fully local (no AWS resources) or local with AWS resources. The launch profile that represents a fully local run, without using any AWS services, is called the _Local_ profile. The second profile, in which the application can be run locally but also make use of some AWS services, is called the _integrated_ profile.
+Launch profiles, contained in the application's launchSettings.json file, are used to determine whether you are running the application fully local (no AWS resources) or local with AWS resources. The launch profile that represents a fully local run, without using any AWS services, is called the _Local_ profile. The second profile, in which the application can be run locally but also make use of some AWS services, is called the _Integrated_ profile.
 
 ![Launch profiles for the web app](./media/vs_launch_profiles.png)
 
@@ -62,7 +71,7 @@ Run the  application by starting the **Bookstore.Web** project using the _Integr
 
 In integrated mode, the application uses Amazon Cognito user pools for user authentication and Amazon Cognito user groups for role-based authorization.
 
-On first login to the admin application you will be asked to change the temporary password.
+On first login to the application you will be asked to change the temporary password.
 
 1. Start the application using the _Integrated_ launch profile.
 
@@ -80,7 +89,7 @@ You are then signed into the application and placed at the customer portal home 
 
 ![Order view in Admin app](./media/app_post_sign-in.png)
 
-**Note:** The application supports self sign up. When users sign up to Bob's Bookstore they are granted access to the customer portal, but not to the administrator portal. Administrators cannot be added via self sign up, they must be added directly in the application's Cognito user pool. This reflects a real-world sign-up and administration experience.
+**Note:** The application supports self sign up. When users sign up to Bob's Used Books they are granted access to the customer portal, but not to the administrator portal. Administrators cannot be added via self sign up, they must be added directly in the application's Cognito user pool.
 
 ### Tearing down infrastructure
 
