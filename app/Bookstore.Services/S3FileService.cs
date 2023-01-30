@@ -13,10 +13,10 @@ namespace Bookstore.Services
         private readonly IConfiguration configuration;
         private readonly TransferUtility transferUtility;
 
-        public S3FileService(IConfiguration configuration)
+        public S3FileService(IConfiguration configuration, IAmazonS3 s3Client)
         {
             this.configuration = configuration;
-            this.transferUtility = new TransferUtility(new AmazonS3Client());
+            this.transferUtility = new TransferUtility(s3Client);
         }
 
         public async Task DeleteAsync(string filePath)
