@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -7,11 +6,11 @@ namespace Bookstore.Services
 {
     public class LocalFileService : IFileService
     {
-        private readonly IWebHostEnvironment environment;
+        private readonly string webRootPath;
 
-        public LocalFileService(IWebHostEnvironment environment)
+        public LocalFileService(string webRootPath)
         {
-            this.environment = environment;
+            this.webRootPath = webRootPath;
         }
 
         public async Task DeleteAsync(string filePath)
@@ -23,7 +22,7 @@ namespace Bookstore.Services
         {
             if (file == null) return null;
 
-            var imageFolder = Path.Combine(environment.WebRootPath, "images/coverimages");
+            var imageFolder = Path.Combine(webRootPath, "images/coverimages");
             var filename = $"{Path.GetFileNameWithoutExtension(Path.GetRandomFileName())}{Path.GetExtension(file.FileName)}";
 
             if (!Directory.Exists(imageFolder)) Directory.CreateDirectory(imageFolder);

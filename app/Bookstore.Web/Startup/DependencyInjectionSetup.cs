@@ -22,7 +22,7 @@ namespace Bookstore.Web.Startup
 
             if (builder.Environment.IsDevelopment())
             {
-                builder.Services.AddTransient<IFileService, LocalFileService>();
+                builder.Services.AddTransient<IFileService, LocalFileService>(x => new LocalFileService(builder.Environment.WebRootPath));
             }
             else
             {

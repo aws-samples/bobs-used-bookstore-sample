@@ -9,7 +9,6 @@
         <PackageReference Include="AWS.Logger.AspNetCore" Version="3.3.0" />
         <PackageReference Include="AWSSDK.CloudWatchLogs" Version="3.7.2.87" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="6.0.10" />
-        <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.6" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.7" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.6" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.6">
@@ -17,7 +16,6 @@
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.11" />
-        <PackageReference Include="X.PagedList.Mvc.Core" Version="8.1.0" />
     </ItemGroup>
 
     <ItemGroup>
