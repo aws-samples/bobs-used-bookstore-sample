@@ -5,10 +5,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <Content Remove="wwwroot\images\AgeOfDevas.png" />
-    </ItemGroup>
-
-    <ItemGroup>
         <PackageReference Include="Amazon.Extensions.Configuration.SystemsManager" Version="2.1.0" />
         <PackageReference Include="AWS.Logger.AspNetCore" Version="3.3.0" />
         <PackageReference Include="AWSSDK.CloudWatchLogs" Version="3.7.2.87" />
@@ -22,10 +18,6 @@
         </PackageReference>
         <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.11" />
         <PackageReference Include="X.PagedList.Mvc.Core" Version="8.1.0" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <None Include="wwwroot\images\AgeOfDevas.png" />
     </ItemGroup>
 
     <ItemGroup>
