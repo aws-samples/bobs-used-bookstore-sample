@@ -7,8 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bookstore.Services", "app\B
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bookstore.Data", "app\Bookstore.Data\Bookstore.Data.csproj", "{9C5151EC-A0B0-4B79-B8FD-9B955349301A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataMigrations", "app\DataMigrations\DataMigrations.csproj", "{0A973E48-856B-4538-ABA9-0A21A838E51F}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bookstore.Domain", "app\Bookstore.Domain\Bookstore.Domain.csproj", "{045475FA-ACF7-480D-821B-AB96A71AD8AB}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CloudInfrastructure", "CloudInfrastructure", "{A048AA24-0669-4136-88B9-D275812BA302}"
@@ -31,10 +29,6 @@ Global
 		{9C5151EC-A0B0-4B79-B8FD-9B955349301A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9C5151EC-A0B0-4B79-B8FD-9B955349301A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9C5151EC-A0B0-4B79-B8FD-9B955349301A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0A973E48-856B-4538-ABA9-0A21A838E51F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0A973E48-856B-4538-ABA9-0A21A838E51F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0A973E48-856B-4538-ABA9-0A21A838E51F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0A973E48-856B-4538-ABA9-0A21A838E51F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{045475FA-ACF7-480D-821B-AB96A71AD8AB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{045475FA-ACF7-480D-821B-AB96A71AD8AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{045475FA-ACF7-480D-821B-AB96A71AD8AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
