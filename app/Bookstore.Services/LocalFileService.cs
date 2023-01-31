@@ -23,7 +23,7 @@ namespace Bookstore.Services
         {
             if (file == null) return null;
 
-            var imageFolder = Path.Combine(environment.WebRootPath, "images");
+            var imageFolder = Path.Combine(environment.WebRootPath, "images/coverimages");
             var filename = $"{Path.GetFileNameWithoutExtension(Path.GetRandomFileName())}{Path.GetExtension(file.FileName)}";
 
             if (!Directory.Exists(imageFolder)) Directory.CreateDirectory(imageFolder);
@@ -34,7 +34,7 @@ namespace Bookstore.Services
 
             await filestream.FlushAsync();
 
-            return $"/images/{filename}";
+            return $"/images/coverimages/{filename}";
         }
     }
 }
