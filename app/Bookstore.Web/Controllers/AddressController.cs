@@ -1,6 +1,6 @@
-﻿using Bookstore.Services;
+﻿using Bookstore.Domain.Addresses;
+using Bookstore.Domain.Customers;
 using Bookstore.Web.Helpers;
-using Bookstore.Web.Mappers;
 using Bookstore.Web.ViewModel.Address;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -9,26 +9,25 @@ namespace Bookstore.Web.Controllers
 {
     public class AddressController : Controller
     {
+        private readonly IAddressService addressService;
         private readonly ICustomerService customerService;
 
-        public AddressController(ICustomerService customerService)
+        public AddressController(IAddressService addressService, ICustomerService customerService)
         {
+            this.addressService = addressService;
             this.customerService = customerService;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var addresses = customerService.GetAddresses(User.GetSub());
+            var addresses = await addressService.GetAddressesAsync(User.GetSub());
 
-            return View(addresses.ToAddressIndexViewModel());
+            return View(new AddressIndexViewModel(addresses));
         }
 
         public IActionResult Create(string returnUrl)
         {
-            var model = new AddressCreateUpdateViewModel
-            {
-                ReturnUrl = returnUrl
-            };
+            var model = new AddressCreateUpdateViewModel(returnUrl);
 
             return View("CreateUpdate", model);
         }
@@ -38,20 +37,18 @@ namespace Bookstore.Web.Controllers
         {
             if (!ModelState.IsValid) return View(model);
 
-            await customerService.SaveAddressAsync(model.ToAddress(), User.GetSub());
+            var dto = new CreateAddressDto(model.AddressLine1, model.AddressLine2, model.City, model.State, model.Country, model.ZipCode, User.GetSub());
+
+            await addressService.CreateAddressAsync(dto);
 
             return Redirect(model.ReturnUrl);
         }
 
-        public IActionResult Update(int id, string returnUrl)
+        public async Task<IActionResult> Update(int id, string returnUrl)
         {
-            var address = customerService.GetAddress(User.GetSub(), id);
+            var address = await addressService.GetAddressAsync(User.GetSub(), id);
 
-            var model = address.ToAddressCreateUpdateViewModel();
-
-            model.ReturnUrl = returnUrl;
-
-            return View("CreateUpdate", model);
+            return View("CreateUpdate", new AddressCreateUpdateViewModel(address, returnUrl));
         }
 
         [HttpPost]
@@ -59,13 +56,9 @@ namespace Bookstore.Web.Controllers
         {
             if (!ModelState.IsValid) return View(model);
 
-            var address = customerService.GetAddress(User.GetSub(), model.Id);
+            var dto = new UpdateAddressDto(model.Id, model.AddressLine1, model.AddressLine2, model.City, model.State, model.Country, model.ZipCode, User.GetSub());
 
-            if (address == null) return NotFound();
-
-            model.ToAddress(address);
-
-            await customerService.SaveAddressAsync(address, User.GetSub());
+            await addressService.UpdateAddressAsync(dto);
 
             return Redirect(model.ReturnUrl);
         }
@@ -73,7 +66,9 @@ namespace Bookstore.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Delete(int id)
         {
-            await customerService.DeleteAddressAsync(User.GetSub(), id);
+            await addressService.DeleteAddressAsync(User.GetSub(), id);
+
+            this.SetNotification("Address deleted.");
 
             return RedirectToAction(nameof(Index));
         }

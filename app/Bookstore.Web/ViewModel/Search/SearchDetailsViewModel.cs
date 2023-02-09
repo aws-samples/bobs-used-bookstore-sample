@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel;
+using Bookstore.Domain.Books;
 
 namespace Bookstore.Web.ViewModel.Search
 {
@@ -34,5 +35,21 @@ namespace Bookstore.Web.ViewModel.Search
         public int Quantity { get; set; }
 
         public string Summary { get; set; }
+
+        public SearchDetailsViewModel(Book book)
+        {
+            BookName = book.Name;
+            Author = book.Author;
+            PublisherName = book.Publisher.Text;
+            ISBN = book.ISBN;
+            GenreName = book.Genre.Text;
+            TypeName = book.BookType.Text;
+            ConditionName = book.Condition.Text;
+            Url = book.CoverImageUrl;
+            MinPrice = book.Price;
+            Quantity = book.Quantity;
+            BookId = book.Id;
+            Summary = book.Summary;
+        }
     }
 }

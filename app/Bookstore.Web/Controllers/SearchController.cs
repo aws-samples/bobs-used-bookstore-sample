@@ -1,37 +1,37 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Bookstore.Services;
-using Services;
 using Microsoft.AspNetCore.Authorization;
-using Bookstore.Web.Mappers;
 using Bookstore.Web.Helpers;
+using Bookstore.Domain.Books;
+using Bookstore.Domain.Carts;
+using Bookstore.Web.ViewModel.Search;
 
 namespace Bookstore.Web.Controllers
 {
     [AllowAnonymous]
     public class SearchController : Controller
     {
-        private readonly IInventoryService inventoryService;
+        private readonly IBookService inventoryService;
         private readonly IShoppingCartService shoppingCartService;
 
-        public SearchController(IInventoryService inventoryService, IShoppingCartService shoppingCartService)
+        public SearchController(IBookService inventoryService, IShoppingCartService shoppingCartService)
         {
             this.inventoryService = inventoryService;
             this.shoppingCartService = shoppingCartService;
         }
 
-        public IActionResult Index(string searchString, string sortBy = "Name", int pageIndex = 1, int pageSize = 10)
+        public async Task<IActionResult> Index(string searchString, string sortBy = "Name", int pageIndex = 1, int pageSize = 10)
         {
-            var books = inventoryService.GetBooks(searchString, sortBy, pageIndex, pageSize);
+            var books = await inventoryService.GetBooksAsync(searchString, sortBy, pageIndex, pageSize);
 
-            return View(books.ToSearchIndexViewModel());
+            return View(new SearchIndexViewModel(books));
         }
 
-        public IActionResult Details(int id)
+        public async Task<IActionResult> Details(int id)
         {
-            var book = inventoryService.GetBook(id);
+            var book = await inventoryService.GetBookAsync(id);
 
-            return View(book.ToSearchDetailsViewModel());
+            return View(new SearchDetailsViewModel(book));
         }
 
         public async Task<IActionResult> AddItemToShoppingCart(int bookId)

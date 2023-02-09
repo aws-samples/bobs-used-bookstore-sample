@@ -1,5 +1,8 @@
-﻿using System;
+﻿using Bookstore.Domain;
+using Bookstore.Domain.Orders;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Bookstore.Web.ViewModel.Orders
 {
@@ -14,6 +17,22 @@ namespace Bookstore.Web.ViewModel.Orders
         public decimal Total { get; set; }
 
         public List<OrderDetailsItemViewModel> OrderItems { get; set; } = new List<OrderDetailsItemViewModel>();
+
+        public OrderDetailsViewModel(Order order)
+        {
+            OrderId = order.Id;
+            DeliveryDate = order.DeliveryDate;
+            OrderStatus = order.OrderStatus.GetDescription();
+            Total = order.Total;
+
+            OrderItems = order.OrderItems.Select(x => new OrderDetailsItemViewModel
+            {
+                BookId = x.BookId,
+                BookName = x.Book.Name,
+                ImageUrl = x.Book.CoverImageUrl,
+                Price = x.Book.Price
+            }).ToList();
+        }
     }
 
     public class OrderDetailsItemViewModel

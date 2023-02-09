@@ -7,6 +7,7 @@
     <ItemGroup>
         <PackageReference Include="AWSSDK.Polly" Version="3.7.1.15" />
         <PackageReference Include="AWSSDK.Rekognition" Version="3.7.1.21" />
+        <PackageReference Include="AWSSDK.S3" Version="3.7.8.13" />
         <PackageReference Include="AWSSDK.SecretsManager" Version="3.7.1.4" />
         <PackageReference Include="AWSSDK.SimpleEmailV2" Version="3.7.1.116" />
         <PackageReference Include="Microsoft.Build" Version="17.2.0" />

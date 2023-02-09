@@ -1,11 +1,9 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Services;
-using Bookstore.Services;
-using Microsoft.AspNetCore.Authorization;
-using Bookstore.Web.Mappers;
 using Bookstore.Web.ViewModel.Resale;
 using Bookstore.Web.Helpers;
+using Bookstore.Domain.Offers;
+using Bookstore.Domain.ReferenceData;
 
 namespace Bookstore.Web.Controllers
 {
@@ -20,21 +18,18 @@ namespace Bookstore.Web.Controllers
             this.offerService = offerService;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var offers = offerService.GetOffers(User.GetSub());
+            var offers = await offerService.GetOffersAsync(User.GetSub());
 
-            return View(offers.ToResaleIndexViewModel());
+            return View(new ResaleIndexViewModel(offers));
         }
 
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            var viewModel = new ResaleCreateViewModel();
-            var referenceData = referenceDataService.GetReferenceData();
+            var referenceDataDtos = await referenceDataService.GetAllReferenceDataAsync();
 
-            viewModel.PopulateReferenceData(referenceData);
-
-            return View(viewModel);
+            return View(new ResaleCreateViewModel(referenceDataDtos));
         }
 
         [HttpPost]
@@ -42,9 +37,18 @@ namespace Bookstore.Web.Controllers
         {
             if (!ModelState.IsValid) return View();
 
-            var offer = resaleViewModel.ToOffer();
+            var dto = new CreateOfferDto(
+                User.GetSub(), 
+                resaleViewModel.BookName, 
+                resaleViewModel.Author, 
+                resaleViewModel.ISBN, 
+                resaleViewModel.SelectedBookTypeId, 
+                resaleViewModel.SelectedConditionId, 
+                resaleViewModel.SelectedGenreId, 
+                resaleViewModel.SelectedPublisherId, 
+                resaleViewModel.BookPrice);
 
-            await offerService.CreateOfferAsync(offer, User.GetSub());
+            await offerService.CreateOfferAsync(dto);
 
             return RedirectToAction(nameof(Index));
         }

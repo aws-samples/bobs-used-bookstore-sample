@@ -19,6 +19,16 @@
             </div>
 
             <div class="col-12">
+                <label class="visually-hidden" for="OrderStatusSelect">Order date from</label>
+                <input id="OrderDateFrom" type="date" class="form-control" name="Filters.OrderDateFromfilter" asp-for="Filters.OrderDateFromFilter" />
+            </div>
+
+            <div class="col-12">
+                <label class="visually-hidden" for="OrderStatusSelect">Order date to</label>
+                <input id="OrderDateTo" type="date" class="form-control" name="Filters.OrderDateTofilter" asp-for="Filters.OrderDateToFilter" />
+            </div>
+
+            <div class="col-12">
                 <button type="submit" class="btn btn-primary">Filter</button>
             </div>
 

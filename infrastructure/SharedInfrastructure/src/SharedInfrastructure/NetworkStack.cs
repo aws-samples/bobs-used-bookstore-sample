@@ -16,9 +16,7 @@ public class NetworkStack : Stack
         {
             IpAddresses = IpAddresses.Cidr("10.0.0.0/16"),
             // Cap at 2 AZs in case we are deployed to a region with only 2
-            MaxAzs = 2,
-            // We do not need a NAT gateway for this sample application, so remove to reduce cost
-            NatGateways = 1,
+            MaxAzs = 2,            
             SubnetConfiguration = new[]
             {
                 new SubnetConfiguration

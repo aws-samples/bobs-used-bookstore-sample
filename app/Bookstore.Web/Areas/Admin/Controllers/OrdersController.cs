@@ -1,9 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Bookstore.Services;
-using Bookstore.Services.Filters;
 using Bookstore.Web.Areas.Admin.Models.Orders;
-using Bookstore.Web.Areas.Admin.Mappers.Orders;
+using Bookstore.Domain.Orders;
 
 namespace Bookstore.Web.Areas.Admin.Controllers
 {
@@ -16,36 +14,26 @@ namespace Bookstore.Web.Areas.Admin.Controllers
             this.orderService = orderService;
         }
 
-        public IActionResult Index(OrderFilters filters, int pageIndex = 1, int pageSize = 10)
+        public async Task<IActionResult> Index(OrderFilters filters, int pageIndex = 1, int pageSize = 10)
         {
-            var orders = orderService.GetOrders(filters, pageIndex, pageSize);
+            var orders = await orderService.GetOrdersAsync(filters, pageIndex, pageSize);
 
-            var model = orders.ToOrderIndexItemViewModel();
-
-            model.Filters = filters;
-
-            return View(model);
+            return View(new OrderIndexViewModel(orders, filters));
         }
 
-        public IActionResult Details(int id)
+        public async Task<IActionResult> Details(int id)
         {
-            var order = orderService.GetOrder(id);
-            var orderDetails = orderService.GetOrderDetails(id);
-            var model = order.ToOrderDetailsViewModel();
+            var order = await orderService.GetOrderAsync(id);
 
-            model.AddOrderDetails(orderDetails);
-
-            return View(model);
+            return View(new OrderDetailsViewModel(order));
         }
 
         [HttpPost]
         public async Task<IActionResult> Details(OrderDetailsViewModel model)
         {
-            var order = orderService.GetOrder(model.OrderId);
+            var dto = new UpdateOrderStatusDto(model.OrderId, model.SelectedOrderStatus);
 
-            order.OrderStatus = model.SelectedOrderStatus;
-
-            await orderService.SaveOrderAsync(order, User.Identity.Name);
+            await orderService.UpdateOrderStatusAsync(dto);
 
             TempData["Message"] = "Order status has been updated";
 

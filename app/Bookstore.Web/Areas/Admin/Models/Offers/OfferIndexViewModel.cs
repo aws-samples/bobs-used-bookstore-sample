@@ -1,13 +1,44 @@
-﻿using Bookstore.Domain.Offers;
-using Bookstore.Services.Filters;
+﻿using Bookstore.Domain;
+using Bookstore.Domain.Offers;
+using Bookstore.Domain.ReferenceData;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Bookstore.Web.Areas.Admin.Models.Offers
 {
     public class OfferIndexViewModel : PaginatedViewModel
     {
+        public OfferIndexViewModel(IPaginatedList<Offer> offers, IEnumerable<ReferenceDataItem> referenceData)
+        {
+            foreach (var offer in offers)
+            {
+                Items.Add(new OfferIndexItemViewModel
+                {
+                    OfferId = offer.Id,
+                    BookName = offer.BookName,
+                    Author = offer.Author,
+                    Genre = offer.Genre.Text,
+                    CustomerName = offer.Customer.FullName,
+                    OfferStatus = offer.OfferStatus,
+                    OfferDate = offer.CreatedOn,
+                    OfferPrice = offer.BookPrice,
+                    Condition = offer.Condition.Text
+                });
+            }
+
+            PageIndex = offers.PageIndex;
+            PageSize = offers.Count;
+            PageCount = offers.TotalPages;
+            HasNextPage = offers.HasNextPage;
+            HasPreviousPage = offers.HasPreviousPage;
+            PaginationButtons = offers.GetPageList(5).ToList();
+
+            Genres = referenceData.Where(x => x.DataType == ReferenceDataType.Genre).Select(x => new SelectListItem { Value = x.Id.ToString(), Text = x.Text });
+            BookConditions = referenceData.Where(x => x.DataType == ReferenceDataType.Condition).Select(x => new SelectListItem { Value = x.Id.ToString(), Text = x.Text });
+        }
+
         public List<OfferIndexItemViewModel> Items { get; set; } = new List<OfferIndexItemViewModel>();
 
         public OfferFilters Filters { get; set; }

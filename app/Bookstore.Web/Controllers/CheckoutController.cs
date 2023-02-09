@@ -1,8 +1,8 @@
-﻿using Bookstore.Services;
+﻿using Bookstore.Domain.Addresses;
+using Bookstore.Domain.Carts;
+using Bookstore.Domain.Orders;
 using Bookstore.Web.Helpers;
-using Bookstore.Web.Mappers;
 using Bookstore.Web.ViewModel.Checkout;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -10,41 +10,41 @@ namespace Bookstore.Web.Controllers
 {
     public class CheckoutController : Controller
     {
-        private readonly ICustomerService customerService;
+        private readonly IAddressService addressService;
         private readonly IShoppingCartService shoppingCartService;
         private readonly IOrderService orderService;
 
-        public CheckoutController(ICustomerService customerService,
-                                  IShoppingCartService shoppingCartService,
-                                  IOrderService orderService)
+        public CheckoutController(IShoppingCartService shoppingCartService,
+                                  IOrderService orderService,
+                                  IAddressService addressService)
         {
-            this.customerService = customerService;
             this.shoppingCartService = shoppingCartService;
             this.orderService = orderService;
+            this.addressService = addressService;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var shoppingCart = shoppingCartService.GetShoppingCart(HttpContext.GetShoppingCartId());
-            var addresses = customerService.GetAddresses(User.GetSub());
-            var viewModel = shoppingCart.ToCheckoutIndexViewModel(addresses);
+            var shoppingCart = await shoppingCartService.GetShoppingCartAsync(HttpContext.GetShoppingCartId());
+            var addresses = await addressService.GetAddressesAsync(User.GetSub());
 
-            return View(viewModel);
+            return View(new CheckoutIndexViewModel(shoppingCart, addresses));
         }
 
         [HttpPost]
         public async Task<IActionResult> Index(CheckoutIndexViewModel model)
         {
+            //TODO Replace with DTO
             var orderId = await orderService.CreateOrderAsync(HttpContext.GetShoppingCartId(), User.GetSub(), model.SelectedAddressId);
 
             return RedirectToAction("Finished", new { orderId });
         }
 
-        public IActionResult Finished(int orderId)
+        public async Task<IActionResult> Finished(int orderId)
         {
-            var order = orderService.GetOrder(orderId);
+            var order = await orderService.GetOrderAsync(orderId);
 
-            return View(order.ToCheckoutFinishedViewModel());
+            return View(new CheckoutFinishedViewModel(order));
         }
     }
 }

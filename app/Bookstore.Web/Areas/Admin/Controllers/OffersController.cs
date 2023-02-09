@@ -1,12 +1,8 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authorization;
 using Bookstore.Domain.Offers;
-using Bookstore.Services;
-using Bookstore.Services.Filters;
-using Services;
-using Bookstore.Web.Areas.Admin.Mappers.Inventory;
-using Bookstore.Web.Areas.Admin.Mappers.Offers;
+using Bookstore.Domain.ReferenceData;
+using Bookstore.Web.Areas.Admin.Models.Offers;
 
 namespace Bookstore.Web.Areas.Admin.Controllers
 {
@@ -21,15 +17,12 @@ namespace Bookstore.Web.Areas.Admin.Controllers
             this.referenceDataService = referenceDataService;
         }
 
-        public IActionResult Index(OfferFilters filters, int pageIndex = 1, int pageSize = 10)
+        public async Task<IActionResult> Index(OfferFilters filters, int pageIndex = 1, int pageSize = 10)
         {
-            var offers = offerService.GetOffers(filters, pageIndex, pageSize);
-            var referenceData = referenceDataService.GetReferenceData();
-            var model = offers.ToOfferIndexViewModel();
+            var offers = await offerService.GetOffersAsync(filters, pageIndex, pageSize);
+            var referenceData = await referenceDataService.GetAllReferenceDataAsync();
 
-            model.PopulateReferenceData(referenceData);
-
-            return View(model);
+            return View(new OfferIndexViewModel(offers, referenceData));
         }
 
         [HttpPost]
@@ -58,11 +51,9 @@ namespace Bookstore.Web.Areas.Admin.Controllers
 
         private async Task<IActionResult> UpdateOfferStatus(int id, OfferStatus status, string message)
         {
-            var offer = offerService.GetOffer(id);
+            var dto = new UpdateOfferStatusDto(id, status);
 
-            offer.OfferStatus = status;
-
-            await offerService.SaveOfferAsync(offer, User.Identity.Name);
+            await offerService.UpdateOfferStatusAsync(dto);
 
             TempData["Message"] = message;
 

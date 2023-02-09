@@ -1,49 +1,42 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Services;
-using Bookstore.Services.Filters;
-using Bookstore.Web.Areas.Admin.Mappers.Inventory;
 using Bookstore.Web.Areas.Admin.Models.Inventory;
+using Bookstore.Domain.Books;
+using Bookstore.Domain.ReferenceData;
 
 namespace Bookstore.Web.Areas.Admin.Controllers
 {
     public class InventoryController : AdminAreaControllerBase
     {
-        private readonly IInventoryService inventoryService;
+        private readonly IBookService bookService;
         private readonly IReferenceDataService referenceDataService;
 
-        public InventoryController(IInventoryService inventoryService, IReferenceDataService referenceDataService)
+        public InventoryController(IBookService bookService, IReferenceDataService referenceDataService)
         {
-            this.inventoryService = inventoryService;
+            this.bookService = bookService;
             this.referenceDataService = referenceDataService;
         }
 
-        public IActionResult Index(InventoryFilters filters, int pageIndex = 1, int pageSize = 10)
+        public async Task<IActionResult> Index(BookFilters filters, int pageIndex = 1, int pageSize = 10)
         {
-            var books = inventoryService.GetBooks(filters, pageIndex, pageSize);
-            var referenceData = referenceDataService.GetReferenceData();
-            var model = books.ToInventoryIndexViewModel();
+            var books = await bookService.GetBooksAsync(filters, pageIndex, pageSize);
+            var referenceDataItems = await referenceDataService.GetAllReferenceDataAsync();
 
-            model = model.PopulateReferenceData(referenceData);
-
-            return View(model);
+            return View(new InventoryIndexViewModel(books, referenceDataItems));
         }
 
-        public IActionResult Details(int id)
+        public async Task<IActionResult> Details(int id)
         {
-            var book = inventoryService.GetBook(id);
+            var book = await bookService.GetBookAsync(id);
 
-            return View(book.ToInventoryDetailsViewModel());
+            return View(new InventoryDetailsViewModel(book));
         }
 
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            var model = new InventoryCreateUpdateViewModel();
-            var referenceData = referenceDataService.GetReferenceData();
+            var referenceDataItemDtos = await referenceDataService.GetAllReferenceDataAsync();
 
-            model = model.PopulateReferenceData(referenceData);
-
-            return View("CreateUpdate", model);
+            return View("CreateUpdate", new InventoryCreateUpdateViewModel(referenceDataItemDtos));
         }
 
         [HttpPost]
@@ -51,32 +44,58 @@ namespace Bookstore.Web.Areas.Admin.Controllers
         {
             if (!ModelState.IsValid) return View("CreateUpdate", model);
 
-            var book = model.ToBook();
+            var dto = new CreateBookDto(
+                model.Name, 
+                model.Author, 
+                model.SelectedBookTypeId, 
+                model.SelectedConditionId, 
+                model.SelectedGenreId, 
+                model.SelectedPublisherId, 
+                model.Year, 
+                model.ISBN, 
+                model.Summary, 
+                model.Price, 
+                model.Quantity, 
+                model.CoverImage?.OpenReadStream(), 
+                model.CoverImage?.FileName);
 
-            await inventoryService.SaveAsync(book, model.CoverImage, User.Identity.Name);
+            await bookService.AddAsync(dto);
+
+            TempData["Message"] = $"{model.Name} has been added to inventory";
 
             return RedirectToAction("Index");
         }
 
-        public IActionResult Update(int id)
+        public async Task<IActionResult> Update(int id)
         {
-            var book = inventoryService.GetBook(id);
-            var referenceData = referenceDataService.GetReferenceData();
-            var model = book.ToInventoryCreateUpdateViewModel();
+            var book = await bookService.GetBookAsync(id);
+            var referenceDataDtos = await referenceDataService.GetAllReferenceDataAsync();
 
-            model = model.PopulateReferenceData(referenceData);
-
-            return View("CreateUpdate", model);
+            return View("CreateUpdate", new InventoryCreateUpdateViewModel(referenceDataDtos, book));
         }
 
         [HttpPost]
         public async Task<IActionResult> Update(InventoryCreateUpdateViewModel model)
         {
-            var book = inventoryService.GetBook(model.Id);
+            var dto = new UpdateBookDto(
+                model.Id,
+                model.Name,
+                model.Author,
+                model.SelectedBookTypeId,
+                model.SelectedConditionId,
+                model.SelectedGenreId,
+                model.SelectedPublisherId,
+                model.Year,
+                model.ISBN,
+                model.Summary,
+                model.Price,
+                model.Quantity,
+                model.CoverImage?.OpenReadStream(),
+                model.CoverImage?.FileName);
 
-            model.ToBook(book);
+            await bookService.UpdateAsync(dto);
 
-            await inventoryService.SaveAsync(book, model.CoverImage, User.Identity.Name);
+            TempData["Message"] = $"{model.Name} has been updated";
 
             return RedirectToAction("Index");
         }

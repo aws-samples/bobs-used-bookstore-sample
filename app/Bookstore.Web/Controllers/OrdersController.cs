@@ -1,9 +1,8 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authorization;
-using Bookstore.Services;
-using Bookstore.Web.Mappers;
 using Bookstore.Web.Helpers;
+using Bookstore.Domain.Orders;
+using Bookstore.Web.ViewModel.Orders;
 
 namespace Bookstore.Web.Controllers
 {
@@ -16,18 +15,18 @@ namespace Bookstore.Web.Controllers
             this.orderService = orderService;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var orders = orderService.GetOrders(User.GetSub());
+            var orders = await orderService.GetOrdersAsync(User.GetSub());
 
-            return View(orders.ToOrderIndexViewModel());
+            return View(new OrderIndexViewModel(orders));
         }
 
-        public IActionResult Details(int id)
+        public async Task<IActionResult> Details(int id)
         {
-            var order = orderService.GetOrder(id);
+            var order = await orderService.GetOrderAsync(id);
 
-            return View(order.ToOrderDetailsViewModel());
+            return View(new OrderDetailsViewModel(order));
         }
 
         [HttpPost]

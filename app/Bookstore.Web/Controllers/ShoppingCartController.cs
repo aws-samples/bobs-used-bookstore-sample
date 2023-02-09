@@ -1,9 +1,10 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Bookstore.Services;
 using Microsoft.AspNetCore.Authorization;
-using Bookstore.Web.Mappers;
 using Bookstore.Web.Helpers;
+using Bookstore.Domain.Customers;
+using Bookstore.Domain.Carts;
+using Bookstore.Web.ViewModel.ShoppingCart;
 
 namespace Bookstore.Web.Controllers
 {
@@ -19,11 +20,11 @@ namespace Bookstore.Web.Controllers
             this.shoppingCartService = shoppingCartService;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var shoppingCartItems = shoppingCartService.GetShoppingCartItems(HttpContext.GetShoppingCartId());
+            var shoppingCart = await shoppingCartService.GetShoppingCartAsync(HttpContext.GetShoppingCartId());
 
-            return View(shoppingCartItems.ToShoppingCartIndexViewModel());
+            return View(new ShoppingCartIndexViewModel(shoppingCart));
         }
 
         [HttpPost]

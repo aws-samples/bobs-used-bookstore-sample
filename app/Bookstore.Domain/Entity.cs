@@ -2,7 +2,7 @@
 
 namespace Bookstore.Domain
 {
-    public class Entity
+    public abstract class Entity
     {
         public int Id { get; set; }
 
@@ -17,7 +17,7 @@ namespace Bookstore.Domain
 
         public bool IsNewEntity()
         {
-            return Id != 0;
+            return Id == 0;
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using Bookstore.Services;
+﻿using Bookstore.Domain.Customers;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
@@ -41,6 +41,7 @@ namespace Bookstore.Web.Helpers
         private async Task SaveCustomerDetails(HttpContext context, ClaimsIdentity identity)
         {
             var customerService = context.RequestServices.GetService<ICustomerService>();
+
             var customer = new Domain.Customers.Customer
             {
                 Sub = identity.FindFirst("Sub").Value,

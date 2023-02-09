@@ -1,8 +1,6 @@
 ﻿using Bookstore.Domain.ReferenceData;
-using Bookstore.Web.Areas.Admin.Mappers.ReferenceData;
 using Bookstore.Web.Areas.Admin.Models.ReferenceData;
 using Microsoft.AspNetCore.Mvc;
-using Services;
 using System.Threading.Tasks;
 
 namespace Bookstore.Web.Areas.Admin.Controllers
@@ -16,13 +14,11 @@ namespace Bookstore.Web.Areas.Admin.Controllers
             this.referenceDataService = referenceDataService;
         }
 
-        public IActionResult Index(ReferenceDataIndexViewModel model)
+        public async Task<IActionResult> Index(ReferenceDataFilters filters, int pageIndex = 1, int pageSize = 10)
         {
-            var referenceDataItems = referenceDataService.GetReferenceData(model.Filters.ReferenceDataType);
+            var referenceDataItems = await referenceDataService.GetReferenceDataAsync(filters, pageIndex, pageSize);
 
-            model.Items = referenceDataItems.ToReferenceDataIndexListItemViewModels();
-
-            return View(model);
+            return View(new ReferenceDataIndexViewModel(referenceDataItems, filters));
         }
 
         public IActionResult Create(ReferenceDataType? selectedReferenceDataType = null)
@@ -37,28 +33,26 @@ namespace Bookstore.Web.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(ReferenceDataItemCreateUpdateViewModel model)
         {
-            var referenceDataItem = model.ToReferenceDataItem();
+            var dto = new CreateReferenceDataItemDto(model.SelectedReferenceDataType, model.Text);
 
-            await referenceDataService.SaveAsync(referenceDataItem, User.Identity.Name);
+            await referenceDataService.CreateAsync(dto);
 
             return RedirectToAction("Index");
         }
 
-        public IActionResult Update(int id)
+        public async Task<IActionResult> Update(int id)
         {
-            var referenceDataItem = referenceDataService.GetReferenceDataItem(id);
+            var referenceDataItem = await referenceDataService.GetReferenceDataItemAsync(id);
 
-            return View("CreateUpdate", referenceDataItem.ToReferenceDataItemCreateUpdateViewModel());
+            return View("CreateUpdate", new ReferenceDataItemCreateUpdateViewModel(referenceDataItem));
         }
 
         [HttpPost]
         public async Task<IActionResult> Update(ReferenceDataItemCreateUpdateViewModel model)
         {
-            var referenceDataItem = referenceDataService.GetReferenceDataItem(model.Id);
+            var dto = new UpdateReferenceDataItemDto(model.Id, model.SelectedReferenceDataType, model.Text);
 
-            model.ToReferenceDataItem(referenceDataItem);
-
-            await referenceDataService.SaveAsync(referenceDataItem, User.Identity.Name);
+            await referenceDataService.UpdateAsync(dto);
 
             return RedirectToAction("Index");
         }

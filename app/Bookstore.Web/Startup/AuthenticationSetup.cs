@@ -1,5 +1,4 @@
 ﻿using Bookstore.Domain.Customers;
-using Bookstore.Services;
 using Bookstore.Web.Helpers;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
