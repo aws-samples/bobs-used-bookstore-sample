@@ -18,4 +18,8 @@
         string Country,
         string ZipCode,
         string CustomerSub);
+
+    public record DeleteAddressDto(
+        int AddressId,
+        string CustomerSub);
 }

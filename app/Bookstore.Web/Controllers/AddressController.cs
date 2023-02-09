@@ -66,9 +66,11 @@ namespace Bookstore.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Delete(int id)
         {
-            await addressService.DeleteAddressAsync(User.GetSub(), id);
+            var dto = new DeleteAddressDto(id, User.GetSub());
 
-            this.SetNotification("Address deleted.");
+            await addressService.DeleteAddressAsync(dto);
+
+            this.SetNotification("Address deleted");
 
             return RedirectToAction(nameof(Index));
         }

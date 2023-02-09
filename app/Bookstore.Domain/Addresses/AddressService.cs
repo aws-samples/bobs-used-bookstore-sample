@@ -1,5 +1,4 @@
 ﻿using Bookstore.Domain.Customers;
-using System.Reflection.Metadata.Ecma335;
 
 namespace Bookstore.Domain.Addresses
 {
@@ -9,7 +8,7 @@ namespace Bookstore.Domain.Addresses
 
         Task<IEnumerable<Address>> GetAddressesAsync(string sub);
 
-        Task DeleteAddressAsync(string sub, int id);
+        Task DeleteAddressAsync(DeleteAddressDto deleteAddressDto);
 
         Task CreateAddressAsync(CreateAddressDto createAddressDto);
 
@@ -61,9 +60,9 @@ namespace Bookstore.Domain.Addresses
             await addressRepository.SaveChangesAsync();
         }
 
-        public async Task DeleteAddressAsync(string sub, int id)
+        public async Task DeleteAddressAsync(DeleteAddressDto dto)
         {
-            await addressRepository.DeleteAsync(sub, id);
+            await addressRepository.DeleteAsync(dto.CustomerSub, dto.AddressId);
 
             await addressRepository.SaveChangesAsync();
         }
