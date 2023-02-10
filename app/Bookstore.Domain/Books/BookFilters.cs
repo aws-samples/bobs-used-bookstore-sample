@@ -13,5 +13,7 @@
         public int? BookTypeId { get; set; }
 
         public int? ConditionId { get; set; }
+
+        public bool LowStock { get; set; }
     }
 }

@@ -43,8 +43,8 @@
             <div class="card-header">Inventory</div>
 
             <ul class="list-group list-group-flush">
-                <li class="list-group-item d-flex justify-content-between">@(Model.OutOfStock == 1 ? "1 book is out of stock" : $"{Model.OutOfStock} books are out of stock")<a asp-area="Admin" asp-controller="Inventory">View</a></li>
-                <li class="list-group-item d-flex justify-content-between">@(Model.LowStock == 1 ? "1 book is low in stock" : $"{Model.LowStock} books are low in stock")<a asp-area="Admin" asp-controller="Inventory">View</a></li>
+                <li class="list-group-item d-flex justify-content-between">@(Model.OutOfStock == 1 ? "1 book is out of stock" : $"{Model.OutOfStock} books are out of stock")<a asp-area="Admin" asp-controller="Inventory" asp-route-Filters.LowStock="True">View</a></li>
+                <li class="list-group-item d-flex justify-content-between">@(Model.LowStock == 1 ? "1 book is low in stock" : $"{Model.LowStock} books are low in stock")<a asp-area="Admin" asp-controller="Inventory" asp-route-Filters.LowStock="True">View</a></li>
                 <li class="list-group-item d-flex justify-content-between">@(Model.StockTotal == 1 ? "There is a total of 1 book in inventory" : $"There is a total of {Model.StockTotal} books in inventory")<a asp-area="Admin" asp-controller="Inventory">View</a></li>
             </ul>
         </div>

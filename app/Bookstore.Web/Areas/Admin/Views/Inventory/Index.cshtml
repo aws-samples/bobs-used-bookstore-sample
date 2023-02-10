@@ -1,6 +1,8 @@
 ﻿@model Bookstore.Web.Areas.Admin.Models.Inventory.InventoryIndexViewModel
 
-@{ ViewData["Title"] = "Inventory"; }
+@{
+    ViewData["Title"] = "Inventory";
+}
 
 @await Html.PartialAsync("_MessageBanner")
 
@@ -8,7 +10,7 @@
     <h5 class="me-auto">Inventory</h5>
 
     <a class="btn btn-primary" asp-controller="Inventory" asp-action="Create">
-       New Book
+        New Book
     </a>
 </div>
 
@@ -54,6 +56,15 @@
             </div>
 
             <div class="col-12">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="LowStockCheckbox" asp-for="Filters.LowStock">
+                    <label class="form-check-label" for="LowStockCheckbox">
+                        Low stock
+                    </label>
+                </div>               
+            </div>
+
+            <div class="col-12">
                 <button type="submit" class="btn btn-primary">Filter</button>
             </div>
 
@@ -82,6 +93,7 @@
                     <th scope="col">Type</th>
                     <th scope="col">Condition</th>
                     <th scope="col">Price</th>
+                    <th scope="col">Stock Level</th>
                     <th scope="col">Updated</th>
                     <th scope="col"></th>
                 </tr>
@@ -97,6 +109,7 @@
                         <td>@book.BookType</td>
                         <td>@book.Condition</td>
                         <td>@book.Price.ToString("C")</td>
+                        <td>@book.Quantity</td>
                         <td>@book.UpdatedOn.ToShortDateString()</td>
                         <td>
                             <div class="hstack gap-2">

@@ -61,6 +61,11 @@ namespace Bookstore.Data.Repositories
                 query = query.Where(x => x.PublisherId == filters.PublisherId);
             }
 
+            if (filters.LowStock)
+            {
+                query = query.Where(x => x.Quantity <= Book.LowBookThreshold);
+            }
+
             query = query
                 .Include(x => x.Genre)
                 .Include(x => x.Publisher)
