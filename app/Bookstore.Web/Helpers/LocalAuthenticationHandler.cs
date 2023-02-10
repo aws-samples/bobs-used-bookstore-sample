@@ -31,26 +31,24 @@ namespace Bookstore.Web.Helpers
 
             await Context.SignInAsync(new ClaimsPrincipal(identity));
 
-            await SaveCustomerDetails(Context, identity);
+            await SaveCustomerDetailsAsync(Context, identity);
 
             var redirectUrl = properties.RedirectUri ?? $"{Context.Request.Scheme}://{Context.Request.Host}{Context.Request.Path}{Context.Request.QueryString}";
 
             Context.Response.Redirect(redirectUrl);
         }
 
-        private async Task SaveCustomerDetails(HttpContext context, ClaimsIdentity identity)
+        private async Task SaveCustomerDetailsAsync(HttpContext context, ClaimsIdentity identity)
         {
             var customerService = context.RequestServices.GetService<ICustomerService>();
 
-            var customer = new Domain.Customers.Customer
-            {
-                Sub = identity.FindFirst("Sub").Value,
-                Username = identity.Name,
-                FirstName = identity.FindFirst("given_name").Value,
-                LastName = identity.FindFirst("family_name").Value
-            };
+            var dto = new CreateOrUpdateCustomerDto(
+                identity.FindFirst("Sub").Value,
+                identity.Name,
+                identity.FindFirst("given_name").Value,
+                identity.FindFirst("family_name").Value);
 
-            await customerService.SaveCustomerAsync(customer);
+            await customerService.CreateOrUpdateCustomerAsync(dto);
         }
 
         protected override Task<AuthenticateResult> HandleAuthenticateAsync()

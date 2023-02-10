@@ -84,7 +84,7 @@ namespace Bookstore.Web.Startup
                     };
 
                     x.Events.OnRedirectToIdentityProviderForSignOut = OnRedirectToIdentityProviderForSignOut;
-                    x.Events.OnTokenValidated = SaveCustomerDetails;
+                    x.Events.OnTokenValidated = SaveCustomerDetailsAsync;
                 });
 
             return builder;
@@ -106,18 +106,17 @@ namespace Bookstore.Web.Startup
             return Task.CompletedTask;
         }
 
-        private static async Task SaveCustomerDetails(TokenValidatedContext context)
+        private static async Task SaveCustomerDetailsAsync(TokenValidatedContext context)
         {
             var customerService = context.HttpContext.RequestServices.GetService<ICustomerService>();
-            var customer = new Customer
-            {
-                Sub = context.Principal.GetSub(),
-                Username = context.Principal.Identity.Name,
-                FirstName = context.Principal.FindFirst("given_name").Value,
-                LastName = context.Principal.FindFirst("family_name").Value
-            };
 
-            await customerService.SaveCustomerAsync(customer);
+            var dto = new CreateOrUpdateCustomerDto(
+                context.Principal.GetSub(),
+                context.Principal.Identity.Name,
+                context.Principal.FindFirst("given_name").Value,
+                context.Principal.FindFirst("family_name").Value);
+
+            await customerService.CreateOrUpdateCustomerAsync(dto);
         }
     }
 }

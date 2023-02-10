@@ -1,6 +1,4 @@
-﻿using Bookstore.Domain.Addresses;
-
-namespace Bookstore.Domain.Customers
+﻿namespace Bookstore.Domain.Customers
 {
     public interface ICustomerService
     {
@@ -8,7 +6,7 @@ namespace Bookstore.Domain.Customers
 
         Task<Customer> GetAsync(string sub);
 
-        Task SaveCustomerAsync(Customer customer);
+        Task CreateOrUpdateCustomerAsync(CreateOrUpdateCustomerDto createOrUpdateCustomerDto);
     }
 
     public class CustomerService : ICustomerService
@@ -30,9 +28,9 @@ namespace Bookstore.Domain.Customers
             return await customerRepository.GetAsync(sub);
         }
        
-        public async Task SaveCustomerAsync(Customer customer)
+        public async Task CreateOrUpdateCustomerAsync(CreateOrUpdateCustomerDto dto)
         {
-            var existingCustomer = await customerRepository.GetAsync(customer.Sub);
+            var existingCustomer = await customerRepository.GetAsync(dto.CustomerSub);
 
             if (existingCustomer == null)
             {
@@ -41,13 +39,10 @@ namespace Bookstore.Domain.Customers
                 await customerRepository.AddAsync(existingCustomer);
             }
 
-            existingCustomer.Sub = customer.Sub;
-            existingCustomer.Email = customer.Email;
-            existingCustomer.FirstName = customer.FirstName;
-            existingCustomer.LastName = customer.LastName;
-            existingCustomer.Phone = customer.Phone;
-            existingCustomer.Username = customer.Username;
-            existingCustomer.CreatedBy = "System";
+            existingCustomer.Sub = dto.CustomerSub;
+            existingCustomer.Username = dto.Username;
+            existingCustomer.FirstName = dto.FirstName;
+            existingCustomer.LastName = dto.LastName;
             existingCustomer.UpdatedOn = DateTime.UtcNow;
 
             await customerRepository.SaveChangesAsync();
