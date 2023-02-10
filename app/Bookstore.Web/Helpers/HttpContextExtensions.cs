@@ -5,7 +5,7 @@ namespace Bookstore.Web.Helpers
 {
     public static class HttpContextExtensions
     {
-        public static string GetShoppingCartId(this HttpContext context)
+        public static string GetShoppingCartCorrelationId(this HttpContext context)
         {
             var CookieKey = "ShoppingCartId";
 

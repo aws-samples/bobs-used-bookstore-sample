@@ -22,7 +22,7 @@ namespace Bookstore.Web.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var shoppingCart = await shoppingCartService.GetShoppingCartAsync(HttpContext.GetShoppingCartId());
+            var shoppingCart = await shoppingCartService.GetShoppingCartAsync(HttpContext.GetShoppingCartCorrelationId());
 
             return View(new ShoppingCartIndexViewModel(shoppingCart));
         }
@@ -30,7 +30,9 @@ namespace Bookstore.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Delete(int shoppingCartItemId)
         {
-            await shoppingCartService.DeleteShoppingCartItemAsync(HttpContext.GetShoppingCartId(), shoppingCartItemId);
+            var dto = new DeleteShoppingCartItemDto(HttpContext.GetShoppingCartCorrelationId(), shoppingCartItemId);
+
+            await shoppingCartService.DeleteShoppingCartItemAsync(dto);
 
             this.SetNotification("Item removed from shopping cart.");
 

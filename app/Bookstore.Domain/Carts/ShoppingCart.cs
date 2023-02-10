@@ -1,12 +1,15 @@
-﻿using Bookstore.Domain.Books;
-
-namespace Bookstore.Domain.Carts
+﻿namespace Bookstore.Domain.Carts
 {
     public class ShoppingCart : Entity
     {
         public List<ShoppingCartItem> ShoppingCartItems { get; private set; } = new();
 
         public string CorrelationId { get; set; }
+
+        public ShoppingCart(string correlationId)
+        {
+            CorrelationId = correlationId;
+        }
 
         public IEnumerable<ShoppingCartItem> GetShoppingCartItems(ShoppingCartItemFilter filter)
         {
@@ -25,7 +28,7 @@ namespace Bookstore.Domain.Carts
             ShoppingCartItems.Add(new ShoppingCartItem(this, bookId, quantity, true));
         }
 
-        public void AddItemToWishList(int bookId)
+        public void AddItemToWishlist(int bookId)
         {
             ShoppingCartItems.Add(new ShoppingCartItem(this, bookId, 1, false));
         }

@@ -4,7 +4,7 @@ namespace Bookstore.Domain.Addresses
 {
     public class Address : Entity
     {
-        //An empty constructor is required by EF Core
+        // An empty constructor is required by EF Core
         private Address() { }
 
         public Address(Customer customer, string addressLine1, string? addressLine2, string city, string state, string country, string zipCode)

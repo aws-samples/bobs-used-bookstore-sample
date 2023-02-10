@@ -1,50 +1,51 @@
-﻿using Bookstore.Domain.Books;
-
-namespace Bookstore.Domain.Carts
+﻿namespace Bookstore.Domain.Carts
 {
     public interface IShoppingCartService
     {
-        Task AddToShoppingCartAsync(string shoppingCartCorrelationId, int bookId, int quantity);
-
-        Task AddToWishlistAsync(string shoppingCartCorrelationId, int bookId);
-
-        Task DeleteShoppingCartItemAsync(string shoppingCartCorrelationId, int id);
-
         Task<ShoppingCart> GetShoppingCartAsync(string shoppingCartCorrelationId);
 
-        Task MoveAllWishlistItemsToShoppingCartAsync(string shoppingCartCorrelationId);
+        Task AddToShoppingCartAsync(AddToShoppingCartDto addToShoppingCartDto);
 
-        Task MoveWishlistItemToShoppingCartAsync(string shoppingCartCorrelationId, int shoppingCartItemId);
+        Task AddToWishlistAsync(AddToWishlistDto addToWishlistDto);
+
+        Task MoveWishlistItemToShoppingCartAsync(MoveWishlistItemToShoppingCartDto moveWishlistItemToShoppingCartDto);
+
+        Task MoveAllWishlistItemsToShoppingCartAsync(MoveAllWishlistItemsToShoppingCartDto moveAllWishlistItemsToShoppingCartDto);
+
+        Task DeleteShoppingCartItemAsync(DeleteShoppingCartItemDto deleteShoppingCartItemDto);
     }
 
     public class ShoppingCartService : IShoppingCartService
     {
         private readonly IShoppingCartRepository shoppingCartRepository;
-        private readonly IBookRepository bookRepository;
 
-        public ShoppingCartService(IShoppingCartRepository shoppingCartRepository, IBookRepository bookRepository)
+        public ShoppingCartService(IShoppingCartRepository shoppingCartRepository)
         {
             this.shoppingCartRepository = shoppingCartRepository;
-            this.bookRepository = bookRepository;
         }
 
-        public async Task AddToShoppingCartAsync(string shoppingCartCorrelationId, int bookId, int quantity)
+        public async Task<ShoppingCart> GetShoppingCartAsync(string shoppingCartCorrelationId)
         {
-            await AddToShoppingCartAsync(shoppingCartCorrelationId, bookId, quantity, true);
+            return await shoppingCartRepository.GetAsync(shoppingCartCorrelationId);
         }
 
-        public async Task AddToWishlistAsync(string shoppingCartCorrelationId, int bookId)
+        public async Task AddToShoppingCartAsync(AddToShoppingCartDto dto)
         {
-            await AddToShoppingCartAsync(shoppingCartCorrelationId, bookId, 1, false);
+            await AddToShoppingCartAsync(dto.CorrelationId, dto.BookId, dto.Quantity, true);
         }
 
-        private async Task AddToShoppingCartAsync(string shoppingCartCorrelationId, int bookId, int quantity, bool wantToBuy)
+        public async Task AddToWishlistAsync(AddToWishlistDto dto)
         {
-            var shoppingCart = await shoppingCartRepository.GetAsync(shoppingCartCorrelationId);
+            await AddToShoppingCartAsync(dto.CorrelationId, dto.BookId, 1, false);
+        }
+
+        private async Task AddToShoppingCartAsync(string correlationId, int bookId, int quantity, bool wantToBuy)
+        {
+            var shoppingCart = await shoppingCartRepository.GetAsync(correlationId);
 
             if (shoppingCart == null)
             {
-                shoppingCart = new ShoppingCart { CorrelationId = shoppingCartCorrelationId };
+                shoppingCart = new ShoppingCart(correlationId);
 
                 await shoppingCartRepository.AddAsync(shoppingCart);
             }
@@ -55,43 +56,38 @@ namespace Bookstore.Domain.Carts
             }
             else
             {
-                shoppingCart.AddItemToWishList(bookId);
+                shoppingCart.AddItemToWishlist(bookId);
             }
 
             await shoppingCartRepository.SaveChangesAsync();
         }
 
-        public async Task DeleteShoppingCartItemAsync(string shoppingCartCorrelationId, int id)
+        public async Task MoveWishlistItemToShoppingCartAsync(MoveWishlistItemToShoppingCartDto dto)
         {
-            var shoppingCart = await shoppingCartRepository.GetAsync(shoppingCartCorrelationId);
+            var shoppingCart = await shoppingCartRepository.GetAsync(dto.CorrelationId);
 
-            shoppingCart.RemoveShoppingCartItemById(id);
+            shoppingCart.MoveWishListItemToShoppingCart(dto.ShoppingCartItemId);
 
             await shoppingCartRepository.SaveChangesAsync();
         }
 
-        public async Task<ShoppingCart> GetShoppingCartAsync(string shoppingCartCorrelationId)
+        public async Task MoveAllWishlistItemsToShoppingCartAsync(MoveAllWishlistItemsToShoppingCartDto dto)
         {
-            return await shoppingCartRepository.GetAsync(shoppingCartCorrelationId);
-        }
-
-        public async Task MoveWishlistItemToShoppingCartAsync(string shoppingCartCorrelationId, int shoppingCartItemId)
-        {
-            var shoppingCart = await shoppingCartRepository.GetAsync(shoppingCartCorrelationId);
-
-            shoppingCart.MoveWishListItemToShoppingCart(shoppingCartItemId);
-
-            await shoppingCartRepository.SaveChangesAsync();
-        }
-
-        public async Task MoveAllWishlistItemsToShoppingCartAsync(string shoppingCartCorrelationId)
-        {
-            var shoppingCart = await shoppingCartRepository.GetAsync(shoppingCartCorrelationId);
+            var shoppingCart = await shoppingCartRepository.GetAsync(dto.CorrelationId);
 
             foreach (var wishListItem in shoppingCart.GetWishListItems())
             {
                 shoppingCart.MoveWishListItemToShoppingCart(wishListItem.Id);
             }
+
+            await shoppingCartRepository.SaveChangesAsync();
+        }
+
+        public async Task DeleteShoppingCartItemAsync(DeleteShoppingCartItemDto dto)
+        {
+            var shoppingCart = await shoppingCartRepository.GetAsync(dto.CorrelationId);
+
+            shoppingCart.RemoveShoppingCartItemById(dto.ShoppingCartItemId);
 
             await shoppingCartRepository.SaveChangesAsync();
         }

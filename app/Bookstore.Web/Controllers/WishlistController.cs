@@ -22,7 +22,7 @@ namespace Bookstore.Web.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var shoppingCart = await shoppingCartService.GetShoppingCartAsync(HttpContext.GetShoppingCartId());
+            var shoppingCart = await shoppingCartService.GetShoppingCartAsync(HttpContext.GetShoppingCartCorrelationId());
 
             return View(new WishlistIndexViewModel(shoppingCart));
         }
@@ -30,9 +30,11 @@ namespace Bookstore.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> MoveToShoppingCart(int shoppingCartItemId)
         {
-            await shoppingCartService.MoveWishlistItemToShoppingCartAsync(HttpContext.GetShoppingCartId(), shoppingCartItemId);
+            var dto = new MoveWishlistItemToShoppingCartDto(HttpContext.GetShoppingCartCorrelationId(), shoppingCartItemId);
 
-            this.SetNotification("Item moved to shopping cart.");
+            await shoppingCartService.MoveWishlistItemToShoppingCartAsync(dto);
+
+            this.SetNotification("Item moved to shopping cart");
 
             return RedirectToAction("Index");
         }
@@ -40,9 +42,11 @@ namespace Bookstore.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> MoveAllItemsToShoppingCart()
         {
-            await shoppingCartService.MoveAllWishlistItemsToShoppingCartAsync(HttpContext.GetShoppingCartId());
+            var dto = new MoveAllWishlistItemsToShoppingCartDto(HttpContext.GetShoppingCartCorrelationId());
 
-            this.SetNotification("All items moved to shopping cart.");
+            await shoppingCartService.MoveAllWishlistItemsToShoppingCartAsync(dto);
+
+            this.SetNotification("All items moved to shopping cart");
 
             return RedirectToAction("Index");
         }
@@ -50,9 +54,11 @@ namespace Bookstore.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Delete(int shoppingCartItemId)
         {
-            await shoppingCartService.DeleteShoppingCartItemAsync(HttpContext.GetShoppingCartId(), shoppingCartItemId);
+            var dto = new DeleteShoppingCartItemDto(HttpContext.GetShoppingCartCorrelationId(), shoppingCartItemId);
 
-            this.SetNotification("Item removed from wishlist.");
+            await shoppingCartService.DeleteShoppingCartItemAsync(dto);
+
+            this.SetNotification("Item removed from wishlist");
 
             return RedirectToAction(nameof(Index));
         }

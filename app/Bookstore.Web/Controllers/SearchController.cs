@@ -36,18 +36,22 @@ namespace Bookstore.Web.Controllers
 
         public async Task<IActionResult> AddItemToShoppingCart(int bookId)
         {
-            await shoppingCartService.AddToShoppingCartAsync(HttpContext.GetShoppingCartId(), bookId, 1);
+            var dto = new AddToShoppingCartDto(HttpContext.GetShoppingCartCorrelationId(), bookId, 1);
 
-            this.SetNotification("Item added to shopping cart.");
+            await shoppingCartService.AddToShoppingCartAsync(dto);
+
+            this.SetNotification("Item added to shopping cart");
 
             return RedirectToAction("Index", "Search");
         }
 
         public async Task<IActionResult> AddItemToWishlist(int bookId)
         {
-            await shoppingCartService.AddToWishlistAsync(HttpContext.GetShoppingCartId(), bookId);
+            var dto = new AddToWishlistDto(HttpContext.GetShoppingCartCorrelationId(), bookId);
 
-            this.SetNotification("Item added to wishlist.");
+            await shoppingCartService.AddToWishlistAsync(dto);
+
+            this.SetNotification("Item added to wishlist");
 
             return RedirectToAction("Index", "Search");
         }

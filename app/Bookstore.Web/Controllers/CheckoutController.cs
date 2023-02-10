@@ -25,7 +25,7 @@ namespace Bookstore.Web.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var shoppingCart = await shoppingCartService.GetShoppingCartAsync(HttpContext.GetShoppingCartId());
+            var shoppingCart = await shoppingCartService.GetShoppingCartAsync(HttpContext.GetShoppingCartCorrelationId());
             var addresses = await addressService.GetAddressesAsync(User.GetSub());
 
             return View(new CheckoutIndexViewModel(shoppingCart, addresses));
@@ -35,7 +35,7 @@ namespace Bookstore.Web.Controllers
         public async Task<IActionResult> Index(CheckoutIndexViewModel model)
         {
             //TODO Replace with DTO
-            var orderId = await orderService.CreateOrderAsync(HttpContext.GetShoppingCartId(), User.GetSub(), model.SelectedAddressId);
+            var orderId = await orderService.CreateOrderAsync(HttpContext.GetShoppingCartCorrelationId(), User.GetSub(), model.SelectedAddressId);
 
             return RedirectToAction("Finished", new { orderId });
         }
