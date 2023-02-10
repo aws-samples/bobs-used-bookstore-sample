@@ -1,0 +1,108 @@
+﻿@using Bookstore.Domain.Orders
+
+@model Bookstore.Web.Areas.Admin.Models.Orders.OrderDetailsViewModel
+
+@await Html.PartialAsync("_MessageBanner")
+
+<div class="d-flex m-3">
+    <h5>Order Details</h5>
+</div>
+
+<div class="row justify-content-center mb-3">
+    <div class="col-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <address>
+                    <strong>@Model.CustomerName</strong>
+                    <br />
+                    @Model.AddressLine1
+                    <br />
+                    @if (!string.IsNullOrWhiteSpace(Model.AddressLine2))
+                    {
+                    @Model.AddressLine2
+                    }
+                    <br />
+                    @Model.City @Model.State @Model.ZipCode
+                    <br />
+                    @Model.Country
+                </address>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <dl class="row">
+                    <dt class="col-3">Order status</dt>
+                    <dd class="col-9">
+                        <form method="post">
+                            <div class="d-flex">
+                                <input type="hidden" asp-for="@Model.OrderId" />
+                                <select id="orderStatusSelect" class="form-select m-auto" asp-for="SelectedOrderStatus" asp-items="Html.GetEnumSelectList<OrderStatus>()"></select>
+                                <button type="submit" class="btn btn-primary ms-2">Update</button>
+                            </div>
+                        </form>
+                    </dd>
+
+                    <dt class="col-3">Ordered on</dt>
+                    <dd class="col-9">@Model.OrderDate.ToShortDateString()</dd>
+
+                    <dt class="col-3">Deliver by</dt>
+                    <dd class="col-9">@Model.DeliveryDate.ToShortDateString()</dd>
+
+                    <dt class="col-3">Subtotal</dt>
+                    <dd class="col-9">@Model.Subtotal.ToString("C")</dd>
+
+                    <dt class="col-3">Tax</dt>
+                    <dd class="col-9">@Model.Tax.ToString("C")</dd>
+
+                    <dt class="col-3">Total</dt>
+                    <dd class="col-9"><strong>@Model.Total.ToString("C")</strong></dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-3">
+    <div class="col">
+        <div class="card">
+            <div class="card-body">
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col">Name</th>
+                            <th scope="col">Author</th>
+                            <th scope="col">Publisher</th>
+                            <th scope="col">Genre</th>
+                            <th scope="col">Type</th>
+                            <th scope="col">Condition</th>
+                            <th scope="col">Price</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var book in Model.Items)
+                        {
+                            <tr>
+                                <td>@book.Name</td>
+                                <td>@book.Author</td>
+                                <td>@book.Publisher</td>
+                                <td>@book.Genre</td>
+                                <td>@book.BookType</td>
+                                <td>@book.Condition</td>
+                                <td>@book.Price.ToString("C")</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-8">
+        <a class="btn btn-primary" asp-action="Index">Back</a>
+    </div>
+</div>

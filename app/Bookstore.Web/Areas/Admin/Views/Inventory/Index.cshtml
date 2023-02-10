@@ -1,0 +1,132 @@
+﻿@model Bookstore.Web.Areas.Admin.Models.Inventory.InventoryIndexViewModel
+
+@{
+    ViewData["Title"] = "Inventory";
+}
+
+@await Html.PartialAsync("_MessageBanner")
+
+<div class="d-flex m-3">
+    <h5 class="me-auto">Inventory</h5>
+
+    <a class="btn btn-primary" asp-controller="Inventory" asp-action="Create">
+        New Book
+    </a>
+</div>
+
+<div class="card mx-3">
+    <div class="card-body">
+        <form class="row row-cols-lg-auto g-3 align-items-center" method="get">
+            <div class="col-12">
+                <label class="visually-hidden" for="NameFilterInput">Name</label>
+                <input id="NameFilterInput" type="text" class="form-control" asp-for="Filters.Name" placeholder="Name" />
+            </div>
+
+            <div class="col-12">
+                <label class="visually-hidden" for="AuthorFilterInput">Author</label>
+                <input id="AuthorFilterInput" type="text" class="form-control" asp-for="Filters.Author" placeholder="Author" />
+            </div>
+
+            <div class="col-12">
+                <label class="visually-hidden" for="PublisherFilter">Publisher</label>
+                <select id="PublisherFilter" class="form-select" asp-for="Filters.PublisherId" asp-items="Model.Publishers">
+                    <option value="">All Publishers</option>
+                </select>
+            </div>
+
+            <div class="col-12">
+                <label class="visually-hidden" for="GenreFilter">Genre</label>
+                <select id="GenreFilter" class="form-select" asp-for="Filters.GenreId" asp-items="Model.Genres">
+                    <option value="">All Genres</option>
+                </select>
+            </div>
+
+            <div class="col-12">
+                <label class="visually-hidden" for="BookTypeFilter">Book type</label>
+                <select id="BookTypeFilter" class="form-select" asp-for="Filters.BookTypeId" asp-items="Model.BookTypes">
+                    <option value="">All Book Types</option>
+                </select>
+            </div>
+
+            <div class="col-12">
+                <label class="visually-hidden" for="ConditionFilter">Condition</label>
+                <select id="ConditionFilter" class="form-select" asp-for="Filters.ConditionId" asp-items="Model.BookConditions">
+                    <option value="">All Book Conditions</option>
+                </select>
+            </div>
+
+            <div class="col-12">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="LowStockCheckbox" asp-for="Filters.LowStock">
+                    <label class="form-check-label" for="LowStockCheckbox">
+                        Low stock
+                    </label>
+                </div>               
+            </div>
+
+            <div class="col-12">
+                <button type="submit" class="btn btn-primary">Filter</button>
+            </div>
+
+            <div class="col-12">
+                <a class="btn btn-secondary" asp-action="Index">Clear</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card m-3">
+    <div class="card-header">
+        <div class="d-flex justify-content-end">
+            @await Html.PartialAsync("_Paginator")
+        </div>
+    </div>
+
+    <div class="card-body">
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Author</th>
+                    <th scope="col">Publisher</th>
+                    <th scope="col">Genre</th>
+                    <th scope="col">Type</th>
+                    <th scope="col">Condition</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Stock Level</th>
+                    <th scope="col">Updated</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var book in Model.Items)
+                {
+                    <tr>
+                        <td>@book.Name</td>
+                        <td>@book.Author</td>
+                        <td>@book.Publisher</td>
+                        <td>@book.Genre</td>
+                        <td>@book.BookType</td>
+                        <td>@book.Condition</td>
+                        <td>@book.Price.ToString("C")</td>
+                        <td>@book.Quantity</td>
+                        <td>@book.UpdatedOn.ToShortDateString()</td>
+                        <td>
+                            <div class="hstack gap-2">
+                                <a class="card-link" asp-controller="Inventory" asp-action="Details" asp-route-id="@book.Id">View</a>
+                                <div class="vr"></div>
+                                <a class="card-link" asp-controller="Inventory" asp-action="Update" asp-route-id="@book.Id">Update</a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="card-footer">
+        <div class="d-flex justify-content-end">
+            @await Html.PartialAsync("_Paginator")
+        </div>
+    </div>
+</div>

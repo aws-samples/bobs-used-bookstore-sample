@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using Bookstore.Domain.Addresses;
 using Bookstore.Domain.Books;
 using Bookstore.Domain.Carts;
 using Bookstore.Domain.Customers;
@@ -7,58 +6,53 @@ using Bookstore.Domain.Offers;
 using Bookstore.Domain.Orders;
 using Bookstore.Domain.ReferenceData;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Design;
-using Microsoft.Extensions.Configuration;
-using BookType = Bookstore.Domain.Books.BookType;
+using System.Reflection.Emit;
 
 namespace Bookstore.Data
 {
-    public class ApplicationDbContext : DbContext
+    public partial class ApplicationDbContext : DbContext
     {
-        public ApplicationDbContext()
-        {
-        }
+        public ApplicationDbContext() { }
 
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-            : base(options)
-        {
-        }
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
         public DbSet<Address> Address { get; set; }
+
         public DbSet<Book> Book { get; set; }
-        public DbSet<Condition> Condition { get; set; }
+
         public DbSet<Customer> Customer { get; set; }
-        public DbSet<Genre> Genre { get; set; }
+
         public DbSet<Order> Order { get; set; }
-        public DbSet<Price> Price { get; set; }
-        public DbSet<Publisher> Publisher { get; set; }
-        public DbSet<BookType> Type { get; set; }
+
         public DbSet<ShoppingCart> ShoppingCart { get; set; }
+
         public DbSet<ShoppingCartItem> ShoppingCartItem { get; set; }
+
         public DbSet<OrderItem> OrderItem { get; set; }
+
         public DbSet<Offer> Offer { get; set; }
+
         public DbSet<ReferenceDataItem> ReferenceData { get; set; }
-    }
 
-    public class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<ApplicationDbContext>
-    {
-        public ApplicationDbContext CreateDbContext(string[] args)
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            var environmentName =
-               Environment.GetEnvironmentVariable(
-                   "ASPNETCORE_ENVIRONMENT");
+            modelBuilder.Entity<Customer>().HasIndex(x => x.Sub).IsUnique();
 
-            var configuration = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile(Directory.GetCurrentDirectory() + "/../frontend/appsettings.json")
-                .AddJsonFile(Directory.GetCurrentDirectory() + $"/../frontend/appsettings.{environmentName}.json", true)
+            modelBuilder.Entity<Book>().HasOne(x => x.Publisher).WithMany().HasForeignKey(x => x.PublisherId).OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<Book>().HasOne(x => x.BookType).WithMany().HasForeignKey(x => x.BookTypeId).OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<Book>().HasOne(x => x.Genre).WithMany().HasForeignKey(x => x.GenreId).OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<Book>().HasOne(x => x.Condition).WithMany().HasForeignKey(x => x.ConditionId).OnDelete(DeleteBehavior.Restrict);
 
-                .Build();
-            var builder = new DbContextOptionsBuilder<ApplicationDbContext>();
-            var connectionString = configuration.GetConnectionString("BobBookstoreContextConnection");
-            builder.UseSqlServer(connectionString, b => b.MigrationsAssembly("DataMigrations"));
+            modelBuilder.Entity<Offer>().HasOne(x => x.Publisher).WithMany().HasForeignKey(x => x.PublisherId).OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<Offer>().HasOne(x => x.BookType).WithMany().HasForeignKey(x => x.BookTypeId).OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<Offer>().HasOne(x => x.Genre).WithMany().HasForeignKey(x => x.GenreId).OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<Offer>().HasOne(x => x.Condition).WithMany().HasForeignKey(x => x.ConditionId).OnDelete(DeleteBehavior.Restrict);
 
-            return new ApplicationDbContext(builder.Options);
+            modelBuilder.Entity<Order>().HasOne(x => x.Customer).WithMany().OnDelete(DeleteBehavior.Restrict);
+
+            PopulateDatabase(modelBuilder);
+
+            base.OnModelCreating(modelBuilder);
         }
     }
 }

@@ -1,0 +1,114 @@
+﻿@using Bookstore.Domain.ReferenceData
+
+@model Bookstore.Web.Areas.Admin.Models.Inventory.InventoryCreateUpdateViewModel
+
+<div asp-validation-summary="All"></div>
+
+<div class="d-flex m-3">
+    <h5 class="me-auto">Create / Update Book</h5>
+</div>
+
+<form class="needs-validation" enctype="multipart/form-data" method="post">
+    <input type="hidden" asp-for="Id" />
+
+    <div class="row justify-content-center">
+        <div class="col-4">
+            <input type="text" class="form-control mb-3" asp-for="Name" placeholder="Book Name" required />
+            <input type="text" class="form-control mb-3" asp-for="Author" placeholder="Author" required />
+            <input type="text" class="form-control mb-3" asp-for="ISBN" placeholder="ISBN" required />
+
+            <div class="row">
+                <div class="col">
+                    <label for="PriceInput">Price</label>
+                    <input id="PriceInput" type="number" class="form-control mb-3" asp-for="Price" placeholder="Price" step="0.01" required />
+                </div>
+                <div class="col">
+                    <label for="QuantityInput">Quantity</label>
+                    <input id="QuantityInput" type="number" class="form-control mb-3" asp-for="Quantity" placeholder="Quantity" required />
+                </div>
+            </div>
+
+            <textarea class="form-control mb-3" asp-for="Summary" rows="4" placeholder="Description"></textarea>
+        </div>
+
+        <div class="col-4">
+            <div class="row">
+                <div class="col-10">
+                    <select class="form-select mb-3" asp-for="SelectedPublisherId" asp-items="Model.Publishers" required>
+                        <option value="">Select the publisher</option>
+                    </select>
+                </div>
+                <div class="col-2">
+                    <a class="mb-3" asp-action="Create" asp-controller="ReferenceData" asp-route-selectedReferenceDataType="@ReferenceDataType.Publisher">Add</a>
+                </div>
+
+                <div class="col-10">
+                    <select class="form-select mb-3" asp-for="SelectedGenreId" asp-items="Model.Genres" required>
+                        <option value="">Select the genre</option>
+                    </select>
+                </div>
+                <div class="col-2">
+                    <a class="mb-3" asp-action="Create" asp-controller="ReferenceData" asp-route-selectedReferenceDataType="@ReferenceDataType.Genre">Add</a>
+                </div>
+
+                <div class="col-10">
+                    <select class="form-select mb-3" asp-for="SelectedBookTypeId" asp-items="Model.BookTypes" required>
+                        <option value="">Select the type</option>
+                    </select>
+                </div>
+                <div class="col-2">
+                    <a class="mb-3" asp-action="Create" asp-controller="ReferenceData" asp-route-selectedReferenceDataType="@ReferenceDataType.BookType">Add</a>
+                </div>
+
+                <div class="col-10">
+                    <select class="form-select mb-3" asp-for="SelectedConditionId" asp-items="Model.BookConditions" required>
+                        <option value="">Select the condition</option>
+                    </select>
+                </div>
+                <div class="col-2">
+                    <a class="mb-3" asp-action="Create" asp-controller="ReferenceData" asp-route-selectedReferenceDataType="@ReferenceDataType.Condition">Add</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-8">
+            <div class="mb-3">
+                <label class="form-label">Cover Image</label>
+                <input asp-for="CoverImage" class="form-control mb-3">
+                <img src="@Model.CoverImageUrl" class="img-thumbnail @(string.IsNullOrWhiteSpace(Model.CoverImageUrl) ? "d-none" : "")" />
+            </div>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-8 d-grid gap-2 d-md-block">
+            <button class="btn btn-primary" type="submit">Save</button>
+            <a class="btn btn-secondary" asp-action="Index">Back</a>
+        </div>
+    </div>
+</form>
+
+@section Scripts{
+    <script type="text/javascript">
+        $(function () {
+            $("input:file").change(function () {
+                readUrl(this);
+            });
+        });
+
+        function readUrl(input) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                $(input)
+                    .next("img")
+                    .attr("src", e.target.result)
+                    .removeClass("d-none");
+            }
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    </script>
+}

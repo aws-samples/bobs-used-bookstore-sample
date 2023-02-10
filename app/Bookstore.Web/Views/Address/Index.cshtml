@@ -1,0 +1,116 @@
+﻿@model Bookstore.Web.ViewModel.Address.AddressIndexViewModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<div class="panel-body">
+    <h1>Your Addresses</h1>
+    <div class="col-md-12 text-right">
+        <a class="btn" asp-action="Create" asp-route-returnUrl="@Url.Action()">Create New Address</a>
+    </div>
+
+    <div class="container">
+
+        <!-- Outer Row -->
+        <div class="row justify-content-center">
+            <div class="col-xl-10 col-lg-12 col-md-9">
+                <div class="card o-hidden border-0 my-5">
+                    <div class="card-body p-0">
+                        <!-- Nested Row within Card Body -->
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">
+                                        Address Line 1
+                                    </th>
+                                    <th scope="col">
+                                        Address Line 2
+                                    </th>
+                                    <th scope="col">
+                                        City
+                                    </th>
+                                    <th scope="col">
+                                        State
+                                    </th>
+                                    <th scope="col">
+                                        Country
+                                    </th>
+                                    <th scope="col">
+                                        Zipcode
+                                    </th>
+                                    <th scope="col">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.Items)
+                                {
+                                    <tr>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.AddressLine1)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.AddressLine2)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.City)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.State)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Country)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.ZipCode)
+                                        </td>
+                                        <td>
+                                            <a asp-action="Update" asp-route-id="@item.Id" asp-route-returnUrl="@Url.Action()">Edit</a> |
+                                            <a asp-action="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" data-addressId="@item.Id">Delete</a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="confirmDeleteModal" class="modal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Delete Address?</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to delete this address?</p>
+                </div>
+                <div class="modal-footer">
+                    <form method="post">
+                        <button id="confirmDeleteButton" type="submit" class="btn btn-primary" asp-action="Delete">Yes, Delete</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No, Don't Delete</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @section Scripts {
+        <script type="text/javascript">
+            $(function () {
+
+                $('#confirmDeleteModal').on('show.bs.modal', function (event) {
+                    var modal = $(this);
+                    var formAction = modal.find('#confirmDeleteButton').attr("formaction");
+                    var addressId = $(event.relatedTarget).data('addressid');
+
+                    modal.find('#confirmDeleteButton').attr("formaction", formAction + "?id=" + addressId);
+                });
+
+            });
+        </script>
+    }
+</div>

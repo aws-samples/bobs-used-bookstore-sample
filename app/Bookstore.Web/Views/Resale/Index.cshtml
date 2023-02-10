@@ -1,0 +1,82 @@
+﻿@model Bookstore.Web.ViewModel.Resale.ResaleIndexViewModel
+
+@{ ViewData["Title"] = "Index"; }
+
+<div class="panel-body">
+    <h1>
+        Sell Your Books
+    </h1>
+
+    <div class="col-12 text-right">
+        <form asp-controller="Resale" asp-action="Create" method="get">
+            <button class="btn" name="id" type="submit">Resell Book</button>
+        </form>
+    </div>
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th>
+                Book Name
+            </th>
+            <th>
+                Author
+            </th>
+            <th>
+                Genre
+            </th>
+            <th>
+                Publisher
+            </th>
+            <th>
+                Book Type
+            </th>
+            <th>
+                ISBN
+            </th>
+            <th>
+                Condition
+            </th>
+            <th>
+                Book Price
+            </th>
+            <th>
+                Status
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var item in Model.Items)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.BookName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Author)
+                </td>
+                <td>
+                @Html.DisplayFor(modelItem => item.Genre)
+                <td>
+                    @Html.DisplayFor(modelItem => item.Publisher)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.BookType)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ISBN)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Condition)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Price)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.OfferStatus)
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>

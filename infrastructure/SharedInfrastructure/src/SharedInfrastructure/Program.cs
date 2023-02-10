@@ -1,5 +1,4 @@
 ﻿using Amazon.CDK;
-using SharedInfrastructure.IntegratedTest;
 using SharedInfrastructure.Production;
 
 namespace SharedInfrastructure;
@@ -19,14 +18,24 @@ internal sealed class Program
     // the CDK will use the account and region of the default profile.
     // 
     // For more information refer to https://docs.aws.amazon.com/cdk/v2/guide/environments.html
-    public static void Main(string[] args)
+    public static void Main()
     {
         var app = new App();
 
         var env = MakeEnv();
 
-        var integratedTestStack = new IntegratedTestStack(app, "BookstoreIntegratedTest", new StackProps { Env = env });
-        var productionStack = new ProductionStack(app, "BookstoreProduction", new StackProps { Env = env });
+        var coreStack = new CoreStack(app, $"{Constants.AppName}Core", new StackProps { Env = env });
+        var networkStack = new NetworkStack(app, $"{Constants.AppName}Network", new StackProps { Env = env });
+        var databaseStack = new DatabaseStack(app, $"{Constants.AppName}Database", new DatabaseStackProps { Env = env, Vpc = networkStack.Vpc });
+
+        var ec2Stack = new EC2ComputeStack(app, $"{Constants.AppName}EC2", new EC2ComputeStackProps 
+        { 
+            Env = env, 
+            Vpc = networkStack.Vpc, 
+            Database = databaseStack.Database, 
+            ImageBucket = coreStack.ImageBucket,
+            WebAppUserPool= coreStack.WebAppUserPool
+        });
 
         app.Synth();
     }

@@ -1,0 +1,84 @@
+﻿@using Bookstore.Domain.Orders;
+
+@model Bookstore.Web.Areas.Admin.Models.Orders.OrderIndexViewModel
+
+@{ ViewData["Title"] = "Orders"; }
+
+<div class="d-flex m-3">
+    <h5 class="me-auto">Orders</h5>
+</div>
+
+<div class="card mx-3">
+    <div class="card-body">
+        <form class="row row-cols-lg-auto g-3 align-items-center" method="get">
+            <div class="col-12">
+                <label class="visually-hidden" for="OrderStatusSelect">Reference data type</label>
+                <select id="OrderStatusSelect" class="form-select" name="Filters.OrderStatusfilter" asp-for="Filters.OrderStatusFilter" asp-items="Html.GetEnumSelectList<OrderStatus>()">
+                    <option value="">All Order Statuses</option>
+                </select>
+            </div>
+
+            <div class="col-12">
+                <label class="visually-hidden" for="OrderStatusSelect">Order date from</label>
+                <input id="OrderDateFrom" type="date" class="form-control" name="Filters.OrderDateFromfilter" asp-for="Filters.OrderDateFromFilter" />
+            </div>
+
+            <div class="col-12">
+                <label class="visually-hidden" for="OrderStatusSelect">Order date to</label>
+                <input id="OrderDateTo" type="date" class="form-control" name="Filters.OrderDateTofilter" asp-for="Filters.OrderDateToFilter" />
+            </div>
+
+            <div class="col-12">
+                <button type="submit" class="btn btn-primary">Filter</button>
+            </div>
+
+            <div class="col-12">
+                <a class="btn btn-secondary" asp-action="Index">Clear</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card m-3">
+    <div class="card-header">
+        <div class="d-flex justify-content-end">
+            @await Html.PartialAsync("_Paginator")
+        </div>
+    </div>
+
+    <div class="card-body">
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">Customer Name</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Order Date</th>
+                    <th scope="col">Delivery Date</th>
+                    <th scope="col">Order Total</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var order in Model.Items)
+                {
+                    <tr>
+                        <td>@order.CustomerName</td>
+                        <td>@order.OrderStatus</td>
+                        <td>@order.OrderDate</td>
+                        <td>@order.DeliveryDate.ToShortDateString()</td>
+                        <td>@order.Total.ToString("C")</td>
+                        <td>
+                            <a class="card-link" asp-controller="Orders" asp-action="Details" asp-route-id="@order.Id">View</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="card-footer">
+        <div class="d-flex justify-content-end">
+            @await Html.PartialAsync("_Paginator")
+        </div>
+    </div>
+</div>

@@ -1,0 +1,58 @@
+﻿@model Bookstore.Web.ViewModel.Orders.OrderIndexViewModel
+
+@{
+    ViewData["Title"] = "Orders";
+}
+
+<div class="panel-body">
+    <h1>Your Orders</h1>
+
+    @if (!Model.OrderItems.Any())
+    {
+        <h2>No Orders Found.</h2>
+    }
+    else
+    {
+        <table class="table table-hover mt-5">
+            <thead>
+            <tr>
+                <th>
+                    Total Cost
+                </th>
+                <th>
+                    Delivery Date
+                </th>
+                <th>
+                    Status
+                </th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var item in Model.OrderItems)
+            {
+                <tr>
+                    <td>
+                        @item.SubTotal.ToString("C")
+                    </td>
+                    <td>
+                        @item.DeliveryDate.ToShortDateString()
+                    </td>
+                    <td>
+                        @item.OrderStatus
+                    </td>
+                    <td>
+                        <div class="hstack gap-2">
+                            <a class="btn" asp-action="Details" asp-controller="Orders" asp-route-id="@item.Id">Details</a>
+
+                            <form method="post">
+                                <button type="submit" class="btn" asp-action="Delete" asp-route-id="@item.Id">Cancel</button>
+                            </form>
+                        </div>                        
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    }
+</div>
