@@ -6,12 +6,11 @@
 
         Task<IEnumerable<ReferenceDataItem>> GetAllReferenceDataAsync();
 
+        Task<ReferenceDataItem> GetReferenceDataItemAsync(int id);
+
         Task CreateAsync(CreateReferenceDataItemDto createReferenceDataItemDto);
 
         Task UpdateAsync(UpdateReferenceDataItemDto createReferenceDataItemDto);
-
-
-        Task<ReferenceDataItem> GetReferenceDataItemAsync(int id);
     }
 
     public class ReferenceDataService : IReferenceDataService
