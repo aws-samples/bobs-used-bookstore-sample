@@ -11,11 +11,11 @@ namespace Bookstore.Domain.Orders
 
         Task<Order> GetOrderAsync(int id);
 
+        Task<int> CreateOrderAsync(CreateOrderDto createOrderDto);
+
         Task UpdateOrderStatusAsync(UpdateOrderStatusDto updateOrderStatusDto);
 
-        Task<int> CreateOrderAsync(string shoppingCartId, string sub, int selectedAddressId);
-
-        Task CancelOrderAsync(int id, string sub);
+        Task CancelOrderAsync(CancelOrderDto cancelOrderDto);
 
         Task<OrderStatistics> GetStatisticsAsync();
     }
@@ -50,29 +50,18 @@ namespace Bookstore.Domain.Orders
             return await orderRepository.GetAsync(id);
         }
 
-        public async Task UpdateOrderStatusAsync(UpdateOrderStatusDto dto)
+        public async Task<OrderStatistics> GetStatisticsAsync()
         {
-            var order = await orderRepository.GetAsync(dto.OrderId);
-
-            order.OrderStatus = dto.OrderStatus;
-
-            order.UpdatedOn = DateTime.UtcNow;
-
-            await orderRepository.SaveChangesAsync();
+            return await orderRepository.GetStatisticsAsync();
         }
 
-        public async Task<int> CreateOrderAsync(string shoppingCartId, string sub, int selectedAddressId)
+        public async Task<int> CreateOrderAsync(CreateOrderDto dto)
         {
-            var shoppingCart = await shoppingCartRepository.GetAsync(shoppingCartId);
-            var customer = await customerRepository.GetAsync(sub);
+            var shoppingCart = await shoppingCartRepository.GetAsync(dto.CorrelationId);
 
-            var order = new Order
-            {
-                AddressId = selectedAddressId,
-                Customer = customer,
-                OrderStatus = OrderStatus.Pending,
-                CreatedBy = sub
-            };
+            var customer = await customerRepository.GetAsync(dto.CustomerSub);
+
+            var order = new Order(customer.Id, dto.AddressId);
 
             await orderRepository.AddAsync(order);
 
@@ -92,9 +81,20 @@ namespace Bookstore.Domain.Orders
             return order.Id;
         }
 
-        public async Task CancelOrderAsync(int id, string sub)
+        public async Task UpdateOrderStatusAsync(UpdateOrderStatusDto dto)
         {
-            var order = await orderRepository.GetAsync(id, sub);
+            var order = await orderRepository.GetAsync(dto.OrderId);
+
+            order.OrderStatus = dto.OrderStatus;
+
+            order.UpdatedOn = DateTime.UtcNow;
+
+            await orderRepository.SaveChangesAsync();
+        }
+
+        public async Task CancelOrderAsync(CancelOrderDto dto)
+        {
+            var order = await orderRepository.GetAsync(dto.OrderId, dto.CustomerSub);
 
             if (order == null) return;
 
@@ -102,12 +102,5 @@ namespace Bookstore.Domain.Orders
 
             await orderRepository.SaveChangesAsync();
         }
-
-        public async Task<OrderStatistics> GetStatisticsAsync()
-        {
-            return await orderRepository.GetStatisticsAsync();
-        }
-
-        
     }
 }

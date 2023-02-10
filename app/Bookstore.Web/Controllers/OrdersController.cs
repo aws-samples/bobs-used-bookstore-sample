@@ -32,7 +32,9 @@ namespace Bookstore.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Delete(int id)
         {
-            await orderService.CancelOrderAsync(id, User.GetSub());
+            var dto = new CancelOrderDto(User.GetSub(), id);
+
+            await orderService.CancelOrderAsync(dto);
 
             return RedirectToAction("Index");
         }

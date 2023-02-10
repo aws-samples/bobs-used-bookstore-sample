@@ -6,19 +6,25 @@ namespace Bookstore.Domain.Orders
 {
     public class Order : Entity
     {
+        public Order(int customerId, int addressId)
+        {
+            CustomerId = customerId;
+            AddressId = addressId;
+        }
+
         private readonly List<OrderItem> orderItems = new List<OrderItem>();
 
         public int CustomerId { get; set; }
-        public Customer? Customer { get; set; }
+        public Customer Customer { get; set; }
 
-        public int? AddressId { get; set; }
-        public Address? Address { get; set; }
+        public int AddressId { get; set; }
+        public Address Address { get; set; }
 
         public IEnumerable<OrderItem> OrderItems => orderItems;
 
         public DateTime DeliveryDate { get; set; } = DateTime.Now.AddDays(7);
 
-        public OrderStatus OrderStatus { get; set; }
+        public OrderStatus OrderStatus { get; set; } = OrderStatus.Pending;
 
         public decimal Tax => SubTotal * 0.1m;
 

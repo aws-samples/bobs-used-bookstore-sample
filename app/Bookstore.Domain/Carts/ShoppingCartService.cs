@@ -2,7 +2,7 @@
 {
     public interface IShoppingCartService
     {
-        Task<ShoppingCart> GetShoppingCartAsync(string shoppingCartCorrelationId);
+        Task<ShoppingCart> GetShoppingCartAsync(string correlationId);
 
         Task AddToShoppingCartAsync(AddToShoppingCartDto addToShoppingCartDto);
 
