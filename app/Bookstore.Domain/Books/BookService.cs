@@ -8,6 +8,8 @@
 
         Task<IPaginatedList<Book>> GetBooksAsync(string searchString, string sortBy, int pageIndex, int pageSize);
 
+        Task<BookStatistics> GetStatisticsAsync();
+
         Task AddAsync(CreateBookDto createBookDto);
 
         Task UpdateAsync(UpdateBookDto updateBookDto);
@@ -95,6 +97,11 @@
                 await fileService.DeleteAsync(book.CoverImageUrl);
                 book.CoverImageUrl = imageUrl;
             }
+        }
+
+        public async Task<BookStatistics> GetStatisticsAsync()
+        {
+            return (await bookRepository.GetStatisticsAsync()) ?? new BookStatistics();
         }
     }
 }

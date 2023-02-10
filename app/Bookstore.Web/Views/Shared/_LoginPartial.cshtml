@@ -5,7 +5,7 @@
 
         @if (User.IsInRole("Administrators"))
         {
-            <a class="nav-link text-dark" asp-area="Admin" asp-controller="Orders" asp-action="Index">Admin Portal</a>
+            <a class="nav-link text-dark" asp-area="Admin" asp-controller="Dashboard" asp-action="Index">Admin Portal</a>
             <div class="vr"></div>
         }
         <a class="nav-link text-dark" asp-controller="Authentication" asp-action="LogOut">Logout</a>

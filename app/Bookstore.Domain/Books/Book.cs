@@ -4,6 +4,8 @@ namespace Bookstore.Domain.Books
 {
     public class Book : Entity
     {
+        public const int LowBookThreshold = 5;
+
         public Book(
             string name, 
             string author, 
@@ -61,6 +63,8 @@ namespace Bookstore.Domain.Books
         public int Quantity { get; set; }
 
         public bool IsInStock => Quantity > 0;
+
+        public bool IsLowInStock => Quantity > LowBookThreshold;
 
         public void ReduceStockLevel(int quantity)
         {

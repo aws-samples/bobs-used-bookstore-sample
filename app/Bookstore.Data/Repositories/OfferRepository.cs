@@ -1,6 +1,8 @@
 ﻿using Bookstore.Domain;
 using Bookstore.Domain.Offers;
+using Bookstore.Domain.Orders;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,6 +16,20 @@ namespace Bookstore.Data.Repositories
         public OfferRepository(ApplicationDbContext dbContext)
         {
             this.dbContext = dbContext;
+        }
+
+        public async Task<OfferStatistics> GetStatisticsAsync()
+        {
+            var startOfMonth = DateTime.UtcNow.StartOfMonth();
+
+            return await dbContext.Offer
+                .GroupBy(x => 1)
+                .Select(x => new OfferStatistics
+                {
+                    PendingOffers = x.Count(y => y.OfferStatus == OfferStatus.PendingApproval),
+                    OffersThisMonth = x.Count(y => y.CreatedOn >= startOfMonth),
+                    OffersTotal = x.Count()
+                }).SingleOrDefaultAsync();
         }
 
         async Task IOfferRepository.AddAsync(Offer offer)

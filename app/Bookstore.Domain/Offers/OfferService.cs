@@ -1,4 +1,5 @@
 ﻿using Bookstore.Domain.Customers;
+using Bookstore.Domain.Orders;
 
 namespace Bookstore.Domain.Offers
 {
@@ -13,6 +14,8 @@ namespace Bookstore.Domain.Offers
         Task CreateOfferAsync(CreateOfferDto createOfferDto);
 
         Task UpdateOfferStatusAsync(UpdateOfferStatusDto updateOfferStatusDto);
+
+        Task<OfferStatistics> GetStatisticsAsync();
     }
 
     public class OfferService : IOfferService
@@ -70,6 +73,11 @@ namespace Bookstore.Domain.Offers
             offer.UpdatedOn = DateTime.UtcNow;
 
             await offerRepository.SaveChangesAsync();
+        }
+
+        public async Task<OfferStatistics> GetStatisticsAsync()
+        {
+            return (await offerRepository.GetStatisticsAsync()) ?? new OfferStatistics();
         }
     }
 }

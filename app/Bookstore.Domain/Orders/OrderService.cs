@@ -11,13 +11,14 @@ namespace Bookstore.Domain.Orders
 
         Task<Order> GetOrderAsync(int id);
 
+        Task<OrderStatistics> GetStatisticsAsync();
+
         Task<int> CreateOrderAsync(CreateOrderDto createOrderDto);
 
         Task UpdateOrderStatusAsync(UpdateOrderStatusDto updateOrderStatusDto);
 
         Task CancelOrderAsync(CancelOrderDto cancelOrderDto);
 
-        Task<OrderStatistics> GetStatisticsAsync();
     }
 
     public class OrderService : IOrderService
@@ -52,7 +53,7 @@ namespace Bookstore.Domain.Orders
 
         public async Task<OrderStatistics> GetStatisticsAsync()
         {
-            return await orderRepository.GetStatisticsAsync();
+            return (await orderRepository.GetStatisticsAsync()) ?? new OrderStatistics();
         }
 
         public async Task<int> CreateOrderAsync(CreateOrderDto dto)

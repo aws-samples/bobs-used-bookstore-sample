@@ -1,4 +1,6 @@
-﻿namespace Bookstore.Domain.Offers
+﻿using Bookstore.Domain.Orders;
+
+namespace Bookstore.Domain.Offers
 {
     public interface IOfferRepository
     {
@@ -11,5 +13,7 @@
         protected internal Task AddAsync(Offer offer);
 
         protected internal Task SaveChangesAsync();
+
+        Task<OfferStatistics> GetStatisticsAsync();
     }
 }

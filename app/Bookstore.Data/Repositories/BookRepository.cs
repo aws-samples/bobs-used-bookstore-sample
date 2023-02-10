@@ -1,6 +1,8 @@
 ﻿using Bookstore.Domain;
 using Bookstore.Domain.Books;
+using Bookstore.Domain.Orders;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -120,6 +122,18 @@ namespace Bookstore.Data.Repositories
         async Task IBookRepository.SaveChangesAsync()
         {
             await dbContext.SaveChangesAsync();
+        }
+
+        public async Task<BookStatistics> GetStatisticsAsync()
+        {
+            return await dbContext.Book
+                .GroupBy(x => 1)
+                .Select(x => new BookStatistics
+                {
+                    LowStock = x.Count(y => y.Quantity > 0 && y.Quantity < Book.LowBookThreshold),
+                    OutOfStock = x.Count(y => y.Quantity == 0),
+                    StockTotal = x.Count()
+                }).SingleOrDefaultAsync();
         }
     }
 }

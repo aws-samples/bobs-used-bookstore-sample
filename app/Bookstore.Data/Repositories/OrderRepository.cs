@@ -44,14 +44,14 @@ namespace Bookstore.Data.Repositories
             var startOfMonth = DateTime.UtcNow.StartOfMonth();
 
             return await dbContext.Order
-                .GroupBy(x => x.Id)
+                .GroupBy(x => 1)
                 .Select(x => new OrderStatistics
                 {
                     PendingOrders = x.Count(y => y.OrderStatus == OrderStatus.Pending),
                     PastDueOrders = x.Count(y => y.OrderStatus == OrderStatus.Ordered && y.DeliveryDate < DateTime.UtcNow),
                     OrdersThisMonth = x.Count(y => y.CreatedOn >= startOfMonth),
                     OrdersTotal = x.Count()
-                }).SingleAsync();
+                }).SingleOrDefaultAsync();
         }
 
         async Task<IPaginatedList<Order>> IOrderRepository.ListAsync(OrderFilters filters, int pageIndex, int pageSize)
