@@ -43,6 +43,8 @@ public class EC2ComputeStack : Stack
         ConfigureUserData();
 
         CreateCognitoUserPoolClient(props);
+
+        _ = new CfnOutput(this, "EC2Url", new CfnOutputProps { Description = "The application URL", Value = Instance.InstancePublicDnsName });
     }
 
     internal void CreateEc2Role(EC2ComputeStackProps props)
@@ -124,27 +126,14 @@ public class EC2ComputeStack : Stack
             {
                 "logs:DescribeLogGroups",
                 "logs:CreateLogGroup",
-                "logs:CreateLogStream"
+                "logs:CreateLogStream",
+                "logs:PutLogEvents"
             },
             Resources = new[]
             {
-                "arn:aws:logs:*:*:log-group:*"
+                "arn:aws:logs:*:*:log-group:*:log-stream:*"
             }
-        }));
-
-        // TODO Can this be combined with the PolicyStatement above?
-        Ec2Role.AddToPolicy(new PolicyStatement(new PolicyStatementProps
-        {
-            Effect = Effect.ALLOW,
-            Actions = new[]
-            {
-                "logs:PutLogEvents",
-            },
-            Resources = new[]
-            {
-                "arn:aws:logs:*:*:log-group:*:log-stream:*",
-            }
-        }));
+        }));        
     }
 
     internal void UploadAssetsToS3()

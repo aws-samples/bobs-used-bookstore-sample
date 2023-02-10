@@ -30,8 +30,6 @@ public class DatabaseStack : Stack
             Vpc = props.Vpc,
             VpcSubnets = new SubnetSelection
             {
-                // We do not need egress connectivity to the internet for this sample. This
-                // eliminates the need for a NAT gateway.
                 SubnetType = SubnetType.PRIVATE_WITH_EGRESS
             },
             // SQL Server 2017 Express Edition, in conjunction with a db.t2.micro instance type,

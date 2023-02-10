@@ -231,7 +231,7 @@ public class CoreStack : Stack
             }
         });
 
-        var adminSiteUserPoolDomain = WebAppUserPool.AddDomain($"{Constants.AppName}UserPoolDomain", new UserPoolDomainOptions
+        var bobsBookstoreUserPoolDomain = WebAppUserPool.AddDomain($"{Constants.AppName}UserPoolDomain", new UserPoolDomainOptions
         {
             CognitoDomain = new CognitoDomainOptions
             {
@@ -240,7 +240,7 @@ public class CoreStack : Stack
             }
         });
 
-        adminSiteUserPoolDomain.SignInUrl(localClient, new SignInUrlOptions
+        bobsBookstoreUserPoolDomain.SignInUrl(localClient, new SignInUrlOptions
         {
             RedirectUri = $"{userPoolCallbackUrlRoot}/signin-oidc"
         });
@@ -262,7 +262,7 @@ public class CoreStack : Stack
             new StringParameter(this, "UserPoolCognitoDomain", new StringParameterProps
             {
                 ParameterName = $"/{Constants.AppName}/Authentication/Cognito/CognitoDomain",
-                StringValue = adminSiteUserPoolDomain.BaseUrl()
+                StringValue = bobsBookstoreUserPoolDomain.BaseUrl()
             })
         };
     }

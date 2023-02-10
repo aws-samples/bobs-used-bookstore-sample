@@ -5,7 +5,9 @@ namespace Bookstore.Domain.Addresses
     public class Address : Entity
     {
         // An empty constructor is required by EF Core
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         private Address() { }
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
         public Address(Customer customer, string addressLine1, string? addressLine2, string city, string state, string country, string zipCode)
         {
