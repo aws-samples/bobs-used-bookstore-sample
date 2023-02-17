@@ -44,7 +44,7 @@ public class EC2ComputeStack : Stack
 
         CreateCognitoUserPoolClient(props);
 
-        _ = new CfnOutput(this, "EC2Url", new CfnOutputProps { Description = "The application URL", Value = Instance.InstancePublicDnsName });
+        _ = new CfnOutput(this, "EC2Url", new CfnOutputProps { Description = "The application URL", Value = $"https://{Instance.InstancePublicDnsName}" });
     }
 
     internal void CreateEc2Role(EC2ComputeStackProps props)
@@ -140,31 +140,31 @@ public class EC2ComputeStack : Stack
     {
         ServerConfigScriptAsset = new Asset(this, "ServerConfigScriptAsset", new AssetProps
         {
-            Path = "src/SharedInfrastructure/EC2Artifacts/configure_ec2_web_app.sh"
+            Path = "app/Bookstore.Cdk/EC2Artifacts/configure_ec2_web_app.sh"
         });
         ServerConfigScriptAsset.GrantRead(Ec2Role);
 
         WebAppAsset = new Asset(this, "WebAppAsset", new AssetProps
         {
-            Path = "../../app/Bookstore.Web/bin/Release/net6.0/publish"
+            Path = "app/Bookstore.Web/bin/Release/net6.0/publish"
         });
         WebAppAsset.GrantRead(Ec2Role);
 
         SslConfigAsset = new Asset(this, "ApacheSSLConfigAsset", new AssetProps
         {
-            Path = "src/SharedInfrastructure/EC2Artifacts/ssl.conf"
+            Path = "app/Bookstore.Cdk/EC2Artifacts/ssl.conf"
         });
         SslConfigAsset.GrantRead(Ec2Role);
 
         WebAppVirtualHostConfigAsset = new Asset(this, "WebAppVirtualHostConfigAsset", new AssetProps
         {
-            Path = "src/SharedInfrastructure/EC2Artifacts/bobsbookstore.conf"
+            Path = "app/Bookstore.Cdk/EC2Artifacts/bobsbookstore.conf"
         });
         WebAppVirtualHostConfigAsset.GrantRead(Ec2Role);
 
         KestrelServiceAsset = new Asset(this, "KestrelServiceAsset", new AssetProps
         {
-            Path = "src/SharedInfrastructure/EC2Artifacts/bobsbookstore.service"
+            Path = "app/Bookstore.Cdk/EC2Artifacts/bobsbookstore.service"
         });
         KestrelServiceAsset.GrantRead(Ec2Role);
     }

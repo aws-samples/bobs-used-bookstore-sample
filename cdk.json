@@ -1,17 +1,21 @@
 {
-  "app": "dotnet run --project src/SharedInfrastructure/SharedInfrastructure.csproj",
+  "app": "dotnet run --project app/Bookstore.Cdk/Bookstore.Cdk.csproj",
   "watch": {
     "include": [
       "**"
     ],
     "exclude": [
       "README.md",
+      "CODE_OF_CONDUCT.md",
+      "CONTRIBUTING.md",
+      "LICENSE",
       "cdk*.json",
-      "src/*/obj",
-      "src/*/bin",
-      "src/*.sln",
-      "src/*/GlobalSuppressions.cs",
-      "src/*/*.csproj"
+      "app/*/obj",
+      "app/*/bin",
+      "app/*.sln",
+      "app/*/GlobalSuppressions.cs",
+      "app/*/*.csproj",
+      "media"
     ]
   },
   "context": {
