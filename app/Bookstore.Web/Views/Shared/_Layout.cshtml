@@ -23,74 +23,44 @@
     <footer>
         <div class="container">
             <div class="row">
-                <div class="col-md-4">
-                    <div class="address">
-                        <h4>Our Address</h4>
-                        <!-- sample data! -->
-                        <h6>
-                            123 Any Street, Any Town, USA
-                        </h6>
-                        <h6>Call: 555-0100</h6>
-                        <h6>Email: staff@BobsUsedBooks.com</h6>
-                    </div>
-                    <div class="timing">
-                        <h4>Store Hours</h4>
-                        <h6>Mon - Fri: 8am - 10pm</h6>
-                        <h6>Saturday: 10am - 8pm</h6>
-                        <h6>Sunday: 11am - 5pm</h6>
-                    </div>
+                <div class="col timing">
+                    <h4>Our Address</h4>
+                    <!-- sample data! -->
+                    <h6>123 Any Street, Any Town, USA</h6>
+                    <h6>Call: 555-0100</h6>
+                    <h6>Email: staff@BobsUsedBooks.com</h6>
                 </div>
-                <div class="col-md-3">
-                    <div class="navigation">
-                        <h4>Navigation</h4>
-                        <ul>
-                            <li>
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                            </li>
-                            <li>
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                            </li>
-                            <li>
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Orders" asp-action="Index">View Orders</a>
-                            </li>
-                            <li>
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Search" asp-action="Index">Search Books</a>
-                            </li>
-                            <li>
-                                <a class="nav-link text-dark" asp-area="" asp-controller="ShoppingCart" asp-action="Index">Cart</a>
-                            </li>
-                        </ul>
-                    </div>
 
+                <div class="col timing">
+                    <h4>Store Hours</h4>
+                    <h6>Mon - Fri: 8am - 10pm</h6>
+                    <h6>Saturday: 10am - 8pm</h6>
+                    <h6>Sunday: 11am - 5pm</h6>
                 </div>
-                <!-- while a real store would have a contact form, this sample does not
-                <div class="col-md-5">
-                    <div class="form">
-                        <h3>Contact us</h3>
-                        <h6>
-                            Our team is ready to respond as soon as possibly during business hours
-                        </h6>
-                        <form>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <input placeholder="Name" required>
-                                </div>
-                                <div class="col-md-6">
-                                    <input type="email" placeholder="Email" required>
-                                </div>
-                                <div class="col-md-12">
-                                    <textarea placeholder="Messege"></textarea>
-                                </div>
-                                <div class="col-md-12">
-                                    <button class="btn black">Send</button>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
+
+                <div class="col navigation">
+                    <h4>Navigation</h4>
+                    <ul>
+                        <li>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                        </li>
+                        <li>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                        </li>
+                        <li>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Orders" asp-action="Index">View Orders</a>
+                        </li>
+                        <li>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Search" asp-action="Index">Search Books</a>
+                        </li>
+                        <li>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="ShoppingCart" asp-action="Index">Cart</a>
+                        </li>
+                    </ul>
                 </div>
-                -->
             </div>
         </div>
+
         <div class="container">
             <br />
             &copy;
@@ -99,7 +69,6 @@
             </span>
             - Bob's Used Books - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
-
     </footer>
 
     <script src="/lib/jquery/jquery.min.js"></script>
