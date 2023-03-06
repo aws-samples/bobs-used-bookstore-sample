@@ -75,6 +75,8 @@
         {
             var shoppingCart = await shoppingCartRepository.GetAsync(dto.CorrelationId);
 
+                if (shoppingCart == null) return;
+
             foreach (var wishListItem in shoppingCart.GetWishListItems())
             {
                 shoppingCart.MoveWishListItemToShoppingCart(wishListItem.Id);
