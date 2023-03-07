@@ -1,4 +1,6 @@
-﻿@{
+﻿@model Bookstore.Web.ViewModel.Home.HomeIndexViewModel
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
@@ -19,87 +21,42 @@
             </div>
         </div>
     </section>
+
     <section class="recomended-sec">
-        <div class="container">
             <div class="title">
                 <h2>Best Sellers</h2>
                 <hr>
             </div>
-            <div class="row">
-                <div class="col-lg-3 col-md-6">
-                    <div class="item">
-                        <img src="/images/AgeOfDevas.jpg" alt="img" class="book_image" onerror="this.onerror=null;this.src='/images/default_c.jpg';">
-                        <p>Age of Devas - Fall of Venus Trilogy</p>
-                        <h6>
-                            <a href="#">Sold Out</a>
-                        </h6>
-                        <div class="hover">
-                            <a asp-controller="Search" asp-action="Details" asp-route-id="191">
-                                <span>
-                                    <i class="bi bi-arrow-right"></i>
-                                </span>
-                            </a>
-                        </div>
-                    </div>
-                </div>
 
-                <div class="col-lg-3 col-md-6">
-                    <div class="item">
-                        <img src="/images/IntroToQuark.png" alt="img" class="book_image" onerror="this.onerror=null;this.src='/images/default_c.jpg';">
-                        <p>Introduction to Quarktronics</p>
-                        <h6>
-                            <a href="#">Sold Out</a>
-                        </h6>
-                        <div class="hover">
-                            <a asp-controller="Search" asp-action="Details" asp-route-id="184">
-                                <span>
-                                    <i class="bi bi-arrow-right"></i>
-                                </span>
-                            </a>
+            <div class="row justify-content-center">
+                @if (Model.Books.Count > 0)
+                {
+                    foreach (var book in Model.Books)
+                    {
+                        <div class="col-lg-3 col-md-6">
+                            <div class="item">
+                                <img src="@book.CoverImageUrl" alt="img" class="book_image" onerror="this.onerror=null;this.src='/images/default_c.jpg';">
+                                <p>@book.BookName</p>
+                                <div class="hover">
+                                    <a asp-controller="Search" asp-action="Details" asp-route-id="@book.BookId">
+                                        <span>
+                                            <i class="bi bi-arrow-right"></i>
+                                        </span>
+                                    </a>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
-
-                <div class="col-lg-3 col-md-6">
-                    <div class="item">
-                        <img src="/images/StopLazy.png" alt="img" class="book_image" onerror="this.onerror=null;this.src='/images/default_c.jpg';">
-                        <p>How to stop being lazy : Beginner's guide to productive life</p>
-                        <h6>
-                            <a href="#">Sold Out</a>
-                        </h6>
-                        <div class="hover">
-                            <a asp-controller="Search" asp-action="Details" asp-route-id="225">
-                                <span>
-                                    <i class="bi bi-arrow-right" aria-hidden="true"></i>
-                                </span>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-lg-3 col-md-6">
-                    <div class="item">
-                        <img src="/images/PowerOfSleep.jpg" alt="img" class="book_image" onerror="this.onerror=null;this.src='/images/default_c.jpg';">
-                        <p>The Power of Sleeping</p>
-                        <h6>
-                            <a href="#">Sold Out</a>
-                        </h6>
-                        <div class="hover">
-                            <a href="product-single.html">
-                                <span>
-                                    <i class="bi bi-arrow-right" aria-hidden="true"></i>
-                                </span>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
+                    }
+                }
+                else
+                {
+                    <p>Check back here soon for a list of our top selling books!</p>
+                }
             </div>
-        </div>
     </section>
 
     <section class="about-sec">
-        <div class="about-content">
+        <div class="about-content m-auto">
             <h2>Wish List</h2>
             <p>
                 Find a book that would be perfect for a friend? How about your parents or siblings or children?
@@ -111,43 +68,45 @@
                 <a class="btn black" asp-area="" asp-controller="Search" asp-action="Index">Shop Books</a>
             </div>
         </div>
+        <div class="about-img">
+            <figure style="background: url(/images/wishlist.jpg)no-repeat;background-size: 100%"></figure>
+        </div>
     </section>
 
     <section class="features-sec">
-        <div class="container">
-            <ul>
-                <li>
-                    <span class="icon">
-                        <i class="bi bi-cart"></i>
-                    </span>
-                    <h3>Newest Titles out there</h3>
-                    <h5>We're stocked up</h5>
-                    <h6>You can be sure that we have the latest books on shelf and are constantly adding new titles daily </h6>
-                </li>
-                <li>
-                    <span class="icon return">
-                        <i class="bi bi-clock-history"></i>
-                    </span>
-                    <h3>2 Week Shipping</h3>
-                    <h5>Fast Shipping Guaranteed</h5>
-                    <h6>We guarantee your book will reach your hands to be read in 2 weeks or less, or your money back guaranteed </h6>
-                </li>
-                <li>
-                    <span class="icon chat">
-                        <i class="bi bi-chat-dots" aria-hidden="true"></i>
-                    </span>
-                    <h3>Active Support</h3>
-                    <h5>Our team is active</h5>
-                    <h6>Need helping picking a book? Confused on what genres are out there? We're available for all questions </h6>
-                </li>
-            </ul>
+        <div class="card-group">
+            <div class="card text-center">
+                <div class="card-body">
+                    <i class="bi bi-cart" style="font-size: 2rem; color: #ffaf00;"></i>
+                    <h5 class="card-title mt-2">Newest titles out there</h5>
+                    <h6 class="card-subtitle mb-3">We're stocked up</h6>
+                    <p class="card-text text-muted">You can be sure that we have the latest books on shelf and are constantly adding new titles daily</p>
+                </div>
+            </div>
+            
+            <div class="card text-center">
+                <div class="card-body">
+                    <i class="bi bi-clock-history" style="font-size: 2rem; color: #00aeef;"></i>
+                    <h5 class="card-title mt-2">Two week shipping</h5>
+                    <h6 class="card-subtitle mb-3">Fast shipping guaranteed</h6>
+                    <p class="card-text text-muted">We guarantee your book will reach your hands to be read in two weeks or less, or your money back guaranteed</p>
+                </div>
+            </div>
+
+            <div class="card text-center">
+                <div class="card-body">
+                    <i class="bi bi-chat-dots" style="font-size: 2rem; color: #00a99d;"></i>
+                    <h5 class="card-title mt-2">Active support</h5>
+                    <h6 class="card-subtitle mb-3">Our team is active</h6>
+                    <p class="card-text text-muted">Need helping picking a book? Confused on what genres are out there? We're available for all questions</p>
+                </div>
+            </div>
         </div>
     </section>
 
     <section class="about-sec">
         <div class="about-img">
             <figure style="background: url(/images/privacy.jpg)no-repeat;background-size: 100%"></figure>
-
         </div>
         <div class="about-content">
             <h2>Our Privacy Policy</h2>

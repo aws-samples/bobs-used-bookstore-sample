@@ -12,8 +12,8 @@
 
         protected internal Task UpdateAsync(Book book);
 
-
         Task SaveChangesAsync();
+
         Task<BookStatistics> GetStatisticsAsync();
     }
 }

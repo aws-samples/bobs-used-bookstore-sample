@@ -7,39 +7,39 @@
     }
     else
     {
-        <h1>@Html.DisplayFor(modelitem => Model.BookName)</h1>
+        <h1>@Model.BookName</h1>
         <br>
         <div class="container">
             <div class="row">
                 <div class="col">
                     <div class="media">
-                        <img class="mr-3" src="@Html.DisplayFor(modelitem => Model.Url)" onerror="this.onerror=null;this.src='/images/default_c.jpg';" style="width: 135px;height: 200px;" />
+                        <img class="mr-3" src="@Model.Url" onerror="this.onerror=null;this.src='/images/default_c.jpg';" style="width: 135px;height: 200px;" />
                         <div class="media-body">
                             <table class="table">
                                 <tbody>
                                 <tr>
                                     <th scope="col">Title</th>
-                                    <td>@Html.DisplayFor(modelitem => Model.BookName)</td>
+                                    <td>@Model.BookName</td>
                                 </tr>
                                 <tr>
                                     <th scope="col">Author</th>
-                                    <td>@Html.DisplayFor(modelitem => Model.Author)</td>
+                                    <td>@Model.Author</td>
                                 </tr>
                                 <tr>
                                     <th scope="col">Publisher</th>
-                                    <td>@Html.DisplayFor(modelitem => Model.PublisherName)</td>
+                                    <td>@Model.PublisherName</td>
                                 </tr>
                                 <tr>
                                     <th scope="col">Genre</th>
-                                    <td>@Html.DisplayFor(modelitem => Model.GenreName)</td>
+                                    <td>@Model.GenreName</td>
                                 </tr>
                                 <tr>
                                     <th scope="col">Condition</th>
-                                    <td>@Html.DisplayFor(modelitem => Model.ConditionName)</td>
+                                    <td>@Model.ConditionName</td>
                                 </tr>
                                 <tr>
                                     <th scope="col">Price</th>
-                                    <td>@Html.DisplayFor(modelitem => Model.MinPrice)</td>
+                                    <td>@Model.MinPrice.ToString("C")</td>
                                 </tr>
                                 @if (string.IsNullOrEmpty(Model.Summary))
                                 {
@@ -52,7 +52,7 @@
                                 {
                                     <tr>
                                         <th scope="col">Description</th>
-                                        <td>@Html.DisplayFor(modelitem => Model.Summary)</td>
+                                        <td>@Model.Summary)</td>
                                     </tr>
                                 }
                                 </tbody>

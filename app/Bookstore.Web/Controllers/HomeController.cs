@@ -3,15 +3,27 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Bookstore.Web.ViewModel;
+using Bookstore.Domain.Books;
+using System.Threading.Tasks;
+using Bookstore.Web.ViewModel.Home;
 
 namespace Bookstore.Web.Controllers
 {
     [AllowAnonymous]
     public class HomeController : Controller
     {
-        public IActionResult Index()
+        private readonly IBookService bookService;
+
+        public HomeController(IBookService bookService)
         {
-            return View();
+            this.bookService = bookService;
+        }
+
+        public async Task<IActionResult> Index()
+        {
+            var books = await bookService.ListBestSellingBooksAsync(4);
+
+            return View(new HomeIndexViewModel(books));
         }
 
         public IActionResult Privacy()
