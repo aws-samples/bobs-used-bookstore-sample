@@ -1,8 +1,9 @@
 ﻿using Bookstore.Domain;
 using Bookstore.Domain.Books;
-using Bookstore.Domain.Orders;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -129,7 +130,7 @@ namespace Bookstore.Data.Repositories
             await dbContext.SaveChangesAsync();
         }
 
-        public async Task<BookStatistics> GetStatisticsAsync()
+        async Task<BookStatistics> IBookRepository.GetStatisticsAsync()
         {
             return await dbContext.Book
                 .GroupBy(x => 1)

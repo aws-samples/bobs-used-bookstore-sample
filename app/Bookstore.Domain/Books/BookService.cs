@@ -1,4 +1,6 @@
-﻿namespace Bookstore.Domain.Books
+﻿using Bookstore.Domain.Orders;
+
+namespace Bookstore.Domain.Books
 {
     public interface IBookService
     {
@@ -8,22 +10,27 @@
 
         Task<IPaginatedList<Book>> GetBooksAsync(string searchString, string sortBy, int pageIndex, int pageSize);
 
+        Task<IEnumerable<Book>> ListBestSellingBooksAsync(int count);
+
         Task<BookStatistics> GetStatisticsAsync();
 
         Task AddAsync(CreateBookDto createBookDto);
 
         Task UpdateAsync(UpdateBookDto updateBookDto);
+
     }
 
     public class BookService : IBookService
     {
         private readonly IFileService fileService;
         private readonly IBookRepository bookRepository;
+        private readonly IOrderRepository orderRepository;
 
-        public BookService(IFileService fileService, IBookRepository bookRepository)
+        public BookService(IFileService fileService, IBookRepository bookRepository, IOrderRepository orderRepository)
         {
             this.fileService = fileService;
             this.bookRepository = bookRepository;
+            this.orderRepository = orderRepository;
         }
 
         public async Task<Book> GetBookAsync(int id)
@@ -39,6 +46,16 @@
         public async Task<IPaginatedList<Book>> GetBooksAsync(string searchString, string sortBy, int pageIndex, int pageSize)
         {
             return await bookRepository.ListAsync(searchString, sortBy, pageIndex, pageSize);
+        }
+
+        public async Task<IEnumerable<Book>> ListBestSellingBooksAsync(int count)
+        {
+            return await orderRepository.ListBestSellingBooksAsync(count);
+        }
+
+        public async Task<BookStatistics> GetStatisticsAsync()
+        {
+            return (await bookRepository.GetStatisticsAsync()) ?? new BookStatistics();
         }
 
         public async Task AddAsync(CreateBookDto dto)
@@ -97,11 +114,6 @@
                 await fileService.DeleteAsync(book.CoverImageUrl);
                 book.CoverImageUrl = imageUrl;
             }
-        }
-
-        public async Task<BookStatistics> GetStatisticsAsync()
-        {
-            return (await bookRepository.GetStatisticsAsync()) ?? new BookStatistics();
         }
     }
 }

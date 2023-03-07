@@ -1,4 +1,5 @@
 ﻿using Bookstore.Domain;
+using Bookstore.Domain.Books;
 using Bookstore.Domain.Orders;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -37,6 +38,22 @@ namespace Bookstore.Data.Repositories
         async Task<Order> IOrderRepository.GetAsync(int id, string sub)
         {
             return await dbContext.Order.SingleOrDefaultAsync(x => x.Id == id && x.Customer.Sub == sub);
+        }
+
+        async Task<IEnumerable<Book>> IOrderRepository.ListBestSellingBooksAsync(int count)
+        {
+            return await dbContext.OrderItem
+                .GroupBy(x => x.BookId)
+                .OrderByDescending(x => x.Count())
+                .Select(x => x.First().Book)
+                .Take(count)
+                .ToListAsync();
+
+            //return await dbContext.OrderItem
+            //    .GroupBy(x => new { x.Book.Name, x.Book.CoverImageUrl })
+            //    .OrderByDescending(x => x.Count())
+            //    .Select(x => x.Key)
+            //    .ToListAsync();
         }
 
         async Task<OrderStatistics> IOrderRepository.GetStatisticsAsync()
