@@ -23,14 +23,13 @@
     </section>
 
     <section class="recomended-sec">
-        <div class="container">
             <div class="title">
                 <h2>Best Sellers</h2>
                 <hr>
-            </div>            
+            </div>
 
             <div class="row justify-content-center">
-                @if(Model.Books.Count > 0)
+                @if (Model.Books.Count > 0)
                 {
                     foreach (var book in Model.Books)
                     {
@@ -52,9 +51,8 @@
                 else
                 {
                     <p>Check back here soon for a list of our top selling books!</p>
-                }                
+                }
             </div>
-        </div>
     </section>
 
     <section class="about-sec">
@@ -76,33 +74,33 @@
     </section>
 
     <section class="features-sec">
-        <div class="container">
-            <ul>
-                <li>
-                    <span class="icon">
-                        <i class="bi bi-cart"></i>
-                    </span>
-                    <h3>Newest Titles out there</h3>
-                    <h5>We're stocked up</h5>
-                    <h6>You can be sure that we have the latest books on shelf and are constantly adding new titles daily </h6>
-                </li>
-                <li>
-                    <span class="icon return">
-                        <i class="bi bi-clock-history"></i>
-                    </span>
-                    <h3>2 Week Shipping</h3>
-                    <h5>Fast Shipping Guaranteed</h5>
-                    <h6>We guarantee your book will reach your hands to be read in 2 weeks or less, or your money back guaranteed </h6>
-                </li>
-                <li>
-                    <span class="icon chat">
-                        <i class="bi bi-chat-dots" aria-hidden="true"></i>
-                    </span>
-                    <h3>Active Support</h3>
-                    <h5>Our team is active</h5>
-                    <h6>Need helping picking a book? Confused on what genres are out there? We're available for all questions </h6>
-                </li>
-            </ul>
+        <div class="card-group">
+            <div class="card text-center">
+                <div class="card-body">
+                    <i class="bi bi-cart" style="font-size: 2rem; color: #ffaf00;"></i>
+                    <h5 class="card-title mt-2">Newest titles out there</h5>
+                    <h6 class="card-subtitle mb-3">We're stocked up</h6>
+                    <p class="card-text text-muted">You can be sure that we have the latest books on shelf and are constantly adding new titles daily</p>
+                </div>
+            </div>
+            
+            <div class="card text-center">
+                <div class="card-body">
+                    <i class="bi bi-clock-history" style="font-size: 2rem; color: #00aeef;"></i>
+                    <h5 class="card-title mt-2">Two week shipping</h5>
+                    <h6 class="card-subtitle mb-3">Fast shipping guaranteed</h6>
+                    <p class="card-text text-muted">We guarantee your book will reach your hands to be read in two weeks or less, or your money back guaranteed</p>
+                </div>
+            </div>
+
+            <div class="card text-center">
+                <div class="card-body">
+                    <i class="bi bi-chat-dots" style="font-size: 2rem; color: #00a99d;"></i>
+                    <h5 class="card-title mt-2">Active support</h5>
+                    <h6 class="card-subtitle mb-3">Our team is active</h6>
+                    <p class="card-text text-muted">Need helping picking a book? Confused on what genres are out there? We're available for all questions</p>
+                </div>
+            </div>
         </div>
     </section>
 
