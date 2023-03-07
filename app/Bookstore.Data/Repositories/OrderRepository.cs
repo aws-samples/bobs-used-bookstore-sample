@@ -48,12 +48,6 @@ namespace Bookstore.Data.Repositories
                 .Select(x => x.First().Book)
                 .Take(count)
                 .ToListAsync();
-
-            //return await dbContext.OrderItem
-            //    .GroupBy(x => new { x.Book.Name, x.Book.CoverImageUrl })
-            //    .OrderByDescending(x => x.Count())
-            //    .Select(x => x.Key)
-            //    .ToListAsync();
         }
 
         async Task<OrderStatistics> IOrderRepository.GetStatisticsAsync()
