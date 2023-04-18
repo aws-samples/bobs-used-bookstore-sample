@@ -65,7 +65,7 @@ sudo chown ec2-user:apache /var/www
 sudo chmod 2775 /var/www && find /var/www -type d -exec sudo chmod 2775 {} \;
 find /var/www -type f -exec sudo chmod 0664 {} \;
 
-# Install the Kestrel Service
+# Install the Kestrel Service 
 cp $KESTREL_SERVICE /etc/systemd/system/bobsbookstore.service
 sudo systemctl enable bobsbookstore.service
 sudo systemctl start bobsbookstore.service
