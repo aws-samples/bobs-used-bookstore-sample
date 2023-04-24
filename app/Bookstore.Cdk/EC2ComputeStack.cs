@@ -194,7 +194,8 @@ public class EC2ComputeStack : Stack
             SecurityGroup = webAppSecurityGroup,
             InstanceType = InstanceType.Of(InstanceClass.BURSTABLE3, InstanceSize.SMALL),
             MachineImage = ami,
-            Role = Ec2Role
+            Role = Ec2Role,
+            RequireImdsv2 = true
         });
     }
 
