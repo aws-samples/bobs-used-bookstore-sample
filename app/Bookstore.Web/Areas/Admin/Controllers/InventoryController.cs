@@ -42,14 +42,7 @@ namespace Bookstore.Web.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(InventoryCreateUpdateViewModel model)
         {
-            if (!ModelState.IsValid)
-            {
-                var referenceDataItemDtos = await referenceDataService.GetAllReferenceDataAsync();
-
-                model.AddReferenceData(referenceDataItemDtos);
-
-                return View("CreateUpdate", model);
-            }
+            if (!ModelState.IsValid) return await InvalidCreateUpdateView(model);
 
             var dto = new CreateBookDto(
                 model.Name, 
@@ -66,11 +59,9 @@ namespace Bookstore.Web.Areas.Admin.Controllers
                 model.CoverImage?.OpenReadStream(), 
                 model.CoverImage?.FileName);
 
-            await bookService.AddAsync(dto);
+            var result = await bookService.AddAsync(dto);
 
-            TempData["Message"] = $"{model.Name} has been added to inventory";
-
-            return RedirectToAction("Index");
+            return await ProcessBookResultAsync(model, result, $"{model.Name} has been added to inventory");
         }
 
         public async Task<IActionResult> Update(int id)
@@ -84,6 +75,8 @@ namespace Bookstore.Web.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> Update(InventoryCreateUpdateViewModel model)
         {
+            if (!ModelState.IsValid) return await InvalidCreateUpdateView(model);
+
             var dto = new UpdateBookDto(
                 model.Id,
                 model.Name,
@@ -100,11 +93,34 @@ namespace Bookstore.Web.Areas.Admin.Controllers
                 model.CoverImage?.OpenReadStream(),
                 model.CoverImage?.FileName);
 
-            await bookService.UpdateAsync(dto);
+            var result = await bookService.UpdateAsync(dto);
 
-            TempData["Message"] = $"{model.Name} has been updated";
+            return await ProcessBookResultAsync(model, result, $"{model.Name} has been updated");
+        }
 
-            return RedirectToAction("Index");
+        private async Task<IActionResult> ProcessBookResultAsync(InventoryCreateUpdateViewModel model, BookResult result, string successMessage)
+        {
+            if (result.IsSuccess)
+            {
+                TempData["Message"] = successMessage;
+
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                ModelState.AddModelError(nameof(model.CoverImage), result.ErrorMessage);
+
+                return await InvalidCreateUpdateView(model);
+            }
+        }
+
+        private async Task<IActionResult> InvalidCreateUpdateView(InventoryCreateUpdateViewModel model)
+        {
+            var referenceDataItemDtos = await referenceDataService.GetAllReferenceDataAsync();
+
+            model.AddReferenceData(referenceDataItemDtos);
+
+            return View("CreateUpdate", model);
         }
     }
 }
