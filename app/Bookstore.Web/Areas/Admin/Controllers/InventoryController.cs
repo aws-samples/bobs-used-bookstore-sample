@@ -42,7 +42,14 @@ namespace Bookstore.Web.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(InventoryCreateUpdateViewModel model)
         {
-            if (!ModelState.IsValid) return View("CreateUpdate", model);
+            if (!ModelState.IsValid)
+            {
+                var referenceDataItemDtos = await referenceDataService.GetAllReferenceDataAsync();
+
+                model.AddReferenceData(referenceDataItemDtos);
+
+                return View("CreateUpdate", model);
+            }
 
             var dto = new CreateBookDto(
                 model.Name, 
