@@ -104,7 +104,7 @@
         <div class="col-8">
             <div class="mb-3">
                 <label class="form-label">Cover Image</label>
-                <input asp-for="CoverImage" class="form-control mb-3">
+                <input asp-for="CoverImage" class="form-control mb-3" accept=".png,.jpg,.jpeg">
                 <span asp-validation-for="CoverImage" class="text-danger"></span>
                 <img src="@Model.CoverImageUrl" class="img-thumbnail @(string.IsNullOrWhiteSpace(Model.CoverImageUrl) ? "d-none" : "")" />
             </div>

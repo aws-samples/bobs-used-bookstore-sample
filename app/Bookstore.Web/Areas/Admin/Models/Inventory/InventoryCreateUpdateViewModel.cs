@@ -80,6 +80,7 @@ namespace Bookstore.Web.Areas.Admin.Models.Inventory
         public int Quantity { get; set; } = 1;
 
         [MaxFileSize(2*1024*1024)]
+        [ImageTypes(new string[] {".png", ".jpg", ".jpeg"})]
         [DisplayName("Cover image")]
         public IFormFile CoverImage { get; set; }
         
