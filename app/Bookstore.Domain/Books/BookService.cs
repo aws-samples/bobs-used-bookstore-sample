@@ -17,7 +17,6 @@ namespace Bookstore.Domain.Books
         Task<BookResult> AddAsync(CreateBookDto createBookDto);
 
         Task<BookResult> UpdateAsync(UpdateBookDto updateBookDto);
-
     }
 
     public class BookService : IBookService
@@ -108,10 +107,9 @@ namespace Bookstore.Domain.Books
         {
             var resizedCoverImage = await ResizeImageAsync(coverImage);
 
-            if ((await imageValidationService.IsSafeAsync(coverImage)) == false)
-            {
-                return new BookResult(false, "The image failed the safety check. Please try another image.");
-            }
+            var imageIsSafe = await imageValidationService.IsSafeAsync(coverImage);
+
+            if (!imageIsSafe) return new BookResult(false, "The image failed the safety check. Please try another image.");
 
             await SaveImageAsync(book, resizedCoverImage, coverImageFileName);
 
