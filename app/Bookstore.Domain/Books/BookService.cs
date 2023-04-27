@@ -14,20 +14,23 @@ namespace Bookstore.Domain.Books
 
         Task<BookStatistics> GetStatisticsAsync();
 
-        Task AddAsync(CreateBookDto createBookDto);
+        Task<BookResult> AddAsync(CreateBookDto createBookDto);
 
-        Task UpdateAsync(UpdateBookDto updateBookDto);
-
+        Task<BookResult> UpdateAsync(UpdateBookDto updateBookDto);
     }
 
     public class BookService : IBookService
     {
+        private readonly IImageResizeService imageResizeService;
+        private readonly IImageValidationService imageValidationService;
         private readonly IFileService fileService;
         private readonly IBookRepository bookRepository;
         private readonly IOrderRepository orderRepository;
 
-        public BookService(IFileService fileService, IBookRepository bookRepository, IOrderRepository orderRepository)
+        public BookService(IImageResizeService imageResizeService, IImageValidationService imageValidationService, IFileService fileService, IBookRepository bookRepository, IOrderRepository orderRepository)
         {
+            this.imageResizeService = imageResizeService;
+            this.imageValidationService = imageValidationService;
             this.fileService = fileService;
             this.bookRepository = bookRepository;
             this.orderRepository = orderRepository;
@@ -58,7 +61,7 @@ namespace Bookstore.Domain.Books
             return (await bookRepository.GetStatisticsAsync()) ?? new BookStatistics();
         }
 
-        public async Task AddAsync(CreateBookDto dto)
+        public async Task<BookResult> AddAsync(CreateBookDto dto)
         {
             var book = new Book(
                 dto.Name,
@@ -73,14 +76,12 @@ namespace Bookstore.Domain.Books
                 dto.Year,
                 dto.Summary);
 
-            await UpdateImageAsync(book, dto.CoverImage, dto.CoverImageFileName);
-
             await bookRepository.AddAsync(book);
 
-            await bookRepository.SaveChangesAsync();
+            return await SaveAsync(book, dto.CoverImage, dto.CoverImageFileName);
         }
 
-        public async Task UpdateAsync(UpdateBookDto dto)
+        public async Task<BookResult> UpdateAsync(UpdateBookDto dto)
         {
             var book = await bookRepository.GetAsync(dto.BookId);
 
@@ -95,17 +96,36 @@ namespace Bookstore.Domain.Books
             book.Quantity = dto.Quantity;
             book.Year = dto.Year;
             book.Summary = dto.Summary;
-
-            await UpdateImageAsync(book, dto.CoverImage, dto.CoverImageFileName);
-
             book.UpdatedOn = DateTime.UtcNow;
 
             await bookRepository.UpdateAsync(book);
 
-            await bookRepository.SaveChangesAsync();
+            return await SaveAsync(book, dto.CoverImage, dto.CoverImageFileName);
         }
 
-        private async Task UpdateImageAsync(Book book, Stream? coverImage, string? coverImageFilename)
+        private async Task<BookResult> SaveAsync(Book book, Stream? coverImage, string coverImageFileName)
+        {
+            var resizedCoverImage = await ResizeImageAsync(coverImage);
+
+            var imageIsSafe = await imageValidationService.IsSafeAsync(coverImage);
+
+            if (!imageIsSafe) return new BookResult(false, "The image failed the safety check. Please try another image.");
+
+            await SaveImageAsync(book, resizedCoverImage, coverImageFileName);
+
+            await bookRepository.SaveChangesAsync();
+
+            return new BookResult(true, null);
+        }
+
+        private async Task<Stream?> ResizeImageAsync(Stream? coverImage)
+        {
+            if (coverImage == null) return null;
+
+            return await imageResizeService.ResizeImageAsync(coverImage);
+        }
+
+        private async Task SaveImageAsync(Book book, Stream? coverImage, string? coverImageFilename)
         {
             var imageUrl = await fileService.SaveAsync(coverImage, coverImageFilename);
 
