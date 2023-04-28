@@ -17,6 +17,8 @@ namespace Bookstore.Web.Helpers
 
         public override bool IsValid(object value)
         {
+            if (value == null) return true;
+
             if (value is not IFormFile file) return base.IsValid(value);
 
             var extension = Path.GetExtension(file.FileName);
