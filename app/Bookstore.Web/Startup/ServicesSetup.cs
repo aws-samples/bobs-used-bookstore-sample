@@ -109,6 +109,5 @@ namespace Bookstore.Web.Startup
 
             return connString;
         }
-
     }
 }
