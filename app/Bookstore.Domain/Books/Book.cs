@@ -64,7 +64,7 @@ namespace Bookstore.Domain.Books
 
         public bool IsInStock => Quantity > 0;
 
-        public bool IsLowInStock => Quantity > LowBookThreshold;
+        public bool IsLowInStock => Quantity <= LowBookThreshold;
 
         public void ReduceStockLevel(int quantity)
         {
