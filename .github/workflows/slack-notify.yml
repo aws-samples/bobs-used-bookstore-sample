@@ -1,0 +1,12 @@
+name: Slack Notify
+on: [issues, issue_comment, project_card, pull_request]
+
+jobs:
+  send:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send GitHub Action trigger data to Slack workflow
+        id: slack
+        uses: slackapi/slack-github-action@v1.24.0
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
