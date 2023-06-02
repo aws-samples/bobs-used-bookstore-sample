@@ -133,7 +133,7 @@ namespace Bookstore.Data.Repositories
                 .GroupBy(x => 1)
                 .Select(x => new BookStatistics
                 {
-                    LowStock = x.Count(y => y.Quantity > 0 && y.Quantity < Book.LowBookThreshold),
+                    LowStock = x.Count(y => y.Quantity > 0 && y.Quantity <= Book.LowBookThreshold),
                     OutOfStock = x.Count(y => y.Quantity == 0),
                     StockTotal = x.Count()
                 }).SingleOrDefaultAsync();
