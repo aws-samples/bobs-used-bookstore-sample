@@ -39,14 +39,14 @@ namespace Bookstore.Data
             );
 
             modelBuilder.Entity<Book>().HasData(
-                new Book("2020 : The Apocalypse", "Marley Cobb", "6556784356", 15, 1, 13, 5, 10.95M, 25, null, null, "/images/coverimages/apocalypse.png") { Id = 1 },
-                new Book("Children Of Iron", "Merritt Chambers", "7665438976", 16, 1, 11, 6, 13.95M, 3, null, null, "/images/coverimages/childrenofiron.png") { Id = 2 },
-                new Book("Gold In The Dark", "Lee Schuman", "5442280765", 17, 1, 13, 5, 6.50M, 10, null, null, "/images/coverimages/goldinthedark.png") { Id = 3 },
-                new Book("League Of Smokes", "Vick Hines", "4556789542", 18, 2, 11, 7, 3M, 1, null, null, "/images/coverimages/leagueofsmokes.png") { Id = 4 },
-                new Book("Alone With The Stars", "Bailey Armstrong", "4563358087", 19, 2, 12, 5, 15.95M, 5, null, null, "/images/coverimages/alonewiththestars.png") { Id = 5 },
-                new Book("The Girl In The Polaroid", "Owen Kain", "2354435678", 20, 1, 12, 6, 8.25M, 2, null, null, "/images/coverimages/girlinthepolaroid.png") { Id = 6 },
-                new Book("Nana Lawrence 10001 Jokes", "Adrian Lawrence", "6554789632", 21, 2, 11, 5, 13.95M, 7, null, null, "/images/coverimages/nana.png") { Id = 7 },
-                new Book("My Search For Meaning", "Harlow Nicholas", "4558786554", 22, 3, 8, 7, 5M, 15, null, null, "/images/coverimages/mysearchformeaning.png") { Id = 8 }
+                new Book("2020: The Apocalypse", "Li Juan", "6556784356", 15, 1, 13, 5, 10.95M, 25, null, null, "/images/coverimages/apocalypse.png") { Id = 1 },
+                new Book("Children Of Iron", "Nikki Wolf", "7665438976", 16, 1, 11, 6, 13.95M, 3, null, null, "/images/coverimages/childrenofiron.png") { Id = 2 },
+                new Book("Gold In The Dark", "Richard Roe", "5442280765", 17, 1, 13, 5, 6.50M, 10, null, null, "/images/coverimages/goldinthedark.png") { Id = 3 },
+                new Book("Leagues Of Smoke", "Pat Candella", "4556789542", 18, 2, 11, 7, 3M, 1, null, null, "/images/coverimages/leaguesofsmoke.png") { Id = 4 },
+                new Book("Alone With The Stars", "Carlos Salazar", "4563358087", 19, 2, 12, 5, 15.95M, 5, null, null, "/images/coverimages/alonewiththestars.png") { Id = 5 },
+                new Book("The Girl In The Polaroid", "Terri Whitlock", "2354435678", 20, 1, 12, 6, 8.25M, 2, null, null, "/images/coverimages/girlinthepolaroid.png") { Id = 6 },
+                new Book("1001 Jokes", "Mary Major", "6554789632", 21, 2, 11, 5, 13.95M, 7, null, null, "/images/coverimages/1001jokes.png") { Id = 7 },
+                new Book("My Search For Meaning", "Mateo Jackson", "4558786554", 22, 3, 8, 7, 5M, 15, null, null, "/images/coverimages/mysearchformeaning.png") { Id = 8 }
             );
         }
     }

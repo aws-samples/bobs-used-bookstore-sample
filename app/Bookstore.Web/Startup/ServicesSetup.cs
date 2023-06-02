@@ -1,5 +1,4 @@
-﻿using Amazon.Polly;
-using Amazon.Rekognition;
+﻿using Amazon.Rekognition;
 using Amazon.S3;
 using Amazon.SecretsManager.Model;
 using Amazon.SecretsManager;
@@ -29,7 +28,6 @@ namespace Bookstore.Web.Startup
 
             builder.Services.AddDefaultAWSOptions(builder.Configuration.GetAWSOptions());
             builder.Services.AddAWSService<IAmazonS3>();
-            builder.Services.AddAWSService<IAmazonPolly>();
             builder.Services.AddAWSService<IAmazonRekognition>();
 
             var connString = GetDatabaseConnectionString(builder.Configuration);
@@ -111,6 +109,5 @@ namespace Bookstore.Web.Startup
 
             return connString;
         }
-
     }
 }

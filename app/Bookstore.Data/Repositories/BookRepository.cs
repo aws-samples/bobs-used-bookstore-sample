@@ -127,7 +127,7 @@ namespace Bookstore.Data.Repositories
             await dbContext.SaveChangesAsync();
         }
 
-        public async Task<BookStatistics> GetStatisticsAsync()
+        async Task<BookStatistics> IBookRepository.GetStatisticsAsync()
         {
             return await dbContext.Book
                 .GroupBy(x => 1)

@@ -66,7 +66,7 @@ To run the application using the _Integrated_ profile a minimal set of AWS resou
     > **NOTE:** the sample CDK command above assumes that your AWS credential profile is named `default`. If you do not have a credential profile with that name, or wish to use an alternate credential profile, add the `--profile` parameter followed by the name of the credential profile. For example, `cdk deploy BobsBookstoreCore --profile my-profile`. Note that the selected profile should be configured to set the target region. See [Configuration and credential file settings](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html) for more details. An example of a credential profile containing region configuration is shown below.
 
     ```text
-    [my-credentials]
+    [my-profile]
     aws_access_key_id=AKIAIOSFODNN7EXAMPLE
     aws_secret_access_key=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
     region=us-west-2

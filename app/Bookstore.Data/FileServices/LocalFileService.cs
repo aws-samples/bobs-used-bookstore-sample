@@ -13,9 +13,13 @@ namespace Bookstore.Data.FileServices
             this.webRootPath = webRootPath;
         }
 
-        public async Task DeleteAsync(string filePath)
+        // The interface defines an async operation, however System.IO.File
+        // does not expose an async delete method.
+        public Task DeleteAsync(string filePath)
         {
             if (File.Exists(filePath)) File.Delete(filePath);
+
+            return Task.CompletedTask;
         }
 
         public async Task<string> SaveAsync(Stream file, string filename)

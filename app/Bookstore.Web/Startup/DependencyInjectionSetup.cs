@@ -11,6 +11,8 @@ using Bookstore.Domain.ReferenceData;
 using Bookstore.Data.Repositories;
 using Bookstore.Data.FileServices;
 using Bookstore.Domain.Addresses;
+using Bookstore.Data.ImageValidationServices;
+using Bookstore.Data.ImageResizeService;
 
 namespace Bookstore.Web.Startup
 {
@@ -26,6 +28,7 @@ namespace Bookstore.Web.Startup
             builder.Services.AddTransient<ICustomerService, CustomerService>();
             builder.Services.AddTransient<IAddressService, AddressService>();
             builder.Services.AddTransient<IShoppingCartService, ShoppingCartService>();
+            builder.Services.AddTransient<IImageResizeService, ImageResizeService>();
 
             builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
             builder.Services.AddScoped<IAddressRepository, AddressRepository>();
@@ -40,10 +43,12 @@ namespace Bookstore.Web.Startup
             if (builder.Environment.IsDevelopment())
             {
                 builder.Services.AddTransient<IFileService, LocalFileService>(x => new LocalFileService(builder.Environment.WebRootPath));
+                builder.Services.AddTransient<IImageValidationService, LocalImageValidationService>();
             }
             else
             {
                 builder.Services.AddTransient<IFileService, S3FileService>();
+                builder.Services.AddTransient<IImageValidationService, RekognitionImageValidationService>();
             }
 
             return builder;
