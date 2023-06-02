@@ -38,15 +38,15 @@ public class DatabaseStack : Stack
             {
                 Version = SqlServerEngineVersion.VER_14
             }),
+            StorageType = StorageType.GP3,
+            AllocatedStorage = 20,            
             Port = DatabasePort,
             SecurityGroups = new[]
             {
                 dbSG
             },
             InstanceType = InstanceType.Of(InstanceClass.BURSTABLE2, InstanceSize.MICRO),
-
             InstanceIdentifier = $"{Constants.AppName}Database",
-
             // As this is a sample app, turn off automated backups to avoid any storage costs
             // of automated backup snapshots. It also helps the stack launch a little faster by
             // avoiding an initial backup.
