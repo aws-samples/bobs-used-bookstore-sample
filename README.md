@@ -103,7 +103,7 @@ In addition to the AWS resources that are created and used by the [_Integrated_ 
 
 1. If you haven't done so already, [Bootstrap](https://docs.aws.amazon.com/cdk/v2/guide/bootstrapping.html) your AWS environment for the AWS CDK by running the command `cdk bootstrap`
 
-1. In the command-line shell run the command `dotnet publish -p:PublishProfile=FolderProfile -c Release`
+1. In the command-line shell run the command `dotnet publish app/Bookstore.Web/Bookstore.Web.csproj -p:PublishProfile=FolderProfile -c Release`
 ![Publish the application](./media/publish.png)
 
 1. In the command-line shell run the command `cdk deploy BobsBookstoreEC2 --require-approval "never"`. This will take about 25 minutes to complete.
