@@ -15,10 +15,10 @@ public class NetworkStack : Stack
         Vpc = new Vpc(this, $"{Constants.AppName}Vpc", new VpcProps
         {
             IpAddresses = IpAddresses.Cidr("10.0.0.0/16"),
-            // Cap at 2 AZs in case we are deployed to a region with only 2
+            // Cap at 2 AZs in case we are deployed to a region with only 2, RDS deployment requires VPC with minimum 2 AZ
             MaxAzs = 2, 
             // Cap at 1 NAT Gateway in order to optimize for costs
-            NatGateways = 1,
+            NatGateways = 0,
             SubnetConfiguration = new[]
             {
                 new SubnetConfiguration
