@@ -42,7 +42,7 @@ namespace Bookstore.Web.Startup
 
             if (builder.Environment.IsDevelopment())
             {
-                builder.Services.AddTransient<IFileService, LocalFileService>(x => new LocalFileService(builder.Environment.WebRootPath));
+                builder.Services.AddTransient<IFileService, LocalFileService>(_ => new LocalFileService(builder.Environment.WebRootPath));
                 builder.Services.AddTransient<IImageValidationService, LocalImageValidationService>();
             }
             else

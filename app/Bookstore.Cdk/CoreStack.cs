@@ -66,7 +66,7 @@ public class CoreStack : Stack
         {
             Actions = new[] { "s3:GetObject" },
             Resources = new[] { ImageBucket.ArnForObjects("*") },
-            Principals = new[]
+            Principals = new IPrincipal[]
             {
                 new CanonicalUserPrincipal
                 (
@@ -81,7 +81,7 @@ public class CoreStack : Stack
         // requests for objects if that request came from the CloudFront distribution.
         var distProps = new CloudFrontWebDistributionProps
         {
-            OriginConfigs = new[]
+            OriginConfigs = new ISourceConfiguration[]
             {
                 new SourceConfiguration
                 {
@@ -90,7 +90,7 @@ public class CoreStack : Stack
                         S3BucketSource = ImageBucket,
                         OriginAccessIdentity = cloudfrontOAI
                     },
-                    Behaviors = new []
+                    Behaviors = new IBehavior[]
                     {
                         new Behavior
                         {

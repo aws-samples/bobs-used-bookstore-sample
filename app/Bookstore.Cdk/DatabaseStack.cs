@@ -41,7 +41,7 @@ public class DatabaseStack : Stack
             StorageType = StorageType.GP3,
             AllocatedStorage = 20,            
             Port = DatabasePort,
-            SecurityGroups = new[]
+            SecurityGroups = new ISecurityGroup[]
             {
                 dbSG
             },

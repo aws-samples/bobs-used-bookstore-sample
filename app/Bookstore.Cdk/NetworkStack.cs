@@ -19,7 +19,7 @@ public class NetworkStack : Stack
             MaxAzs = 2, 
             // Cap at 1 NAT Gateway in order to optimize for costs
             NatGateways = 0,
-            SubnetConfiguration = new[]
+            SubnetConfiguration = new ISubnetConfiguration[]
             {
                 new SubnetConfiguration
                 {

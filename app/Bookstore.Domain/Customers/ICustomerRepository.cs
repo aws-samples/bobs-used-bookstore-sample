@@ -2,12 +2,12 @@
 {
     public interface ICustomerRepository
     {
-        protected internal Task<Customer> GetAsync(int id);
+        internal protected Task<Customer> GetAsync(int id);
 
-        protected internal Task<Customer> GetAsync(string sub);
+        internal protected Task<Customer> GetAsync(string sub);
 
-        protected internal Task AddAsync(Customer customer);
+        internal protected Task AddAsync(Customer customer);
 
-        protected internal Task SaveChangesAsync();
+        internal protected Task SaveChangesAsync();
     }
 }

@@ -35,8 +35,9 @@ namespace Bookstore.Web.Areas.Admin.Models.Offers
             HasPreviousPage = offers.HasPreviousPage;
             PaginationButtons = offers.GetPageList(5).ToList();
 
-            Genres = referenceData.Where(x => x.DataType == ReferenceDataType.Genre).Select(x => new SelectListItem { Value = x.Id.ToString(), Text = x.Text });
-            BookConditions = referenceData.Where(x => x.DataType == ReferenceDataType.Condition).Select(x => new SelectListItem { Value = x.Id.ToString(), Text = x.Text });
+            var referenceDataItems = referenceData.ToList();
+            Genres = referenceDataItems.Where(x => x.DataType == ReferenceDataType.Genre).Select(x => new SelectListItem { Value = x.Id.ToString(), Text = x.Text });
+            BookConditions = referenceDataItems.Where(x => x.DataType == ReferenceDataType.Condition).Select(x => new SelectListItem { Value = x.Id.ToString(), Text = x.Text });
         }
 
         public List<OfferIndexItemViewModel> Items { get; set; } = new List<OfferIndexItemViewModel>();
