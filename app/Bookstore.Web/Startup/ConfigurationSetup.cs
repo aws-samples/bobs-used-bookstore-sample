@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Hosting;
 
 namespace Bookstore.Web.Startup
 {
@@ -8,7 +7,10 @@ namespace Bookstore.Web.Startup
     {
         public static WebApplicationBuilder ConfigureConfiguration(this WebApplicationBuilder builder)
         {
-            if (!builder.Environment.IsDevelopment())
+            if (builder.Configuration["Services:Authentication"] == "AWS" ||
+                builder.Configuration["Services:Database"] == "AWS" ||
+                builder.Configuration["Services:FileService"] == "AWS" ||
+                builder.Configuration["Services:ImageValidationService"] == "AWS")
             {
                 builder.Configuration.AddSystemsManager("/BobsBookstore/");
             }

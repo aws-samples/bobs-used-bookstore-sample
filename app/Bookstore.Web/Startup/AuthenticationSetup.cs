@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Threading.Tasks;
@@ -43,7 +42,7 @@ namespace Bookstore.Web.Startup
 
             // For the 'Development' profile we fake authentication. For 'Test' and 'Production'
             // profiles we use Amazon Cognito's Hosted UI
-            return builder.Environment.IsDevelopment() ? ConfigureLocalAuthentication(builder) : ConfigureCognitoAuthentication(builder);
+            return builder.Configuration["Services:Authentication"] == "AWS" ? ConfigureCognitoAuthentication(builder) :ConfigureLocalAuthentication(builder);
         }
 
         private static WebApplicationBuilder ConfigureLocalAuthentication(WebApplicationBuilder builder)

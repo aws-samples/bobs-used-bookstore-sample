@@ -50,6 +50,7 @@ namespace Bookstore.Web.Startup
             const string DbSecretsParameterName = "dbsecretsname";
 
             var connString = configuration.GetConnectionString("BookstoreDbDefaultConnection");
+
             if (!string.IsNullOrEmpty(connString))
             {
                 Console.WriteLine("Using localdb connection string");

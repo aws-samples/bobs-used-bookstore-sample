@@ -40,15 +40,22 @@ namespace Bookstore.Web.Startup
 
             builder.Services.AddScoped(typeof(IPaginatedList<>), typeof(PaginatedList<>));
 
-            if (builder.Environment.IsDevelopment())
+            if (builder.Configuration["Services:FileService"] == "AWS")
             {
-                builder.Services.AddTransient<IFileService, LocalFileService>(x => new LocalFileService(builder.Environment.WebRootPath));
-                builder.Services.AddTransient<IImageValidationService, LocalImageValidationService>();
+                builder.Services.AddTransient<IFileService, S3FileService>();
             }
             else
             {
-                builder.Services.AddTransient<IFileService, S3FileService>();
+                builder.Services.AddTransient<IFileService, LocalFileService>(x => new LocalFileService(builder.Environment.WebRootPath));
+            }
+
+            if (builder.Configuration["Services:ImageValidationService"] == "AWS")
+            {
                 builder.Services.AddTransient<IImageValidationService, RekognitionImageValidationService>();
+            }
+            else
+            {
+                builder.Services.AddTransient<IImageValidationService, LocalImageValidationService>();
             }
 
             return builder;
