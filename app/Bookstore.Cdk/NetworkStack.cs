@@ -1,8 +1,9 @@
+namespace Bookstore.Cdk;
+
 using Amazon.CDK;
-using Constructs;
 using Amazon.CDK.AWS.EC2;
 
-namespace SharedInfrastructure.Production;
+using Constructs;
 
 public class NetworkStack : Stack
 {
@@ -12,7 +13,7 @@ public class NetworkStack : Stack
     {
         // Create a new vpc spanning two AZs and with public and private subnets
         // to host the application resources
-        Vpc = new Vpc(this, $"{Constants.AppName}Vpc", new VpcProps
+        this.Vpc = new Vpc(this, $"{Constants.AppName}Vpc", new VpcProps
         {
             IpAddresses = IpAddresses.Cidr("10.0.0.0/16"),
             // Cap at 2 AZs in case we are deployed to a region with only 2, RDS deployment requires VPC with minimum 2 AZ

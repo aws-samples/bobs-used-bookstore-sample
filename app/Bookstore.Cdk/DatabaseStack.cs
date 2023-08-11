@@ -1,10 +1,11 @@
+namespace Bookstore.Cdk;
+
 using Amazon.CDK;
-using Constructs;
 using Amazon.CDK.AWS.EC2;
 using Amazon.CDK.AWS.RDS;
 using Amazon.CDK.AWS.SSM;
 
-namespace SharedInfrastructure.Production;
+using Constructs;
 
 public class DatabaseStackProps : StackProps
 {
@@ -25,7 +26,7 @@ public class DatabaseStack : Stack
             Description = "Allow access to the SQL Server instance from the website",
         });
 
-        Database = new DatabaseInstance(this, $"{Constants.AppName}SqlDb", new DatabaseInstanceProps
+        this.Database = new DatabaseInstance(this, $"{Constants.AppName}SqlDb", new DatabaseInstanceProps
         {
             Vpc = props.Vpc,
             VpcSubnets = new SubnetSelection
@@ -59,7 +60,7 @@ public class DatabaseStack : Stack
         _ = new StringParameter(this, $"{Constants.AppName}DbSecret", new StringParameterProps
         {
             ParameterName = $"/{Constants.AppName}/dbsecretsname",
-            StringValue = Database.Secret.SecretName
+            StringValue = this.Database.Secret.SecretName
         });
     }
 }

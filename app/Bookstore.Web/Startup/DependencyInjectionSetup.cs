@@ -16,6 +16,8 @@ using Bookstore.Data.ImageResizeService;
 
 namespace Bookstore.Web.Startup
 {
+    using Bookstore.Data;
+
     public static class DependencyInjectionSetup
     {
         public static WebApplicationBuilder ConfigureDependencyInjection(this WebApplicationBuilder builder)

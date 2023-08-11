@@ -1,7 +1,6 @@
-﻿using Amazon.CDK;
-using SharedInfrastructure.Production;
+﻿namespace Bookstore.Cdk;
 
-namespace SharedInfrastructure;
+using Amazon.CDK;
 
 internal sealed class Program
 {

@@ -18,7 +18,6 @@ namespace Bookstore.Domain.Orders
         Task UpdateOrderStatusAsync(UpdateOrderStatusDto updateOrderStatusDto);
 
         Task CancelOrderAsync(CancelOrderDto cancelOrderDto);
-
     }
 
     public class OrderService : IOrderService
@@ -53,7 +52,7 @@ namespace Bookstore.Domain.Orders
 
         public async Task<OrderStatistics> GetStatisticsAsync()
         {
-            return (await orderRepository.GetStatisticsAsync()) ?? new OrderStatistics();
+            return await this.orderRepository.GetStatisticsAsync();
         }
 
         public async Task<int> CreateOrderAsync(CreateOrderDto dto)
