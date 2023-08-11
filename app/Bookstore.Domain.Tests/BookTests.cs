@@ -1,39 +1,43 @@
 using Bookstore.Domain.Books;
+using Bookstore.Domain.Tests.Builders;
 
 namespace Bookstore.Domain.Tests
 {
     public class BookTests
     {
-        [Fact]
-        public void IsInStock_ReturnsTrue_When_QuantityIsGreaterThanZero()
+        [Theory]
+        [InlineData(1, true)]
+        [InlineData(0, false)]
+        public void IsInStock_ReturnsTrue_When_QuantityIsGreaterThanZero(int quantity, bool expectedResult)
         {
-            var book = new Book("Test", "Test", "1234567890123", 1, 1, 1, 1, 1, 1);
-            Assert.True(book.IsInStock);
-
-            book = new Book("Test", "Test", "1234567890123", 1, 1, 1, 1, 1, 0);
-            Assert.False(book.IsInStock);
+            var book = new BookBuilder()
+                .Quantity(quantity)
+                .Build();
+            
+            Assert.Equal(expectedResult, book.IsInStock);
         }
 
-        [Fact]
-        public void IsLowInStock_ReturnsTrue_When_QuantityIsLessThanOrEqualToThreshold()
+        [Theory]
+        [InlineData(Book.LowBookThreshold - 1, true)]
+        [InlineData(Book.LowBookThreshold, true)]
+        [InlineData(Book.LowBookThreshold + 1, false)]
+        public void IsLowInStock_ReturnsTrue_When_QuantityIsLessThanOrEqualToThreshold(int quantity, bool expectedResult)
         {
-            var threshold = Book.LowBookThreshold;
-
-            var book = new Book("Test", "Test", "1234567890123", 1, 1, 1, 1, 1, threshold - 1);
-            Assert.True(book.IsLowInStock);
-
-            book = new Book("Test", "Test", "1234567890123", 1, 1, 1, 1, 1, threshold);
-            Assert.True(book.IsLowInStock);
-
-            book = new Book("Test", "Test", "1234567890123", 1, 1, 1, 1, 1, threshold + 1);
-            Assert.False(book.IsLowInStock);
+            var book = new BookBuilder()
+                .Quantity(quantity)
+                .Build();
+            
+            Assert.Equal(expectedResult, book.IsLowInStock);
         }
 
         [Fact]
         public void ReduceStockLevel_ReducesQuantityBySpecifiedAmount_When_Executed()
         {
-            var book = new Book("Test", "Test", "1234567890123", 1, 1, 1, 1, 1, 100);
-            var amountToReduce = 50;
+            var book = new BookBuilder()
+                .Quantity(100)
+                .Build();
+            
+            const int amountToReduce = 50;
             var expectedQuantity = book.Quantity - amountToReduce;
 
             book.ReduceStockLevel(amountToReduce);
@@ -44,12 +48,15 @@ namespace Bookstore.Domain.Tests
         [Fact]
         public void ReduceStockLevel_DoesNotReduceQuantityBelowZero_When_Executed()
         {
-            var book = new Book("Test", "Test", "1234567890123", 1, 1, 1, 1, 1, 50);
-            var amountToReduce = 60;
+            var book = new BookBuilder()
+                .Quantity(50)
+                .Build();
+            
+            const int amountToReduce = 60;
 
             book.ReduceStockLevel(amountToReduce);
 
-            Assert.True(book.Quantity == 0);
+            Assert.Equal(0, book.Quantity);
         }
     }
 }

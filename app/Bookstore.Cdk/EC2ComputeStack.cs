@@ -196,7 +196,8 @@ public class EC2ComputeStack : Stack
             InstanceType = InstanceType.Of(InstanceClass.BURSTABLE3, InstanceSize.SMALL),
             MachineImage = ami,
             Role = this.Ec2Role,
-            RequireImdsv2 = true
+            RequireImdsv2 = true,
+            UserDataCausesReplacement = true
         });
     }
 
