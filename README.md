@@ -13,6 +13,9 @@ The administration portal is used by site administrators to maintain inventory, 
 
 In its current state the application illustrates an in-progress "lift and shift" from on-premises to AWS, with partial modernization to use some AWS services. As the sample application progresses over time we have plans to add further modernization examples including (but not limited to) database modernization and refactoring to microservices.
 
+<img src="./media/aws-architecture.png" width="884" height="715" title="AWS Architecture Diagram">
+
+
 ## Prerequisites
 
 To run and debug the application locally you need the following:
