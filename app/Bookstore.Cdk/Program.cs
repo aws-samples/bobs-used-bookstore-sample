@@ -1,4 +1,5 @@
 ﻿using Amazon.CDK;
+using Amazon.CDK.AWS.CloudWatch;
 using SharedInfrastructure.Production;
 
 namespace SharedInfrastructure;
@@ -25,17 +26,17 @@ internal sealed class Program
         var env = MakeEnv();
 
         var coreStack = new CoreStack(app, $"{Constants.AppName}Core", new StackProps { Env = env });
+        var storageStack = new StorageStack(app, $"{Constants.AppName}Storage", new StorageStackProps { Env = env, ApplicationRole = coreStack.ApplicationRole });
         var networkStack = new NetworkStack(app, $"{Constants.AppName}Network", new StackProps { Env = env });
         var databaseStack = new DatabaseStack(app, $"{Constants.AppName}Database", new DatabaseStackProps { Env = env, Vpc = networkStack.Vpc });
 
-        var ec2Stack = new EC2ComputeStack(app, $"{Constants.AppName}EC2", new EC2ComputeStackProps 
-        { 
-            Env = env, 
-            Vpc = networkStack.Vpc, 
-            Database = databaseStack.Database, 
-            ImageBucket = coreStack.ImageBucket,
-            WebAppUserPool= coreStack.WebAppUserPool
-        });
+        //var ec2Stack = new EC2ComputeStack(app, $"{Constants.AppName}EC2", new EC2ComputeStackProps 
+        //{ 
+        //    Env = env, 
+        //    Vpc = networkStack.Vpc, 
+        //    Database = databaseStack.Database, 
+        //    WebAppUserPool= coreStack.WebAppUserPool
+        //});
 
         app.Synth();
     }

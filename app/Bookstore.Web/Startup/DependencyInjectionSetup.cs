@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Bookstore.Domain.Customers;
 using Bookstore.Domain.Books;
 using Bookstore.Domain;

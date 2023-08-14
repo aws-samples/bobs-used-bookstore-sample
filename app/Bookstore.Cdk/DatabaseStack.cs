@@ -19,12 +19,24 @@ public class DatabaseStack : Stack
 
     internal DatabaseStack(Construct scope, string id, DatabaseStackProps props) : base(scope, id, props)
     {
-        var dbSG = new SecurityGroup(this, "DatabaseSecurityGroup", new SecurityGroupProps
+        var securityGroup = CreateSecurityGroup(props);
+
+        CreateDatabase(props, securityGroup);
+
+        CreateConnectionString();
+    }
+
+    private SecurityGroup CreateSecurityGroup(DatabaseStackProps props)
+    {
+        return new SecurityGroup(this, "DatabaseSecurityGroup", new SecurityGroupProps
         {
             Vpc = props.Vpc,
             Description = "Allow access to the SQL Server instance from the website",
         });
+    }
 
+    private void CreateDatabase(DatabaseStackProps props, SecurityGroup dbSG)
+    {
         Database = new DatabaseInstance(this, $"{Constants.AppName}SqlDb", new DatabaseInstanceProps
         {
             Vpc = props.Vpc,
@@ -39,27 +51,32 @@ public class DatabaseStack : Stack
                 Version = SqlServerEngineVersion.VER_14
             }),
             StorageType = StorageType.GP3,
-            AllocatedStorage = 20,            
+            AllocatedStorage = 20,
             Port = DatabasePort,
             SecurityGroups = new[]
-            {
+                    {
                 dbSG
             },
-            InstanceType = InstanceType.Of(InstanceClass.BURSTABLE2, InstanceSize.MICRO),
+            InstanceType = Amazon.CDK.AWS.EC2.InstanceType.Of(InstanceClass.BURSTABLE2, InstanceSize.MICRO),
             InstanceIdentifier = $"{Constants.AppName}Database",
             // As this is a sample app, turn off automated backups to avoid any storage costs
             // of automated backup snapshots. It also helps the stack launch a little faster by
             // avoiding an initial backup.
             BackupRetention = Duration.Seconds(0)
         });
+    }
 
-        // The secret, in Secrets Manager, holds the auto-generated database credentials. Because
-        // the secret name will have a random string suffix, we add a deterministic parameter in
-        // Systems Manager to contain the actual secret name.
-        _ = new StringParameter(this, $"{Constants.AppName}DbSecret", new StringParameterProps
+    private void CreateConnectionString()
+    {
+        var password = Database.Secret.SecretValueFromJson("password");
+        var server = Database.Secret.SecretValueFromJson("host");
+        var userId = Database.Secret.SecretValueFromJson("username");
+        var database = Database.Secret.SecretValueFromJson("dbInstanceIdentifier");
+
+        _ = new StringParameter(this, $"{Constants.AppName}ConnectionString", new StringParameterProps
         {
-            ParameterName = $"/{Constants.AppName}/dbsecretsname",
-            StringValue = Database.Secret.SecretName
+            ParameterName = $"/{Constants.AppName}/Database/ConnectionStrings/BookstoreDatabaseConnection",
+            StringValue = $"Server={server};Database={database};User Id={userId};Password={password};"
         });
     }
 }

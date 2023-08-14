@@ -18,7 +18,7 @@ public class NetworkStack : Stack
             // Cap at 2 AZs in case we are deployed to a region with only 2, RDS deployment requires VPC with minimum 2 AZ
             MaxAzs = 2, 
             // Cap at 1 NAT Gateway in order to optimize for costs
-            NatGateways = 0,
+            NatGateways = 1,
             SubnetConfiguration = new[]
             {
                 new SubnetConfiguration

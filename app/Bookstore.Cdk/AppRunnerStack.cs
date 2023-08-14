@@ -8,10 +8,11 @@ using Amazon.CDK.AWS.S3.Assets;
 using Amazon.CDK.AWS.RDS;
 using Amazon.CDK.AWS.S3;
 using Amazon.CDK.AWS.Logs;
+using Amazon.CDK.AWS.AppRunner;
 
 namespace SharedInfrastructure.Production;
 
-public class EC2ComputeStackProps : StackProps
+public class AppRunnerStackProps : StackProps
 {
     public IVpc Vpc { get; set; }
 
@@ -22,7 +23,7 @@ public class EC2ComputeStackProps : StackProps
     public UserPool WebAppUserPool { get; set; }
 }
 
-public class EC2ComputeStack : Stack
+public class AppRunnerStack : Stack
 {
     private Role Ec2Role;
     private Asset ServerConfigScriptAsset;
@@ -32,7 +33,7 @@ public class EC2ComputeStack : Stack
     private Asset KestrelServiceAsset;
     private Instance_ Instance;
 
-    internal EC2ComputeStack(Construct scope, string id, EC2ComputeStackProps props) : base(scope, id, props)
+    internal AppRunnerStack(Construct scope, string id, EC2ComputeStackProps props) : base(scope, id, props)
     {
         CreateEc2Role(props);
 
@@ -45,6 +46,14 @@ public class EC2ComputeStack : Stack
         CreateCognitoUserPoolClient(props);
 
         _ = new CfnOutput(this, "EC2Url", new CfnOutputProps { Description = "The application URL", Value = $"https://{Instance.InstancePublicDnsName}" });
+    }
+
+    internal void CreateAppRunnerService(AppRunnerStackProps props)
+    {
+        //var app = new CfnService(this, "BobsUsedBooksAppRunner", new CfnServiceProps
+        //{
+        //    SourceConfiguration = 
+        //});
     }
 
     internal void CreateEc2Role(EC2ComputeStackProps props)

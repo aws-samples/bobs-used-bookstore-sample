@@ -17,13 +17,13 @@ namespace Bookstore.Web.Startup
             switch (builder.Configuration["AWS:Service"])
             {
                 case "EC2":
-                    return builder.Configuration["Authentication:Cognito:EC2ClientId"];
+                    return builder.Configuration["Cognito:EC2ClientId"];
 
                 case "AppRunner":
-                    return builder.Configuration["Authentication:Cognito:AppRunnerClientId"];
+                    return builder.Configuration["Cognito:AppRunnerClientId"];
 
                 default:
-                    return builder.Configuration["Authentication:Cognito:LocalClientId"];
+                    return builder.Configuration["Cognito:LocalClientId"];
             }
         }
     }
@@ -36,9 +36,9 @@ namespace Bookstore.Web.Startup
 
         public static WebApplicationBuilder ConfigureAuthentication(this WebApplicationBuilder builder)
         {
-            _cognitoDomain = builder.Configuration["Authentication:Cognito:CognitoDomain"];
+            _cognitoDomain = builder.Configuration["Cognito:CognitoDomain"];
             _cognitoClientId = CognitoClientIdHelper.GetClientId(builder);
-            _cognitoAppSignOutUrl = builder.Configuration["Authentication:Cognito:AppSignOutUrl"];
+            _cognitoAppSignOutUrl = builder.Configuration["Cognito:AppSignOutUrl"];
 
             // For the 'Development' profile we fake authentication. For 'Test' and 'Production'
             // profiles we use Amazon Cognito's Hosted UI
@@ -73,8 +73,8 @@ namespace Bookstore.Web.Startup
                 .AddCookie()
                 .AddOpenIdConnect(x =>
                 {
-                    x.ResponseType = builder.Configuration["Authentication:Cognito:ResponseType"];
-                    x.MetadataAddress = builder.Configuration["Authentication:Cognito:MetadataAddress"];
+                    x.ResponseType = builder.Configuration["Cognito:ResponseType"];
+                    x.MetadataAddress = builder.Configuration["Cognito:MetadataAddress"];
                     x.ClientId = CognitoClientIdHelper.GetClientId(builder);
                     x.TokenValidationParameters = new TokenValidationParameters
                     {

@@ -13,7 +13,7 @@ namespace Bookstore.Domain
         public DateTime UpdatedOn { get; set; } = DateTime.UtcNow;
 
         [Timestamp]
-        public byte[] RowVersion { get; set; }
+        public byte[]? RowVersion { get; set; }
 
         public bool IsNewEntity()
         {

@@ -7,15 +7,19 @@ namespace Bookstore.Web.Startup
     {
         public static WebApplicationBuilder ConfigureConfiguration(this WebApplicationBuilder builder)
         {
-            if (builder.Configuration["Services:Authentication"] == "AWS" ||
-                builder.Configuration["Services:Database"] == "AWS" ||
-                builder.Configuration["Services:FileService"] == "AWS" ||
-                builder.Configuration["Services:ImageValidationService"] == "AWS")
-            {
-                builder.Configuration.AddSystemsManager("/BobsBookstore/");
-            }
+            LoadConfigurationFromSystemsManager(builder, "Services:Authentication", "/BobsBookstore/Authentication/");
+            LoadConfigurationFromSystemsManager(builder, "Services:FileService", "/BobsBookstore/Files/");
+            LoadConfigurationFromSystemsManager(builder, "Services:Database", "/BobsBookstore/Database/");
 
             return builder;
+        }
+
+        private static void LoadConfigurationFromSystemsManager(WebApplicationBuilder builder, string key, string path)
+        {
+            if (builder.Configuration[key] == "AWS")
+            {
+                builder.Configuration.AddSystemsManager(path);
+            }
         }
     }
 }

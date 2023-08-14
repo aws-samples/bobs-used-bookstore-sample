@@ -358,3 +358,6 @@ ASALocalRun/
 /app/Bookstore.Admin/wwwroot/images
 /app/Bookstore.Customer/wwwroot/images
 /app/Bookstore.Web/wwwroot/images
+/app/Bookstore.Web/bookstore.db
+/app/Bookstore.Web/bookstore.db-shm
+/app/Bookstore.Web/bookstore.db-wal
