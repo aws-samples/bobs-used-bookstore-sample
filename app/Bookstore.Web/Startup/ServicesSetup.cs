@@ -1,18 +1,13 @@
 ﻿using Amazon.Rekognition;
 using Amazon.S3;
-using Amazon.SecretsManager.Model;
-using Amazon.SecretsManager;
 using Bookstore.Data;
-using Bookstore.Domain.AdminUser;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System.Text.Json;
-using System;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
+using System.IO;
 
 namespace Bookstore.Web.Startup
 {
@@ -38,6 +33,7 @@ namespace Bookstore.Web.Startup
             }
             else
             {
+                connString = $"Data Source={Path.Combine(Path.GetTempPath(), "bookstore.db")}";
                 builder.Services.AddDbContext<ApplicationDbContext>(option => option.UseSqlite(connString));
             }
 

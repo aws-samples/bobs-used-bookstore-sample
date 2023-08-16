@@ -42,7 +42,7 @@ namespace Bookstore.Web.Startup
 
             // For the 'Development' profile we fake authentication. For 'Test' and 'Production'
             // profiles we use Amazon Cognito's Hosted UI
-            return builder.Configuration["Services:Authentication"] == "AWS" ? ConfigureCognitoAuthentication(builder) :ConfigureLocalAuthentication(builder);
+            return builder.Configuration["Services:Authentication"] == "AWS" ? ConfigureCognitoAuthentication(builder) : ConfigureLocalAuthentication(builder);
         }
 
         private static WebApplicationBuilder ConfigureLocalAuthentication(WebApplicationBuilder builder)
@@ -54,7 +54,10 @@ namespace Bookstore.Web.Startup
                 x.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
                 x.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
                 x.DefaultChallengeScheme = "localauth";
-            }).AddCookie();
+            }).AddCookie(x =>
+            {
+                x.Cookie.SecurePolicy = Microsoft.AspNetCore.Http.CookieSecurePolicy.None;
+            });
 
             return builder;
         }

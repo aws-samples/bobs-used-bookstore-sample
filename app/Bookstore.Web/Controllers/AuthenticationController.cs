@@ -2,20 +2,19 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Configuration;
 
 namespace Bookstore.Web.Controllers
 {
     public class AuthenticationController : Controller
     {
-        private IWebHostEnvironment webHostEnvironment;
+        private IConfiguration configuration;
 
-        public AuthenticationController(IWebHostEnvironment webHostEnvironment)
+        public AuthenticationController(IConfiguration configuration)
         {
-            this.webHostEnvironment = webHostEnvironment;
+            this.configuration = configuration;
         }
 
         [AllowAnonymous]
@@ -26,7 +25,7 @@ namespace Bookstore.Web.Controllers
 
         public IActionResult LogOut()
         {
-            return webHostEnvironment.IsDevelopment() ? LocalSignOut() : CognitoSignOut();
+            return configuration["Services:Authentication"] == "AWS" ? CognitoSignOut() : LocalSignOut();
         }
 
         private IActionResult LocalSignOut()
