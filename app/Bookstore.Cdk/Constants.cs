@@ -1,4 +1,4 @@
-﻿namespace SharedInfrastructure
+﻿namespace Bookstore.Cdk
 {
     internal static class Constants
     {

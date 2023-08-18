@@ -1,11 +1,14 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace Bookstore.Domain
+﻿namespace Bookstore.Data
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+
+    using Bookstore.Domain;
+
+    using Microsoft.EntityFrameworkCore;
+
     public class PaginatedList<T> : List<T>, IPaginatedList<T>
     {
         private readonly IQueryable<T> source;
@@ -27,19 +30,19 @@ namespace Bookstore.Domain
 
         public async Task PopulateAsync()
         {
-            var count = await source.CountAsync();
-            var items = await source.Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
+            var count = await this.source.CountAsync();
+            var items = await this.source.Skip((this.pageIndex - 1) * this.pageSize).Take(this.pageSize).ToListAsync();
 
-            PageIndex = pageIndex;
+            this.PageIndex = this.pageIndex;
 
-            TotalPages = (int)Math.Ceiling(count / (double)pageSize);
+            this.TotalPages = (int)Math.Ceiling(count / (double)this.pageSize);
 
-            AddRange(items);
+            this.AddRange(items);
         }
 
-        public bool HasPreviousPage => PageIndex > 1;
+        public bool HasPreviousPage => this.PageIndex > 1;
 
-        public bool HasNextPage => PageIndex < TotalPages;
+        public bool HasNextPage => this.PageIndex < this.TotalPages;
 
         //TODO Consider pulling this out into its own class, e.g. PaginationButtonGenerator
         public IEnumerable<int> GetPageList(int count)
@@ -48,12 +51,12 @@ namespace Bookstore.Domain
 
             var pagesCount = 1;
             var newPagesCount = 1;
-            var start = PageIndex;
-            var end = PageIndex;
+            var start = this.PageIndex;
+            var end = this.PageIndex;
 
             while (pagesCount < count)
             {
-                if (end + 1 <= TotalPages)
+                if (end + 1 <= this.TotalPages)
                 {
                     end++;
                     newPagesCount++;
@@ -82,8 +85,8 @@ namespace Bookstore.Domain
         {
             var result = new PaginatedList<TConvertTo>
             {
-                PageIndex = PageIndex,
-                TotalPages = TotalPages,
+                PageIndex = this.PageIndex,
+                TotalPages = this.TotalPages,
             };
 
             foreach (var item in this)

@@ -1,6 +1,4 @@
-﻿using System.Linq.Expressions;
-
-namespace Bookstore.Domain
+﻿namespace Bookstore.Domain
 {
     public interface IPaginatedList<T> : IList<T>
     {

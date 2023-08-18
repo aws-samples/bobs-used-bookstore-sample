@@ -1,5 +1,4 @@
 ﻿using Bookstore.Domain;
-using Bookstore.Domain.Books;
 using Bookstore.Domain.ReferenceData;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;

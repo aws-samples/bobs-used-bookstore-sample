@@ -2,10 +2,10 @@
 {
     public interface IShoppingCartRepository
     {
-        protected internal Task AddAsync(ShoppingCart shoppingCart);
+        internal protected Task AddAsync(ShoppingCart shoppingCart);
 
-        protected internal Task<ShoppingCart> GetAsync(string correlationId);
+        internal protected Task<ShoppingCart> GetAsync(string correlationId);
 
-        protected internal Task SaveChangesAsync();
+        internal protected Task SaveChangesAsync();
     }
 }

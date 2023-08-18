@@ -1,14 +1,16 @@
-using Amazon.CDK;
-using Constructs;
-using Amazon.CDK.AWS.S3;
-using Amazon.CDK.AWS.SSM;
-using Amazon.CDK.AWS.CloudFront;
-using Amazon.CDK.AWS.IAM;
-using Amazon.CDK.AWS.Cognito;
-using Amazon.CDK.CustomResources;
+namespace Bookstore.Cdk;
+
 using System.Collections.Generic;
 
-namespace SharedInfrastructure.Production;
+using Amazon.CDK;
+using Amazon.CDK.AWS.CloudFront;
+using Amazon.CDK.AWS.Cognito;
+using Amazon.CDK.AWS.IAM;
+using Amazon.CDK.AWS.S3;
+using Amazon.CDK.AWS.SSM;
+using Amazon.CDK.CustomResources;
+
+using Constructs;
 
 public class CoreStack : Stack
 {
@@ -22,12 +24,12 @@ public class CoreStack : Stack
 
     internal CoreStack(Construct scope, string id, IStackProps props = null) : base(scope, id, props)
     {
-        CreateImageS3Bucket();
-        CreateCloudFrontDistribution();
-        CreateCognitoUserPool();
-        CreateCognitoAdministratorsUserGroup();
-        CreateDefaultAdminUser();
-        CreateUserPoolClient();
+        this.CreateImageS3Bucket();
+        this.CreateCloudFrontDistribution();
+        this.CreateCognitoUserPool();
+        this.CreateCognitoAdministratorsUserGroup();
+        this.CreateDefaultAdminUser();
+        this.CreateUserPoolClient();
     }
 
     internal void CreateImageS3Bucket()
@@ -40,7 +42,7 @@ public class CoreStack : Stack
         // the stack is deleted to avoid charges on an unused resource - EVEN IF IT CONTAINS DATA
         // - BEWARE!
         //
-        ImageBucket = new Bucket(this, "CoverImages-Bucket", new BucketProps
+        this.ImageBucket = new Bucket(this, "CoverImages-Bucket", new BucketProps
         {
             // !DO NOT USE THESE TWO SETTINGS FOR PRODUCTION DEPLOYMENTS - YOU WILL LOSE DATA
             // WHEN THE STACK IS DELETED!
@@ -51,7 +53,7 @@ public class CoreStack : Stack
         _ = new StringParameter(this, "CoverImages-BucketName", new StringParameterProps
         {
             ParameterName = $"/{Constants.AppName}/AWS/BucketName",
-            StringValue = ImageBucket.BucketName
+            StringValue = this.ImageBucket.BucketName
         });
     }
 
@@ -65,8 +67,8 @@ public class CoreStack : Stack
         var policyProps = new PolicyStatementProps
         {
             Actions = new[] { "s3:GetObject" },
-            Resources = new[] { ImageBucket.ArnForObjects("*") },
-            Principals = new[]
+            Resources = new[] { this.ImageBucket.ArnForObjects("*") },
+            Principals = new IPrincipal[]
             {
                 new CanonicalUserPrincipal
                 (
@@ -75,22 +77,22 @@ public class CoreStack : Stack
             }
         };
 
-        ImageBucket.AddToResourcePolicy(new PolicyStatement(policyProps));
+        this.ImageBucket.AddToResourcePolicy(new PolicyStatement(policyProps));
 
         // Place a CloudFront distribution in front of the storage bucket. S3 will only respond to
         // requests for objects if that request came from the CloudFront distribution.
         var distProps = new CloudFrontWebDistributionProps
         {
-            OriginConfigs = new[]
+            OriginConfigs = new ISourceConfiguration[]
             {
                 new SourceConfiguration
                 {
                     S3OriginSource = new S3OriginConfig
                     {
-                        S3BucketSource = ImageBucket,
+                        S3BucketSource = this.ImageBucket,
                         OriginAccessIdentity = cloudfrontOAI
                     },
-                    Behaviors = new []
+                    Behaviors = new IBehavior[]
                     {
                         new Behavior
                         {
@@ -117,7 +119,7 @@ public class CoreStack : Stack
 
     internal void CreateCognitoUserPool()
     {
-        WebAppUserPool = new UserPool(this, $"{Constants.AppName}UserPool", new UserPoolProps
+        this.WebAppUserPool = new UserPool(this, $"{Constants.AppName}UserPool", new UserPoolProps
         {
             UserPoolName = Constants.AppName,
             SelfSignUpEnabled = true,
@@ -134,9 +136,9 @@ public class CoreStack : Stack
 
     internal void CreateCognitoAdministratorsUserGroup()
     {
-        CognitoAdminUserGroup = new CfnUserPoolGroup(this, "AdministratorsGroup", new CfnUserPoolGroupProps
+        this.CognitoAdminUserGroup = new CfnUserPoolGroup(this, "AdministratorsGroup", new CfnUserPoolGroupProps
         {
-            UserPoolId = WebAppUserPool.UserPoolId,
+            UserPoolId = this.WebAppUserPool.UserPoolId,
             GroupName = "Administrators",
             Precedence = 0
         });
@@ -155,7 +157,7 @@ public class CoreStack : Stack
                 Action = "adminCreateUser",
                 Parameters = new Dictionary<string, string>
                 {
-                    { "UserPoolId", WebAppUserPool.UserPoolId },
+                    { "UserPoolId", this.WebAppUserPool.UserPoolId },
                     { "Username", UserName },
                     { "TemporaryPassword", "P@ssword1" },
                     { "MessageAction", "SUPPRESS" }
@@ -168,7 +170,7 @@ public class CoreStack : Stack
                 Action = "adminDeleteUser",
                 Parameters = new Dictionary<string, string>
                 {
-                    { "UserPoolId", WebAppUserPool.UserPoolId },
+                    { "UserPoolId", this.WebAppUserPool.UserPoolId },
                     { "Username", UserName }
                 }
             },
@@ -177,9 +179,9 @@ public class CoreStack : Stack
 
         var adminUserAttachment = new CfnUserPoolUserToGroupAttachment(this, "AttachAdminUserToAdministratorsGroup", new CfnUserPoolUserToGroupAttachmentProps
         {
-            GroupName = CognitoAdminUserGroup.GroupName,
+            GroupName = this.CognitoAdminUserGroup.GroupName,
             Username = UserName,
-            UserPoolId = WebAppUserPool.UserPoolId
+            UserPoolId = this.WebAppUserPool.UserPoolId
         });
 
         adminUserAttachment.Node.AddDependency(defaultUser);
@@ -189,7 +191,7 @@ public class CoreStack : Stack
     {
         var localClient = new UserPoolClient(this, "LocalClient", new UserPoolClientProps
         {
-            UserPool = WebAppUserPool,
+            UserPool = this.WebAppUserPool,
             GenerateSecret = false,
             PreventUserExistenceErrors = true,
             ReadAttributes = new ClientAttributes()
@@ -231,12 +233,12 @@ public class CoreStack : Stack
             }
         });
 
-        var bobsBookstoreUserPoolDomain = WebAppUserPool.AddDomain($"{Constants.AppName}UserPoolDomain", new UserPoolDomainOptions
+        var bobsBookstoreUserPoolDomain = this.WebAppUserPool.AddDomain($"{Constants.AppName}UserPoolDomain", new UserPoolDomainOptions
         {
             CognitoDomain = new CognitoDomainOptions
             {
                 // The prefix must be unique across the AWS Region in which the pool is created
-                DomainPrefix = $"{Constants.AppName.ToLower()}-{Account}"
+                DomainPrefix = $"{Constants.AppName.ToLower()}-{this.Account}"
             }
         });
 
@@ -256,7 +258,7 @@ public class CoreStack : Stack
             new StringParameter(this, "UserPoolMetadataAddress", new StringParameterProps
             {
                 ParameterName = $"/{Constants.AppName}/Authentication/Cognito/MetadataAddress",
-                StringValue = $"https://cognito-idp.{Region}.amazonaws.com/{WebAppUserPool.UserPoolId}/.well-known/openid-configuration"
+                StringValue = $"https://cognito-idp.{this.Region}.amazonaws.com/{this.WebAppUserPool.UserPoolId}/.well-known/openid-configuration"
             }),
 
             new StringParameter(this, "UserPoolCognitoDomain", new StringParameterProps

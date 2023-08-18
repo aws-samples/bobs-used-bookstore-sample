@@ -10,7 +10,6 @@ namespace Bookstore.Web.Areas.Admin.Models.Inventory
 {
     public class InventoryIndexViewModel : PaginatedViewModel
     {
-
         public List<InventoryIndexListItemViewModel> Items { get; set; } = new List<InventoryIndexListItemViewModel>();
 
         public BookFilters Filters { get; set; } = new BookFilters();
@@ -52,10 +51,11 @@ namespace Bookstore.Web.Areas.Admin.Models.Inventory
             HasPreviousPage = books.HasPreviousPage;
             PaginationButtons = books.GetPageList(5).ToList();
 
-            BookConditions = referenceDataItems.Where(x => x.DataType == ReferenceDataType.Condition).Select(x => new SelectListItem(x.Text, x.Id.ToString()));
-            BookTypes = referenceDataItems.Where(x => x.DataType == ReferenceDataType.BookType).Select(x => new SelectListItem(x.Text, x.Id.ToString()));
-            Genres = referenceDataItems.Where(x => x.DataType == ReferenceDataType.Genre).Select(x => new SelectListItem(x.Text, x.Id.ToString()));
-            Publishers = referenceDataItems.Where(x => x.DataType == ReferenceDataType.Publisher).Select(x => new SelectListItem(x.Text, x.Id.ToString()));
+            var dataItems = referenceDataItems.ToList();
+            BookConditions = dataItems.Where(x => x.DataType == ReferenceDataType.Condition).Select(x => new SelectListItem(x.Text, x.Id.ToString()));
+            BookTypes = dataItems.Where(x => x.DataType == ReferenceDataType.BookType).Select(x => new SelectListItem(x.Text, x.Id.ToString()));
+            Genres = dataItems.Where(x => x.DataType == ReferenceDataType.Genre).Select(x => new SelectListItem(x.Text, x.Id.ToString()));
+            Publishers = dataItems.Where(x => x.DataType == ReferenceDataType.Publisher).Select(x => new SelectListItem(x.Text, x.Id.ToString()));
         }
     }
 

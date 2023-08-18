@@ -11,12 +11,10 @@ namespace Bookstore.Web.Controllers
     [AllowAnonymous]
     public class WishlistController : Controller
     {
-        private readonly ICustomerService customerService;
         private readonly IShoppingCartService shoppingCartService;
 
-        public WishlistController(ICustomerService customerService, IShoppingCartService shoppingCartService)
+        public WishlistController(IShoppingCartService shoppingCartService)
         {
-            this.customerService = customerService;
             this.shoppingCartService = shoppingCartService;
         }
 

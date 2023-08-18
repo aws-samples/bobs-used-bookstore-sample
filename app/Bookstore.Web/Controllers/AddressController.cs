@@ -10,12 +10,10 @@ namespace Bookstore.Web.Controllers
     public class AddressController : Controller
     {
         private readonly IAddressService addressService;
-        private readonly ICustomerService customerService;
 
-        public AddressController(IAddressService addressService, ICustomerService customerService)
+        public AddressController(IAddressService addressService)
         {
             this.addressService = addressService;
-            this.customerService = customerService;
         }
 
         public async Task<IActionResult> Index()
