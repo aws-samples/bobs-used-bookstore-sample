@@ -57,7 +57,7 @@
                                     @if (item.Quantity > 0)
                                     {
                                         <h6>
-                                            <span class="price">$@item.Price</span>
+                                            <span class="price">@item.Price.ToString("C")</span>
                                         </h6>
                                     }
                                     else
