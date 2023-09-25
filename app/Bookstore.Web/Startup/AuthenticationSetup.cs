@@ -40,8 +40,6 @@ namespace Bookstore.Web.Startup
             _cognitoClientId = CognitoClientIdHelper.GetClientId(builder);
             _cognitoAppSignOutUrl = builder.Configuration["Cognito:AppSignOutUrl"];
 
-            // For the 'Development' profile we fake authentication. For 'Test' and 'Production'
-            // profiles we use Amazon Cognito's Hosted UI
             return builder.Configuration["Services:Authentication"] == "AWS" ? ConfigureCognitoAuthentication(builder) : ConfigureLocalAuthentication(builder);
         }
 
