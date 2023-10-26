@@ -58,7 +58,7 @@ namespace Bookstore.Domain.Books
 
         public async Task<BookStatistics> GetStatisticsAsync()
         {
-            return (await this.bookRepository.GetStatisticsAsync());
+            return (await bookRepository.GetStatisticsAsync()) ?? new BookStatistics();
         }
 
         public async Task<BookResult> AddAsync(CreateBookDto dto)

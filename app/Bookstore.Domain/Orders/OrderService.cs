@@ -52,7 +52,7 @@ namespace Bookstore.Domain.Orders
 
         public async Task<OrderStatistics> GetStatisticsAsync()
         {
-            return await this.orderRepository.GetStatisticsAsync();
+            return (await orderRepository.GetStatisticsAsync()) ?? new OrderStatistics();
         }
 
         public async Task<int> CreateOrderAsync(CreateOrderDto dto)

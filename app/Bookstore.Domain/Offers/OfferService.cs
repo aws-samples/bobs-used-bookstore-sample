@@ -77,7 +77,9 @@ namespace Bookstore.Domain.Offers
 
         public async Task<OfferStatistics> GetStatisticsAsync()
         {
-            return await this.offerRepository.GetStatisticsAsync();
+            var result = (await offerRepository.GetStatisticsAsync()) ?? new OfferStatistics();
+
+            return result;
         }
     }
 }
