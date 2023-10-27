@@ -4,6 +4,8 @@ using Bookstore.Web.Startup;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.AddObservabilityOptions();
+
 builder.ConfigureConfiguration();
 
 builder.ConfigureServices();

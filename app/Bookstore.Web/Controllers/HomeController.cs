@@ -6,6 +6,8 @@ using Bookstore.Web.ViewModel;
 using Bookstore.Domain.Books;
 using System.Threading.Tasks;
 using Bookstore.Web.ViewModel.Home;
+using Amazon.Runtime.Internal.Util;
+using Microsoft.Extensions.Logging;
 
 namespace Bookstore.Web.Controllers
 {
@@ -13,16 +15,20 @@ namespace Bookstore.Web.Controllers
     public class HomeController : Controller
     {
         private readonly IBookService bookService;
+        private readonly ILogger<HomeController> logger;
 
-        public HomeController(IBookService bookService)
+        public HomeController(IBookService bookService, ILogger<HomeController> logger)
         {
             this.bookService = bookService;
+            this.logger = logger;
         }
 
         public async Task<IActionResult> Index()
         {
+            logger.LogDebug("Retrieving best selling books to display on home page");
             var books = await bookService.ListBestSellingBooksAsync(4);
 
+            logger.LogInformation("Retrieved the {Number} top selling books", 4);
             return View(new HomeIndexViewModel(books));
         }
 

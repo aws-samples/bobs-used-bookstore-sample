@@ -1,4 +1,5 @@
 ﻿using Bookstore.Domain.Orders;
+using Microsoft.Extensions.Logging;
 
 namespace Bookstore.Domain.Books
 {
@@ -26,14 +27,16 @@ namespace Bookstore.Domain.Books
         private readonly IFileService fileService;
         private readonly IBookRepository bookRepository;
         private readonly IOrderRepository orderRepository;
+        private readonly ILogger<BookService> logger;
 
-        public BookService(IImageResizeService imageResizeService, IImageValidationService imageValidationService, IFileService fileService, IBookRepository bookRepository, IOrderRepository orderRepository)
+        public BookService(IImageResizeService imageResizeService, IImageValidationService imageValidationService, IFileService fileService, IBookRepository bookRepository, IOrderRepository orderRepository, ILoggerFactory logger)
         {
             this.imageResizeService = imageResizeService;
             this.imageValidationService = imageValidationService;
             this.fileService = fileService;
             this.bookRepository = bookRepository;
             this.orderRepository = orderRepository;
+            this.logger = logger.CreateLogger<BookService>();
         }
 
         public async Task<Book> GetBookAsync(int id)
@@ -53,6 +56,7 @@ namespace Bookstore.Domain.Books
 
         public async Task<IEnumerable<Book>> ListBestSellingBooksAsync(int count)
         {
+            logger.LogDebug("BookService.ListBestSellingBooksAsync Invoked");
             return await orderRepository.ListBestSellingBooksAsync(count);
         }
 
@@ -109,7 +113,11 @@ namespace Bookstore.Domain.Books
 
             var imageIsSafe = await imageValidationService.IsSafeAsync(coverImage);
 
-            if (!imageIsSafe) return new BookResult(false, "The image failed the safety check. Please try another image.");
+            if (!imageIsSafe)
+            {
+                logger.LogError("The provided image for the book {name} failed the moderation checks.", book.Name);
+                return new BookResult(false, "The image failed the safety check. Please try another image.");
+            }
 
             await SaveImageAsync(book, resizedCoverImage, coverImageFileName);
 
