@@ -8,6 +8,10 @@ using System.Threading.Tasks;
 using Bookstore.Web.ViewModel.Home;
 using Amazon.Runtime.Internal.Util;
 using Microsoft.Extensions.Logging;
+using System;
+using Amazon.Runtime;
+using Microsoft.AspNetCore.Diagnostics;
+using Bookstore.Web.Helpers;
 
 namespace Bookstore.Web.Controllers
 {
@@ -34,6 +38,7 @@ namespace Bookstore.Web.Controllers
 
         public IActionResult Privacy()
         {
+            logger.LogDebug("Loading the privacy page");
             return View();
         }
 
@@ -50,6 +55,9 @@ namespace Bookstore.Web.Controllers
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
+            var errorFeature = HttpContext.Features.Get<IExceptionHandlerFeature>();
+            logger.LogError("Exception encountered: {msg}", errorFeature.Error.Message);
+
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }

@@ -1,4 +1,7 @@
-﻿namespace Bookstore.Domain.Carts
+﻿using Bookstore.Domain.Books;
+using Microsoft.Extensions.Logging;
+
+namespace Bookstore.Domain.Carts
 {
     public interface IShoppingCartService
     {
@@ -18,10 +21,12 @@
     public class ShoppingCartService : IShoppingCartService
     {
         private readonly IShoppingCartRepository shoppingCartRepository;
+        private readonly ILogger<ShoppingCartService> logger;
 
-        public ShoppingCartService(IShoppingCartRepository shoppingCartRepository)
+        public ShoppingCartService(IShoppingCartRepository shoppingCartRepository, ILoggerFactory logger)
         {
             this.shoppingCartRepository = shoppingCartRepository;
+            this.logger = logger.CreateLogger<ShoppingCartService>();
         }
 
         public async Task<ShoppingCart> GetShoppingCartAsync(string shoppingCartCorrelationId)
@@ -48,15 +53,19 @@
                 shoppingCart = new ShoppingCart(correlationId);
 
                 await shoppingCartRepository.AddAsync(shoppingCart);
+
+                logger.LogInformation("Created a new shopping cart");
             }
 
             if (wantToBuy)
             {
                 shoppingCart.AddItemToShoppingCart(bookId, quantity);
+                logger.LogInformation("Adding the following bookid and quantity to the cart respectively - {book}, {id}", bookId, quantity);
             }
             else
             {
                 shoppingCart.AddItemToWishlist(bookId);
+                logger.LogInformation("Adding the following bookid and quantity to the wish list respectively - {book}, {id}", bookId, quantity);
             }
 
             await shoppingCartRepository.SaveChangesAsync();
@@ -83,6 +92,8 @@
             }
 
             await shoppingCartRepository.SaveChangesAsync();
+
+            logger.LogInformation("Moved all wish list items to the shopping cart");
         }
 
         public async Task DeleteShoppingCartItemAsync(DeleteShoppingCartItemDto dto)
@@ -92,6 +103,8 @@
             shoppingCart.RemoveShoppingCartItemById(dto.ShoppingCartItemId);
 
             await shoppingCartRepository.SaveChangesAsync();
+
+            logger.LogInformation("Deleted the item with Id: {id} from the shopping cart", dto.CorrelationId);
         }
     }
 }

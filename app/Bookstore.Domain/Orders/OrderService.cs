@@ -1,5 +1,7 @@
 ﻿using Bookstore.Domain.Carts;
 using Bookstore.Domain.Customers;
+using Microsoft.Extensions.Logging;
+using System.Text.Json;
 
 namespace Bookstore.Domain.Orders
 {
@@ -26,14 +28,17 @@ namespace Bookstore.Domain.Orders
         private readonly IOrderRepository orderRepository;
         private readonly IShoppingCartRepository shoppingCartRepository;
         private readonly ICustomerRepository customerRepository;
+        private readonly ILogger<OrderService> logger;
 
         public OrderService(IOrderRepository orderRepository,
             IShoppingCartRepository shoppingCartRepository,
-            ICustomerRepository customerRepository)
+            ICustomerRepository customerRepository,
+            ILoggerFactory logger)
         {
             this.orderRepository = orderRepository;
             this.shoppingCartRepository = shoppingCartRepository;
             this.customerRepository = customerRepository;
+            this.logger = logger.CreateLogger<OrderService>();
         }
 
         public async Task<IPaginatedList<Order>> GetOrdersAsync(OrderFilters filters, int pageIndex = 1, int pageSize = 10)
@@ -65,6 +70,8 @@ namespace Bookstore.Domain.Orders
             var order = new Order(customer.Id, dto.AddressId);
 
             await orderRepository.AddAsync(order);
+
+            logger.LogInformation("Creating a new order for the customer {id} with the following item: {items}", customer.Id, JsonSerializer.Serialize(shoppingCart.ShoppingCartItems));
 
             shoppingCart.GetShoppingCartItems(ShoppingCartItemFilter.ExcludeOutOfStockItems).ToList().ForEach(x =>
             {

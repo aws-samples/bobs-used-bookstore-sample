@@ -1,5 +1,6 @@
 ﻿using Bookstore.Domain.Orders;
 using Microsoft.Extensions.Logging;
+using System.Text.Json;
 
 namespace Bookstore.Domain.Books
 {
@@ -81,6 +82,8 @@ namespace Bookstore.Domain.Books
                 dto.Summary);
 
             await bookRepository.AddAsync(book);
+
+            logger.LogInformation("Adding a new book to the inventory with the following properties: {book}", JsonSerializer.Serialize(book));
 
             return await SaveAsync(book, dto.CoverImage, dto.CoverImageFileName);
         }

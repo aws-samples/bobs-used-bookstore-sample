@@ -4,7 +4,7 @@ using Bookstore.Web.Startup;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.AddObservabilityOptions();
+builder.ConfigureObservabilityOptions();
 
 builder.ConfigureConfiguration();
 
