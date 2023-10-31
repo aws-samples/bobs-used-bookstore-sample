@@ -71,8 +71,6 @@ namespace Bookstore.Domain.Orders
 
             await orderRepository.AddAsync(order);
 
-            logger.LogInformation("Creating a new order for the customer {id} with the following item: {items}", customer.Id, JsonSerializer.Serialize(shoppingCart.ShoppingCartItems));
-
             shoppingCart.GetShoppingCartItems(ShoppingCartItemFilter.ExcludeOutOfStockItems).ToList().ForEach(x =>
             {
                 order.AddOrderItem(x.Book, x.Quantity);
@@ -85,6 +83,8 @@ namespace Bookstore.Domain.Orders
             // Because each repository implements a unit of work, changes to the shopping cart and to stock levels 
             // are captured by the unit of work and can be persisted by called SaveChangesAsync on _any_ repository.
             await orderRepository.SaveChangesAsync();
+
+            logger.LogInformation("Created a new OrderId {orderid} for the CustomerId {customerid}", customer.Id, order.Id);
 
             return order.Id;
         }

@@ -36,7 +36,6 @@ namespace Bookstore.Domain.Addresses
 
         public int CustomerId { get; set; }
 
-        [JsonIgnore]
         public Customer Customer { get; set; }
 
         public bool IsActive { get; set; } = true;

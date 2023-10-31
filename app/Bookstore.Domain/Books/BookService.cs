@@ -83,7 +83,7 @@ namespace Bookstore.Domain.Books
 
             await bookRepository.AddAsync(book);
 
-            logger.LogInformation("Adding a new book to the inventory with the following properties: {book}", JsonSerializer.Serialize(book));
+            logger.LogInformation("Adding a new book to the inventory with the following properties: Name: {name}, Author: {author}, ISBN: {isbn}", book.Name, book.Author, book.ISBN);
 
             return await SaveAsync(book, dto.CoverImage, dto.CoverImageFileName);
         }

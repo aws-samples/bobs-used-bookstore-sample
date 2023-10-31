@@ -43,19 +43,15 @@ namespace Bookstore.Domain.Books
 
         public string ISBN { get; set; }
 
-        [JsonIgnore]
         public ReferenceDataItem Publisher { get; set; }
         public int PublisherId { get; set; }
 
-        [JsonIgnore]
         public ReferenceDataItem BookType { get; set; }
         public int BookTypeId { get; set; }
 
-        [JsonIgnore]
         public ReferenceDataItem Genre { get; set; }
         public int GenreId { get; set; }
 
-        [JsonIgnore]
         public ReferenceDataItem Condition { get; set; }
         public int ConditionId { get; set; }
 
@@ -67,10 +63,8 @@ namespace Bookstore.Domain.Books
 
         public int Quantity { get; set; }
 
-        [JsonIgnore]
         public bool IsInStock => Quantity > 0;
 
-        [JsonIgnore]
         public bool IsLowInStock => Quantity <= LowBookThreshold;
 
         public void ReduceStockLevel(int quantity)

@@ -16,8 +16,6 @@ namespace Bookstore.Web.Startup
                 return next(context);
             });
 
-            app.UseHttpLogging();
-
             if (app.Environment.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

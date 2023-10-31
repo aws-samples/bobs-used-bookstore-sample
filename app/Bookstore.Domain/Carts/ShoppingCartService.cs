@@ -60,12 +60,12 @@ namespace Bookstore.Domain.Carts
             if (wantToBuy)
             {
                 shoppingCart.AddItemToShoppingCart(bookId, quantity);
-                logger.LogInformation("Adding the following bookid and quantity to the cart respectively - {book}, {id}", bookId, quantity);
+                logger.LogInformation("Adding the following bookid and quantity to the cart respectively : {book}, {id}", bookId, quantity);
             }
             else
             {
                 shoppingCart.AddItemToWishlist(bookId);
-                logger.LogInformation("Adding the following bookid and quantity to the wish list respectively - {book}, {id}", bookId, quantity);
+                logger.LogInformation("Adding the following bookid and quantity to the wish list respectively : {book}, {id}", bookId, quantity);
             }
 
             await shoppingCartRepository.SaveChangesAsync();

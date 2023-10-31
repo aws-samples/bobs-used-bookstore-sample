@@ -18,7 +18,7 @@ namespace Bookstore.Domain.Carts
         }
 
         public int ShoppingCartId { get; set; }
-        [JsonIgnore]
+
         public ShoppingCart ShoppingCart { get; set; }
 
         public int BookId { get; set; }
