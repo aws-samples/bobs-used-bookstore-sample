@@ -1,7 +1,6 @@
 ﻿using Bookstore.Domain.Carts;
 using Bookstore.Domain.Customers;
 using Microsoft.Extensions.Logging;
-using System.Text.Json;
 
 namespace Bookstore.Domain.Orders
 {
