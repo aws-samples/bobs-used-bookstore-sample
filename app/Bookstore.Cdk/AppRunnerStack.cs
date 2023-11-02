@@ -36,6 +36,8 @@ public class AppRunnerStack : Stack
 
         CreateAppRunnerEcrRole();
 
+        CreateDockerImage();
+
         CreateAppRunnerService(props);
     }
 

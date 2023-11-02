@@ -2,7 +2,6 @@
 using System.Diagnostics;
 using Amazon.CDK;
 using Bookstore.Common;
-using SharedInfrastructure.Production;
 
 namespace Bookstore.Cdk;
 
@@ -20,6 +19,7 @@ internal sealed class Program
         var networkStack = new NetworkStack(app, $"{Constants.AppName}Network", new StackProps { Env = env });
         var databaseStack = new DatabaseStack(app, $"{Constants.AppName}Database", new DatabaseStackProps { Env = env, Vpc = networkStack.Vpc });
         var appRunnerStack = new AppRunnerStack(app, $"{Constants.AppName}AppRunner", new AppRunnerStackProps {  Env = env, Vpc = networkStack.Vpc, ImageBucket = coreStack.ImageBucket });
+        var ecsStack = new EcsStack(app, $"{Constants.AppName}ECS", new EcsStackProps { Env = env, Vpc = networkStack.Vpc, Database = databaseStack.Database, ImageBucket = coreStack.ImageBucket, WebAppUserPool = coreStack.WebAppUserPool });
 
         app.Synth();
     }

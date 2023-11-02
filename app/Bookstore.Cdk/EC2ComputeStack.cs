@@ -8,6 +8,7 @@ using Amazon.CDK.AWS.S3.Assets;
 using Amazon.CDK.AWS.RDS;
 using Amazon.CDK.AWS.S3;
 using Amazon.CDK.AWS.Logs;
+using Bookstore.Common;
 
 namespace SharedInfrastructure.Production;
 

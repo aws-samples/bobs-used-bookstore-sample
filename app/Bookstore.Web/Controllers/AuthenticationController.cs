@@ -25,7 +25,7 @@ namespace Bookstore.Web.Controllers
 
         public IActionResult LogOut()
         {
-            return configuration["Services:Authentication"] == "AWS" ? CognitoSignOut() : LocalSignOut();
+            return configuration["Services:Authentication"] == "aws" ? CognitoSignOut() : LocalSignOut();
         }
 
         private IActionResult LocalSignOut()

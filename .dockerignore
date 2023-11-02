@@ -1,0 +1,7 @@
+.git/
+.github/
+.vs/
+cdk.out/
+media/
+**/[Bb]in/
+**/[Oo]bj/

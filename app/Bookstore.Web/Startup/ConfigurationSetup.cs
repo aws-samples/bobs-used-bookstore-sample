@@ -17,7 +17,7 @@ namespace Bookstore.Web.Startup
 
         private static void LoadConfigurationFromSystemsManager(WebApplicationBuilder builder, string key, string path)
         {
-            if (builder.Configuration[key] == "AWS")
+            if (builder.Configuration[key] == "aws")
             {
                 builder.Configuration.AddSystemsManager(path);
             }

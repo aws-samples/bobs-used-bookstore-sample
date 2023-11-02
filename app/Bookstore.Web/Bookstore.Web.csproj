@@ -2,6 +2,9 @@
 
     <PropertyGroup>
 		<TargetFramework>net6.0</TargetFramework>
+		<UserSecretsId>249fb4d7-2829-437e-85e4-c698d6bda7c4</UserSecretsId>
+		<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+		<DockerfileContext>..\..</DockerfileContext>
     </PropertyGroup>
 
     <ItemGroup>
@@ -15,11 +18,12 @@
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
+        <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.19.4" />
         <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.11" />
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\Bookstore.Common\Bookstore.Common.csproj" />
+      <ProjectReference Include="..\Bookstore.Common\Bookstore.Common.csproj" />
       <ProjectReference Include="..\Bookstore.Data\Bookstore.Data.csproj" />
       <ProjectReference Include="..\Bookstore.Domain\Bookstore.Domain.csproj" />
     </ItemGroup>

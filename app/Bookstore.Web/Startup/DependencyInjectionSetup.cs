@@ -39,7 +39,7 @@ namespace Bookstore.Web.Startup
 
             builder.Services.AddScoped(typeof(IPaginatedList<>), typeof(PaginatedList<>));
 
-            if (builder.Configuration["Services:FileService"] == "AWS")
+            if (builder.Configuration["Services:FileService"] == "aws")
             {
                 builder.Services.AddTransient<IFileService, S3FileService>();
             }
@@ -48,7 +48,7 @@ namespace Bookstore.Web.Startup
                 builder.Services.AddTransient<IFileService, LocalFileService>(x => new LocalFileService(builder.Environment.WebRootPath));
             }
 
-            if (builder.Configuration["Services:ImageValidationService"] == "AWS")
+            if (builder.Configuration["Services:ImageValidationService"] == "aws")
             {
                 builder.Services.AddTransient<IImageValidationService, RekognitionImageValidationService>();
             }

@@ -17,7 +17,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\Bookstore.Common\Bookstore.Common.csproj" />
+      <ProjectReference Include="..\Bookstore.Common\Bookstore.Common.csproj" />
     </ItemGroup>
 
 </Project>

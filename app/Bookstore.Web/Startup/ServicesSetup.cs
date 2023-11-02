@@ -29,7 +29,7 @@ namespace Bookstore.Web.Startup
 
             var connString = builder.Configuration["ConnectionStrings:BookstoreDatabaseConnection"];
 
-            if (builder.Configuration["Services:Database"] == "AWS")
+            if (builder.Configuration["Services:Database"] == "aws")
             {
                 builder.Services.AddDbContext<ApplicationDbContext>(option => option.UseSqlServer(connString));
             }

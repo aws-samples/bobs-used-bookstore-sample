@@ -40,7 +40,7 @@ namespace Bookstore.Web.Startup
             _cognitoClientId = CognitoClientIdHelper.GetClientId(builder);
             _cognitoAppSignOutUrl = builder.Configuration["Cognito:AppSignOutUrl"];
 
-            return builder.Configuration["Services:Authentication"] == "AWS" ? ConfigureCognitoAuthentication(builder) : ConfigureLocalAuthentication(builder);
+            return builder.Configuration["Services:Authentication"] == "aws" ? ConfigureCognitoAuthentication(builder) : ConfigureLocalAuthentication(builder);
         }
 
         private static WebApplicationBuilder ConfigureLocalAuthentication(WebApplicationBuilder builder)

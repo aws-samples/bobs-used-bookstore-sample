@@ -77,7 +77,7 @@ public class DatabaseStack : Stack
         _ = new StringParameter(this, "RDSDatabaseConnectionStringSSMParameter", new StringParameterProps
         {
             ParameterName = $"/{Constants.AppName}/Database/ConnectionStrings/BookstoreDatabaseConnection",
-            StringValue = $"Server={server};Database={database};User Id={userId};Password={password};"
+            StringValue = $"Server={server};Database={database};TrustServerCertificate=True;User Id={userId};Password=\"{password}\";"
         });
     }
 }

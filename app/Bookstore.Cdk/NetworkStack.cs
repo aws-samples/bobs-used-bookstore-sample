@@ -12,7 +12,7 @@ public class NetworkStack : Stack
     {
         // Create a new vpc spanning two AZs and with public and private subnets
         // to host the application resources
-        Vpc = new Vpc(this, "Vpc", new VpcProps
+        Vpc = new Vpc(this, "VPC", new VpcProps
         {
             IpAddresses = IpAddresses.Cidr("10.0.0.0/16"),
             // Cap at 2 AZs in case we are deployed to a region with only 2, RDS deployment requires VPC with minimum 2 AZ

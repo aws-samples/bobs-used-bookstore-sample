@@ -17,7 +17,7 @@ namespace Bookstore.Web.Startup
             builder.Logging.ClearProviders();
             builder.Logging.AddConsole();
 
-            if(builder.Configuration["Services:Observability"] == "AWS")
+            if(builder.Configuration["Services:LoggingService"] == "aws")
             {
                 builder.Logging.AddAWSProvider();
             }
