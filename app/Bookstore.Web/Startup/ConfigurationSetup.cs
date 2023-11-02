@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using Bookstore.Common;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 
 namespace Bookstore.Web.Startup
@@ -7,9 +8,9 @@ namespace Bookstore.Web.Startup
     {
         public static WebApplicationBuilder ConfigureConfiguration(this WebApplicationBuilder builder)
         {
-            LoadConfigurationFromSystemsManager(builder, "Services:Authentication", "/BobsBookstore/Authentication/");
-            LoadConfigurationFromSystemsManager(builder, "Services:FileService", "/BobsBookstore/Files/");
-            LoadConfigurationFromSystemsManager(builder, "Services:Database", "/BobsBookstore/Database/");
+            LoadConfigurationFromSystemsManager(builder, "Services:Authentication", $"/{Constants.AppName}/Authentication/");
+            LoadConfigurationFromSystemsManager(builder, "Services:FileService", $"/{Constants.AppName}/Files/");
+            LoadConfigurationFromSystemsManager(builder, "Services:Database", $"/{Constants.AppName}/Database/");
 
             return builder;
         }

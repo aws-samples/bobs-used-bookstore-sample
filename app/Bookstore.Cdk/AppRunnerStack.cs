@@ -1,18 +1,14 @@
 using Amazon.CDK;
-using Constructs;
-using Amazon.CDK.AWS.EC2;
-using Amazon.CDK.AWS.IAM;
-using Amazon.CDK.AWS.S3;
-using Amazon.CDK.AWS.Logs;
-using Amazon.CDK.AWS.AppRunner;
-using System.Linq;
-using Amazon.CDK.AWS.Ecr.Assets;
 using Amazon.CDK.AWS.AppRunner.Alpha;
-using System.IO;
-using System;
-using Amazon.CDK.AWS.RDS;
+using Amazon.CDK.AWS.EC2;
+using Amazon.CDK.AWS.Ecr.Assets;
+using Amazon.CDK.AWS.IAM;
+using Amazon.CDK.AWS.Logs;
+using Amazon.CDK.AWS.S3;
+using Bookstore.Common;
+using Constructs;
 
-namespace SharedInfrastructure.Production;
+namespace Bookstore.Cdk;
 
 public class AppRunnerStackProps : StackProps
 {
@@ -45,7 +41,7 @@ public class AppRunnerStack : Stack
 
     internal void CreateAppRunnerSecurityGroup(AppRunnerStackProps props)
     {
-        appRunnerSecurityGroup = new SecurityGroup(this, $"{Constants.AppName}AppRunnerSecurityGroup", new SecurityGroupProps
+        appRunnerSecurityGroup = new SecurityGroup(this, "AppRunnerSecurityGroup", new SecurityGroupProps
         {
             SecurityGroupName = $"{Constants.AppName}AppRunnerSecurityGroup",
             Vpc = props.Vpc,
@@ -55,7 +51,7 @@ public class AppRunnerStack : Stack
 
     internal void CreateAppRunnerInstanceRole(AppRunnerStackProps props)
     {
-        appRunnerInstanceRole = new Role(this, $"{Constants.AppName}AppRunnerRole", new RoleProps
+        appRunnerInstanceRole = new Role(this, "AppRunnerRole", new RoleProps
         {
             AssumedBy = new ServicePrincipal("tasks.apprunner.amazonaws.com")
         });
@@ -91,7 +87,7 @@ public class AppRunnerStack : Stack
         props.ImageBucket.GrantReadWrite(appRunnerInstanceRole);
 
         // Create an Amazon CloudWatch log group for the website
-        _ = new LogGroup(this, $"{Constants.AppName}AppRunnerLogGroup", new LogGroupProps
+        _ = new LogGroup(this, "CloudWatchLogGroup", new LogGroupProps
         {
             LogGroupName = Constants.AppName,
             RemovalPolicy = RemovalPolicy.DESTROY
@@ -117,7 +113,7 @@ public class AppRunnerStack : Stack
 
     internal void CreateAppRunnerEcrRole()
     {
-        appRunnerEcrRole = new Role(this, $"{Constants.AppName}AppRunnerEcrRole", new RoleProps
+        appRunnerEcrRole = new Role(this, "AppRunnerEcrRole", new RoleProps
         {
             AssumedBy = new ServicePrincipal("build.apprunner.amazonaws.com"),
             RoleName = $"{Constants.AppName}AppRunnerEcrRole"
@@ -134,16 +130,16 @@ public class AppRunnerStack : Stack
 
     private void CreateAppRunnerService(AppRunnerStackProps props)
     {
-        _ = new Service(this, $"{Constants.AppName}AppRunnerService", new ServiceProps
+        _ = new Service(this, "AppRunnerService", new ServiceProps
         {
             Source = Source.FromAsset(new AssetProps { Asset = dockerImage, ImageConfiguration = new ImageConfiguration { Port = 80 } }),
             InstanceRole = appRunnerInstanceRole,
             AccessRole = appRunnerEcrRole,
-            VpcConnector = new VpcConnector(this, $"{Constants.AppName}VpcConnector", new VpcConnectorProps
+            VpcConnector = new VpcConnector(this, "VPCConnector", new VpcConnectorProps
             {
-                VpcConnectorName = $"{Constants.AppName}VpcConnector",
+                VpcConnectorName = $"{Constants.AppName}VPCConnector",
                 Vpc = props.Vpc,
-                VpcSubnets = new SubnetSelection() { Subnets = props.Vpc.PrivateSubnets },
+                VpcSubnets = new SubnetSelection { Subnets = props.Vpc.PrivateSubnets },
                 SecurityGroups = new[] { appRunnerSecurityGroup }
             })
         });

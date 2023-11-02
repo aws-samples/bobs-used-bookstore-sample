@@ -19,6 +19,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\Bookstore.Common\Bookstore.Common.csproj" />
       <ProjectReference Include="..\Bookstore.Data\Bookstore.Data.csproj" />
       <ProjectReference Include="..\Bookstore.Domain\Bookstore.Domain.csproj" />
     </ItemGroup>

@@ -1,10 +1,11 @@
 using Amazon.CDK;
-using Constructs;
 using Amazon.CDK.AWS.EC2;
 using Amazon.CDK.AWS.RDS;
 using Amazon.CDK.AWS.SSM;
+using Bookstore.Common;
+using Constructs;
 
-namespace SharedInfrastructure.Production;
+namespace Bookstore.Cdk;
 
 public class DatabaseStackProps : StackProps
 {
@@ -35,9 +36,9 @@ public class DatabaseStack : Stack
         });
     }
 
-    private void CreateDatabase(DatabaseStackProps props, SecurityGroup dbSG)
+    private void CreateDatabase(DatabaseStackProps props, SecurityGroup securityGroup)
     {
-        Database = new DatabaseInstance(this, $"{Constants.AppName}SqlDb", new DatabaseInstanceProps
+        Database = new DatabaseInstance(this, "RDSDatabase", new DatabaseInstanceProps
         {
             Vpc = props.Vpc,
             VpcSubnets = new SubnetSelection
@@ -55,7 +56,7 @@ public class DatabaseStack : Stack
             Port = DatabasePort,
             SecurityGroups = new[]
                     {
-                dbSG
+                securityGroup
             },
             InstanceType = Amazon.CDK.AWS.EC2.InstanceType.Of(InstanceClass.BURSTABLE2, InstanceSize.MICRO),
             InstanceIdentifier = $"{Constants.AppName}Database",
@@ -73,7 +74,7 @@ public class DatabaseStack : Stack
         var userId = Database.Secret.SecretValueFromJson("username");
         var database = Database.Secret.SecretValueFromJson("dbInstanceIdentifier");
 
-        _ = new StringParameter(this, $"{Constants.AppName}ConnectionString", new StringParameterProps
+        _ = new StringParameter(this, "RDSDatabaseConnectionStringSSMParameter", new StringParameterProps
         {
             ParameterName = $"/{Constants.AppName}/Database/ConnectionStrings/BookstoreDatabaseConnection",
             StringValue = $"Server={server};Database={database};User Id={userId};Password={password};"

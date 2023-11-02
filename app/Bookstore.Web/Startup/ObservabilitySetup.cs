@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Bookstore.Web.Startup
 {
-    public static class ConfigurationObservability
+    public static class ObservabilitySetup
     {
         public static WebApplicationBuilder ConfigureObservabilityOptions(this WebApplicationBuilder builder)
         {
