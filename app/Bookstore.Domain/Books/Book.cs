@@ -1,4 +1,5 @@
 ﻿using Bookstore.Domain.ReferenceData;
+using System.Text.Json.Serialization;
 
 namespace Bookstore.Domain.Books
 {

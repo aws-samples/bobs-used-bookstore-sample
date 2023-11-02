@@ -1,4 +1,7 @@
-﻿namespace Bookstore.Domain.Customers
+﻿using Bookstore.Domain.Carts;
+using Microsoft.Extensions.Logging;
+
+namespace Bookstore.Domain.Customers
 {
     public interface ICustomerService
     {
@@ -12,10 +15,12 @@
     public class CustomerService : ICustomerService
     {
         private readonly ICustomerRepository customerRepository;
+        private readonly ILogger<CustomerService> logger;
 
-        public CustomerService(ICustomerRepository customerRepository)
+        public CustomerService(ICustomerRepository customerRepository, ILoggerFactory logger)
         {
             this.customerRepository = customerRepository;
+            this.logger = logger.CreateLogger<CustomerService>();
         }
 
         public async Task<Customer> GetAsync(int id)
@@ -46,6 +51,8 @@
             existingCustomer.UpdatedOn = DateTime.UtcNow;
 
             await customerRepository.SaveChangesAsync();
+
+            logger.LogInformation("Updated customer information for the customer: {firstname} {lastname}", dto.FirstName, dto.LastName);
         }
     }
 }

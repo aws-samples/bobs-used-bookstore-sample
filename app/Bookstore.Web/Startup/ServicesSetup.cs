@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using System.IO;
+using Bookstore.Web.Helpers;
 
 namespace Bookstore.Web.Startup
 {
@@ -19,6 +20,7 @@ namespace Bookstore.Web.Startup
             {
                 x.Filters.Add(new AuthorizeFilter());
                 x.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
+                x.Filters.Add<LogActionFilter>();
             });
 
             builder.Services.AddDefaultAWSOptions(builder.Configuration.GetAWSOptions());

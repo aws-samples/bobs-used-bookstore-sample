@@ -1,5 +1,6 @@
 ﻿using Bookstore.Domain.Carts;
 using Bookstore.Domain.Customers;
+using Microsoft.Extensions.Logging;
 
 namespace Bookstore.Domain.Orders
 {
@@ -26,14 +27,17 @@ namespace Bookstore.Domain.Orders
         private readonly IOrderRepository orderRepository;
         private readonly IShoppingCartRepository shoppingCartRepository;
         private readonly ICustomerRepository customerRepository;
+        private readonly ILogger<OrderService> logger;
 
         public OrderService(IOrderRepository orderRepository,
             IShoppingCartRepository shoppingCartRepository,
-            ICustomerRepository customerRepository)
+            ICustomerRepository customerRepository,
+            ILoggerFactory logger)
         {
             this.orderRepository = orderRepository;
             this.shoppingCartRepository = shoppingCartRepository;
             this.customerRepository = customerRepository;
+            this.logger = logger.CreateLogger<OrderService>();
         }
 
         public async Task<IPaginatedList<Order>> GetOrdersAsync(OrderFilters filters, int pageIndex = 1, int pageSize = 10)
@@ -78,6 +82,8 @@ namespace Bookstore.Domain.Orders
             // Because each repository implements a unit of work, changes to the shopping cart and to stock levels 
             // are captured by the unit of work and can be persisted by called SaveChangesAsync on _any_ repository.
             await orderRepository.SaveChangesAsync();
+
+            logger.LogInformation("Created a new OrderId {orderid} for the CustomerId {customerid}", customer.Id, order.Id);
 
             return order.Id;
         }

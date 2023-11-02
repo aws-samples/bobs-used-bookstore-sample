@@ -1,5 +1,6 @@
 ﻿using Bookstore.Domain.Customers;
 using Bookstore.Domain.Orders;
+using Microsoft.Extensions.Logging;
 
 namespace Bookstore.Domain.Offers
 {
@@ -22,11 +23,13 @@ namespace Bookstore.Domain.Offers
     {
         private readonly IOfferRepository offerRepository;
         private readonly ICustomerRepository customerRepository;
+        private readonly ILogger<OfferService> logger;
 
-        public OfferService(IOfferRepository offerRepository, ICustomerRepository customerRepository)
+        public OfferService(IOfferRepository offerRepository, ICustomerRepository customerRepository, ILoggerFactory logger)
         {
             this.offerRepository = offerRepository;
             this.customerRepository = customerRepository;
+            this.logger = logger.CreateLogger<OfferService>();
         }
 
         public async Task<IPaginatedList<Offer>> GetOffersAsync(OfferFilters filters, int pageIndex, int pageSize)
@@ -62,6 +65,8 @@ namespace Bookstore.Domain.Offers
             await offerRepository.AddAsync(offer);
 
             await offerRepository.SaveChangesAsync();
+
+            logger.LogInformation("Created a new offer for customer {id} for the book {bookname}", customer.Id, dto.BookName);
         }
 
         public async Task UpdateOfferStatusAsync(UpdateOfferStatusDto dto)

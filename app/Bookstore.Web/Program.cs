@@ -3,6 +3,8 @@ using Bookstore.Web.Startup;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.ConfigureObservabilityOptions();
+
 builder.ConfigureConfiguration();
 
 builder.ConfigureServices();

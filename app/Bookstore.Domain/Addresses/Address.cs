@@ -1,4 +1,5 @@
 ﻿using Bookstore.Domain.Customers;
+using System.Text.Json.Serialization;
 
 namespace Bookstore.Domain.Addresses
 {
@@ -34,6 +35,7 @@ namespace Bookstore.Domain.Addresses
         public string ZipCode { get; set; }
 
         public int CustomerId { get; set; }
+
         public Customer Customer { get; set; }
 
         public bool IsActive { get; set; } = true;
