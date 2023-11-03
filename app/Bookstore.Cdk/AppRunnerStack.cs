@@ -1,9 +1,10 @@
 using Amazon.CDK;
 using Amazon.CDK.AWS.AppRunner.Alpha;
+using Amazon.CDK.AWS.Cognito;
 using Amazon.CDK.AWS.EC2;
 using Amazon.CDK.AWS.Ecr.Assets;
 using Amazon.CDK.AWS.IAM;
-using Amazon.CDK.AWS.Logs;
+using Amazon.CDK.AWS.RDS;
 using Amazon.CDK.AWS.S3;
 using Bookstore.Common;
 using Constructs;
@@ -14,11 +15,11 @@ public class AppRunnerStackProps : StackProps
 {
     public IVpc Vpc { get; set; }
 
-    //public DatabaseInstance Database { get; set; }
+    public DatabaseInstance Database { get; set; }
 
     public Bucket ImageBucket { get; set; }
 
-    //public UserPool WebAppUserPool { get; set; }
+    public UserPool WebAppUserPool { get; set; }
 }
 
 public class AppRunnerStack : Stack
@@ -88,13 +89,6 @@ public class AppRunnerStack : Stack
         // Add permissions to the app to access the S3 image bucket
         props.ImageBucket.GrantReadWrite(appRunnerInstanceRole);
 
-        // Create an Amazon CloudWatch log group for the website
-        _ = new LogGroup(this, "CloudWatchLogGroup", new LogGroupProps
-        {
-            LogGroupName = Constants.AppName,
-            RemovalPolicy = RemovalPolicy.DESTROY
-        });
-
         // Add permissions to write logs
         appRunnerInstanceRole.AddToPolicy(new PolicyStatement(new PolicyStatementProps
         {
@@ -111,6 +105,8 @@ public class AppRunnerStack : Stack
                 "arn:aws:logs:*:*:log-group:*:log-stream:*"
             }
         }));
+
+        appRunnerSecurityGroup.Connections.AllowTo(props.Database, Port.Tcp(1433));
     }
 
     internal void CreateAppRunnerEcrRole()
@@ -132,11 +128,13 @@ public class AppRunnerStack : Stack
 
     private void CreateAppRunnerService(AppRunnerStackProps props)
     {
-        _ = new Service(this, "AppRunnerService", new ServiceProps
+        var appRunnerService = new Service(this, "AppRunnerService", new ServiceProps
         {
             Source = Source.FromAsset(new AssetProps { Asset = dockerImage, ImageConfiguration = new ImageConfiguration { Port = 80 } }),
+            Cpu = Cpu.HALF_VCPU,
+            Memory = Memory.ONE_GB,
             InstanceRole = appRunnerInstanceRole,
-            AccessRole = appRunnerEcrRole,
+            AccessRole = appRunnerEcrRole, 
             VpcConnector = new VpcConnector(this, "VPCConnector", new VpcConnectorProps
             {
                 VpcConnectorName = $"{Constants.AppName}VPCConnector",
@@ -145,5 +143,11 @@ public class AppRunnerStack : Stack
                 SecurityGroups = new[] { appRunnerSecurityGroup }
             })
         });
+
+        appRunnerService.AddEnvironmentVariable("Services:Authentication", "local");
+        appRunnerService.AddEnvironmentVariable("Services:Database", "aws");
+        appRunnerService.AddEnvironmentVariable("Services:FileService", "aws");
+        appRunnerService.AddEnvironmentVariable("Services:ImageValidationService", "aws");
+        appRunnerService.AddEnvironmentVariable("Services:LoggingService", "aws");
     }
 }

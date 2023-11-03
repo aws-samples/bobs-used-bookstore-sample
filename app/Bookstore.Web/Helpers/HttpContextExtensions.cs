@@ -11,6 +11,7 @@ namespace Bookstore.Web.Helpers
 
             var cookieOptions = new CookieOptions
             {
+                Secure = false,
                 Expires = DateTime.Now.AddYears(1),
                 Path = "/"
             };

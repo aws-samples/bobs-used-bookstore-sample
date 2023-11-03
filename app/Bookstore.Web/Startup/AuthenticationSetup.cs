@@ -45,18 +45,13 @@ namespace Bookstore.Web.Startup
 
         private static WebApplicationBuilder ConfigureLocalAuthentication(WebApplicationBuilder builder)
         {
-            builder.Services
-                .AddAuthentication(x =>
+            builder.Services.AddAuthentication(x =>
             {
-                x.AddScheme<LocalAuthenticationHandler>("localauth", null);
-                x.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                x.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                x.DefaultChallengeScheme = "localauth";
-            }).AddCookie(x =>
-            {
-                x.Cookie.SecurePolicy = Microsoft.AspNetCore.Http.CookieSecurePolicy.None;
+                x.AddScheme<LocalAuthenticationHandler>("LocalAuthentication", null);
+                x.DefaultAuthenticateScheme = "LocalAuthentication";
+                x.DefaultChallengeScheme = "LocalAuthentication";
             });
-
+            
             return builder;
         }
 

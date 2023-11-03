@@ -5,7 +5,7 @@ namespace Bookstore.Web.Startup
 {
     public static class ObservabilitySetup
     {
-        public static WebApplicationBuilder ConfigureObservabilityOptions(this WebApplicationBuilder builder)
+        public static WebApplicationBuilder ConfigureObservability(this WebApplicationBuilder builder)
         {
             ConfigureLogging(builder);
 

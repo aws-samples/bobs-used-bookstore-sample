@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Authentication;
+﻿using System;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authorization;
@@ -10,7 +12,7 @@ namespace Bookstore.Web.Controllers
 {
     public class AuthenticationController : Controller
     {
-        private IConfiguration configuration;
+        private readonly IConfiguration configuration;
 
         public AuthenticationController(IConfiguration configuration)
         {
@@ -23,19 +25,25 @@ namespace Bookstore.Web.Controllers
             return Challenge(new AuthenticationProperties { RedirectUri = redirectUri ?? Request.GetTypedHeaders().Referer.ToString() });
         }
 
-        public IActionResult LogOut()
+        public async Task<IActionResult> LogOutAsync()
         {
-            return configuration["Services:Authentication"] == "aws" ? CognitoSignOut() : LocalSignOut();
+            if (configuration["Services:Authentication"] == "aws") return CognitoLogOut();
+            
+            return await LocalLogOutAsync();
         }
 
-        private IActionResult LocalSignOut()
+        private async Task<IActionResult> LocalLogOutAsync()
         {
-            HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            if (!Request.Cookies.ContainsKey("BobsUsedBooks")) return RedirectToAction("Index", "Home");
+
+            var userCookie = new CookieOptions { Secure = false, Expires = DateTime.Now.AddDays(-1) };
+
+            Response.Cookies.Append("BobsUsedBooks", string.Empty, userCookie);
 
             return RedirectToAction("Index", "Home");
         }
 
-        private IActionResult CognitoSignOut()
+        private IActionResult CognitoLogOut()
         {
             return SignOut(CookieAuthenticationDefaults.AuthenticationScheme, OpenIdConnectDefaults.AuthenticationScheme);
         }
