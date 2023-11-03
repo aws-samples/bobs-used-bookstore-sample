@@ -1,7 +1,10 @@
+using System.Globalization;
 using Microsoft.AspNetCore.Builder;
 using Bookstore.Web.Startup;
 
 var builder = WebApplication.CreateBuilder(args);
+
+CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("en-US");
 
 builder.ConfigureObservability();
 
