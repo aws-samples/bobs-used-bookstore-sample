@@ -20,9 +20,9 @@ internal sealed class Program
         app.Synth();
     }
 
-    private static Amazon.CDK.Environment MakeEnv(string account = null, string region = null)
+    private static Environment MakeEnv(string account = null, string region = null)
     {
-        return new Amazon.CDK.Environment
+        return new Environment
         {
             Account = account ?? System.Environment.GetEnvironmentVariable("CDK_DEFAULT_ACCOUNT"),
             Region = region ?? System.Environment.GetEnvironmentVariable("CDK_DEFAULT_REGION")
