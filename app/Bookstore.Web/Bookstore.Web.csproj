@@ -8,6 +8,8 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="Amazon.CloudWatch.EMF" Version="2.1.0" />
+        <PackageReference Include="Amazon.CloudWatch.EMF.Web" Version="1.0.0" />
         <PackageReference Include="Amazon.Extensions.Configuration.SystemsManager" Version="2.1.0" />
         <PackageReference Include="AWS.Logger.AspNetCore" Version="3.3.0" />
         <PackageReference Include="AWSSDK.CloudWatchLogs" Version="3.7.2.87" />
