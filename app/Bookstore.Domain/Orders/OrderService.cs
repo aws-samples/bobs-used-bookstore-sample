@@ -131,6 +131,8 @@ namespace Bookstore.Domain.Orders
             metricsLogger.PutMetric("SaleAmount", Decimal.ToDouble(order.OrderItems.Sum(x => x.Quantity * x.Book.Price)), Unit.COUNT);
             metricsLogger.PutMetric("ProcessingTime", processingTimeMilliseconds, Unit.MILLISECONDS);
 
+            metricsLogger.PutProperty("CustomerID", order.CustomerId);
+
             metricsLogger.Flush();
         }
     }
