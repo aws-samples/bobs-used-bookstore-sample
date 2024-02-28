@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using System.IO;
 using Bookstore.Web.Helpers;
+using Amazon.CloudWatch.EMF.Web;
 
 namespace Bookstore.Web.Startup
 {
@@ -40,6 +41,7 @@ namespace Bookstore.Web.Startup
             }
 
             builder.Services.AddSession();
+            builder.Services.AddEmf();
 
             return builder;
         }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Logging;
+using EMF = Amazon.CloudWatch.EMF;
 
 namespace Bookstore.Web.Startup
 {
@@ -8,6 +9,7 @@ namespace Bookstore.Web.Startup
         public static WebApplicationBuilder ConfigureObservability(this WebApplicationBuilder builder)
         {
             ConfigureLogging(builder);
+            ConfigureMetrics(builder);
 
             return builder;
         }
@@ -25,6 +27,18 @@ namespace Bookstore.Web.Startup
             {
                 builder.Logging.AddDebug(); 
             }
+        }
+
+        public static void ConfigureMetrics(this WebApplicationBuilder builder)
+        {
+            EMF.Config.EnvironmentConfigurationProvider.Config = new EMF.Config.Configuration
+            {
+                ServiceName = "BobsUsedBookstore",
+                LogGroupName = "BobsUsedBookstore/emf",
+                EnvironmentOverride = builder.Configuration["Services:MetricsService"] == "local"
+                            ? EMF.Environment.Environments.Local
+                            : EMF.Environment.Environments.Unknown
+            };
         }
     }
 }

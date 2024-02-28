@@ -1,4 +1,6 @@
-﻿using Bookstore.Domain.Carts;
+﻿using Amazon.CloudWatch.EMF.Logger;
+using Amazon.CloudWatch.EMF.Model;
+using Bookstore.Domain.Carts;
 using Bookstore.Domain.Customers;
 using Microsoft.Extensions.Logging;
 
@@ -28,16 +30,19 @@ namespace Bookstore.Domain.Orders
         private readonly IShoppingCartRepository shoppingCartRepository;
         private readonly ICustomerRepository customerRepository;
         private readonly ILogger<OrderService> logger;
+        private readonly IMetricsLogger metricsLogger;
 
         public OrderService(IOrderRepository orderRepository,
             IShoppingCartRepository shoppingCartRepository,
             ICustomerRepository customerRepository,
-            ILoggerFactory logger)
+            ILoggerFactory logger,
+            IMetricsLogger metricsLogger)
         {
             this.orderRepository = orderRepository;
             this.shoppingCartRepository = shoppingCartRepository;
             this.customerRepository = customerRepository;
             this.logger = logger.CreateLogger<OrderService>();
+            this.metricsLogger = metricsLogger; 
         }
 
         public async Task<IPaginatedList<Order>> GetOrdersAsync(OrderFilters filters, int pageIndex = 1, int pageSize = 10)
@@ -62,6 +67,7 @@ namespace Bookstore.Domain.Orders
 
         public async Task<int> CreateOrderAsync(CreateOrderDto dto)
         {
+            var watch = System.Diagnostics.Stopwatch.StartNew();
             var shoppingCart = await shoppingCartRepository.GetAsync(dto.CorrelationId);
 
             var customer = await customerRepository.GetAsync(dto.CustomerSub);
@@ -83,6 +89,8 @@ namespace Bookstore.Domain.Orders
             // are captured by the unit of work and can be persisted by called SaveChangesAsync on _any_ repository.
             await orderRepository.SaveChangesAsync();
 
+            watch.Stop();
+            EmitOrderMetrics(order, watch.ElapsedMilliseconds);
             logger.LogInformation("Created a new OrderId {orderid} for the CustomerId {customerid}", customer.Id, order.Id);
 
             return order.Id;
@@ -108,6 +116,24 @@ namespace Bookstore.Domain.Orders
             order.OrderStatus = OrderStatus.Cancelled;
 
             await orderRepository.SaveChangesAsync();
+        }
+
+        private void EmitOrderMetrics(Order order, long processingTimeMilliseconds)
+        {
+            //Add Dimensions
+            var dimensionSet = new DimensionSet();
+            dimensionSet.AddDimension("Application", "BobsUsedBookstore");
+
+            metricsLogger.SetDimensions(dimensionSet);
+
+            metricsLogger.PutMetric("NumberOfOrders", 1, Unit.COUNT);
+            metricsLogger.PutMetric("BooksSold", order.OrderItems.Count(), Unit.COUNT);
+            metricsLogger.PutMetric("SaleAmount", Decimal.ToDouble(order.OrderItems.Sum(x => x.Quantity * x.Book.Price)), Unit.COUNT);
+            metricsLogger.PutMetric("ProcessingTime", processingTimeMilliseconds, Unit.MILLISECONDS);
+
+            metricsLogger.PutProperty("CustomerID", order.CustomerId);
+
+            metricsLogger.Flush();
         }
     }
 }
