@@ -193,7 +193,7 @@ public class EC2ComputeStack : Stack
             Vpc = props.Vpc,
             VpcSubnets = new SubnetSelection { SubnetType = SubnetType.PUBLIC },
             SecurityGroup = webAppSecurityGroup,
-            InstanceType = InstanceType.Of(InstanceClass.BURSTABLE3, InstanceSize.SMALL),
+            InstanceType = Amazon.CDK.AWS.EC2.InstanceType.Of(InstanceClass.BURSTABLE3, InstanceSize.SMALL),
             MachineImage = ami,
             Role = this.Ec2Role,
             RequireImdsv2 = true,
