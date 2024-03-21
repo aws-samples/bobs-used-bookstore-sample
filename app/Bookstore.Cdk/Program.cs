@@ -1,7 +1,6 @@
-﻿using Amazon.CDK;
-using SharedInfrastructure.Production;
+﻿namespace Bookstore.Cdk;
 
-namespace SharedInfrastructure;
+using Amazon.CDK;
 
 internal sealed class Program
 {
@@ -34,7 +33,7 @@ internal sealed class Program
             Vpc = networkStack.Vpc, 
             Database = databaseStack.Database, 
             ImageBucket = coreStack.ImageBucket,
-            WebAppUserPool= coreStack.WebAppUserPool
+            WebAppUserPool = coreStack.WebAppUserPool
         });
 
         app.Synth();

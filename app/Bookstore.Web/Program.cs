@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.Hosting;
+
 using Bookstore.Web.Startup;
 
 var builder = WebApplication.CreateBuilder(args);

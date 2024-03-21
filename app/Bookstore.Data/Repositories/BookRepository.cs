@@ -88,7 +88,7 @@ namespace Bookstore.Data.Repositories
                                          x.BookType.Text.Contains(searchString) ||
                                          x.ISBN.Contains(searchString) ||
                                          x.Publisher.Text.Contains(searchString));
-            };
+            }
 
             query = sortBy switch
             {

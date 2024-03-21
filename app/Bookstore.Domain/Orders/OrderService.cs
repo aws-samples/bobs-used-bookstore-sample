@@ -18,7 +18,6 @@ namespace Bookstore.Domain.Orders
         Task UpdateOrderStatusAsync(UpdateOrderStatusDto updateOrderStatusDto);
 
         Task CancelOrderAsync(CancelOrderDto cancelOrderDto);
-
     }
 
     public class OrderService : IOrderService

@@ -1,15 +1,16 @@
+namespace Bookstore.Cdk;
+
 using Amazon.CDK;
-using Constructs;
 using Amazon.CDK.AWS.Cognito;
 using Amazon.CDK.AWS.EC2;
 using Amazon.CDK.AWS.IAM;
-using Amazon.CDK.AWS.SSM;
-using Amazon.CDK.AWS.S3.Assets;
+using Amazon.CDK.AWS.Logs;
 using Amazon.CDK.AWS.RDS;
 using Amazon.CDK.AWS.S3;
-using Amazon.CDK.AWS.Logs;
+using Amazon.CDK.AWS.S3.Assets;
+using Amazon.CDK.AWS.SSM;
 
-namespace SharedInfrastructure.Production;
+using Constructs;
 
 public class EC2ComputeStackProps : StackProps
 {
@@ -34,17 +35,17 @@ public class EC2ComputeStack : Stack
 
     internal EC2ComputeStack(Construct scope, string id, EC2ComputeStackProps props) : base(scope, id, props)
     {
-        CreateEc2Role(props);
+        this.CreateEc2Role(props);
 
-        UploadAssetsToS3();
+        this.UploadAssetsToS3();
 
-        CreateEc2Instance(props);
+        this.CreateEc2Instance(props);
 
-        ConfigureUserData();
+        this.ConfigureUserData();
 
-        CreateCognitoUserPoolClient(props);
+        this.CreateCognitoUserPoolClient(props);
 
-        _ = new CfnOutput(this, "EC2Url", new CfnOutputProps { Description = "The application URL", Value = $"https://{Instance.InstancePublicDnsName}" });
+        _ = new CfnOutput(this, "EC2Url", new CfnOutputProps { Description = "The application URL", Value = $"https://{this.Instance.InstancePublicDnsName}" });
     }
 
     internal void CreateEc2Role(EC2ComputeStackProps props)
@@ -56,7 +57,7 @@ public class EC2ComputeStack : Stack
         // CodeDeploy if we wish. The trust relationship to EC2 enables the running application
         // to obtain temporary, auto-rotating credentials for calls to service APIs made by the
         // AWS SDK for .NET, without needing to place credentials onto the compute host.
-        Ec2Role = new Role(this, "EC2Role", new RoleProps
+        this.Ec2Role = new Role(this, "EC2Role", new RoleProps
         {
             AssumedBy = new CompositePrincipal(new ServicePrincipal("ec2.amazonaws.com")),
             ManagedPolicies = new[]
@@ -68,7 +69,7 @@ public class EC2ComputeStack : Stack
 
         // Access to read parameters by path is not in the AmazonSSMManagedInstanceCore
         // managed policy
-        Ec2Role.AddToPolicy(new PolicyStatement(new PolicyStatementProps
+        this.Ec2Role.AddToPolicy(new PolicyStatement(new PolicyStatementProps
         {
             Effect = Effect.ALLOW,
             Actions = new[] { "ssm:GetParametersByPath" },
@@ -86,7 +87,7 @@ public class EC2ComputeStack : Stack
         // Provide permission to allow access to Amazon Rekognition for processing uploaded
         // book images. Credentials for the calls will be provided courtesy of the application
         // role defined above, and the trust relationship with EC2.
-        Ec2Role.AddToPolicy(new PolicyStatement(new PolicyStatementProps
+        this.Ec2Role.AddToPolicy(new PolicyStatement(new PolicyStatementProps
         {
             Effect = Effect.ALLOW,
             Actions = new[] { "rekognition:DetectModerationLabels" },
@@ -94,7 +95,7 @@ public class EC2ComputeStack : Stack
         }));
 
         // Add permissions for the app to retrieve the database password in Secrets Manager
-        Ec2Role.AddToPolicy(new PolicyStatement(new PolicyStatementProps
+        this.Ec2Role.AddToPolicy(new PolicyStatement(new PolicyStatementProps
         {
             Effect = Effect.ALLOW,
             Actions = new[]
@@ -109,7 +110,7 @@ public class EC2ComputeStack : Stack
         }));
 
         // Add permissions to the app to access the S3 image bucket
-        props.ImageBucket.GrantReadWrite(Ec2Role);
+        props.ImageBucket.GrantReadWrite(this.Ec2Role);
 
         // Create an Amazon CloudWatch log group for the website
         _ = new LogGroup(this, $"{Constants.AppName}LogGroup", new LogGroupProps
@@ -119,7 +120,7 @@ public class EC2ComputeStack : Stack
         });
 
         // Add permissions to write logs
-        Ec2Role.AddToPolicy(new PolicyStatement(new PolicyStatementProps
+        this.Ec2Role.AddToPolicy(new PolicyStatement(new PolicyStatementProps
         {
             Effect = Effect.ALLOW,
             Actions = new[]
@@ -138,35 +139,35 @@ public class EC2ComputeStack : Stack
 
     internal void UploadAssetsToS3()
     {
-        ServerConfigScriptAsset = new Asset(this, "ServerConfigScriptAsset", new AssetProps
+        this.ServerConfigScriptAsset = new Asset(this, "ServerConfigScriptAsset", new AssetProps
         {
             Path = "app/Bookstore.Cdk/EC2Artifacts/configure_ec2_web_app.sh"
         });
-        ServerConfigScriptAsset.GrantRead(Ec2Role);
+        this.ServerConfigScriptAsset.GrantRead(this.Ec2Role);
 
-        WebAppAsset = new Asset(this, "WebAppAsset", new AssetProps
+        this.WebAppAsset = new Asset(this, "WebAppAsset", new AssetProps
         {
             Path = "app/Bookstore.Web/bin/Release/net6.0/publish"
         });
-        WebAppAsset.GrantRead(Ec2Role);
+        this.WebAppAsset.GrantRead(this.Ec2Role);
 
-        SslConfigAsset = new Asset(this, "ApacheSSLConfigAsset", new AssetProps
+        this.SslConfigAsset = new Asset(this, "ApacheSSLConfigAsset", new AssetProps
         {
             Path = "app/Bookstore.Cdk/EC2Artifacts/ssl.conf"
         });
-        SslConfigAsset.GrantRead(Ec2Role);
+        this.SslConfigAsset.GrantRead(this.Ec2Role);
 
-        WebAppVirtualHostConfigAsset = new Asset(this, "WebAppVirtualHostConfigAsset", new AssetProps
+        this.WebAppVirtualHostConfigAsset = new Asset(this, "WebAppVirtualHostConfigAsset", new AssetProps
         {
             Path = "app/Bookstore.Cdk/EC2Artifacts/bobsbookstore.conf"
         });
-        WebAppVirtualHostConfigAsset.GrantRead(Ec2Role);
+        this.WebAppVirtualHostConfigAsset.GrantRead(this.Ec2Role);
 
-        KestrelServiceAsset = new Asset(this, "KestrelServiceAsset", new AssetProps
+        this.KestrelServiceAsset = new Asset(this, "KestrelServiceAsset", new AssetProps
         {
             Path = "app/Bookstore.Cdk/EC2Artifacts/bobsbookstore.service"
         });
-        KestrelServiceAsset.GrantRead(Ec2Role);
+        this.KestrelServiceAsset.GrantRead(this.Ec2Role);
     }
 
     internal void CreateEc2Instance(EC2ComputeStackProps props)
@@ -187,14 +188,14 @@ public class EC2ComputeStack : Stack
         webAppSecurityGroup.AddIngressRule(Peer.AnyIpv4(), Port.Tcp(443), "HTTPS access");
         webAppSecurityGroup.Connections.AllowTo(props.Database, Port.Tcp(1433), "Database");
 
-        Instance = new Instance_(this, "WebServer", new Amazon.CDK.AWS.EC2.InstanceProps
+        this.Instance = new Instance_(this, "WebServer", new Amazon.CDK.AWS.EC2.InstanceProps
         {
             Vpc = props.Vpc,
             VpcSubnets = new SubnetSelection { SubnetType = SubnetType.PUBLIC },
             SecurityGroup = webAppSecurityGroup,
-            InstanceType = InstanceType.Of(InstanceClass.BURSTABLE3, InstanceSize.SMALL),
+            InstanceType = Amazon.CDK.AWS.EC2.InstanceType.Of(InstanceClass.BURSTABLE3, InstanceSize.SMALL),
             MachineImage = ami,
-            Role = Ec2Role,
+            Role = this.Ec2Role,
             RequireImdsv2 = true,
             UserDataCausesReplacement = true
         });
@@ -202,37 +203,37 @@ public class EC2ComputeStack : Stack
 
     internal void ConfigureUserData()
     {
-        var serverConfigScriptFilePath = Instance.UserData.AddS3DownloadCommand(new S3DownloadOptions
+        var serverConfigScriptFilePath = this.Instance.UserData.AddS3DownloadCommand(new S3DownloadOptions
         {
-            Bucket = ServerConfigScriptAsset.Bucket,
-            BucketKey = ServerConfigScriptAsset.S3ObjectKey
+            Bucket = this.ServerConfigScriptAsset.Bucket,
+            BucketKey = this.ServerConfigScriptAsset.S3ObjectKey
         });
 
-        var webAppFilePath = Instance.UserData.AddS3DownloadCommand(new S3DownloadOptions
+        var webAppFilePath = this.Instance.UserData.AddS3DownloadCommand(new S3DownloadOptions
         {
-            Bucket = WebAppAsset.Bucket,
-            BucketKey = WebAppAsset.S3ObjectKey
+            Bucket = this.WebAppAsset.Bucket,
+            BucketKey = this.WebAppAsset.S3ObjectKey
         });
 
-        var sslConfigFilePath = Instance.UserData.AddS3DownloadCommand(new S3DownloadOptions
+        var sslConfigFilePath = this.Instance.UserData.AddS3DownloadCommand(new S3DownloadOptions
         {
-            Bucket = SslConfigAsset.Bucket,
-            BucketKey = SslConfigAsset.S3ObjectKey
+            Bucket = this.SslConfigAsset.Bucket,
+            BucketKey = this.SslConfigAsset.S3ObjectKey
         });
 
-        var webAppConfigVirtualHostFilePath = Instance.UserData.AddS3DownloadCommand(new S3DownloadOptions
+        var webAppConfigVirtualHostFilePath = this.Instance.UserData.AddS3DownloadCommand(new S3DownloadOptions
         {
-            Bucket = WebAppVirtualHostConfigAsset.Bucket,
-            BucketKey = WebAppVirtualHostConfigAsset.S3ObjectKey
+            Bucket = this.WebAppVirtualHostConfigAsset.Bucket,
+            BucketKey = this.WebAppVirtualHostConfigAsset.S3ObjectKey
         });
 
-        var kestrelServiceFilPath = Instance.UserData.AddS3DownloadCommand(new S3DownloadOptions
+        var kestrelServiceFilPath = this.Instance.UserData.AddS3DownloadCommand(new S3DownloadOptions
         {
-            Bucket = KestrelServiceAsset.Bucket,
-            BucketKey = KestrelServiceAsset.S3ObjectKey
+            Bucket = this.KestrelServiceAsset.Bucket,
+            BucketKey = this.KestrelServiceAsset.S3ObjectKey
         });
 
-        Instance.UserData.AddExecuteFileCommand(new ExecuteFileOptions
+        this.Instance.UserData.AddExecuteFileCommand(new ExecuteFileOptions
         {
             FilePath = serverConfigScriptFilePath,
             Arguments = $"{webAppFilePath} {sslConfigFilePath} {webAppConfigVirtualHostFilePath} {kestrelServiceFilPath}"
@@ -269,11 +270,11 @@ public class EC2ComputeStack : Stack
                 },
                 CallbackUrls = new[]
                 {
-                    $"https://{Instance.InstancePublicDnsName}/signin-oidc"
+                    $"https://{this.Instance.InstancePublicDnsName}/signin-oidc"
                 },
                 LogoutUrls = new[]
                 {
-                    $"https://{Instance.InstancePublicDnsName}/"
+                    $"https://{this.Instance.InstancePublicDnsName}/"
                 }
             }
         });

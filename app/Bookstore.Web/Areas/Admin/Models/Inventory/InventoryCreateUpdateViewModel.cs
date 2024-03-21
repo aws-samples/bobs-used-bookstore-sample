@@ -79,8 +79,8 @@ namespace Bookstore.Web.Areas.Admin.Models.Inventory
         [Required]
         public int Quantity { get; set; } = 1;
 
-        [MaxFileSize(2*1024*1024)]
-        [ImageTypes(new string[] {".png", ".jpg", ".jpeg"})]
+        [MaxFileSize(2 * 1024 * 1024)]
+        [ImageTypes(new[] { ".png", ".jpg", ".jpeg" })]
         [DisplayName("Cover image")]
         public IFormFile CoverImage { get; set; }
         
@@ -90,19 +90,20 @@ namespace Bookstore.Web.Areas.Admin.Models.Inventory
 
         public void AddReferenceData(IEnumerable<ReferenceDataItem> referenceDataItems)
         {
-            BookConditions = referenceDataItems
+            var dataItems = referenceDataItems.ToList();
+            BookConditions = dataItems
                 .Where(x => x.DataType == ReferenceDataType.Condition)
                 .Select(x => new SelectListItem(x.Text, x.Id.ToString()));
 
-            BookTypes = referenceDataItems
+            BookTypes = dataItems
                 .Where(x => x.DataType == ReferenceDataType.BookType)
                 .Select(x => new SelectListItem(x.Text, x.Id.ToString()));
 
-            Genres = referenceDataItems
+            Genres = dataItems
                 .Where(x => x.DataType == ReferenceDataType.Genre)
                 .Select(x => new SelectListItem(x.Text, x.Id.ToString()));
 
-            Publishers = referenceDataItems
+            Publishers = dataItems
                 .Where(x => x.DataType == ReferenceDataType.Publisher)
                 .Select(x => new SelectListItem(x.Text, x.Id.ToString()));
         }

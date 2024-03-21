@@ -1,10 +1,11 @@
+namespace Bookstore.Cdk;
+
 using Amazon.CDK;
-using Constructs;
 using Amazon.CDK.AWS.EC2;
 using Amazon.CDK.AWS.RDS;
 using Amazon.CDK.AWS.SSM;
 
-namespace SharedInfrastructure.Production;
+using Constructs;
 
 public class DatabaseStackProps : StackProps
 {
@@ -25,7 +26,7 @@ public class DatabaseStack : Stack
             Description = "Allow access to the SQL Server instance from the website",
         });
 
-        Database = new DatabaseInstance(this, $"{Constants.AppName}SqlDb", new DatabaseInstanceProps
+        this.Database = new DatabaseInstance(this, $"{Constants.AppName}SqlDb", new DatabaseInstanceProps
         {
             Vpc = props.Vpc,
             VpcSubnets = new SubnetSelection
@@ -41,11 +42,11 @@ public class DatabaseStack : Stack
             StorageType = StorageType.GP3,
             AllocatedStorage = 20,            
             Port = DatabasePort,
-            SecurityGroups = new[]
+            SecurityGroups = new ISecurityGroup[]
             {
                 dbSG
             },
-            InstanceType = InstanceType.Of(InstanceClass.BURSTABLE2, InstanceSize.MICRO),
+            InstanceType = Amazon.CDK.AWS.EC2.InstanceType.Of(InstanceClass.BURSTABLE2, InstanceSize.MICRO),
             InstanceIdentifier = $"{Constants.AppName}Database",
             // As this is a sample app, turn off automated backups to avoid any storage costs
             // of automated backup snapshots. It also helps the stack launch a little faster by
@@ -59,7 +60,7 @@ public class DatabaseStack : Stack
         _ = new StringParameter(this, $"{Constants.AppName}DbSecret", new StringParameterProps
         {
             ParameterName = $"/{Constants.AppName}/dbsecretsname",
-            StringValue = Database.Secret.SecretName
+            StringValue = this.Database.Secret.SecretName
         });
     }
 }
