@@ -10,6 +10,7 @@ namespace Bookstore.Web.Controllers
     public class AddressController : Controller
     {
         private readonly IAddressService addressService;
+        private readonly IAddressService addressService2;
 
         public AddressController(IAddressService addressService)
         {
