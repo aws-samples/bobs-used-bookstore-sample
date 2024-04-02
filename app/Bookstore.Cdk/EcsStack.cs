@@ -5,10 +5,8 @@ using Amazon.CDK.AWS.ECS;
 using Amazon.CDK.AWS.ECS.Patterns;
 using Amazon.CDK.AWS.S3;
 using Constructs;
-using Amazon.CDK.AWS.Cognito;
 using Amazon.CDK.AWS.IAM;
 using Amazon.CDK.AWS.RDS;
-using Amazon.CDK.AWS.SSM;
 using Bookstore.Common;
 using HealthCheck = Amazon.CDK.AWS.ElasticLoadBalancingV2.HealthCheck;
 
@@ -21,8 +19,6 @@ public class EcsStackProps : StackProps
     public DatabaseInstance Database { get; set; }
 
     public Bucket ImageBucket { get; set; }
-
-    public UserPool WebAppUserPool { get; set; }
 }
 
 public class EcsStack : Stack
@@ -30,8 +26,6 @@ public class EcsStack : Stack
     internal EcsStack(Construct scope, string id, EcsStackProps props) : base(scope, id, props)
     {
         var service = CreateEcsStack(props);
-
-        CreateCognitoUserPoolClient(service, props);
 
         CreateEcsPermissions(service, props);
     }
@@ -74,55 +68,6 @@ public class EcsStack : Stack
         };
 
         return service;
-    }
-
-    internal void CreateCognitoUserPoolClient(ApplicationLoadBalancedFargateService service, EcsStackProps props)
-    {
-        var ecsUserPoolClient = new UserPoolClient(this, "CognitoECSAppClient", new UserPoolClientProps
-        {
-            UserPool = props.WebAppUserPool,
-            GenerateSecret = false,
-            PreventUserExistenceErrors = true,
-            SupportedIdentityProviders = new[]
-            {
-                    UserPoolClientIdentityProvider.COGNITO
-                },
-            AuthFlows = new AuthFlow
-            {
-                UserPassword = true
-            },
-            OAuth = new OAuthSettings
-            {
-                Flows = new OAuthFlows
-                {
-                    AuthorizationCodeGrant = true
-                },
-                Scopes = new[]
-                {
-                        OAuthScope.OPENID,
-                        OAuthScope.EMAIL,
-                        OAuthScope.COGNITO_ADMIN,
-                        OAuthScope.PROFILE
-                    },
-                CallbackUrls = new[]
-                {
-                        $"https://{service.LoadBalancer.LoadBalancerDnsName}/signin-oidc"
-                    },
-                LogoutUrls = new[]
-                {
-                        $"https://{service.LoadBalancer.LoadBalancerDnsName}/"
-                    }
-            }
-        });
-
-        _ = new[]
-        {
-                new StringParameter(this, "CognitoECSAppClientSSMParameter", new StringParameterProps
-                {
-                    ParameterName = $"/{Constants.AppName}/Authentication/Cognito/ECSClientId",
-                    StringValue = ecsUserPoolClient.UserPoolClientId
-                })
-            };
     }
 
     internal void CreateEcsPermissions(ApplicationLoadBalancedFargateService service, EcsStackProps props)

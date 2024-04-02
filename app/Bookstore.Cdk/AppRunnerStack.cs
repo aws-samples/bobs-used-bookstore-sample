@@ -6,8 +6,11 @@ using Amazon.CDK.AWS.Ecr.Assets;
 using Amazon.CDK.AWS.IAM;
 using Amazon.CDK.AWS.RDS;
 using Amazon.CDK.AWS.S3;
+using Amazon.CDK.AWS.SSM;
+using Amazon.CDK.CustomResources;
 using Bookstore.Common;
 using Constructs;
+using System.Collections.Generic;
 
 namespace Bookstore.Cdk;
 
@@ -39,7 +42,11 @@ public class AppRunnerStack : Stack
 
         CreateDockerImage();
 
-        CreateAppRunnerService(props);
+        var appRunnerService = CreateAppRunnerService(props);
+
+        CreateCognitoUserPoolClient(appRunnerService, props);
+
+        //UpdateAppRunnerEnvironmentVariables(props.WebAppUserPool, userPoolClient, appRunnerService);
     }
 
     internal void CreateAppRunnerSecurityGroup(AppRunnerStackProps props)
@@ -126,7 +133,7 @@ public class AppRunnerStack : Stack
         });
     }
 
-    private void CreateAppRunnerService(AppRunnerStackProps props)
+    private Service CreateAppRunnerService(AppRunnerStackProps props)
     {
         var appRunnerService = new Service(this, "AppRunnerService", new ServiceProps
         {
@@ -144,10 +151,61 @@ public class AppRunnerStack : Stack
             })
         });
 
-        appRunnerService.AddEnvironmentVariable("Services:Authentication", "local");
+        appRunnerService.AddEnvironmentVariable("Services:Authentication", "aws");
         appRunnerService.AddEnvironmentVariable("Services:Database", "aws");
         appRunnerService.AddEnvironmentVariable("Services:FileService", "aws");
         appRunnerService.AddEnvironmentVariable("Services:ImageValidationService", "aws");
         appRunnerService.AddEnvironmentVariable("Services:LoggingService", "aws");
+        appRunnerService.AddEnvironmentVariable("Cognito:ClientIdSSMParameterName", "Cognito:AppRunnerClientId");
+
+        return appRunnerService;
+    }
+
+    internal UserPoolClient CreateCognitoUserPoolClient(Service appRunnerService, AppRunnerStackProps props)
+    {
+        var appRunnerUserPoolClient = new UserPoolClient(this, "AppRunnerClient", new UserPoolClientProps
+        {
+            UserPool = props.WebAppUserPool,
+            GenerateSecret = false,
+            PreventUserExistenceErrors = true,
+            SupportedIdentityProviders = new[]
+            {
+                UserPoolClientIdentityProvider.COGNITO
+            },
+            AuthFlows = new AuthFlow
+            {
+                UserPassword = true
+            },
+            OAuth = new OAuthSettings
+            {
+                Flows = new OAuthFlows
+                {
+                    AuthorizationCodeGrant = true
+                },
+                Scopes = new[]
+                {
+                    OAuthScope.OPENID,
+                    OAuthScope.EMAIL,
+                    OAuthScope.COGNITO_ADMIN,
+                    OAuthScope.PROFILE
+                },
+                CallbackUrls = new[]
+                {
+                    $"https://{appRunnerService.ServiceUrl}/signin-oidc"
+                },
+                LogoutUrls = new[]
+                {
+                    $"https://{appRunnerService.ServiceUrl}/"
+                }
+            }
+        });
+
+        _ = new StringParameter(this, "CognitoAppRunnerUserPoolClientSSMParameter", new StringParameterProps
+        {
+            ParameterName = $"/{Constants.AppName}/Authentication/Cognito/AppRunnerClientId",
+            StringValue = appRunnerUserPoolClient.UserPoolClientId
+        });
+
+        return appRunnerUserPoolClient;
     }
 }

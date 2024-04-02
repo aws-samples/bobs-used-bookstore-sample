@@ -15,7 +15,7 @@ internal sealed class Program
         var networkStack = new NetworkStack(app, $"{Constants.AppName}Network", new StackProps { Env = env });
         var databaseStack = new DatabaseStack(app, $"{Constants.AppName}Database", new DatabaseStackProps { Env = env, Vpc = networkStack.Vpc });
         var appRunnerStack = new AppRunnerStack(app, $"{Constants.AppName}AppRunner", new AppRunnerStackProps {  Env = env, Vpc = networkStack.Vpc, Database = databaseStack.Database, ImageBucket = coreStack.ImageBucket, WebAppUserPool = coreStack.WebAppUserPool });
-        var ecsStack = new EcsStack(app, $"{Constants.AppName}ECS", new EcsStackProps { Env = env, Vpc = networkStack.Vpc, Database = databaseStack.Database, ImageBucket = coreStack.ImageBucket, WebAppUserPool = coreStack.WebAppUserPool });
+        var ecsStack = new EcsStack(app, $"{Constants.AppName}ECS", new EcsStackProps { Env = env, Vpc = networkStack.Vpc, Database = databaseStack.Database, ImageBucket = coreStack.ImageBucket });
 
         app.Synth();
     }
