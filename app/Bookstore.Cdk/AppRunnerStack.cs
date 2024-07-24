@@ -157,6 +157,7 @@ public class AppRunnerStack : Stack
         appRunnerService.AddEnvironmentVariable("Services:ImageValidationService", "aws");
         appRunnerService.AddEnvironmentVariable("Services:LoggingService", "aws");
         appRunnerService.AddEnvironmentVariable("Cognito:ClientIdSSMParameterName", "Cognito:AppRunnerClientId");
+        appRunnerService.AddEnvironmentVariable("ASPNETCORE_HTTP_PORTS", "80");  // .NET8 default port changed to 8080. Instructing to use 80 https://learn.microsoft.com/en-us/dotnet/core/compatibility/containers/8.0/aspnet-port     
 
         return appRunnerService;
     }

@@ -38,8 +38,8 @@ namespace Bookstore.Web.Controllers
 
             var userCookie = new CookieOptions { Secure = false, Expires = DateTime.Now.AddDays(-1) };
 
-            Response.Cookies.Append("BobsUsedBooks", string.Empty, userCookie);
-
+            await Task.Run(() => Response.Cookies.Append("BobsUsedBooks", string.Empty, userCookie));
+            
             return RedirectToAction("Index", "Home");
         }
 
