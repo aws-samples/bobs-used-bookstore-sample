@@ -36,7 +36,7 @@ public static class AuthenticationSetup
 
     private static WebApplicationBuilder ConfigureCognitoAuthentication(WebApplicationBuilder builder)
     {
-        JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+        Microsoft.IdentityModel.JsonWebTokens.JsonWebTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
         builder.Services
             .AddAuthentication(x =>
@@ -68,8 +68,10 @@ public static class AuthenticationSetup
     {
         var clientSsmParameterName = configuration["Cognito:ClientIdSSMParameterName"];
 
+        Console.WriteLine("clientSsmParameterName: {0}", clientSsmParameterName);
         if (clientSsmParameterName == null) throw new ArgumentNullException("configuration[\"Cognito:ClientIdSSMParameterName\"]");
 
+        Console.WriteLine("configuration[clientSsmParameterName]: {0}", configuration[clientSsmParameterName]);
         return configuration[clientSsmParameterName];
     }
 
@@ -96,8 +98,8 @@ public static class AuthenticationSetup
         var dto = new CreateOrUpdateCustomerDto(
             context.Principal.GetSub(),
             context.Principal.Identity.Name,
-            context.Principal.FindFirst("given_name").Value,
-            context.Principal.FindFirst("family_name").Value);
+            context.Principal.FindFirst("given_name")?.Value,
+            context.Principal.FindFirst("family_name")?.Value);
 
         await customerService.CreateOrUpdateCustomerAsync(dto);
     }
