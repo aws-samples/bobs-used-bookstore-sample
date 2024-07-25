@@ -68,10 +68,8 @@ public static class AuthenticationSetup
     {
         var clientSsmParameterName = configuration["Cognito:ClientIdSSMParameterName"];
 
-        Console.WriteLine("clientSsmParameterName: {0}", clientSsmParameterName);
         if (clientSsmParameterName == null) throw new ArgumentNullException("configuration[\"Cognito:ClientIdSSMParameterName\"]");
 
-        Console.WriteLine("configuration[clientSsmParameterName]: {0}", configuration[clientSsmParameterName]);
         return configuration[clientSsmParameterName];
     }
 
