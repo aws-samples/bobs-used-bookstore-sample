@@ -33,7 +33,7 @@ public class DatabaseStack : Stack
             {
                 SubnetType = SubnetType.PRIVATE_WITH_EGRESS
             },
-            // SQL Server 2017 Express Edition, in conjunction with a db.t2.micro instance type,
+            // SQL Server 2017 Express Edition, in conjunction with a db.t3.micro instance type,
             // fits inside the free tier for new accounts
             Engine = DatabaseInstanceEngine.SqlServerEx(new SqlServerExInstanceEngineProps
             {
@@ -46,7 +46,7 @@ public class DatabaseStack : Stack
             {
                 dbSG
             },
-            InstanceType = Amazon.CDK.AWS.EC2.InstanceType.Of(InstanceClass.BURSTABLE2, InstanceSize.MICRO),
+            InstanceType = Amazon.CDK.AWS.EC2.InstanceType.Of(InstanceClass.BURSTABLE3, InstanceSize.MICRO),
             InstanceIdentifier = $"{Constants.AppName}Database",
             // As this is a sample app, turn off automated backups to avoid any storage costs
             // of automated backup snapshots. It also helps the stack launch a little faster by
