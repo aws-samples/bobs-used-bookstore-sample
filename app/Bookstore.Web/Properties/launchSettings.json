@@ -2,24 +2,24 @@
   "profiles": {
     "Local": {
       "commandName": "Project",
-      "launchBrowser": true,
+      "launchBrowser": false,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
       "dotnetRunMessages": true,
-      "applicationUrl": "https://localhost:5000;http://localhost:5001"
+      "applicationUrl": "http://localhost:5001"
     },
     "Integrated": {
       "commandName": "Project",
-      "launchBrowser": true,
+      "launchBrowser": false,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Test"
       },
       "dotnetRunMessages": true,
-      "applicationUrl": "https://localhost:5000;http://localhost:5001",
+      "applicationUrl": "http://localhost:5001",
       "IIS Express": {
         "commandName": "IISExpress",
-        "launchBrowser": true,
+        "launchBrowser": false,
         "environmentVariables": {
           "ASPNETCORE_ENVIRONMENT": "Development"
         }
