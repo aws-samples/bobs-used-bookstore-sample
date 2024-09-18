@@ -7,7 +7,7 @@
     <partial name="_Notification" />
 
     <h2 class="mb-3">Search for Books</h2>
-    
+
     <form asp-controller="Search" asp-action="Index" method="get">
         <div class="row">
             <div class="col-7">
@@ -47,7 +47,8 @@
                             <div class="col-md-3">
                                 <div class="item text-center">
                                     <a asp-controller="Search" asp-action="Details" asp-route-id="@item.BookId">
-                                        <img src="@Html.DisplayFor(modelItem => item.ImageUrl)" alt="img" class="book_image_size" onerror="this.onerror=null;this.src='/images/default_c.jpg';" style="width: 135px;height: 200px;">
+                                        <img src="@Html.DisplayFor(modelItem => item.ImageUrl)" alt="img"
+                                            class="book_image_size" style="width: 135px;height: 200px;">
                                     </a>
 
                                     <center>

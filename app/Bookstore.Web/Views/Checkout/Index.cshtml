@@ -27,58 +27,59 @@
     <form method="post">
         <table class="table">
             <thead>
-            <tr>
-                <th></th>
-                <th>Address Line 1</th>
-                <th>Address Line 2</th>
-                <th>City</th>
-                <th>State</th>
-                <th>Country</th>
-                <th>ZipCode</th>
-                <th></th>
-            </tr>
+                <tr>
+                    <th></th>
+                    <th>Address Line 1</th>
+                    <th>Address Line 2</th>
+                    <th>City</th>
+                    <th>State</th>
+                    <th>Country</th>
+                    <th>ZipCode</th>
+                    <th></th>
+                </tr>
             </thead>
             <tbody>
 
-            @foreach (var address in Model.Addresses)
-            {
-                <tr>
-                    <td>
-                        <input type="radio" asp-for="@Model.SelectedAddressId" value="@address.Id" />
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => address.AddressLine1)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => address.AddressLine2)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => address.City)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => address.State)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => address.Country)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => address.ZipCode)
-                    </td>
-                    <td>
-                        <a asp-action="Update" asp-controller="Address" asp-route-id="@address.Id" asp-route-returnUrl="@Url.Action()">Edit</a>
-                    </td>
-                </tr>
-            }
+                @foreach (var address in Model.Addresses)
+                {
+                    <tr>
+                        <td>
+                            <input type="radio" asp-for="@Model.SelectedAddressId" value="@address.Id" />
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => address.AddressLine1)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => address.AddressLine2)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => address.City)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => address.State)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => address.Country)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => address.ZipCode)
+                        </td>
+                        <td>
+                            <a asp-action="Update" asp-controller="Address" asp-route-id="@address.Id"
+                                asp-route-returnUrl="@Url.Action()">Edit</a>
+                        </td>
+                    </tr>
+                }
 
-            @if (Model.Addresses.Count() == 0)
-            {
-                <input type="submit" value="Finish your order" class="btn" disabled />
-                <p style="color:red"> Add an Address to proceed to checkout </p>
-            }
-            else
-            {
-                <input type="submit" value="Finish your order" class="btn" />
-            }
+                @if (Model.Addresses.Count() == 0)
+                {
+                    <input type="submit" value="Finish your order" class="btn" disabled />
+                    <p style="color:red"> Add an Address to proceed to checkout </p>
+                }
+                else
+                {
+                    <input type="submit" value="Finish your order" class="btn" />
+                }
             </tbody>
         </table>
     </form>
@@ -91,33 +92,33 @@
 
     <table class="table">
         <thead>
-        <tr>
-            <th>Cover</th>
-            <th>name</th>
-            <th>price</th>
-        </tr>
+            <tr>
+                <th>Cover</th>
+                <th>name</th>
+                <th>price</th>
+            </tr>
         </thead>
         <tbody>
-        @foreach (var item in Model.ShoppingCartItems)
-        {
-            <tr>
-                <td>
-                    <img src="@item.ImageUrl" height="80" width="50" onerror="this.onerror=null;this.src='/images/default_c.jpg';" />
-                </td>
-                <td>
-                    <span class="@(item.OutOfStock ? "text-danger" : "")">@item.BookName</span>
+            @foreach (var item in Model.ShoppingCartItems)
+            {
+                <tr>
+                    <td>
+                        <img src="@item.ImageUrl" height="80" width="50" />
+                    </td>
+                    <td>
+                        <span class="@(item.OutOfStock ? "text-danger" : "")">@item.BookName</span>
 
-                    @if (item.OutOfStock)
-                    {
-                        <p class="text-danger"><small>Out of stock</small></p>
-                    }
-                </td>
+                        @if (item.OutOfStock)
+                        {
+                            <p class="text-danger"><small>Out of stock</small></p>
+                        }
+                    </td>
 
-                <td>
-                    <span style="@(item.OutOfStock ? "text-decoration: line-through;":"")">$@item.Price</span>
-                </td>
-            </tr>
-        }
+                    <td>
+                        <span style="@(item.OutOfStock ? "text-decoration: line-through;":"")">$@item.Price</span>
+                    </td>
+                </tr>
+            }
         </tbody>
     </table>
 </div>

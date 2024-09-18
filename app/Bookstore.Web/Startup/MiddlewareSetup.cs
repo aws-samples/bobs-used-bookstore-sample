@@ -12,6 +12,14 @@ namespace Bookstore.Web.Startup
         {
             app.Use((context, next) =>
             {
+                context.Request.PathBase = "/proxy/5001";
+                return next();
+            });
+
+            app.UsePathBase("/proxy/5001");
+
+            app.Use((context, next) =>
+            {
                 context.Request.Scheme = "https";
                 return next(context);
             });

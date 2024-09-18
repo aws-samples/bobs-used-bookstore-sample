@@ -35,37 +35,37 @@
         <form method="post">
             @if (!User.Identity.IsAuthenticated)
             {
-                <p>Please log in to complete your order.</p>
-                <a class="btn" asp-action="Login" asp-controller="Authentication">Log In</a>
+                    <p>Please log in to complete your order.</p>
+                    <a class="btn" asp-action="Login" asp-controller="Authentication">Log In</a>
             }
             else
             {
-                <a class="btn" asp-action="Index" asp-controller="Checkout">Check Out</a>
+                    <a class="btn" asp-action="Index" asp-controller="Checkout">Check Out</a>
             }
 
             <table class="table">
                 <tbody>
                     @foreach (var item in Model.ShoppingCartItems)
                     {
-                        <tr>
-                            <td>
-                                <img src="@Html.DisplayFor(modelitem => item.ImageUrl)" onerror="this.onerror=null;this.src='/images/default_c.jpg';" style="max-width: 75px;max-height: 75px;" />
-                            </td>
-                            <td>
-                                <span class="@(item.StockLevel <= 0 ? "text-danger" : "")">@item.BookName</span>
+                            <tr>
+                                <td>
+                                    <img src="@Html.DisplayFor(modelitem => item.ImageUrl)" style="max-width: 75px;max-height: 75px;" />
+                                </td>
+                                <td>
+                                    <span class="@(item.StockLevel <= 0 ? "text-danger" : "")">@item.BookName</span>
 
                                 @if (item.StockLevel <= 5)
                                 {
-                                    <p class="text-danger"><small>@(item.StockLevel <= 0 ? "Out of stock" : $"Hurry, only {item.StockLevel} left!")</small></p>
+                                            <p class="text-danger"><small>@(item.StockLevel <= 0 ? "Out of stock" : $"Hurry, only {item.StockLevel} left!")</small></p>
                                 }
-                            </td>
-                            <td>
+                                </td>
+                                <td>
                                 @item.Price.ToString("C")
-                            </td>
-                            <td>
-                                <button type="button" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" data-shoppingCartItemId="@item.ShoppingCartItemId">Remove</button>
-                            </td>
-                        </tr>
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" data-shoppingCartItemId="@item.ShoppingCartItemId">Remove</button>
+                                </td>
+                            </tr>
                     }
                 </tbody>
             </table>
@@ -95,17 +95,17 @@
 </div>
 
 @section Scripts {
-    <script type="text/javascript">
-        $(function () {
+        <script type="text/javascript">
+            $(function () {
 
-            $('#confirmDeleteModal').on('show.bs.modal', function (event) {
-                var modal = $(this);
-                var formAction = modal.find('#confirmDeleteButton').attr("formaction");
-                var shoppingCartItemId = $(event.relatedTarget).data('shoppingcartitemid');
+                $('#confirmDeleteModal').on('show.bs.modal', function (event) {
+                    var modal = $(this);
+                    var formAction = modal.find('#confirmDeleteButton').attr("formaction");
+                    var shoppingCartItemId = $(event.relatedTarget).data('shoppingcartitemid');
 
-                modal.find('#confirmDeleteButton').attr("formaction", formAction + "?shoppingCartItemId=" + shoppingCartItemId);
+                    modal.find('#confirmDeleteButton').attr("formaction", formAction + "?shoppingCartItemId=" + shoppingCartItemId);
+                });
+
             });
-
-        });
-    </script>
+        </script>
 }

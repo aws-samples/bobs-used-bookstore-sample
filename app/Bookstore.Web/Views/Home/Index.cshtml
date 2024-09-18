@@ -7,15 +7,18 @@
 <div class="panel-body">
     <section class="about-sec">
         <div class="about-img">
-            <figure style="background:url(/images/register.jpg)no-repeat;"></figure>
+            <figure style="background:url(images/register.jpg)no-repeat;"></figure>
         </div>
         <div class="about-content">
             <h2>Welcome!</h2>
-            <p>                
-                Welcome to Bob’s Used Books, your online destination for finding great deals on pre-loved books of all genres and topics. 
-                Whether you’re looking for a classic novel, a rare edition, a textbook, or a cookbook, you'll find it here. 
+            <p>
+                Welcome to Bob’s Used Books, your online destination for finding great deals on pre-loved books of all
+                genres and topics.
+                Whether you’re looking for a classic novel, a rare edition, a textbook, or a cookbook, you'll find it
+                here.
             </p>
-            <p>You can also sell your own books to us and earn some extra cash. At Bob’s Used Books, we believe that every book deserves a second chance.</p>
+            <p>You can also sell your own books to us and earn some extra cash. At Bob’s Used Books, we believe that
+                every book deserves a second chance.</p>
             <p>Shop with us today and discover the joy of reading!</p>
             <div class="btn-sec">
                 <a class="btn black" asp-area="" asp-controller="Search" asp-action="Index">Shop Books</a>
@@ -24,36 +27,36 @@
     </section>
 
     <section class="recomended-sec">
-            <div class="title">
-                <h2>Best Sellers</h2>
-                <hr>
-            </div>
+        <div class="title">
+            <h2>Best Sellers</h2>
+            <hr>
+        </div>
 
-            <div class="row justify-content-center">
-                @if (Model.Books.Count > 0)
+        <div class="row justify-content-center">
+            @if (Model.Books.Count > 0)
+            {
+                foreach (var book in Model.Books)
                 {
-                    foreach (var book in Model.Books)
-                    {
-                        <div class="col-lg-3 col-md-6">
-                            <div class="item">
-                                <img src="@book.CoverImageUrl" alt="img" class="book_image" onerror="this.onerror=null;this.src='/images/default_c.jpg';">
-                                <p>@book.BookName</p>
-                                <div class="hover">
-                                    <a asp-controller="Search" asp-action="Details" asp-route-id="@book.BookId">
-                                        <span>
-                                            <i class="bi bi-arrow-right"></i>
-                                        </span>
-                                    </a>
-                                </div>
+                    <div class="col-lg-3 col-md-6">
+                        <div class="item">
+                            <img src="@book.CoverImageUrl" alt="img" class="book_image">
+                            <p>@book.BookName</p>
+                            <div class="hover">
+                                <a asp-controller="Search" asp-action="Details" asp-route-id="@book.BookId">
+                                    <span>
+                                        <i class="bi bi-arrow-right"></i>
+                                    </span>
+                                </a>
                             </div>
                         </div>
-                    }
+                    </div>
                 }
-                else
-                {
-                    <p>Check back here soon for a list of our top selling books!</p>
-                }
-            </div>
+            }
+            else
+            {
+                <p>Check back here soon for a list of our top selling books!</p>
+            }
+        </div>
     </section>
 
     <section class="about-sec">
@@ -70,7 +73,7 @@
             </div>
         </div>
         <div class="about-img">
-            <figure style="background: url(/images/wishlist.jpg)no-repeat;background-size: 100%"></figure>
+            <figure style="background: url(images/wishlist.jpg)no-repeat;background-size: 100%"></figure>
         </div>
     </section>
 
@@ -81,16 +84,18 @@
                     <i class="bi bi-cart" style="font-size: 2rem; color: #ffaf00;"></i>
                     <h5 class="card-title mt-2">Newest titles out there</h5>
                     <h6 class="card-subtitle mb-3">We're stocked up</h6>
-                    <p class="card-text text-muted">You can be sure that we have the latest books on shelf and are constantly adding new titles daily</p>
+                    <p class="card-text text-muted">You can be sure that we have the latest books on shelf and are
+                        constantly adding new titles daily</p>
                 </div>
             </div>
-            
+
             <div class="card text-center">
                 <div class="card-body">
                     <i class="bi bi-clock-history" style="font-size: 2rem; color: #00aeef;"></i>
                     <h5 class="card-title mt-2">Two week shipping</h5>
                     <h6 class="card-subtitle mb-3">Fast shipping guaranteed</h6>
-                    <p class="card-text text-muted">We guarantee your book will reach your hands to be read in two weeks or less, or your money back guaranteed</p>
+                    <p class="card-text text-muted">We guarantee your book will reach your hands to be read in two weeks
+                        or less, or your money back guaranteed</p>
                 </div>
             </div>
 
@@ -99,7 +104,8 @@
                     <i class="bi bi-chat-dots" style="font-size: 2rem; color: #00a99d;"></i>
                     <h5 class="card-title mt-2">Active support</h5>
                     <h6 class="card-subtitle mb-3">Our team is active</h6>
-                    <p class="card-text text-muted">Need helping picking a book? Confused on what genres are out there? We're available for all questions</p>
+                    <p class="card-text text-muted">Need helping picking a book? Confused on what genres are out there?
+                        We're available for all questions</p>
                 </div>
             </div>
         </div>
@@ -107,7 +113,7 @@
 
     <section class="about-sec">
         <div class="about-img">
-            <figure style="background: url(/images/privacy.jpg)no-repeat;background-size: 100%"></figure>
+            <figure style="background: url(images/privacy.jpg)no-repeat;background-size: 100%"></figure>
         </div>
         <div class="about-content">
             <h2>Our Privacy Policy</h2>

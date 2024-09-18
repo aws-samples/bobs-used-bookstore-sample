@@ -25,46 +25,46 @@
 
     <table class="table" width="700">
         <thead>
-        <tr>
-            <th>
-                Cover
-            </th>
-            <th>
-                name
-            </th>
-            <th>
-                price
-            </th>
-            <th>quantity</th>
-            <th>total</th>
-        </tr>
+            <tr>
+                <th>
+                    Cover
+                </th>
+                <th>
+                    name
+                </th>
+                <th>
+                    price
+                </th>
+                <th>quantity</th>
+                <th>total</th>
+            </tr>
         </thead>
 
         <tbody>
-        @foreach (var item in Model.Items)
-        {
-            var total = item.Price * item.Quantity;
-            <tr>
-                <td>
-                    <img src="@item.Url" height="80" width="50" onerror="this.onerror=null;this.src='/images/default_c.jpg';" />
-                </td>
-                <td>
-                    @item.Bookname
-                </td>
+            @foreach (var item in Model.Items)
+            {
+                var total = item.Price * item.Quantity;
+                <tr>
+                    <td>
+                        <img src="@item.Url" height="80" width="50" />
+                    </td>
+                    <td>
+                        @item.Bookname
+                    </td>
 
-                <td>
-                    $@item.Price
-                </td>
+                    <td>
+                        $@item.Price
+                    </td>
 
-                <td>
-                    @item.Quantity
-                </td>
+                    <td>
+                        @item.Quantity
+                    </td>
 
-                <td>
-                    $@total
-                </td>
-            </tr>
-        }
+                    <td>
+                        $@total
+                    </td>
+                </tr>
+            }
         </tbody>
     </table>
 

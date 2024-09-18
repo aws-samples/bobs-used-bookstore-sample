@@ -26,27 +26,27 @@
 
         <table class="table table-hover mt-5">
             <thead>
-            <tr>
-                <th cope="col">Cover</th>
-                <th scope="col">Title</th>
-                <th scope="col">Price</th>
-            </tr>
+                <tr>
+                    <th cope="col">Cover</th>
+                    <th scope="col">Title</th>
+                    <th scope="col">Price</th>
+                </tr>
             </thead>
             <tbody>
-            @foreach (var book in Model.OrderItems)
-            {
-                <tr>
-                    <td>
-                        <img src="@book.ImageUrl" class="img-thumbnail" onerror="this.onerror=null;this.src='/images/default_c.jpg';" style="max-width: 75px;max-height: 75px;" />
-                    </td>
-                    <td>
-                        <a asp-controller="Search" asp-action="Details" asp-route-id="@book.BookId">
-                            @book.BookName
-                        </a>
-                    </td>
-                    <td>$@book.Price</td>
-                </tr>
-            }
+                @foreach (var book in Model.OrderItems)
+                {
+                    <tr>
+                        <td>
+                            <img src="@book.ImageUrl" class="img-thumbnail" style="max-width: 75px;max-height: 75px;" />
+                        </td>
+                        <td>
+                            <a asp-controller="Search" asp-action="Details" asp-route-id="@book.BookId">
+                                @book.BookName
+                            </a>
+                        </td>
+                        <td>$@book.Price</td>
+                    </tr>
+                }
             </tbody>
         </table>
 
