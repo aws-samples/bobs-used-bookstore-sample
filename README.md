@@ -1,7 +1,7 @@
 # 'Bob's Used Books' Sample Application
 
 ## Overview
-_Bob's Used Books_ is a sample application built on ASP.NET Core 6.0 that aims to represent a simple, real-world application. It is a monolithic n-tier application with an ASP.NET Core MVC front end and a Microsoft SQL Server database backend.
+_Bob's Used Books_ is a sample application built on ASP.NET Core 8.0 (in branch v2) that aims to represent a simple, real-world application. It is a monolithic n-tier application with an ASP.NET Core MVC front end and a Microsoft SQL Server database backend.
 
 The MVC application contains a customer portal and an administration portal. The customer portal enables customers to search for books, select and add them to a shopping cart, and work through a simulated check-out process. Customers can also offer their own books for resale through the website.
 
