@@ -23,8 +23,7 @@ namespace Bookstore.Web.Helpers
         {
             if (!Request.Cookies.ContainsKey("BobsUsedBooks")) return AuthenticateResult.Fail("Not authenticated");
 
-            ClaimsPrincipal claimsPrincipal = null;
-            await Task.Run(() => {var claimsPrincipal = CreateClaimsPrincipal();});
+            var claimsPrincipal = CreateClaimsPrincipal();
 
             return AuthenticateResult.Success(new AuthenticationTicket(claimsPrincipal, Scheme.Name));
         }
@@ -39,7 +38,7 @@ namespace Bookstore.Web.Helpers
 
                 var userCookie = new CookieOptions { Secure = false, Expires = DateTime.Now.AddDays(1) };
 
-                Response.Cookies.Append("BobsUsedBooks", string.Empty, userCookie);
+                Response.Cookies.Append("BobsUsedBooks", "authenticated", userCookie);
 
                 Response.Redirect("/");
             }
