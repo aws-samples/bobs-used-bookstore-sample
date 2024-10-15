@@ -1,6 +1,7 @@
 ﻿using Bookstore.Domain;
 using Bookstore.Domain.Books;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -137,6 +138,30 @@ namespace Bookstore.Data.Repositories
                     OutOfStock = x.Count(y => y.Quantity == 0),
                     StockTotal = x.Count()
                 }).SingleOrDefaultAsync();
+        }
+
+        public async Task<IEnumerable<Book>> FindRelevantBooks()
+        {
+            var books = await dbContext.Book
+                .OrderBy(b => b.Price)
+                .ToListAsync();
+
+            var filteredbooks = new List<Book>();
+
+            foreach (var book in books)
+            {
+                if (book.GenreId == 13)
+                {
+                    filteredbooks.Add(book);
+                }
+
+                if (filteredbooks.Count == 3)
+                {
+                    break;
+                }
+            }
+            filteredbooks = filteredbooks.OrderBy(x => x.Name).ToList();
+            return filteredbooks;
         }
     }
 }
