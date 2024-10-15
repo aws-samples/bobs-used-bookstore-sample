@@ -18,7 +18,7 @@ namespace Bookstore.Data.Repositories
 
         async Task<Book> IBookRepository.GetAsync(int id)
         {
-            return await dbContext.Book
+            return await dbContext.Books
                 .Include(x => x.Genre)
                 .Include(y => y.Publisher)
                 .Include(x => x.BookType)
@@ -28,7 +28,7 @@ namespace Bookstore.Data.Repositories
 
         async Task<IPaginatedList<Book>> IBookRepository.ListAsync(BookFilters filters, int pageIndex, int pageSize)
         {
-            var query = dbContext.Book.AsQueryable();
+            var query = dbContext.Books.AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(filters.Name))
             {
@@ -80,7 +80,7 @@ namespace Bookstore.Data.Repositories
 
         async Task<IPaginatedList<Book>> IBookRepository.ListAsync(string searchString, string sortBy, int pageIndex, int pageSize)
         {
-            var query = dbContext.Book.AsQueryable();
+            var query = dbContext.Books.AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(searchString))
             {
@@ -113,7 +113,7 @@ namespace Bookstore.Data.Repositories
 
         async Task IBookRepository.UpdateAsync(Book book)
         {
-            var existing = await dbContext.Book.FindAsync(book.Id);
+            var existing = await dbContext.Books.FindAsync(book.Id);
 
             dbContext.Entry(existing).CurrentValues.SetValues(book);
 
@@ -130,7 +130,7 @@ namespace Bookstore.Data.Repositories
 
         async Task<BookStatistics> IBookRepository.GetStatisticsAsync()
         {
-            return await dbContext.Book
+            return await dbContext.Books
                 .GroupBy(x => 1)
                 .Select(x => new BookStatistics
                 {
@@ -142,7 +142,7 @@ namespace Bookstore.Data.Repositories
 
         public async Task<IEnumerable<Book>> FindRelevantBooks()
         {
-            var books = await dbContext.Book
+            var books = await dbContext.Books
                 .OrderBy(b => b.Price)
                 .ToListAsync();
 

@@ -15,12 +15,12 @@ namespace Bookstore.Data.Repositories
 
         async Task IShoppingCartRepository.AddAsync(ShoppingCart shoppingCart)
         {
-            await dbContext.ShoppingCart.AddAsync(shoppingCart);
+            await dbContext.ShoppingCarts.AddAsync(shoppingCart);
         }
 
         async Task<ShoppingCart> IShoppingCartRepository.GetAsync(string correlationId)
         {
-            return await dbContext.ShoppingCart
+            return await dbContext.ShoppingCarts
                 .Include(x => x.ShoppingCartItems)
                 .ThenInclude(x => x.Book)
                 .SingleOrDefaultAsync(x => x.CorrelationId == correlationId);

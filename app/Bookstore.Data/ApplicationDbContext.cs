@@ -15,23 +15,23 @@ namespace Bookstore.Data
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
-        public DbSet<Address> Address { get; set; }
+        public DbSet<Address> Addresses { get; set; }
 
-        public DbSet<Book> Book { get; set; }
+        public DbSet<Book> Books { get; set; }
 
-        public DbSet<Customer> Customer { get; set; }
+        public DbSet<Customer> Customers { get; set; }
 
-        public DbSet<Order> Order { get; set; }
+        public DbSet<Order> Orders { get; set; }
 
-        public DbSet<ShoppingCart> ShoppingCart { get; set; }
+        public DbSet<ShoppingCart> ShoppingCarts { get; set; }
 
-        public DbSet<ShoppingCartItem> ShoppingCartItem { get; set; }
+        public DbSet<ShoppingCartItem> ShoppingCartItems { get; set; }
 
-        public DbSet<OrderItem> OrderItem { get; set; }
+        public DbSet<OrderItem> OrderItems { get; set; }
 
-        public DbSet<Offer> Offer { get; set; }
+        public DbSet<Offer> Offers { get; set; }
 
-        public DbSet<ReferenceDataItem> ReferenceData { get; set; }
+        public DbSet<ReferenceDataItem> ReferenceDatas { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

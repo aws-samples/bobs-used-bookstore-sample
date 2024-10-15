@@ -17,7 +17,7 @@ namespace Bookstore.Data.Repositories
 
         async Task IAddressRepository.DeleteAsync(string sub, int id)
         {
-            var address = await dbContext.Address.SingleOrDefaultAsync(x => x.Customer.Sub == sub && x.Id == id);
+            var address = await dbContext.Addresses.SingleOrDefaultAsync(x => x.Customer.Sub == sub && x.Id == id);
 
             if (address == null) return;
 
@@ -26,17 +26,17 @@ namespace Bookstore.Data.Repositories
 
         async Task<Address> IAddressRepository.GetAsync(string sub, int id)
         {
-            return await dbContext.Address.SingleOrDefaultAsync(x => x.Customer.Sub == sub && x.Id == id && x.IsActive == true);
+            return await dbContext.Addresses.SingleOrDefaultAsync(x => x.Customer.Sub == sub && x.Id == id && x.IsActive == true);
         }
 
         async Task<IEnumerable<Address>> IAddressRepository.ListAsync(string sub)
         {
-            return await dbContext.Address.Where(x => x.Customer.Sub == sub && x.IsActive == true).ToListAsync();
+            return await dbContext.Addresses.Where(x => x.Customer.Sub == sub && x.IsActive == true).ToListAsync();
         }
 
         async Task IAddressRepository.AddAsync(Address address)
         {
-            await dbContext.Address.AddAsync(address);
+            await dbContext.Addresses.AddAsync(address);
         }
 
         public async Task SaveChangesAsync()
