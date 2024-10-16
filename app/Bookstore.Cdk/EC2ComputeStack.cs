@@ -147,7 +147,7 @@ public class EC2ComputeStack : Stack
 
         this.WebAppAsset = new Asset(this, "WebAppAsset", new AssetProps
         {
-            Path = "app/Bookstore.Web/bin/Release/net6.0/publish"
+            Path = "app/Bookstore.Web/bin/Release/net8.0/publish"
         });
         this.WebAppAsset.GrantRead(this.Ec2Role);
 

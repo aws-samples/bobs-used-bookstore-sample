@@ -8,8 +8,8 @@
 
     <ItemGroup>
         <!-- CDK Construct Library dependencies -->
-        <PackageReference Include="Amazon.CDK.Lib" Version="2.130.0" />
-        <PackageReference Include="Constructs" Version="10.1.*" />
+        <PackageReference Include="Amazon.CDK.Lib" Version="2.162.1" />
+        <PackageReference Include="Constructs" Version="10.4.2" />
 
         <PackageReference Include="Amazon.Jsii.Analyzers" Version="*" PrivateAssets="all" />
         
