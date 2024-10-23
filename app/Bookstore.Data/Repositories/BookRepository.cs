@@ -78,7 +78,7 @@ namespace Bookstore.Data.Repositories
             return result;
         }
 
-        async Task<IPaginatedList<Book>> IBookRepository.ListAsync(string searchString, string sortBy, int pageIndex, int pageSize)
+        public async Task<IPaginatedList<Book>> ListAsync(string searchString, string sortBy, int pageIndex, int pageSize)
         {
             var query = dbContext.Books.AsQueryable();
 

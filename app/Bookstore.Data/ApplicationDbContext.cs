@@ -6,6 +6,7 @@ using Bookstore.Domain.Offers;
 using Bookstore.Domain.Orders;
 using Bookstore.Domain.ReferenceData;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 
 namespace Bookstore.Data
 {
@@ -14,6 +15,10 @@ namespace Bookstore.Data
         public ApplicationDbContext() { }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
+
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, bool skipDataBaseCreation) : base(options) {
+            this.SkipInitialData = skipDataBaseCreation;
+        }
 
         public DbSet<Address> Addresses { get; set; }
 
@@ -33,6 +38,8 @@ namespace Bookstore.Data
 
         public DbSet<ReferenceDataItem> ReferenceDatas { get; set; }
 
+        public bool SkipInitialData { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Customer>().HasIndex(x => x.Sub).IsUnique();
@@ -49,7 +56,7 @@ namespace Bookstore.Data
 
             modelBuilder.Entity<Order>().HasOne(x => x.Customer).WithMany().OnDelete(DeleteBehavior.Restrict);
 
-            PopulateDatabase(modelBuilder);
+            PopulateDatabase(modelBuilder,SkipInitialData);
 
             base.OnModelCreating(modelBuilder);
         }
