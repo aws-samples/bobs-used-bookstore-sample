@@ -54,10 +54,4 @@
             return GetShoppingCartItems(filter).Sum(x => x.Book.Price);
         }
     }
-
-    public enum ShoppingCartItemFilter
-    {
-        IncludeOutOfStockItems,
-        ExcludeOutOfStockItems
-    }
 }
