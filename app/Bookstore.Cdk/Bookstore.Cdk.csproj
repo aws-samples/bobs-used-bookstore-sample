@@ -13,6 +13,8 @@
         <PackageReference Include="Constructs" Version="10.3.0" />
 
         <PackageReference Include="Amazon.Jsii.Analyzers" Version="*" PrivateAssets="all" />
+
+        <PackageReference Include="System.Text.Json" Version="8.0.5" />
         
     </ItemGroup>
 
