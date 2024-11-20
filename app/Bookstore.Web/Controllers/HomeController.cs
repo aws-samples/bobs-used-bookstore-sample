@@ -6,12 +6,8 @@ using Bookstore.Web.ViewModel;
 using Bookstore.Domain.Books;
 using System.Threading.Tasks;
 using Bookstore.Web.ViewModel.Home;
-using Amazon.Runtime.Internal.Util;
 using Microsoft.Extensions.Logging;
-using System;
-using Amazon.Runtime;
 using Microsoft.AspNetCore.Diagnostics;
-using Bookstore.Web.Helpers;
 
 namespace Bookstore.Web.Controllers
 {

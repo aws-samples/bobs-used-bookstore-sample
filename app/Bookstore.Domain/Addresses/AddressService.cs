@@ -50,9 +50,7 @@ namespace Bookstore.Domain.Addresses
 
             await addressRepository.SaveChangesAsync();
 
-            logger.LogInformation("Saved a new address for the Customer with Id {id}. Address : {address}", 
-                                   customer.Id,
-                                   JsonSerializer.Serialize(new { address.AddressLine1, address.AddressLine2, address.City, address.State, address.Country, address.ZipCode }));
+            logger.LogInformation($"Saved a new address for the Customer with Id {customer.Id}. Address : {address}");
         }
 
         public async Task UpdateAddressAsync(UpdateAddressDto dto)
