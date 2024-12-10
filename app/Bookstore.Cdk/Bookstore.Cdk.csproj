@@ -2,17 +2,23 @@
 
     <PropertyGroup>
         <OutputType>Exe</OutputType>
-        <TargetFramework>net6.0</TargetFramework>
+        <TargetFramework>net8.0</TargetFramework>
         <RollForward>Major</RollForward>
     </PropertyGroup>
 
     <ItemGroup>
         <!-- CDK Construct Library dependencies -->
         <PackageReference Include="Amazon.CDK.AWS.AppRunner.Alpha" Version="2.92.0-alpha.0" />
-        <PackageReference Include="Amazon.CDK.Lib" Version="2.92.0" />
-        <PackageReference Include="Constructs" Version="10.1.*" />
+        <PackageReference Include="Amazon.CDK.Lib" Version="2.172.0" />
+        <PackageReference Include="Constructs" Version="10.4.2" />
 
         <PackageReference Include="Amazon.Jsii.Analyzers" Version="*" PrivateAssets="all" />
+
+        <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
+
+        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.2" />
+
+        <PackageReference Include="System.Text.Json" Version="8.0.5" />
         
     </ItemGroup>
 
