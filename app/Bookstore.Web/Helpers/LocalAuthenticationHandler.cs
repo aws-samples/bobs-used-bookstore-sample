@@ -38,7 +38,7 @@ namespace Bookstore.Web.Helpers
 
                 var userCookie = new CookieOptions { Secure = false, Expires = DateTime.Now.AddDays(1) };
 
-                Response.Cookies.Append("BobsUsedBooks", string.Empty, userCookie);
+                Response.Cookies.Append("BobsUsedBooks", "authenticated", userCookie);
 
                 Response.Redirect("/");
             }
