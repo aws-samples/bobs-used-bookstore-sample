@@ -9,6 +9,7 @@ using Amazon.CDK.AWS.IAM;
 using Amazon.CDK.AWS.RDS;
 using Bookstore.Common;
 using HealthCheck = Amazon.CDK.AWS.ElasticLoadBalancingV2.HealthCheck;
+using System.IO;
 
 namespace Bookstore.Cdk;
 
@@ -48,14 +49,15 @@ public class EcsStack : Stack
                 HealthCheckGracePeriod = Duration.Seconds(30),
                 TaskImageOptions = new ApplicationLoadBalancedTaskImageOptions
                 {
-                    Image = ContainerImage.FromAsset(".\\"),
+                    Image = ContainerImage.FromAsset(Directory.GetCurrentDirectory().ToString()),
                     Environment = new Dictionary<string, string>
                     {
                             { "Services:Authentication", "local" }, //Can't use Cognito hosted UI without an https redirect.
                             { "Services:Database", "aws" },
                             { "Services:FileService", "aws" },
                             { "Services:ImageValidationService", "aws" },
-                            { "Services:LoggingService", "aws" }
+                            { "Services:LoggingService", "aws" },
+                            {"ASPNETCORE_HTTP_PORTS", "80"}
                     }
                 }
             });
