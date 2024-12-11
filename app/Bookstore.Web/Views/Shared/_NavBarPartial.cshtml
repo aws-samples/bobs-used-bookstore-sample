@@ -1,5 +1,5 @@
 ﻿<header>
-    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+    <nav class="navbar navbar-expand-sm bg-primary mb-4" data-bs-theme="dark">
         <div class="container-fluid">
             <a class="navbar-brand" asp-controller="Home" asp-action="Index">Bob's Used Books</a>
 
@@ -13,23 +13,23 @@
                     @if (User.Identity.IsAuthenticated)
                     {
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Orders" asp-action="Index">My Orders</a>
+                            <a class="nav-link" asp-controller="Orders" asp-action="Index">Orders</a>
                         </li>
                     }
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-controller="Search" asp-action="Index">Search</a>
+                        <a class="nav-link" asp-controller="Search" asp-action="Index">Search</a>
                     </li>
                     @if (User.Identity.IsAuthenticated)
                     {
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Resale" asp-action="Index">Resell my Books</a>
+                            <a class="nav-link" asp-controller="Resale" asp-action="Index">Sell</a>
                         </li>
                     }
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-controller="Wishlist" asp-action="Index">Wish List</a>
+                        <a class="nav-link" asp-controller="Wishlist" asp-action="Index">Wish List</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-controller="ShoppingCart" asp-action="Index">Cart</a>
+                        <a class="nav-link" asp-controller="ShoppingCart" asp-action="Index">Cart</a>
                     </li>
                 </ul>
             </div>

@@ -1,82 +1,63 @@
 ﻿@model Bookstore.Web.ViewModel.Search.SearchIndexViewModel
 @{
-    ViewData["Title"] = "Search for books";
+    ViewData["Title"] = "Search";
 }
 
-<div class="panel-body">
-    <partial name="_Notification" />
+<partial name="_Notification" />
 
-    <h2 class="mb-3">Search for Books</h2>
-    
-    <form asp-controller="Search" asp-action="Index" method="get">
-        <div class="row">
-            <div class="col-7">
-                <input class="form-control" type="text" name="SearchString" asp-for="SearchString" />
-            </div>
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item h5 active" aria-current="page">Search</li>
+    </ol>
+</nav>
 
-            <div class="col-4">
-                <select id="selectId" class="form-select" name="SortBy" asp-for="SortBy">
-                    <option value="Name">Name</option>
-                    <option value="PriceAsc">Price (ascending)</option>
-                    <option value="PriceDesc">Price (descending)</option>
-                </select>
-            </div>
-
-            <div class="col-1">
-                <button type="submit" class="btn btn-primary" value="Search">Search</button>
-            </div>
+<form asp-controller="Search" asp-action="Index" method="get">
+    <div class="row mb-4">
+        <div class="col-10">
+            <input class="form-control" type="text" name="SearchString" asp-for="SearchString" placeholder="Search by title" />
         </div>
-    </form>
 
-    @if (Model.Books.Count == 0)
-    {
-        <h3>
-            No results found.
-        </h3>
-    }
-    else
-    {
-        <section class="static about-sec">
-            <div class="container">
-                <h2>Search Results</h2>
+        <div class="col-2">
+            <button type="submit" class="btn btn-primary w-100" value="Search">Search</button>
+        </div>
+    </div>
+</form>
 
-                <div class="recent-book-sec">
-                    <div class="row">
-                        @foreach (var item in Model.Books)
-                        {
-                            <div class="col-md-3">
-                                <div class="item text-center">
-                                    <a asp-controller="Search" asp-action="Details" asp-route-id="@item.BookId">
-                                        <img src="@Html.DisplayFor(modelItem => item.ImageUrl)" alt="img" class="book_image_size" onerror="this.onerror=null;this.src='/images/default_c.jpg';" style="width: 135px;height: 200px;">
-                                    </a>
+@if (Model.Books.Count > 0)
+{
+    <div class="row">
+        @foreach (var item in Model.Books)
+        {
+            <div class="col-md-2 mb-3">
+                <a asp-controller="Search" asp-action="Details" asp-route-id="@item.BookId" class="text-decoration-none">
+                    <div class="card hover-card h-100">
+                        <img src="@Html.DisplayFor(modelItem => item.ImageUrl)" class="px-1 pt-1" alt="img" />
 
-                                    <center>
-                                        <p class="text-dark">@Html.DisplayFor(modelitem => item.BookName)</p>
-                                    </center>
+                        <div class="card-body d-flex flex-column">
+                            <h6 class="text-center pb-3">@item.BookName</h6>
 
-                                    @if (item.Quantity > 0)
-                                    {
-                                        <h6>
-                                            <span class="price">@item.Price.ToString("C")</span>
-                                        </h6>
-                                    }
-                                    else
-                                    {
-                                        <h6>Out Of Stock</h6>
-                                    }
-
-                                    <div class="hover">
-                                    </div>
-                                </div>
+                            <div class="mt-auto">
+                                @if (item.Quantity > 0)
+                                {
+                                    <h6 class="text-center">@item.Price.ToString("C")</h6>
+                                }
+                                else
+                                {
+                                    <h6 class="text-center">Out Of Stock</h6>
+                                }
                             </div>
-                        }
+                        </div>
                     </div>
-                </div>
-
-                <div>
-                    <partial name="_paginator" />
-                </div>
+                </a>
             </div>
-        </section>
-    }
-</div>
+        }
+    </div>
+
+    <div>
+        <partial name="_paginator" />
+    </div>
+}
+else
+{
+    <h3 class="text-center">No results found.</h3>
+}

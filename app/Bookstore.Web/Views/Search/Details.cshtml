@@ -1,73 +1,83 @@
 ﻿@model Bookstore.Web.ViewModel.Search.SearchDetailsViewModel
 
-<div class="panel-body">
-    @if (Model == null)
-    {
-        <h3>Book not found.</h3>
-    }
-    else
-    {
-        <h1>@Model.BookName</h1>
-        <br>
-        <div class="container">
-            <div class="row">
-                <div class="col">
-                    <div class="media">
-                        <img class="mr-3" src="@Model.Url" onerror="this.onerror=null;this.src='/images/default_c.jpg';" style="width: 135px;height: 200px;" />
-                        <div class="media-body">
-                            <table class="table">
-                                <tbody>
-                                <tr>
-                                    <th scope="col">Title</th>
-                                    <td>@Model.BookName</td>
-                                </tr>
-                                <tr>
-                                    <th scope="col">Author</th>
-                                    <td>@Model.Author</td>
-                                </tr>
-                                <tr>
-                                    <th scope="col">Publisher</th>
-                                    <td>@Model.PublisherName</td>
-                                </tr>
-                                <tr>
-                                    <th scope="col">Genre</th>
-                                    <td>@Model.GenreName</td>
-                                </tr>
-                                <tr>
-                                    <th scope="col">Condition</th>
-                                    <td>@Model.ConditionName</td>
-                                </tr>
-                                <tr>
-                                    <th scope="col">Price</th>
-                                    <td>@Model.MinPrice.ToString("C")</td>
-                                </tr>
+<nav aria-label="breadcrumb" class="mb-4">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item h5"><a class="text-decoration-none" asp-action="Index">Search</a></li>
+        <li class="breadcrumb-item h5 active" aria-current="page">Details</li>
+    </ol>
+</nav>
+
+@if (Model == null)
+{
+    <div class="alert alert-warning">
+        <h3 class="m-0">Book not found.</h3>
+    </div>
+}
+else
+{
+    <div class="row">
+        <!-- Book Image Column -->
+        <div class="col-md-3 text-center mb-4 mb-md-0">
+            <img class="img-fluid rounded shadow"
+                 src="@Model.Url"
+                 onerror="this.onerror=null;this.src='/images/default_c.jpg';"
+                 alt="@Model.BookName"
+                 style="max-height: 300px; width: auto;" />
+        </div>
+
+        <!-- Book Details Column -->
+        <div class="col-md-9">
+            <h1 class="mb-4">@Model.BookName</h1>
+
+            <div class="row mb-4">
+                <div class="col-sm-6">
+                    <table class="table">
+                        <tbody>
+                            <tr>
+                                <th class="text-secondary" style="width: 30%">Author</th>
+                                <td>@Model.Author</td>
+                            </tr>
+                            <tr>
+                                <th class="text-secondary">Publisher</th>
+                                <td>@Model.PublisherName</td>
+                            </tr>
+                            <tr>
+                                <th class="text-secondary">Genre</th>
+                                <td>@Model.GenreName</td>
+                            </tr>
+                            <tr>
+                                <th class="text-secondary">Condition</th>
+                                <td>@Model.ConditionName</td>
+                            </tr>
+                            <tr>
+                                <th class="text-secondary">Price</th>
+                                <td><span class="badge bg-primary fs-6">@Model.MinPrice.ToString("C")</span></td>
+                            </tr>
+                            <tr>
+                                <th class="text-secondary">Overview</th>
                                 @if (string.IsNullOrEmpty(Model.Summary))
                                 {
-                                    <tr>
-                                        <th scope="col">Description</th>
-                                        <td>No description found.</td>
-                                    </tr>
+                                    <td><span class="text-muted">No overview available.</span></td>
                                 }
                                 else
                                 {
-                                    <tr>
-                                        <th scope="col">Description</th>
-                                        <td>@Model.Summary)</td>
-                                    </tr>
+                                    <td>@Model.Summary</td>
                                 }
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
 
-            <div class="row">
-                <div class="col">
-                    <a class="btn" asp-action="AddItemToShoppingCart" asp-route-bookid="@Model.BookId">Add to cart</a>
-                    <a class="btn" asp-action="AddItemToWishlist" asp-route-bookid="@Model.BookId">Add to wishlist</a>
-                </div>
+            <!-- Action Buttons -->
+            <div class="d-flex gap-2">
+                <a class="btn btn-primary" asp-action="AddItemToShoppingCart" asp-route-bookid="@Model.BookId">
+                    <i class="bi bi-cart-plus"></i> Add to Cart
+                </a>
+                <a class="btn btn-outline-primary" asp-action="AddItemToWishlist" asp-route-bookid="@Model.BookId">
+                    <i class="bi bi-heart"></i> Add to Wishlist
+                </a>
             </div>
         </div>
-    }
-</div>
+    </div>
+}

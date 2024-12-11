@@ -1,82 +1,98 @@
 ﻿@model Bookstore.Web.ViewModel.Resale.ResaleIndexViewModel
 
-@{ ViewData["Title"] = "Index"; }
+@{
+    ViewData["Title"] = "Sell Your Books";
+}
 
-<div class="panel-body">
-    <h1>
-        Sell Your Books
-    </h1>
-
-    <div class="col-12 text-right">
-        <form asp-controller="Resale" asp-action="Create" method="get">
-            <button class="btn" name="id" type="submit">Resell Book</button>
-        </form>
+<div class="container py-4">
+    <!-- Header Section -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="mb-0">Sell Your Books</h1>
+        <a href="@Url.Action("Create", "Resale")" class="btn btn-primary">
+            <i class="bi bi-plus-lg me-2"></i>Resell Book
+        </a>
     </div>
 
-    <table class="table">
-        <thead>
-        <tr>
-            <th>
-                Book Name
-            </th>
-            <th>
-                Author
-            </th>
-            <th>
-                Genre
-            </th>
-            <th>
-                Publisher
-            </th>
-            <th>
-                Book Type
-            </th>
-            <th>
-                ISBN
-            </th>
-            <th>
-                Condition
-            </th>
-            <th>
-                Book Price
-            </th>
-            <th>
-                Status
-            </th>
-        </tr>
-        </thead>
-        <tbody>
-        @foreach (var item in Model.Items)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.BookName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Author)
-                </td>
-                <td>
-                @Html.DisplayFor(modelItem => item.Genre)
-                <td>
-                    @Html.DisplayFor(modelItem => item.Publisher)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.BookType)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ISBN)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Condition)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Price)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.OfferStatus)
-                </td>
-            </tr>
-        }
-        </tbody>
-    </table>
+    <!-- Introduction Card -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <div class="row align-items-center">
+                <div class="col-md-9">
+                    <h4 class="card-title mb-3">Turn Your Books Into Cash</h4>
+                    <p class="card-text text-muted mb-0">
+                        Have books you no longer need? Sell them to us! We accept books in good condition
+                        and offer competitive prices. Start by clicking the "Resell Book" button above
+                        to submit your books for review.
+                    </p>
+                </div>
+                <div class="col-md-3 text-center">
+                    <i class="bi bi-book text-primary" style="font-size: 4rem;"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if (!Model.Items.Any())
+    {
+        <!-- Empty State -->
+        <div class="text-center py-5">
+            <i class="bi bi-journal-plus" style="font-size: 4rem; color: var(--bs-primary)"></i>
+            <h3 class="mt-4">No Books Listed Yet</h3>
+            <p class="text-muted">Start selling your books by clicking the "Resell Book" button above.</p>
+        </div>
+    }
+    else
+    {
+        <!-- Books Table -->
+        <div class="card shadow-sm">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th scope="col">Book Details</th>
+                            <th scope="col">Genre</th>
+                            <th scope="col">Publisher</th>
+                            <th scope="col">ISBN</th>
+                            <th scope="col">Condition</th>
+                            <th scope="col">Price</th>
+                            <th scope="col">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Items)
+                        {
+                            <tr>
+                                <td>
+                                    <div class="d-flex flex-column">
+                                        <strong>@item.BookName</strong>
+                                        <small class="text-muted">by @item.Author</small>
+                                        <small class="text-muted">@item.BookType</small>
+                                    </div>
+                                </td>
+                                <td>@item.Genre</td>
+                                <td>@item.Publisher</td>
+                                <td>@item.ISBN</td>
+                                <td>
+                                    <span class="badge bg-secondary">@item.Condition</span>
+                                </td>
+                                <td>@item.Price.ToString("C")</td>
+                                <td>
+                                    @{
+                                        var statusClass = item.OfferStatus.ToLower() switch
+                                        {
+                                            "pending" => "bg-warning",
+                                            "approved" => "bg-success",
+                                            "rejected" => "bg-danger",
+                                            _ => "bg-secondary"
+                                        };
+                                    }
+                                    <span class="badge @statusClass">@item.OfferStatus</span>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
 </div>

@@ -1,4 +1,6 @@
-﻿namespace Bookstore.Web.ViewModel.Address
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Bookstore.Web.ViewModel.Address
 {
     public class AddressCreateUpdateViewModel
     {
@@ -23,16 +25,21 @@
 
         public int Id { get; set; }
 
+        [Required(ErrorMessage = "The Street Address field is required.")]
         public string AddressLine1 { get; set; }
 
         public string AddressLine2 { get; set; }
 
+        [Required]
         public string City { get; set; }
 
+        [Required]
         public string State { get; set; }
 
+        [Required]
         public string Country { get; set; }
 
+        [Required]
         public string ZipCode { get; set; }
 
         public string ReturnUrl { get; set; }

@@ -1,55 +1,91 @@
 ﻿@model Bookstore.Web.ViewModel.Orders.OrderDetailsViewModel
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Order Details";
 }
 
-<div class="panel-body">
-    <h1>Order: #@Model.OrderId</h1>
+<nav aria-label="breadcrumb" class="mb-4">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item h5"><a class="text-decoration-none" asp-controller="Orders" asp-action="Index">Orders</a></li>
+        <li class="breadcrumb-item h5 active" aria-current="page">Order #@Model.OrderId</li>
+    </ol>
+</nav>
 
-    <div class="container mt-1">
-        <h5>Status: @Model.OrderStatus</h5>
+<div class="row">
+    <!-- Order Summary Card -->
+    <div class="col-md-4">
+        <div class="card shadow-sm h-100">
+            <div class="card-body">
+                <h4 class="card-title mb-4">Order Summary</h4>
 
-        @if (Model.DeliveryDate == DateTime.MinValue)
-        {
-            <h5>Delivery Date: Unknown</h5>
-        }
-        else
-        {
-            <h5>Delivery Date: @Model.DeliveryDate</h5>
-        }
-        <h5>Total cost: @Model.Total.ToString("C")</h5>
+                <div class="d-flex justify-content-between mb-3">
+                    @{
+                        var statusClass = Model.OrderStatus.ToLower() switch
+                        {
+                            "pending" => "warning",
+                            "shipped" => "info",
+                            "delivered" => "success",
+                            "cancelled" => "danger",
+                            _ => "secondary"
+                        };
+                    }
+                    <span class="text-muted">Order Status</span>
+                    <span class="badge bg-@statusClass">@Model.OrderStatus</span>
+                </div>
+                                
+                <div class="d-flex justify-content-between mb-3">
+                    <span class="text-muted">Delivery Date</span>
+                    <span>
+                        @if (Model.DeliveryDate == DateTime.MinValue)
+                        {
+                            <span class="text-warning">Pending</span>
+                        }
+                        else
+                        {
+                            @Model.DeliveryDate.ToShortDateString()
+                        }
+                    </span>
+                </div>
+
+                <hr class="my-4">
+
+                <div class="d-flex justify-content-between">
+                    <span class="h5">Total</span>
+                    <span class="h5">@Model.Total.ToString("C")</span>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <div class="container mt-5">
-        <h2>Your Order:</h2>
+    <!-- Order Items Card -->
+    <div class="col-md-8">
+        <div class="card shadow-sm h-100">
+            <div class="card-body">
+                <h4 class="card-title mb-4">Order Items</h4>
 
-        <table class="table table-hover mt-5">
-            <thead>
-            <tr>
-                <th cope="col">Cover</th>
-                <th scope="col">Title</th>
-                <th scope="col">Price</th>
-            </tr>
-            </thead>
-            <tbody>
-            @foreach (var book in Model.OrderItems)
-            {
-                <tr>
-                    <td>
-                        <img src="@book.ImageUrl" class="img-thumbnail" onerror="this.onerror=null;this.src='/images/default_c.jpg';" style="max-width: 75px;max-height: 75px;" />
-                    </td>
-                    <td>
-                        <a asp-controller="Search" asp-action="Details" asp-route-id="@book.BookId">
-                            @book.BookName
-                        </a>
-                    </td>
-                    <td>$@book.Price</td>
-                </tr>
-            }
-            </tbody>
-        </table>
+                @foreach (var item in Model.OrderItems)
+                {
+                    <div class="d-flex align-items-center mb-4 pb-3 border-bottom">
+                        <img src="@item.ImageUrl"
+                             onerror="this.onerror=null;this.src='/images/default_c.jpg';"
+                             class="img-fluid rounded"
+                             style="width: 75px; height: 110px; object-fit: cover;"
+                             alt="@item.BookName cover" />
 
-        <a class="btn" asp-action="Index">Back</a>
+                        <div class="ms-4 flex-grow-1">
+                            <a asp-controller="Search" asp-action="Details" asp-route-id="@item.BookId"
+                               class="h5 mb-1 text-decoration-none">@item.BookName</a>
+                            <p class="h6 mb-0">@item.Price.ToString("C")</p>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
     </div>
+</div>
+
+<div class="mt-4">
+    <a class="btn btn-outline-primary" asp-action="Index">
+        <i class="bi bi-arrow-left me-2"></i>Back to Orders
+    </a>
 </div>

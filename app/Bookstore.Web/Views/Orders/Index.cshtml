@@ -4,55 +4,131 @@
     ViewData["Title"] = "Orders";
 }
 
-<div class="panel-body">
-    <h1>Your Orders</h1>
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item active" aria-current="page"><h5>Orders</h5></li>
+    </ol>
+</nav>
 
-    @if (!Model.OrderItems.Any())
-    {
-        <h2>No Orders Found.</h2>
-    }
-    else
-    {
-        <table class="table table-hover mt-5">
-            <thead>
-            <tr>
-                <th>
-                    Total Cost
-                </th>
-                <th>
-                    Delivery Date
-                </th>
-                <th>
-                    Status
-                </th>
-                <th></th>
-            </tr>
-            </thead>
-            <tbody>
-            @foreach (var item in Model.OrderItems)
-            {
-                <tr>
-                    <td>
-                        @item.SubTotal.ToString("C")
-                    </td>
-                    <td>
-                        @item.DeliveryDate.ToShortDateString()
-                    </td>
-                    <td>
-                        @item.OrderStatus
-                    </td>
-                    <td>
-                        <div class="hstack gap-2">
-                            <a class="btn" asp-action="Details" asp-controller="Orders" asp-route-id="@item.Id">Details</a>
+@if (!Model.OrderItems.Any())
+{
+    <div class="text-center py-5">
+        <i class="bi bi-box-seam" style="font-size: 4rem;"></i>
+        <h3 class="mt-4">No orders found</h3>
+        <p class="text-muted">Start shopping to see your orders here!</p>
+        <a class="btn btn-primary mt-3" asp-controller="Search" asp-action="Index">Browse Books</a>
+    </div>
+}
+else
+{
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Order ID</th>
+                                    <th scope="col">Delivery Date</th>
+                                    <th scope="col">Status</th>
+                                    <th scope="col">Total</th>
+                                    <th scope="col">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.OrderItems)
+                                {
+                                    <tr>
+                                        <td class="align-middle">
+                                            <span class="text-muted">#@item.Id</span>
+                                        </td>
+                                        <td class="align-middle">
+                                            @item.DeliveryDate.ToShortDateString()
+                                        </td>
+                                        <td class="align-middle">
+                                            @{
+                                                var statusClass = item.OrderStatus.ToLower() switch
+                                                {
+                                                    "pending" => "warning",
+                                                    "shipped" => "info",
+                                                    "delivered" => "success",
+                                                    "cancelled" => "danger",
+                                                    _ => "secondary"
+                                                };
+                                            }
+                                            <span class="badge bg-@statusClass">@item.OrderStatus</span>
+                                        </td>
+                                        <td class="align-middle">
+                                            <strong>@item.SubTotal.ToString("C")</strong>
+                                        </td>
+                                        <td class="align-middle">
+                                            <div class="btn-group">
+                                                <a class="btn btn-outline-primary btn-sm"
+                                                   asp-action="Details"
+                                                   asp-controller="Orders"
+                                                   asp-route-id="@item.Id">
+                                                    <i class="bi bi-eye me-1"></i>
+                                                    Details
+                                                </a>
 
-                            <form method="post">
-                                <button type="submit" class="btn" asp-action="Delete" asp-route-id="@item.Id">Cancel</button>
-                            </form>
-                        </div>                        
-                    </td>
-                </tr>
-            }
-            </tbody>
-        </table>
-    }
+                                                @if (item.OrderStatus.ToLower() == "pending")
+                                                {
+                                                    <button type="button"
+                                                            class="btn btn-outline-danger btn-sm"
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#cancelOrderModal"
+                                                            data-orderid="@item.Id">
+                                                        <i class="bi bi-x-circle me-1"></i>
+                                                        Cancel
+                                                    </button>
+                                                }
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<!-- Cancel Order Modal -->
+<div class="modal fade" id="cancelOrderModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Cancel Order</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to cancel this order? This action cannot be undone.</p>
+            </div>
+            <div class="modal-footer">
+                <form method="post">
+                    <button id="confirmCancelButton" type="submit" class="btn btn-danger" asp-action="Delete">
+                        Yes, Cancel My Order
+                    </button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No, Keep My Order</button>                    
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
+
+@section Scripts {
+    <script>
+        $(function() {
+            $('#cancelOrderModal').on('show.bs.modal', function(event) {
+                var modal = $(this);
+                var formAction = modal.find('#confirmCancelButton').attr("formaction");
+                var orderId = $(event.relatedTarget).data('orderid');
+                modal.find('#confirmCancelButton').attr("formaction",
+                    formAction + "?id=" + orderId);
+            });
+        });
+    </script>
+}

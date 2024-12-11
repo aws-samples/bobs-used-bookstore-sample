@@ -1,111 +1,133 @@
 ﻿@model Bookstore.Web.ViewModel.ShoppingCart.ShoppingCartIndexViewModel
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Shopping Cart";
 }
 
-<div class="panel-body">
+<partial name="_Notification" />
 
-    <partial name="_Notification" />
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item h5 active" aria-current="page">Shopping Cart</li>
+    </ol>
+</nav>
 
-    <p style="text-align: center">
-        <h1>Cart</h1>
-    </p>
-
-    <div class="container">
-        <ul class="time-horizontal">
-            <li style="color:red"><b></b>Cart</li>
-            <li>
-                <p></p>Choose Address
-            </li>
-            <li>
-                <p></p>Finish
-            </li>
-        </ul>
-    </div>
-
-    <div>
-        <br />
-        <br />
-        <br />
-
-        <h4>Total price：@Model.TotalPrice.ToString("C")</h4>
-        <br />
-
-        <form method="post">
-            @if (!User.Identity.IsAuthenticated)
-            {
-                <p>Please log in to complete your order.</p>
-                <a class="btn" asp-action="Login" asp-controller="Authentication">Log In</a>
-            }
-            else
-            {
-                <a class="btn" asp-action="Index" asp-controller="Checkout">Check Out</a>
-            }
-
-            <table class="table">
-                <tbody>
+@if (Model.ShoppingCartItems.Any())
+{
+    <div class="row">
+        <div class="col-lg-8">
+            <!-- Cart Items -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-body">
                     @foreach (var item in Model.ShoppingCartItems)
                     {
-                        <tr>
-                            <td>
-                                <img src="@Html.DisplayFor(modelitem => item.ImageUrl)" onerror="this.onerror=null;this.src='/images/default_c.jpg';" style="max-width: 75px;max-height: 75px;" />
-                            </td>
-                            <td>
-                                <span class="@(item.StockLevel <= 0 ? "text-danger" : "")">@item.BookName</span>
+                        <div class="d-flex align-items-center mb-4 pb-3 border-bottom">
+                            <img src="@item.ImageUrl"
+                                 onerror="this.onerror=null;this.src='/images/default_c.jpg';"
+                                 class="img-fluid rounded"
+                                 style="width: 75px; height: 110px; object-fit: cover;" />
 
+                            <div class="ms-4 flex-grow-1">
+                                <h5 class="mb-1 @(item.StockLevel <= 0 ? "text-danger" : "")">@item.BookName</h5>
                                 @if (item.StockLevel <= 5)
                                 {
-                                    <p class="text-danger"><small>@(item.StockLevel <= 0 ? "Out of stock" : $"Hurry, only {item.StockLevel} left!")</small></p>
+                                    <p class="text-danger mb-2">
+                                        <small>
+                                            <i class="bi bi-exclamation-circle me-1"></i>
+                                            @(item.StockLevel <= 0 ? "Out of stock" : $"Hurry, only {item.StockLevel} left!")
+                                        </small>
+                                    </p>
                                 }
-                            </td>
-                            <td>
-                                @item.Price.ToString("C")
-                            </td>
-                            <td>
-                                <button type="button" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" data-shoppingCartItemId="@item.ShoppingCartItemId">Remove</button>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </form>
-    </div>
-    <br />
+                                <p class="h5 mb-0">@item.Price.ToString("C")</p>
+                            </div>
 
-    <div id="confirmDeleteModal" class="modal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Remove Item?</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            <button type="button"
+                                    class="btn btn-link text-danger"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#confirmDeleteModal"
+                                    data-shoppingcartitemid="@item.ShoppingCartItemId">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </div>
+                    }
                 </div>
-                <div class="modal-body">
-                    <p>Are you sure you want to remove this item from your shopping cart?</p>
-                </div>
-                <div class="modal-footer">
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <!-- Order Summary -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-body">
+                    <h4 class="card-title mb-4">Order Summary</h4>
+
+                    <div class="d-flex justify-content-between mb-4">
+                        <span>Total</span>
+                        <span class="h4 mb-0">@Model.TotalPrice.ToString("C")</span>
+                    </div>
+
                     <form method="post">
-                        <button id="confirmDeleteButton" type="submit" class="btn btn-primary" asp-action="Delete">Yes, Remove</button>
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No, Don't Remove</button>
+                        @if (!User.Identity.IsAuthenticated)
+                        {
+                            <p class="text-muted mb-3">Please log in to complete your order.</p>
+                            <a class="btn btn-primary w-100" asp-action="Login" asp-controller="Authentication">
+                                Log In to Continue
+                            </a>
+                        }
+                        else
+                        {
+                            <a class="btn btn-primary w-100" asp-action="Index" asp-controller="Checkout">
+                                Proceed to Checkout
+                            </a>
+                        }
                     </form>
                 </div>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="text-center py-5">
+        <i class="bi bi-cart-x" style="font-size: 4rem;"></i>
+        <h3 class="mt-4">Your cart is empty</h3>
+        <p class="text-muted">Start adding items to your cart by browsing our collection.</p>
+        <a class="btn btn-primary mt-3" asp-controller="Search" asp-action="Index">Browse Books</a>
+    </div>
+}
+
+<!-- Delete Confirmation Modal -->
+<div id="confirmDeleteModal" class="modal fade" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Remove Item?</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to remove this item from your shopping cart?</p>
+            </div>
+            <div class="modal-footer">
+                <form method="post">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button id="confirmDeleteButton" type="submit" class="btn btn-danger" asp-action="Delete">
+                        Remove Item
+                    </button>
+                </form>
             </div>
         </div>
     </div>
 </div>
 
 @section Scripts {
-    <script type="text/javascript">
+    <script>
         $(function () {
-
             $('#confirmDeleteModal').on('show.bs.modal', function (event) {
                 var modal = $(this);
                 var formAction = modal.find('#confirmDeleteButton').attr("formaction");
                 var shoppingCartItemId = $(event.relatedTarget).data('shoppingcartitemid');
-
-                modal.find('#confirmDeleteButton').attr("formaction", formAction + "?shoppingCartItemId=" + shoppingCartItemId);
+                modal.find('#confirmDeleteButton').attr("formaction",
+                    formAction + "?shoppingCartItemId=" + shoppingCartItemId);
             });
-
         });
     </script>
 }

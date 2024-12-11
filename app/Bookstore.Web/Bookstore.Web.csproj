@@ -45,7 +45,6 @@
 
     <ItemGroup>
       <Folder Include="Controllers\" />
-      <Folder Include="wwwroot\css\" />
       <Folder Include="wwwroot\lib\" />
     </ItemGroup>
 </Project>
