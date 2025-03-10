@@ -46,7 +46,7 @@ public class DatabaseStack : Stack
             {
                 dbSG
             },
-            InstanceType = Amazon.CDK.AWS.EC2.InstanceType.Of(InstanceClass.BURSTABLE2, InstanceSize.MICRO),
+            InstanceType = Amazon.CDK.AWS.EC2.InstanceType.Of(InstanceClass.BURSTABLE3, InstanceSize.MICRO),
             InstanceIdentifier = $"{Constants.AppName}Database",
             // As this is a sample app, turn off automated backups to avoid any storage costs
             // of automated backup snapshots. It also helps the stack launch a little faster by
