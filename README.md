@@ -165,3 +165,4 @@ When you have completed working with the sample applications we recommend deleti
 
 * Or, in a command-line shell, navigate to the solution folder and run the command `cdk destroy BobsBookstore*`. 
 > **NOTE:** If you supplied `--profile` parameter to the CDK when instantiating the stack, be sure to provide the same ones on deletion, otherwise the CDK command will error out complaining that the stack cannot be found.
+test
