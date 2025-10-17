@@ -33,7 +33,7 @@ namespace Bookstore.Web.Startup
             var connString = GetDatabaseConnectionString(builder.Configuration);
             builder.Services.AddDbContext<ApplicationDbContext>(option => option.UseSqlServer(connString));
             builder.Services.AddSession();
-
+ 
             return builder;
         }
 
@@ -88,7 +88,7 @@ namespace Bookstore.Web.Startup
                     PropertyNameCaseInsensitive = true
                 });
 
-                var partialConnString = $"Server={dbSecrets.Host},{dbSecrets.Port}; Initial Catalog=BobsUsedBookStore;MultipleActiveResultSets=true; Integrated Security=false";
+                var partialConnString = $"Server={dbSecrets.Host},{dbSecrets.Port}; Initial Catalog=BobsUsedBookStore;MultipleActiveResultSets=true; Integrated Security=false;TrustServerCertificate=True\r\n";
 
                 var builder = new SqlConnectionStringBuilder(partialConnString)
                 {

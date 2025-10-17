@@ -1,9 +1,11 @@
 ﻿using Bookstore.Domain.Addresses;
+using Bookstore.Domain.Authors;
 using Bookstore.Domain.Books;
 using Bookstore.Domain.Carts;
 using Bookstore.Domain.Customers;
 using Bookstore.Domain.Offers;
 using Bookstore.Domain.Orders;
+using Bookstore.Domain.Products;
 using Bookstore.Domain.ReferenceData;
 using Microsoft.EntityFrameworkCore;
 
@@ -30,6 +32,11 @@ namespace Bookstore.Data
         public DbSet<OrderItem> OrderItem { get; set; }
 
         public DbSet<Offer> Offer { get; set; }
+
+        public DbSet<Author> Author { get; set; }
+        
+        public DbSet<Product> Product { get; set; }
+
 
         public DbSet<ReferenceDataItem> ReferenceData { get; set; }
 
