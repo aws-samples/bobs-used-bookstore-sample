@@ -1,0 +1,5 @@
+{
+  "ConnectionStrings": {
+    "BookstoreDbDefaultConnection": "Server=(localdb)\\MSSQLLocalDB; Initial Catalog=BobsUsedBookStore;MultipleActiveResultSets=true; Integrated Security=true"
+  }
+}
