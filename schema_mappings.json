@@ -1,0 +1,183 @@
+﻿{
+  "database_mapping": {
+    "source_database": "MySql",
+    "target_database": "PostgreSQL",
+    "source_schema": "dbo",
+    "target_schema": "public"
+  },
+  "table_mappings": [
+    {
+      "source_table": "Book",
+      "target_table": "book",
+      "column_mappings": [
+        { "source_column": "Name", "target_column": "name" },
+        { "source_column": "Author", "target_column": "author" },
+        { "source_column": "Year", "target_column": "year" },
+        { "source_column": "ISBN", "target_column": "isbn" },
+        { "source_column": "PublisherId", "target_column": "publisher_id" },
+        { "source_column": "BookTypeId", "target_column": "book_type_id" },
+        { "source_column": "GenreId", "target_column": "genre_id" },
+        { "source_column": "ConditionId", "target_column": "condition_id" },
+        { "source_column": "CoverImageUrl", "target_column": "cover_image_url" },
+        { "source_column": "Summary", "target_column": "summary" },
+        { "source_column": "Price", "target_column": "price" },
+        { "source_column": "Quantity", "target_column": "quantity" },
+        { "source_column": "Id", "target_column": "id" },
+        { "source_column": "CreatedBy", "target_column": "created_by" },
+        { "source_column": "CreatedOn", "target_column": "created_on" },
+        { "source_column": "UpdatedOn", "target_column": "updated_on" }
+      ]
+    },
+    {
+      "source_table": "Customer",
+      "target_table": "customer",
+      "column_mappings": [
+        { "source_column": "Sub", "target_column": "sub" },
+        { "source_column": "Username", "target_column": "username" },
+        { "source_column": "FirstName", "target_column": "first_name" },
+        { "source_column": "LastName", "target_column": "last_name" },
+        { "source_column": "Email", "target_column": "email" },
+        { "source_column": "DateOfBirth", "target_column": "date_of_birth" },
+        { "source_column": "Phone", "target_column": "phone" },
+        { "source_column": "Id", "target_column": "id" },
+        { "source_column": "CreatedBy", "target_column": "created_by" },
+        { "source_column": "CreatedOn", "target_column": "created_on" },
+        { "source_column": "UpdatedOn", "target_column": "updated_on" }
+      ]
+    },
+    {
+      "source_table": "Address",
+      "target_table": "address",
+      "column_mappings": [
+        { "source_column": "AddressLine1", "target_column": "address_line1" },
+        { "source_column": "AddressLine2", "target_column": "address_line2" },
+        { "source_column": "City", "target_column": "city" },
+        { "source_column": "State", "target_column": "state" },
+        { "source_column": "Country", "target_column": "country" },
+        { "source_column": "ZipCode", "target_column": "zip_code" },
+        { "source_column": "CustomerId", "target_column": "customer_id" },
+        { "source_column": "IsActive", "target_column": "is_active" },
+        { "source_column": "Id", "target_column": "id" },
+        { "source_column": "CreatedBy", "target_column": "created_by" },
+        { "source_column": "CreatedOn", "target_column": "created_on" },
+        { "source_column": "UpdatedOn", "target_column": "updated_on" }
+      ]
+    },
+    {
+      "source_table": "Order",
+      "target_table": "order",
+      "column_mappings": [
+        { "source_column": "CustomerId", "target_column": "customer_id" },
+        { "source_column": "AddressId", "target_column": "address_id" },
+        { "source_column": "DeliveryDate", "target_column": "delivery_date" },
+        { "source_column": "OrderStatus", "target_column": "order_status" },
+        { "source_column": "Tax", "target_column": "tax" },
+        { "source_column": "SubTotal", "target_column": "sub_total" },
+        { "source_column": "Total", "target_column": "total" },
+        { "source_column": "Id", "target_column": "id" },
+        { "source_column": "CreatedBy", "target_column": "created_by" },
+        { "source_column": "CreatedOn", "target_column": "created_on" },
+        { "source_column": "UpdatedOn", "target_column": "updated_on" }
+      ]
+    },
+    {
+      "source_table": "ShoppingCart",
+      "target_table": "shopping_cart",
+      "column_mappings": [
+        { "source_column": "CorrelationId", "target_column": "correlation_id" },
+        { "source_column": "Id", "target_column": "id" },
+        { "source_column": "CreatedBy", "target_column": "created_by" },
+        { "source_column": "CreatedOn", "target_column": "created_on" },
+        { "source_column": "UpdatedOn", "target_column": "updated_on" }
+      ]
+    },
+    {
+      "source_table": "ShoppingCartItem",
+      "target_table": "shopping_cart_item",
+      "column_mappings": [
+        { "source_column": "ShoppingCartId", "target_column": "shopping_cart_id" },
+        { "source_column": "BookId", "target_column": "book_id" },
+        { "source_column": "Quantity", "target_column": "quantity" },
+        { "source_column": "WantToBuy", "target_column": "want_to_buy" },
+        { "source_column": "Id", "target_column": "id" },
+        { "source_column": "CreatedBy", "target_column": "created_by" },
+        { "source_column": "CreatedOn", "target_column": "created_on" },
+        { "source_column": "UpdatedOn", "target_column": "updated_on" }
+      ]
+    },
+    {
+      "source_table": "OrderItem",
+      "target_table": "order_item",
+      "column_mappings": [
+        { "source_column": "OrderId", "target_column": "order_id" },
+        { "source_column": "BookId", "target_column": "book_id" },
+        { "source_column": "Quantity", "target_column": "quantity" },
+        { "source_column": "Id", "target_column": "id" },
+        { "source_column": "CreatedBy", "target_column": "created_by" },
+        { "source_column": "CreatedOn", "target_column": "created_on" },
+        { "source_column": "UpdatedOn", "target_column": "updated_on" }
+      ]
+    },
+    {
+      "source_table": "Offer",
+      "target_table": "offer",
+      "column_mappings": [
+        { "source_column": "Author", "target_column": "author" },
+        { "source_column": "ISBN", "target_column": "isbn" },
+        { "source_column": "BookName", "target_column": "book_name" },
+        { "source_column": "FrontUrl", "target_column": "front_url" },
+        { "source_column": "GenreId", "target_column": "genre_id" },
+        { "source_column": "ConditionId", "target_column": "condition_id" },
+        { "source_column": "PublisherId", "target_column": "publisher_id" },
+        { "source_column": "BookTypeId", "target_column": "book_type_id" },
+        { "source_column": "Summary", "target_column": "summary" },
+        { "source_column": "Comment", "target_column": "comment" },
+        { "source_column": "CustomerId", "target_column": "customer_id" },
+        { "source_column": "BookPrice", "target_column": "book_price" },
+        { "source_column": "OfferStatus", "target_column": "offer_status" },
+        { "source_column": "Id", "target_column": "id" },
+        { "source_column": "CreatedBy", "target_column": "created_by" },
+        { "source_column": "CreatedOn", "target_column": "created_on" },
+        { "source_column": "UpdatedOn", "target_column": "updated_on" }
+      ]
+    },
+    {
+      "source_table": "Author",
+      "target_table": "author",
+      "column_mappings": [
+        { "source_column": "BusinessEntityID", "target_column": "business_entity_id" },
+        { "source_column": "NationalIDNumber", "target_column": "national_id_number" },
+        { "source_column": "LoginID", "target_column": "login_id" },
+        { "source_column": "JobTitle", "target_column": "job_title" },
+        { "source_column": "BirthDate", "target_column": "birth_date" },
+        { "source_column": "MaritalStatus", "target_column": "marital_status" },
+        { "source_column": "Gender", "target_column": "gender" },
+        { "source_column": "HireDate", "target_column": "hire_date" },
+        { "source_column": "VacationHours", "target_column": "vacation_hours" },
+        { "source_column": "ModifiedDate", "target_column": "modified_date" }
+      ]
+    },
+    {
+      "source_table": "Product",
+      "target_table": "product",
+      "column_mappings": [
+        { "source_column": "ProductID", "target_column": "product_id" },
+        { "source_column": "Name", "target_column": "name" },
+        { "source_column": "ProductNumber", "target_column": "product_number" },
+        { "source_column": "SafetyStockLevel", "target_column": "safety_stock_level" }
+      ]
+    },
+    {
+      "source_table": "ReferenceData",
+      "target_table": "reference_data",
+      "column_mappings": [
+        { "source_column": "Text", "target_column": "text" },
+        { "source_column": "DataType", "target_column": "data_type" },
+        { "source_column": "Id", "target_column": "id" },
+        { "source_column": "CreatedBy", "target_column": "created_by" },
+        { "source_column": "CreatedOn", "target_column": "created_on" },
+        { "source_column": "UpdatedOn", "target_column": "updated_on" }
+      ]
+    }
+  ]
+}

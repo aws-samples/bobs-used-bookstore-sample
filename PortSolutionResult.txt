@@ -1,0 +1,221 @@
+==========
+References
+==========
+Bookstore.Data
+Microsoft.EntityFrameworkCore
+Bookstore.Domain.Addresses
+Bookstore.Domain.Books
+Bookstore.Domain.Customers
+Bookstore.Domain.Orders
+Bookstore.Domain.Carts
+Bookstore.Domain.Offers
+Bookstore.Domain.Authors
+Bookstore.Domain.Products
+Bookstore.Domain.ReferenceData
+Microsoft.EntityFrameworkCore.Metadata.Builders
+Bookstore.Data.FileServices
+Bookstore.Domain
+System.Threading.Tasks
+System.IO
+System
+Microsoft.Extensions.Configuration
+Amazon.S3.Transfer
+Amazon.S3
+Amazon.S3.Model
+Bookstore.Data.ImageResizeService
+ImageMagick
+Bookstore.Data.ImageValidationServices
+Amazon.Rekognition
+Amazon.Rekognition.Model
+System.Linq
+System.Collections.Generic
+Bookstore.Data.Repositories
+Microsoft.EntityFrameworkCore.ChangeTracking
+project.all
+System.ComponentModel.DataAnnotations.Schema
+Bookstore.Domain.AdminUser
+System.ComponentModel.DataAnnotations
+System.Reflection
+System.ComponentModel
+System.Net.Http
+System.Threading
+System.Text
+Bookstore.Web.Areas.Admin.Controllers
+Microsoft.AspNetCore.Mvc
+Microsoft.AspNetCore.Authorization
+Bookstore.Web.Areas.Admin.Models.Dashboard
+Microsoft.AspNetCore.Diagnostics
+Microsoft.AspNetCore.Http.Features
+Microsoft.AspNetCore.Http
+Bookstore.Web.Areas.Admin.Models.Inventory
+Microsoft.AspNetCore.Mvc.ModelBinding
+Bookstore.Web.Areas.Admin.Models.Offers
+Bookstore.Web.Areas.Admin.Models.Orders
+Bookstore.Web.Areas.Admin.Models.ReferenceData
+Bookstore.Web.Areas.Admin.Models
+Microsoft.AspNetCore.Mvc.Rendering
+Bookstore.Web.Helpers
+Bookstore.Web.Controllers
+Bookstore.Web.ViewModel.Address
+Microsoft.AspNetCore.Hosting
+Microsoft.AspNetCore.Authentication
+Microsoft.AspNetCore.Http.Headers
+Microsoft.Extensions.Hosting
+Microsoft.AspNetCore.Authentication.Cookies
+Microsoft.AspNetCore.Authentication.OpenIdConnect
+Bookstore.Web.ViewModel.Checkout
+Bookstore.Web.ViewModel.Home
+Bookstore.Web.ViewModel
+System.Diagnostics
+Bookstore.Web.ViewModel.Orders
+Bookstore.Web.ViewModel.Resale
+Bookstore.Web.ViewModel.Search
+Bookstore.Web.ViewModel.ShoppingCart
+Bookstore.Web.ViewModel.Wishlist
+System.Security.Claims
+System.Security.Principal
+Microsoft.Extensions.Logging
+System.Text.Encodings.Web
+Microsoft.Extensions.DependencyInjection
+Bookstore.Web.Startup
+Microsoft.AspNetCore.Builder
+System.IdentityModel.Tokens.Jwt
+Microsoft.IdentityModel.Tokens
+Microsoft.IdentityModel.Protocols.OpenIdConnect
+Microsoft.IdentityModel.Protocols
+System.Collections.ObjectModel
+Microsoft.AspNetCore.Mvc.Authorization
+Amazon.SecretsManager
+Amazon.Extensions.NETCore.Setup
+Amazon.SecretsManager.Model
+<global namespace>
+System.Text.Json
+Npgsql
+Microsoft.Extensions.Options
+
+===============
+DownloadedFiles
+===============
+system.net.http.json
+project.all.json
+imagemagick.json
+
+==============
+ProjectResults
+==============
+----------------------
+Showing results for: /QNet/site-packages/atx_dot_net_strands_cli/all_local_test_output/artifact-BobsBookstore/artifact/sourceCode/app/Bookstore.Data/Bookstore.Data.csproj
+----------------------
+---------------------------
+Target Versions:
+---------------------------
+net8.0
+---------------------------
+Source Versions:
+---------------------------
+net48
+---------------------------
+Upgrade packages:
+---------------------------
+---------------------------
+Action packages:
+---------------------------
+Magick.NET-Q8-AnyCPU,13.3.0
+
+----------------------
+Showing results for: /QNet/site-packages/atx_dot_net_strands_cli/all_local_test_output/artifact-BobsBookstore/artifact/sourceCode/app/Bookstore.Domain/Bookstore.Domain.csproj
+----------------------
+---------------------------
+Target Versions:
+---------------------------
+net8.0
+---------------------------
+Source Versions:
+---------------------------
+net48
+---------------------------
+Upgrade packages:
+---------------------------
+---------------------------
+Action packages:
+---------------------------
+
+----------------------
+Showing results for: /QNet/site-packages/atx_dot_net_strands_cli/all_local_test_output/artifact-BobsBookstore/artifact/sourceCode/app/Bookstore.Web/Bookstore.Web.csproj
+----------------------
+---------------------------
+Target Versions:
+---------------------------
+net8.0
+---------------------------
+Source Versions:
+---------------------------
+net48
+---------------------------
+Upgrade packages:
+---------------------------
+---------------------------
+Action packages:
+---------------------------
+
+----------------------
+Showing results for: /QNet/site-packages/atx_dot_net_strands_cli/all_local_test_output/artifact-BobsBookstore/artifact/sourceCode/app/Bookstore.Data/Bookstore.Data.csproj
+----------------------
+---------------------------
+Target Versions:
+---------------------------
+net8.0
+---------------------------
+Source Versions:
+---------------------------
+net48
+---------------------------
+Upgrade packages:
+---------------------------
+---------------------------
+Action packages:
+---------------------------
+Magick.NET-Q8-AnyCPU,13.3.0
+
+----------------------
+Showing results for: /QNet/site-packages/atx_dot_net_strands_cli/all_local_test_output/artifact-BobsBookstore/artifact/sourceCode/app/Bookstore.Domain/Bookstore.Domain.csproj
+----------------------
+---------------------------
+Target Versions:
+---------------------------
+net8.0
+---------------------------
+Source Versions:
+---------------------------
+net48
+---------------------------
+Upgrade packages:
+---------------------------
+---------------------------
+Action packages:
+---------------------------
+
+----------------------
+Showing results for: /QNet/site-packages/atx_dot_net_strands_cli/all_local_test_output/artifact-BobsBookstore/artifact/sourceCode/app/Bookstore.Web/Bookstore.Web.csproj
+----------------------
+---------------------------
+Target Versions:
+---------------------------
+net8.0
+---------------------------
+Source Versions:
+---------------------------
+net48
+---------------------------
+Upgrade packages:
+---------------------------
+---------------------------
+Action packages:
+---------------------------
+
+
+===========
+BuildErrors
+===========
+
+

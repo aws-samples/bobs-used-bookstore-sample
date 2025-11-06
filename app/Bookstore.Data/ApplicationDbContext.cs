@@ -55,6 +55,15 @@ namespace Bookstore.Data
             modelBuilder.Entity<Offer>().HasOne(x => x.Condition).WithMany().HasForeignKey(x => x.ConditionId).OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Order>().HasOne(x => x.Customer).WithMany().OnDelete(DeleteBehavior.Restrict);
+            
+            // Configure boolean to integer conversions for PostgreSQL compatibility
+            modelBuilder.Entity<Address>()
+                .Property(e => e.IsActive)
+                .HasConversion<int>();
+                
+            modelBuilder.Entity<ShoppingCartItem>()
+                .Property(e => e.WantToBuy)
+                .HasConversion<int>();
 
             PopulateDatabase(modelBuilder);
 
