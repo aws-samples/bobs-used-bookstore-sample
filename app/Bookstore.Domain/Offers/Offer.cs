@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Bookstore.Domain.Offers
 {
-    [Table("offer", Schema = "public")]
+    [Table("offer", Schema = "bobsusedbookstore_dbo")]
     public class Offer : Entity
     {
         public Offer(
@@ -37,42 +37,42 @@ namespace Bookstore.Domain.Offers
         [Column("isbn")]
         public string ISBN { get; set; }
 
-        [Column("book_name")]
+        [Column("bookname")]
         public string BookName { get; set; }
 
-        [Column("front_url")]
+        [Column("fronturl")]
         public string? FrontUrl { get; set; }
 
-        public ReferenceDataItem Genre { get; set; }
-        [Column("genre_id")]
+        public ReferenceDataItem Genre { get; set; } = null!;
+        [Column("genreid")]
         public int GenreId { get; set; }
 
-        public ReferenceDataItem Condition { get; set; }
-        [Column("condition_id")]
+        public ReferenceDataItem Condition { get; set; } = null!;
+        [Column("conditionid")]
         public int ConditionId { get; set; }
 
-        public ReferenceDataItem Publisher { get; set; }
-        [Column("publisher_id")]
+        public ReferenceDataItem Publisher { get; set; } = null!;
+        [Column("publisherid")]
         public int PublisherId { get; set; }
 
-        public ReferenceDataItem BookType { get; set; }
-        [Column("book_type_id")]
+        public ReferenceDataItem BookType { get; set; } = null!;
+        [Column("booktypeid")]
         public int BookTypeId { get; set; }
 
         [Column("summary")]
         public string? Summary { get; set; }
 
-        [Column("offer_status")]
+        [Column("offerstatus")]
         public OfferStatus OfferStatus { get; set; } = OfferStatus.PendingApproval;
 
         [Column("comment")]
         public string? Comment { get; set; }
 
-        public Customer Customer { get; set; }
-        [Column("customer_id")]
+        public Customer Customer { get; set; } = null!;
+        [Column("customerid")]
         public int CustomerId { get; set; }
 
-        [Column("book_price")]
+        [Column("bookprice")]
         public decimal BookPrice { get; set; }
     }
 }

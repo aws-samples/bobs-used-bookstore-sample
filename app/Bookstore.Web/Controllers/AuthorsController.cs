@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Bookstore.Data;
 using Bookstore.Domain.Authors;
 using Npgsql;
+using Microsoft.Data.SqlClient;
 
 
 namespace Bookstore.Web.Controllers

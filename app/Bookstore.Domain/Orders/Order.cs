@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace Bookstore.Domain.Orders
 {
-    [Table("order", Schema = "public")]
+    [Table("order", Schema = "bobsusedbookstore_dbo")]
     public class Order : Entity
     {
         public Order(int customerId, int addressId)
@@ -19,21 +19,21 @@ namespace Bookstore.Domain.Orders
 
         private readonly List<OrderItem> orderItems = new List<OrderItem>();
 
-        [Column("customer_id")]
+        [Column("customerid")]
         public int CustomerId { get; set; }
-        public Customer Customer { get; set; }
+        public Customer Customer { get; set; } = null!;
 
-        [Column("address_id")]
+        [Column("addressid")]
         public int AddressId { get; set; }
-        public Address Address { get; set; }
+        public Address Address { get; set; } = null!;
 
         [NotMapped]
         public IEnumerable<OrderItem> OrderItems => orderItems;
 
-        [Column("delivery_date")]
+        [Column("deliverydate")]
         public DateTime DeliveryDate { get; set; } = DateTime.Now.ToUniversalTime().AddDays(7);
 
-        [Column("order_status")]
+        [Column("orderstatus")]
         public OrderStatus OrderStatus { get; set; } = OrderStatus.Pending;
 
         [NotMapped]

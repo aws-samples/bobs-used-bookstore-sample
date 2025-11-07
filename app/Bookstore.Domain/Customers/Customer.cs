@@ -4,19 +4,19 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Bookstore.Domain.Customers
 {
-    [Table("customer", Schema = "public")]
+    [Table("customer", Schema = "bobsusedbookstore_dbo")]
     public class Customer : Entity
     {
         [Column("sub")]
-        public string Sub { get; set; }
+        public string Sub { get; set; } = string.Empty;
 
         [Column("username")]
         public string? Username { get; set; }
 
-        [Column("first_name")]
+        [Column("firstname")]
         public string? FirstName { get; set; }
 
-        [Column("last_name")]
+        [Column("lastname")]
         public string? LastName { get; set; }
 
         [NotMapped]
@@ -25,7 +25,7 @@ namespace Bookstore.Domain.Customers
         [Column("email")]
         public string? Email { get; set; }
 
-        [Column("date_of_birth")]
+        [Column("dateofbirth")]
         public DateTime? DateOfBirth { get; set; }
 
         [Column("phone")]

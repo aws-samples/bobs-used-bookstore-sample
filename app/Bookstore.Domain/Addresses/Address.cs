@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Bookstore.Domain.Addresses
 {
-    [Table("address", Schema = "public")]
+    [Table("address", Schema = "bobsusedbookstore_dbo")]
     public class Address : Entity
     {
         // An empty constructor is required by EF Core
@@ -25,10 +25,10 @@ namespace Bookstore.Domain.Addresses
             ZipCode = zipCode;
         }
 
-        [Column("address_line1")]
+        [Column("addressline1")]
         public string AddressLine1 { get; set; }
 
-        [Column("address_line2")]
+        [Column("addressline2")]
         public string? AddressLine2 { get; set; }
 
         [Column("city")]
@@ -40,14 +40,14 @@ namespace Bookstore.Domain.Addresses
         [Column("country")]
         public string Country { get; set; }
 
-        [Column("zip_code")]
+        [Column("zipcode")]
         public string ZipCode { get; set; }
 
-        [Column("customer_id")]
+        [Column("customerid")]
         public int CustomerId { get; set; }
         public Customer Customer { get; set; }
 
-        [Column("is_active")]
+        [Column("isactive")]
         public bool IsActive { get; set; } = true;
     }
 }

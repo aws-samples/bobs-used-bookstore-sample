@@ -8,52 +8,52 @@ using System.Threading.Tasks;
 
 namespace Bookstore.Domain.Authors
 {
-    [Table("author", Schema = "public")]
+    [Table("author", Schema = "bobsusedbookstore_dbo")]
     public class Author
     {
         [Key]
-        [Column("business_entity_id")]
+        [Column("businessentityid")]
         public int BusinessEntityID { get; set; }
 
         [Required]
         [StringLength(15)]
-        [Column("national_id_number")]
-        public string NationalIDNumber { get; set; }
+        [Column("nationalidnumber")]
+        public string NationalIDNumber { get; set; } = string.Empty;
 
         [Required]
         [StringLength(256)]
-        [Column("login_id")]
-        public string LoginID { get; set; }
+        [Column("loginid")]
+        public string LoginID { get; set; } = string.Empty;
 
         [Required]
         [StringLength(50)]
-        [Column("job_title")]
-        public string JobTitle { get; set; }
+        [Column("jobtitle")]
+        public string JobTitle { get; set; } = string.Empty;
 
         [Required]
-        [Column("birth_date")]
+        [Column("birthdate")]
         public DateTime BirthDate { get; set; }
 
         [Required]
         [StringLength(1)]
-        [Column("marital_status")]
-        public string MaritalStatus { get; set; }
+        [Column("maritalstatus")]
+        public string MaritalStatus { get; set; } = string.Empty;
 
         [Required]
         [StringLength(1)]
         [Column("gender")]
-        public string Gender { get; set; }
+        public string Gender { get; set; } = string.Empty;
 
         [Required]
-        [Column("hire_date")]
+        [Column("hiredate")]
         public DateTime HireDate { get; set; }
 
         [Required]
-        [Column("vacation_hours")]
+        [Column("vacationhours")]
         public short VacationHours { get; set; }
         
         [Required]
-        [Column("modified_date")]
+        [Column("modifieddate")]
         public DateTime ModifiedDate { get; set; } = DateTime.Now.ToUniversalTime();
     }
 }

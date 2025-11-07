@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Bookstore.Domain.Books
 {
-    [Table("book", Schema = "public")]
+    [Table("book", Schema = "bobsusedbookstore_dbo")]
     public class Book : Entity
     {
         public const int LowBookThreshold = 5;
@@ -50,23 +50,23 @@ namespace Bookstore.Domain.Books
         [Column("isbn")]
         public string ISBN { get; set; }
 
-        public ReferenceDataItem Publisher { get; set; }
-        [Column("publisher_id")]
+        public ReferenceDataItem Publisher { get; set; } = null!;
+        [Column("publisherid")]
         public int PublisherId { get; set; }
 
-        public ReferenceDataItem BookType { get; set; }
-        [Column("book_type_id")]
+        public ReferenceDataItem BookType { get; set; } = null!;
+        [Column("booktypeid")]
         public int BookTypeId { get; set; }
 
-        public ReferenceDataItem Genre { get; set; }
-        [Column("genre_id")]
+        public ReferenceDataItem Genre { get; set; } = null!;
+        [Column("genreid")]
         public int GenreId { get; set; }
 
-        public ReferenceDataItem Condition { get; set; }
-        [Column("condition_id")]
+        public ReferenceDataItem Condition { get; set; } = null!;
+        [Column("conditionid")]
         public int ConditionId { get; set; }
 
-        [Column("cover_image_url")]
+        [Column("coverimageurl")]
         public string? CoverImageUrl { get; set; }
 
         [Column("summary")]

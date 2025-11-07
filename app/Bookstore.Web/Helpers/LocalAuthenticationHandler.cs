@@ -15,7 +15,7 @@ namespace Bookstore.Web.Helpers
     {
         private const string UserId = "FB6135C7-1464-4A72-B74E-4B63D343DD09";
 
-        public LocalAuthenticationHandler(IOptionsMonitor<AuthenticationSchemeOptions> options, ILoggerFactory logger, UrlEncoder encoder, ISystemClock clock) : base(options, logger, encoder, clock)
+        public LocalAuthenticationHandler(IOptionsMonitor<AuthenticationSchemeOptions> options, ILoggerFactory logger, UrlEncoder encoder) : base(options, logger, encoder)
         {
         }
 

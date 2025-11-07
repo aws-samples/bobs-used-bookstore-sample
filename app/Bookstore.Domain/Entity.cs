@@ -10,13 +10,13 @@ namespace Bookstore.Domain
         [Column("id")]
         public int Id { get; set; }
 
-        [Column("created_by")]
+        [Column("createdby")]
         public string CreatedBy { get; set; } = "System";
 
-        [Column("created_on")]
+        [Column("createdon")]
         public DateTime CreatedOn { get; set; } = DateTime.UtcNow;
 
-        [Column("updated_on")]
+        [Column("updatedon")]
         public DateTime UpdatedOn { get; set; } = DateTime.UtcNow;
 
         //[Timestamp]

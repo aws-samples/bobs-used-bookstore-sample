@@ -90,7 +90,7 @@ namespace Bookstore.Web.Startup
                 });
 
                 // PostgreSQL connection string format
-                connString = $"Host={dbSecrets.Host};Port={dbSecrets.Port};Database=BobsUsedBookStore;Username={dbSecrets.Username};Password={dbSecrets.Password}";
+                connString = $"Host={dbSecrets.Host};Port={dbSecrets.Port};Database=postgres;Username={dbSecrets.Username};Password={dbSecrets.Password};SearchPath=bobsusedbookstore_dbo";
             }
             catch (AmazonSecretsManagerException e)
             {
