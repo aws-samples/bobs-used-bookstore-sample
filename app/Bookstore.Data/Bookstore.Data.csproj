@@ -10,8 +10,8 @@
         <PackageReference Include="AWSSDK.SecretsManager" Version="3.7.1.4" />
         <PackageReference Include="Magick.NET-Q8-AnyCPU" Version="13.3.0" />
         <PackageReference Include="Microsoft.Build" Version="17.2.0" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.6" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.6">
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.36" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.36">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
