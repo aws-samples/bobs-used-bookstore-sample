@@ -41,6 +41,52 @@ When running under the _local_ profile the application will use a SQL Server Exp
 
 Launch profiles, contained in the application's launchSettings.json file, are used to determine whether you are running the application fully local (no AWS resources) or local with AWS resources. The launch profile that represents a fully local run, without using any AWS services, is called the _Local_ profile. The second profile, in which the application can be run locally but also make use of some AWS services, is called the _Integrated_ profile. See the [Deployment](#deployment) section for details on launching the application with the _Integrated_ profile.
 
+### Connecting to RDS Database Using AWS Secrets Manager
+
+To connect the application to an existing Amazon RDS database using AWS Secrets Manager instead of the local SQL Server:
+
+1. **Update `appsettings.Development.json`** in the _Bookstore.Web_ project:
+   ```json
+   {
+     "dbsecretsname": "your-secret-name",
+     "AWS": {
+       "Profile": "default",
+       "Region": "us-east-1"
+     }
+   }
+   ```
+   
+2. **Configure AWS credentials or EC2 Instance Profile** with access to:
+   - The specified secret in AWS Secrets Manager
+   - The RDS database referenced in that secret
+   
+   **For EC2 deployment**, attach an IAM role that has permissions to read the secret such as the following sample policy:
+   ```json
+   {
+     "Version": "2012-10-17",
+     "Statement": [
+       {
+         "Effect": "Allow",
+         "Action": [
+           "secretsmanager:GetSecretValue"
+         ],
+         "Resource": "arn:aws:secretsmanager:REGION:ACCOUNT:secret:your-secret-name*"
+       }
+     ]
+   }
+   ```
+   
+   Replace `REGION`, `ACCOUNT`, and `your-secret-name` with your actual values.
+   
+3. **In AWS Secrets Manager, store a new secret**:
+   - Navigate to AWS Secrets Manager in the AWS Console
+   - Click "Store a new secret"
+   - Select "Credentials for Amazon RDS database"
+   - Enter your database username and password
+   - Select your encryption key (use default AWS managed key or your own KMS key)
+   - Select your SQL Server RDS database instance from the dropdown
+   - Give the secret a name (this will be your `dbsecretsname` value)
+   - Complete the creation process
 
 ## Deployment
 
