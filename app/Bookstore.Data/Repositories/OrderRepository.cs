@@ -20,12 +20,12 @@ namespace Bookstore.Data.Repositories
 
         async Task IOrderRepository.AddAsync(Order order)
         {
-            await dbContext.Order.AddAsync(order);
+            await dbContext.Orders.AddAsync(order);
         }
 
         async Task<Order> IOrderRepository.GetAsync(int id)
         {
-            return await dbContext.Order
+            return await dbContext.Orders
                 .Include(x => x.Customer)
                 .Include(x => x.Address)
                 .Include(x => x.OrderItems).ThenInclude(x => x.Book).ThenInclude(x => x.BookType)
@@ -37,7 +37,7 @@ namespace Bookstore.Data.Repositories
 
         async Task<Order> IOrderRepository.GetAsync(int id, string sub)
         {
-            return await dbContext.Order.SingleOrDefaultAsync(x => x.Id == id && x.Customer.Sub == sub);
+            return await dbContext.Orders.SingleOrDefaultAsync(x => x.Id == id && x.Customer.Sub == sub);
         }
 
         async Task<IEnumerable<Book>> IOrderRepository.ListBestSellingBooksAsync(int count)
@@ -54,7 +54,7 @@ namespace Bookstore.Data.Repositories
         {
             var startOfMonth = DateTime.UtcNow.StartOfMonth();
 
-            return await dbContext.Order
+            return await dbContext.Orders
                 .GroupBy(x => 1)
                 .Select(x => new OrderStatistics
                 {
@@ -67,7 +67,7 @@ namespace Bookstore.Data.Repositories
 
         async Task<IPaginatedList<Order>> IOrderRepository.ListAsync(OrderFilters filters, int pageIndex, int pageSize)
         {
-            var query = dbContext.Order.AsQueryable();
+            var query = dbContext.Orders.AsQueryable();
 
             if (filters.OrderStatusFilter.HasValue)
             {
@@ -98,7 +98,7 @@ namespace Bookstore.Data.Repositories
 
         async Task<IEnumerable<Order>> IOrderRepository.ListAsync(string sub)
         {
-            return await dbContext.Order
+            return await dbContext.Orders
                 .Include(x => x.OrderItems)
                 .ThenInclude(x => x.Book)
                 .Where(x => x.Customer.Sub == sub)
