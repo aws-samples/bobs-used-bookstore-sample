@@ -2,6 +2,14 @@
 {
     public class Customer : Entity
     {
+        // Empty constructor required by EF Core
+        public Customer() { }
+        
+        public Customer(string sub)
+        {
+            Sub = sub;
+        }
+        
         public string Sub { get; set; }
 
         public string? Username { get; set; }
