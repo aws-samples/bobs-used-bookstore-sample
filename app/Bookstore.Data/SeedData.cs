@@ -9,7 +9,7 @@ namespace Bookstore.Data
         private void PopulateDatabase(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ReferenceDataItem>().HasData(
-                new ReferenceDataItem(ReferenceDataType.BookType, "Hardcover") { Id = 1 },
+                new ReferenceDataItem(ReferenceDataType.BookType, "Hardcover") { Id = 2147483700 },
                 new ReferenceDataItem(ReferenceDataType.BookType, "Trade Paperback") { Id = 2 },
                 new ReferenceDataItem(ReferenceDataType.BookType, "Mass Market Paperback") { Id = 3 },
 
@@ -50,4 +50,5 @@ namespace Bookstore.Data
             );
         }
     }
+
 }
