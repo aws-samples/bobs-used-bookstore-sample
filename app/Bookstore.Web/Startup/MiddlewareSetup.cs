@@ -50,17 +50,6 @@ namespace Bookstore.Web.Startup
             {
                 var context = scope.ServiceProvider.GetService<ApplicationDbContext>()!;
                 await context.Database.EnsureCreatedAsync();
-                
-                // Check if RowVersion columns exist, if not recreate database
-                try
-                {
-                    await context.OrderItem.FirstOrDefaultAsync();
-                }
-                catch (Microsoft.Data.SqlClient.SqlException ex) when (ex.Message.Contains("RowVersion"))
-                {
-                    await context.Database.EnsureDeletedAsync();
-                    await context.Database.EnsureCreatedAsync();
-                }
             }
 
             return app;
