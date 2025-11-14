@@ -49,7 +49,11 @@ namespace Bookstore.Web.Startup
             using (var scope = app.Services.CreateAsyncScope())
             {
                 var context = scope.ServiceProvider.GetService<ApplicationDbContext>()!;
-                await context.Database.EnsureCreatedAsync();
+                
+                if (!await context.Database.CanConnectAsync())
+                {
+                    await context.Database.EnsureCreatedAsync();
+                }
             }
 
             return app;
