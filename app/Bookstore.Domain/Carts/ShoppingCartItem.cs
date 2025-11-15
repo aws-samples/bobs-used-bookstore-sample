@@ -7,7 +7,7 @@ namespace Bookstore.Domain.Carts
         // An empty constructor is required by EF Core
         private ShoppingCartItem() { }
 
-        public ShoppingCartItem(ShoppingCart shoppingCart, int bookId, int quantity, bool wantToBuy)
+        public ShoppingCartItem(ShoppingCart shoppingCart, int bookId, int quantity, int wantToBuy)
         {
             ShoppingCartId = shoppingCart.Id;
             ShoppingCart = shoppingCart;
@@ -24,6 +24,6 @@ namespace Bookstore.Domain.Carts
 
         public int Quantity { get; set; }
 
-        public bool WantToBuy { get; set; }
+        public int WantToBuy { get; set; }
     }
 }

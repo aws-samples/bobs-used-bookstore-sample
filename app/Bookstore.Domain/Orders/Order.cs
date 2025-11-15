@@ -1,6 +1,7 @@
 ﻿using Bookstore.Domain.Addresses;
 using Bookstore.Domain.Books;
 using Bookstore.Domain.Customers;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Bookstore.Domain.Orders
 {
@@ -22,8 +23,10 @@ namespace Bookstore.Domain.Orders
 
         public IEnumerable<OrderItem> OrderItems => orderItems;
 
-        public DateTime DeliveryDate { get; set; } = DateTime.Now.AddDays(7);
+        [Column("DeliveryDate")]
+        public DateTime DeliveryDate { get; set; } = DateTime.UtcNow.AddDays(7);
 
+        [Column("OrderStatus")]
         public OrderStatus OrderStatus { get; set; } = OrderStatus.Pending;
 
         public decimal Tax => SubTotal * 0.1m;

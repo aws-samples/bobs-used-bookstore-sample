@@ -36,6 +36,6 @@ namespace Bookstore.Domain.Addresses
         public int CustomerId { get; set; }
         public Customer Customer { get; set; }
 
-        public bool IsActive { get; set; } = true;
+        public int IsActive { get; set; } = 1;
     }
 }
