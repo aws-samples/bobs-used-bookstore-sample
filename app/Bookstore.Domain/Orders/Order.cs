@@ -15,9 +15,11 @@ namespace Bookstore.Domain.Orders
 
         private readonly List<OrderItem> orderItems = new List<OrderItem>();
 
+        [Column("CustomerId")]
         public int CustomerId { get; set; }
         public Customer Customer { get; set; }
 
+        [Column("AddressId")]
         public int AddressId { get; set; }
         public Address Address { get; set; }
 
