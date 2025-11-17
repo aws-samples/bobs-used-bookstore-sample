@@ -1,0 +1,79 @@
+﻿@model Bookstore.Web.ViewModel.Resale.ResaleCreateViewModel
+
+<div class="panel-body">
+    <h1>
+        Book details
+    </h1>
+
+    <br />
+
+    <form method="post">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="form-group">
+            <label class="main-text form-check-label" asp-for="BookName">Book Name</label>
+            <input class="main-text form-control bg-light text-dark" asp-for="BookName" required />
+            <span asp-validation-for="BookName" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label class="main-text form-check-label" asp-for="Author">Author</label>
+            <input class="main-text form-control bg-light text-dark" asp-for="Author" required />
+            <span asp-validation-for="Author" class="text-danger"></span>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label class="main-text form-check-label" asp-for="ISBN">ISBN</label>
+                <input class="main-text form-control bg-light text-dark" asp-for="ISBN" type="text" placeholder="10 or 13 digit ISBN" required />
+                <span asp-validation-for="ISBN" class="text-danger"></span>
+            </div>
+
+            <div class="form-group col-md-6">
+                <label class="main-text form-check-label">Publisher Name</label>
+
+                <select class="form-control mb-3" asp-for="SelectedPublisherId" asp-items="Model.Publishers" required>
+                    <option value="">Select the publisher</option>
+                </select>
+            </div>
+
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label class="main-text form-check-label" asp-for="BookPrice">Book Price</label>
+                <input class="main-text form-control bg-light text-dark" asp-for="BookPrice" placeholder="$" required />
+                <span asp-validation-for="BookPrice" class="text-danger"></span>
+            </div>
+            <div class="form-group col-md-6">
+                <label class="main-text form-check-label">Book Condition</label><br />
+
+                <select class="form-control mb-3" asp-for="SelectedConditionId" asp-items="Model.Conditions" required>
+                    <option value="">Select the book condition</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label class="main-text form-check-label">Book Type</label><br />
+
+                <select class="form-control mb-3" asp-for="SelectedBookTypeId" asp-items="Model.BookTypes" required>
+                    <option value="">Select the book type</option>
+                </select>
+            </div>
+
+            <div class="form-group col-md-6">
+                <label class="main-text form-check-label">Book Genre</label><br />
+
+                <select class="form-control mb-3" asp-for="SelectedGenreId" asp-items="Model.Genres" required>
+                    <option value="">Select the genre</option>
+                </select>
+            </div>
+        </div>
+
+        <hr class="mt-2 mb-5">
+
+        <div class="form-group text-center">
+            <button class="btn btn-lg" type="submit">SUBMIT</button>
+        </div>
+    </form>
+</div>

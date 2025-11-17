@@ -1,0 +1,123 @@
+﻿@model Bookstore.Web.ViewModel.Checkout.CheckoutIndexViewModel
+
+<div class="panel-body">
+
+    <h1>Finish your order</h1>
+    <br />
+    <br />
+    <div class="container" style="text-align: center">
+
+        <ul class="time-horizontal">
+            <li style="color:red"><b></b>Cart</li>
+            <li style="color:red"><b></b>Choose Address</li>
+            <li>
+                <p></p>Finish
+            </li>
+
+        </ul>
+    </div>
+    <br />
+    <br />
+    <br />
+
+    <div>
+        <h2>Total price :$@Model.Total</h2>
+    </div>
+
+    <form method="post">
+        <table class="table">
+            <thead>
+            <tr>
+                <th></th>
+                <th>Address Line 1</th>
+                <th>Address Line 2</th>
+                <th>City</th>
+                <th>State</th>
+                <th>Country</th>
+                <th>ZipCode</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+
+            @foreach (var address in Model.Addresses)
+            {
+                <tr>
+                    <td>
+                        <input type="radio" asp-for="@Model.SelectedAddressId" value="@address.Id" />
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => address.AddressLine1)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => address.AddressLine2)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => address.City)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => address.State)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => address.Country)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => address.ZipCode)
+                    </td>
+                    <td>
+                        <a asp-action="Update" asp-controller="Address" asp-route-id="@address.Id" asp-route-returnUrl="@Url.Action()">Edit</a>
+                    </td>
+                </tr>
+            }
+
+            @if (Model.Addresses.Count() == 0)
+            {
+                <input type="submit" value="Finish your order" class="btn" disabled />
+                <p style="color:red"> Add an Address to proceed to checkout </p>
+            }
+            else
+            {
+                <input type="submit" value="Finish your order" class="btn" />
+            }
+            </tbody>
+        </table>
+    </form>
+
+    <div>
+        <p style="text-align: center">
+            <a asp-action="Create" asp-controller="Address" asp-route-returnUrl="@Url.Action()">Add address</a>
+        </p>
+    </div>
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Cover</th>
+            <th>name</th>
+            <th>price</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var item in Model.ShoppingCartItems)
+        {
+            <tr>
+                <td>
+                    <img src="@item.ImageUrl" height="80" width="50" onerror="this.onerror=null;this.src='/images/default_c.jpg';" />
+                </td>
+                <td>
+                    <span class="@(item.OutOfStock ? "text-danger" : "")">@item.BookName</span>
+
+                    @if (item.OutOfStock)
+                    {
+                        <p class="text-danger"><small>Out of stock</small></p>
+                    }
+                </td>
+
+                <td>
+                    <span style="@(item.OutOfStock ? "text-decoration: line-through;":"")">$@item.Price</span>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>

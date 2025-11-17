@@ -1,0 +1,55 @@
+﻿@model Bookstore.Web.ViewModel.Orders.OrderDetailsViewModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<div class="panel-body">
+    <h1>Order: #@Model.OrderId</h1>
+
+    <div class="container mt-1">
+        <h5>Status: @Model.OrderStatus</h5>
+
+        @if (Model.DeliveryDate == DateTime.MinValue)
+        {
+            <h5>Delivery Date: Unknown</h5>
+        }
+        else
+        {
+            <h5>Delivery Date: @Model.DeliveryDate</h5>
+        }
+        <h5>Total cost: @Model.Total.ToString("C")</h5>
+    </div>
+
+    <div class="container mt-5">
+        <h2>Your Order:</h2>
+
+        <table class="table table-hover mt-5">
+            <thead>
+            <tr>
+                <th cope="col">Cover</th>
+                <th scope="col">Title</th>
+                <th scope="col">Price</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var book in Model.OrderItems)
+            {
+                <tr>
+                    <td>
+                        <img src="@book.ImageUrl" class="img-thumbnail" onerror="this.onerror=null;this.src='/images/default_c.jpg';" style="max-width: 75px;max-height: 75px;" />
+                    </td>
+                    <td>
+                        <a asp-controller="Search" asp-action="Details" asp-route-id="@book.BookId">
+                            @book.BookName
+                        </a>
+                    </td>
+                    <td>$@book.Price</td>
+                </tr>
+            }
+            </tbody>
+        </table>
+
+        <a class="btn" asp-action="Index">Back</a>
+    </div>
+</div>

@@ -1,0 +1,89 @@
+﻿@model Bookstore.Web.ViewModel.Wishlist.WishlistIndexViewModel
+
+@{
+    ViewData["Title"] = "Wishlist";
+}
+
+<partial name="_Notification" />
+
+<div class="panel-body">
+
+    <h1>Wishlist</h1>
+
+    <br />
+
+    <form method="post">
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Cover</th>
+                <th>Book name</th>
+                <th>Price</th>
+                <th></th>
+            </tr>
+            </thead>
+
+            <tbody>
+            @foreach (var item in Model.WishlistItems)
+            {
+                <tr>
+                    <td>
+                        <img src="@Html.DisplayFor(modelitem => item.ImageUrl)" style="width: 135px;height: 200px;" onerror="this.onerror=null;this.src='/images/default_c.jpg';" />
+                    </td>
+                    <td>
+                        @item.BookName
+                    </td>
+                    <td>
+                        @item.Price.ToString("C")
+                    </td>
+                    <td>
+                        <div class="hstack gap-2">
+                            <button type="submit" class="btn btn-link" asp-action="MoveToShoppingCart" asp-route-shoppingCartItemId="@item.ShoppingCartItemId">Move to shopping cart</button>
+                            <div class="vr"></div>
+                            <button type="button" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" data-shoppingCartItemId="@item.ShoppingCartItemId">Remove</button>
+                        </div>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+
+        <button type="submit" class="btn" asp-action="MoveAllItemsToShoppingCart">Move all items to shopping cart</button>
+    </form>
+
+    <div id="confirmDeleteModal" class="modal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Remove Wishlist Item?</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to remove this item from your wishlist?</p>
+                </div>
+                <div class="modal-footer">
+                    <form method="post">
+                        <button id="confirmDeleteButton" type="submit" class="btn btn-primary" asp-action="Delete">Yes, Remove</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No, Don't Remove</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+        $(function () {
+
+            $('#confirmDeleteModal').on('show.bs.modal', function (event) {               
+                var modal = $(this);
+                var formAction = modal.find('#confirmDeleteButton').attr("formaction");
+                var shoppingCartItemId = $(event.relatedTarget).data('shoppingcartitemid');
+
+                modal.find('#confirmDeleteButton').attr("formaction", formAction + "?shoppingCartItemId=" + shoppingCartItemId);
+            });
+
+        });
+    </script>
+}

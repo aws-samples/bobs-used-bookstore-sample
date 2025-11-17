@@ -1,0 +1,22 @@
+﻿@model Bookstore.Web.Areas.Admin.Models.PaginatedViewModel
+
+@{
+    var filters = Context.Request.Query.ToDictionary(x => x.Key, x => x.Value.ToString());
+}
+
+<nav aria-label="Page navigation example">
+    <ul class="pagination mb-0">
+        <li class="page-item @(Model.HasPreviousPage ? "" : "disabled")">
+            <a class="page-link" asp-action="Index" asp-all-route-data="@filters" asp-route-pageIndex="@(Model.PageIndex - 1)">Previous</a>
+        </li>
+
+        @foreach (var button in Model.PaginationButtons)
+        {
+                <li class="page-item @(Model.PageIndex == button ? "disabled" : "")"><a class="page-link" asp-action="Index" asp-all-route-data="@filters" asp-route-pageIndex="@button">@button</a></li>
+        }
+
+        <li class="page-item @(Model.HasNextPage ? "" : "disabled")">
+            <a class="page-link" asp-action="Index" asp-all-route-data="@filters" asp-route-pageIndex="@(Model.PageIndex + 1)" >Next</a>
+        </li>
+    </ul>
+</nav>

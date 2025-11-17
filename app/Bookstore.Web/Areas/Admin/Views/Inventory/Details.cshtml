@@ -1,0 +1,60 @@
+﻿@model Bookstore.Web.Areas.Admin.Models.Inventory.InventoryDetailsViewModel
+
+<div class="d-flex m-3">
+    <h5 class="me-auto">Book Details</h5>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-4 mb-3">
+        <img src="@Model.CoverImageUrl" class="img-fluid img-thumbnail">
+    </div>
+
+    <div class="col-4 mb-3">
+        <table class="table">
+            <tbody>
+                <tr>
+                    <th scope="row">Name</th>
+                    <td>@Model.Name</td>
+                </tr>
+                <tr>
+                    <th scope="row">Author</th>
+                    <td>@Model.Author</td>
+                </tr>
+                <tr>
+                    <th scope="row">Genre</th>
+                    <td>@Model.Genre</td>
+                </tr>
+                <tr>
+                    <th scope="row">Price</th>
+                    <td>@Model.Price.ToString("C")</td>
+                </tr>
+                <tr>
+                    <th scope="row">Publisher</th>
+                    <td>@Model.Publisher</td>
+                </tr>
+                <tr>
+                    <th scope="row">ISBN</th>
+                    <td>@Model.ISBN</td>
+                </tr>
+                <tr>
+                    <th scope="row">Book Type</th>
+                    <td>@Model.BookType</td>
+                </tr>
+                <tr>
+                    <th scope="row">Condition</th>
+                    <td>@Model.Condition</td>
+                </tr>
+                <tr>
+                    <th scope="row">Description</th>
+                    <td>@Model.Summary</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-8">
+        <a class="btn btn-primary" asp-action="Index">Back</a>
+    </div>
+</div>

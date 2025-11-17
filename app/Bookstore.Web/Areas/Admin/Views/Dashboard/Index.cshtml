@@ -1,0 +1,52 @@
+﻿@using Bookstore.Domain;
+@using Bookstore.Domain.Offers;
+@using Bookstore.Domain.Orders
+
+@model Bookstore.Web.Areas.Admin.Models.Dashboard.DashboardIndexViewModel
+
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<div class="d-flex m-3">
+    <h5 class="me-auto">Dashboard</h5>
+</div>
+
+<div class="row row-cols-3">
+    <div class="col">
+        <div class="card mx-3">
+            <div class="card-header">Orders</div>
+
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item d-flex justify-content-between">@(Model.PendingOrders == 1 ? "There is 1 pending order" : $"There are {Model.PendingOrders} pending orders")<a asp-area="Admin" asp-controller="Orders" asp-route-Filters.OrderStatusfilter="@((int)OrderStatus.Pending)">View</a></li>
+                <li class="list-group-item d-flex justify-content-between">@(Model.PastDueOrders == 1 ? "There is 1 past-due order" : $"There are {Model.PastDueOrders} past-due orders")<a asp-area="Admin" asp-controller="Orders">View</a></li>
+                <li class="list-group-item d-flex justify-content-between">@(Model.OrdersThisMonth == 1 ? "There has been 1 order placed this month" : $"There have been {Model.OrdersThisMonth} orders placed this month")<a asp-area="Admin" asp-controller="Orders" asp-route-Filters.OrderDateFromfilter="@DateTime.UtcNow.StartOfMonth().ToString("yyyy-MM-dd")">View</a></li>
+                <li class="list-group-item d-flex justify-content-between">@(Model.OrdersTotal == 1 ? "There has been 1 order placed in total" : $"There have been {Model.OrdersTotal} orders placed in total")<a asp-area="Admin" asp-controller="Orders">View</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="col">
+        <div class="card mx-3">
+            <div class="card-header">Offers</div>
+
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item d-flex justify-content-between">@(Model.PendingOffers == 1 ? "There is 1 pending offer" : $"There are {Model.PendingOffers} pending offers")<a asp-area="Admin" asp-controller="Offers" asp-route-Filters.OfferStatus="@((int)OfferStatus.PendingApproval)">View</a></li>
+                <li class="list-group-item d-flex justify-content-between">@(Model.OffersThisMonth == 1 ? "There has been 1 offer made this month" : $"There have been {Model.OffersThisMonth} offers made this month")<a asp-area="Admin" asp-controller="Offers" asp-route-Filters.OfferDateFromfilter="@DateTime.UtcNow.StartOfMonth().ToString("yyyy-MM-dd")">View</a></li>
+                <li class="list-group-item d-flex justify-content-between">@(Model.OffersTotal == 1 ? "There has been 1 offer made in total" : $"There have been {Model.OffersTotal} offers made in total")<a asp-area="Admin" asp-controller="Offers">View</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="col">
+        <div class="card mx-3">
+            <div class="card-header">Inventory</div>
+
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item d-flex justify-content-between">@(Model.OutOfStock == 1 ? "1 book is out of stock" : $"{Model.OutOfStock} books are out of stock")<a asp-area="Admin" asp-controller="Inventory" asp-route-Filters.LowStock="True">View</a></li>
+                <li class="list-group-item d-flex justify-content-between">@(Model.LowStock == 1 ? "1 book is low in stock" : $"{Model.LowStock} books are low in stock")<a asp-area="Admin" asp-controller="Inventory" asp-route-Filters.LowStock="True">View</a></li>
+                <li class="list-group-item d-flex justify-content-between">@(Model.StockTotal == 1 ? "There is a total of 1 book in inventory" : $"There is a total of {Model.StockTotal} books in inventory")<a asp-area="Admin" asp-controller="Inventory">View</a></li>
+            </ul>
+        </div>
+    </div>
+</div>

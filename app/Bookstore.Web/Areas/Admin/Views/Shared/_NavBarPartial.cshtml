@@ -1,0 +1,34 @@
+﻿<header>
+    <nav class="navbar navbar-expand-lg bg-light mb-3">
+        <div class="container-fluid">
+            <a class="navbar-brand" asp-area="Admin" asp-controller="Orders" asp-action="Index">Bob's Used Books</a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse d-sm-inline-flex flex-sm-row-reverse" id="navbarSupportedContent">
+                <ul class="navbar-nav flex-grow-1">
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="Admin" asp-controller="Dashboard" asp-action="Index">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="Admin" asp-controller="Orders" asp-action="Index">Orders</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="Admin" asp-controller="Offers" asp-action="Index">Offers</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="Admin" asp-controller="Inventory" asp-action="Index">Inventory</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="Admin" asp-controller="ReferenceData" asp-action="Index">Reference Data</a>
+                    </li>
+                </ul>
+            </div>
+
+            <partial name="_LoginPartial" />
+        </div>
+    </nav>
+</header>

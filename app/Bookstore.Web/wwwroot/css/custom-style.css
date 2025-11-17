@@ -1,0 +1,57 @@
+﻿.time-horizontal {
+    list-style-type: none;
+    border-top: 4px solid #2282ca;
+    max-width: 600px;
+    padding: 2px;
+    margin: 0px;
+}
+
+.time-horizontal li {
+    float: left;
+    position: relative;
+    text-align: center;
+    width: 33%;
+    padding-top: 10px;
+}
+
+.time-horizontal li b:before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: 47%;
+    width: 18px;
+    height: 18px;
+    border: 2px solid #2282ca;
+    border-radius: 8px;
+    background: #ff0000
+}
+
+.time-horizontal li p:before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: 47%;
+    width: 18px;
+    height: 18px;
+    border: 2px solid #2282ca;
+    border-radius: 8px;
+    background: #110fe5
+}
+
+.book_image {
+    width: 80%
+}
+
+.book_image_size {
+    width: 133px !important;
+    height: 200px !important
+}
+
+.bg-cover {
+    background: url('/images/manage_cover.jpg');
+    background-repeat: no-repeat;
+    background-position: center;
+    padding: 175px;
+    background-size: contain;
+    height: 600px;
+}

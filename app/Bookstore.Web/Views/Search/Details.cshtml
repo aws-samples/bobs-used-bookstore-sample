@@ -1,0 +1,73 @@
+﻿@model Bookstore.Web.ViewModel.Search.SearchDetailsViewModel
+
+<div class="panel-body">
+    @if (Model == null)
+    {
+        <h3>Book not found.</h3>
+    }
+    else
+    {
+        <h1>@Model.BookName</h1>
+        <br>
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    <div class="media">
+                        <img class="mr-3" src="@Model.Url" onerror="this.onerror=null;this.src='/images/default_c.jpg';" style="width: 135px;height: 200px;" />
+                        <div class="media-body">
+                            <table class="table">
+                                <tbody>
+                                <tr>
+                                    <th scope="col">Title</th>
+                                    <td>@Model.BookName</td>
+                                </tr>
+                                <tr>
+                                    <th scope="col">Author</th>
+                                    <td>@Model.Author</td>
+                                </tr>
+                                <tr>
+                                    <th scope="col">Publisher</th>
+                                    <td>@Model.PublisherName</td>
+                                </tr>
+                                <tr>
+                                    <th scope="col">Genre</th>
+                                    <td>@Model.GenreName</td>
+                                </tr>
+                                <tr>
+                                    <th scope="col">Condition</th>
+                                    <td>@Model.ConditionName</td>
+                                </tr>
+                                <tr>
+                                    <th scope="col">Price</th>
+                                    <td>@Model.MinPrice.ToString("C")</td>
+                                </tr>
+                                @if (string.IsNullOrEmpty(Model.Summary))
+                                {
+                                    <tr>
+                                        <th scope="col">Description</th>
+                                        <td>No description found.</td>
+                                    </tr>
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <th scope="col">Description</th>
+                                        <td>@Model.Summary)</td>
+                                    </tr>
+                                }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col">
+                    <a class="btn" asp-action="AddItemToShoppingCart" asp-route-bookid="@Model.BookId">Add to cart</a>
+                    <a class="btn" asp-action="AddItemToWishlist" asp-route-bookid="@Model.BookId">Add to wishlist</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>
