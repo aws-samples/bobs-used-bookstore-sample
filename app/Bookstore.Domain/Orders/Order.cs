@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Bookstore.Domain.Orders
 {
+    [Table("orders", Schema = "bobsusedbookstore_dbo")]
     public class Order : Entity
     {
         public Order(int customerId, int addressId)
@@ -15,20 +16,20 @@ namespace Bookstore.Domain.Orders
 
         private readonly List<OrderItem> orderItems = new List<OrderItem>();
 
-        [Column("CustomerId")]
+        [Column("customerid")]
         public int CustomerId { get; set; }
         public Customer Customer { get; set; }
 
-        [Column("AddressId")]
+        [Column("addressid")]
         public int AddressId { get; set; }
         public Address Address { get; set; }
 
         public IEnumerable<OrderItem> OrderItems => orderItems;
 
-        [Column("DeliveryDate")]
+        [Column("deliverydate")]
         public DateTime DeliveryDate { get; set; } = DateTime.UtcNow.AddDays(7);
 
-        [Column("OrderStatus")]
+        [Column("orderstatus")]
         public OrderStatus OrderStatus { get; set; } = OrderStatus.Pending;
 
         public decimal Tax => SubTotal * 0.1m;
