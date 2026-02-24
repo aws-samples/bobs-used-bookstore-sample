@@ -7,8 +7,9 @@ namespace Bookstore.Web.ViewModel.Home
     public class HomeIndexViewModel
     {
         public List<HomeIndexItemViewModel> Books { get; set; } = new List<HomeIndexItemViewModel>();
+        public string DatabaseEndpoint { get; set; }
 
-        public HomeIndexViewModel(IEnumerable<Book> books)
+        public HomeIndexViewModel(IEnumerable<Book> books, string databaseEndpoint = null)
         {
             if (books == null) return;
 
@@ -21,6 +22,8 @@ namespace Bookstore.Web.ViewModel.Home
                 HasLowStockLevels = x.IsLowInStock,
                 IsOutOfStock = !x.IsInStock
             }).ToList();
+            
+            DatabaseEndpoint = databaseEndpoint;
         }
     }
 

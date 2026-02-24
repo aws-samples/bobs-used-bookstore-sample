@@ -1,6 +1,5 @@
 ﻿using Bookstore.Data;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Threading.Tasks;
@@ -45,22 +44,10 @@ namespace Bookstore.Web.Startup
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
 
-            // Create/update the database
+            // Create the database
             using (var scope = app.Services.CreateAsyncScope())
             {
-                var context = scope.ServiceProvider.GetService<ApplicationDbContext>()!;
-                await context.Database.EnsureCreatedAsync();
-                
-                // Check if RowVersion columns exist, if not recreate database
-                try
-                {
-                    await context.OrderItem.FirstOrDefaultAsync();
-                }
-                catch (Microsoft.Data.SqlClient.SqlException ex) when (ex.Message.Contains("RowVersion"))
-                {
-                    await context.Database.EnsureDeletedAsync();
-                    await context.Database.EnsureCreatedAsync();
-                }
+                await scope.ServiceProvider.GetService<ApplicationDbContext>()!.Database.EnsureCreatedAsync();
             }
 
             return app;

@@ -10,31 +10,18 @@
 
             <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                 <ul class="navbar-nav flex-grow-1">
-                    @if (User.Identity.IsAuthenticated)
-                    {
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Orders" asp-action="Index">My Orders</a>
-                        </li>
-                    }
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-controller="Search" asp-action="Index">Search</a>
-                    </li>
-                    @if (User.Identity.IsAuthenticated)
-                    {
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Resale" asp-action="Index">Resell my Books</a>
-                        </li>
-                    }
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-controller="Wishlist" asp-action="Index">Wish List</a>
+                        <a class="nav-link text-dark" asp-controller="Authors" asp-action="Index">Authors</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-controller="ShoppingCart" asp-action="Index">Cart</a>
+                        <a class="nav-link text-dark" asp-controller="Products" asp-action="Index">Products</a>
                     </li>
                 </ul>
             </div>
 
+            @*
             <partial name="_LoginPartial" />
+        *@
         </div>
     </nav>
 </header>

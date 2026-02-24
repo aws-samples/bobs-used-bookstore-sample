@@ -1,0 +1,37 @@
+@model  IEnumerable<Bookstore.Domain.Products.Product>
+       
+@{
+   ViewData["Title"] = "Index";
+}
+       
+<table class="table">
+   <thead>
+       <tr>
+           <th>
+               @Html.DisplayNameFor(model => model.ProductID)
+           </th>
+           <th>
+               @Html.DisplayNameFor(model => model.ProductNumber)
+           </th>
+           <th>
+               @Html.DisplayNameFor(model => model.SafetyStockLevel)
+           </th>
+       </tr>
+   </thead>
+   <tbody>
+       @foreach (var item in Model) 
+       {
+           <tr>
+               <td>
+                   @Html.DisplayFor(modelItem => item.ProductID)
+               </td>
+               <td>
+                   @Html.DisplayFor(modelItem => item.ProductNumber)
+               </td>
+               <td>
+                   @Html.DisplayFor(modelItem => item.SafetyStockLevel)
+               </td>
+           </tr>
+       }
+   </tbody>
+</table>
