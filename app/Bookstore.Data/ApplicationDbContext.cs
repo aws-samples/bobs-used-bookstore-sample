@@ -1,9 +1,11 @@
 ﻿using Bookstore.Domain.Addresses;
+using Bookstore.Domain.Authors;
 using Bookstore.Domain.Books;
 using Bookstore.Domain.Carts;
 using Bookstore.Domain.Customers;
 using Bookstore.Domain.Offers;
 using Bookstore.Domain.Orders;
+using Bookstore.Domain.Products;
 using Bookstore.Domain.ReferenceData;
 using Microsoft.EntityFrameworkCore;
 
@@ -21,7 +23,7 @@ namespace Bookstore.Data
 
         public DbSet<Customer> Customer { get; set; }
 
-        public DbSet<Order> Orders { get; set; }
+        public DbSet<Order> Order { get; set; }
 
         public DbSet<ShoppingCart> ShoppingCart { get; set; }
 
@@ -30,6 +32,11 @@ namespace Bookstore.Data
         public DbSet<OrderItem> OrderItem { get; set; }
 
         public DbSet<Offer> Offer { get; set; }
+
+        public DbSet<Author> Author { get; set; }
+        
+        public DbSet<Product> Product { get; set; }
+
 
         public DbSet<ReferenceDataItem> ReferenceData { get; set; }
 
@@ -47,7 +54,6 @@ namespace Bookstore.Data
             modelBuilder.Entity<Offer>().HasOne(x => x.Genre).WithMany().HasForeignKey(x => x.GenreId).OnDelete(DeleteBehavior.Restrict);
             modelBuilder.Entity<Offer>().HasOne(x => x.Condition).WithMany().HasForeignKey(x => x.ConditionId).OnDelete(DeleteBehavior.Restrict);
 
-            modelBuilder.Entity<Order>().ToTable("Orders");
             modelBuilder.Entity<Order>().HasOne(x => x.Customer).WithMany().OnDelete(DeleteBehavior.Restrict);
 
             PopulateDatabase(modelBuilder);

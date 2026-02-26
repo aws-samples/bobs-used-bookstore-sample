@@ -1,4 +1,4 @@
-using Bookstore.Domain.Customers;
+﻿using Bookstore.Domain.Customers;
 
 namespace Bookstore.Domain.Addresses
 {
@@ -36,6 +36,6 @@ namespace Bookstore.Domain.Addresses
         public int CustomerId { get; set; }
         public Customer Customer { get; set; }
 
-        public int IsActive { get; set; } = 1;
+        public bool IsActive { get; set; } = true;
     }
 }

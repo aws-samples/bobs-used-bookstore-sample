@@ -1,6 +1,5 @@
 ﻿using Bookstore.Domain.Customers;
 using Bookstore.Domain.ReferenceData;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Bookstore.Domain.Offers
 {
@@ -50,7 +49,6 @@ namespace Bookstore.Domain.Offers
 
         public string? Summary { get; set; }
 
-        [Column("OfferStatus")]
         public OfferStatus OfferStatus { get; set; } = OfferStatus.PendingApproval;
 
         public string? Comment { get; set; }

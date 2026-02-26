@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-
-namespace Bookstore.Domain.ReferenceData
+﻿namespace Bookstore.Domain.ReferenceData
 {
     public class ReferenceDataItem : Entity
     {
@@ -13,7 +11,6 @@ namespace Bookstore.Domain.ReferenceData
             Text = text;
         }
 
-        [Column("DataType")]
         public ReferenceDataType DataType { get; set; }
 
         public string Text { get; set; }
