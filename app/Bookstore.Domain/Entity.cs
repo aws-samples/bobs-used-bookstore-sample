@@ -1,4 +1,6 @@
-﻿namespace Bookstore.Domain
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Bookstore.Domain
 {
     public abstract class Entity
     {
@@ -9,6 +11,9 @@
         public DateTime CreatedOn { get; set; } = DateTime.UtcNow;
 
         public DateTime UpdatedOn { get; set; } = DateTime.UtcNow;
+
+        //[Timestamp]
+        //public long RowVersion { get; set; }
 
         public bool IsNewEntity()
         {

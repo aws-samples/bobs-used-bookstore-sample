@@ -1,6 +1,5 @@
 ﻿using Bookstore.Data;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Threading.Tasks;
@@ -45,15 +44,10 @@ namespace Bookstore.Web.Startup
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
 
-            // Create/update the database
+            // Create the database
             using (var scope = app.Services.CreateAsyncScope())
             {
-                var context = scope.ServiceProvider.GetService<ApplicationDbContext>()!;
-                
-                if (!await context.Database.CanConnectAsync())
-                {
-                    await context.Database.EnsureCreatedAsync();
-                }
+                await scope.ServiceProvider.GetService<ApplicationDbContext>()!.Database.EnsureCreatedAsync();
             }
 
             return app;
