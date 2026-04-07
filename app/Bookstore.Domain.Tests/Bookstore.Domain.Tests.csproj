@@ -15,5 +15,6 @@
     <PackageReference Include="xunit.runner.visualstudio" Version="*" />
     <PackageReference Include="coverlet.collector" Version="6.0.4" />
     <PackageReference Include="xunit.runner.console" Version="*" />
+    <PackageReference Include="System.Diagnostics.DiagnosticSource" Version="9.0.1" />
   </ItemGroup>
 </Project>
