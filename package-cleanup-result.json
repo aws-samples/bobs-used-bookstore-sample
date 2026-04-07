@@ -1,23 +1,60 @@
 {
-  "Bookstore.Domain": [],
+  "Bookstore.Domain": [
+    "Microsoft.EntityFrameworkCore",
+    "Microsoft.EntityFrameworkCore.Abstractions",
+    "Microsoft.EntityFrameworkCore.Analyzers",
+    "Microsoft.EntityFrameworkCore.Relational",
+    "System.IdentityModel.Tokens.Jwt",
+    "Microsoft.Extensions.Configuration.Json"
+  ],
   "Bookstore.Data": [
     "Npgsql.EntityFrameworkCore.PostgreSQL",
     "AWSSDK.SecretsManager",
     "Microsoft.Build",
     "Microsoft.Extensions.Configuration",
     "Microsoft.Extensions.Configuration.Json",
-    "Microsoft.VisualStudio.Web.CodeGeneration.Design"
+    "Microsoft.VisualStudio.Web.CodeGeneration.Design",
+    "System.Diagnostics.DiagnosticSource",
+    "System.Text.Encodings.Web",
+    "System.Text.Json",
+    "System.IO.Pipelines",
+    "Microsoft.Extensions.Logging",
+    "Microsoft.Extensions.Primitives",
+    "Microsoft.Extensions.DependencyInjection.Abstractions",
+    "Microsoft.Extensions.Logging.Abstractions",
+    "Microsoft.Extensions.Options",
+    "Microsoft.Extensions.DependencyInjection"
   ],
   "Bookstore.Web": [
+    "Npgsql.EntityFrameworkCore.PostgreSQL",
     "AWS.Logger.AspNetCore",
     "AWSSDK.CloudWatchLogs",
-    "Microsoft.VisualStudio.Web.CodeGeneration.Design"
+    "Microsoft.VisualStudio.Web.CodeGeneration.Design",
+    "System.IO.Pipelines",
+    "Microsoft.Extensions.Logging",
+    "Microsoft.Extensions.Primitives",
+    "Microsoft.Extensions.Options",
+    "Microsoft.Extensions.DependencyInjection",
+    "Microsoft.Extensions.Configuration.Json"
   ],
   "Bookstore.Cdk": [
-    "Amazon.Jsii.Analyzers"
+    "Amazon.Jsii.Analyzers",
+    "Microsoft.Extensions.Configuration",
+    "System.Diagnostics.DiagnosticSource",
+    "System.Text.Encodings.Web",
+    "System.Text.Json",
+    "System.IO.Pipelines",
+    "Microsoft.Extensions.Logging",
+    "Microsoft.Extensions.Configuration.Abstractions",
+    "Microsoft.Extensions.Primitives",
+    "Microsoft.Extensions.DependencyInjection.Abstractions",
+    "Microsoft.Extensions.Logging.Abstractions",
+    "Microsoft.Extensions.Options",
+    "Microsoft.Extensions.DependencyInjection"
   ],
   "Bookstore.Domain.Tests": [
     "xunit",
-    "xunit.runner.console"
+    "xunit.runner.console",
+    "System.Diagnostics.DiagnosticSource"
   ]
 }
