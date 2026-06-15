@@ -39,7 +39,7 @@ namespace Bookstore.Web.Startup
 
         // If we find a non-empty connection string in appsettings, use it, otherwise
         // attempt to build it from data in Secrets Manager
-        private static string GetDatabaseConnectionString(ConfigurationManager configuration)
+        private static string? GetDatabaseConnectionString(ConfigurationManager configuration)
         {
             // This is the key of a string value in Parameter Store containing the name of the
             // secret in Secrets Manager that in turn contains the credentials of the database in
@@ -88,7 +88,7 @@ namespace Bookstore.Web.Startup
                     PropertyNameCaseInsensitive = true
                 });
 
-                var partialConnString = $"Server={dbSecrets.Host},{dbSecrets.Port}; Initial Catalog=BobsUsedBookStore;MultipleActiveResultSets=true; Integrated Security=false;TrustServerCertificate=true;";
+                var partialConnString = $"Server={dbSecrets!.Host},{dbSecrets.Port}; Initial Catalog=BobsUsedBookStore;MultipleActiveResultSets=true; Integrated Security=false;TrustServerCertificate=true;";
 
                 var builder = new SqlConnectionStringBuilder(partialConnString)
                 {
@@ -100,7 +100,7 @@ namespace Bookstore.Web.Startup
             }
             catch (AmazonSecretsManagerException e)
             {
-                Console.WriteLine($"Failed to read secret {configuration[DbSecretsParameterName]}, error {e.Message}, inner {e.InnerException.Message}");
+                Console.WriteLine($"Failed to read secret {configuration[DbSecretsParameterName]}, error {e.Message}, inner {e.InnerException?.Message}");
             }
             catch (JsonException e)
             {

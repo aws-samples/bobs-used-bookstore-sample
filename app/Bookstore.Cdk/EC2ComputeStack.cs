@@ -147,7 +147,7 @@ public class EC2ComputeStack : Stack
 
         this.WebAppAsset = new Asset(this, "WebAppAsset", new AssetProps
         {
-            Path = "app/Bookstore.Web/bin/Release/net6.0/publish"
+            Path = "app/Bookstore.Web/bin/Release/net10.0/publish"
         });
         this.WebAppAsset.GrantRead(this.Ec2Role);
 
@@ -174,7 +174,7 @@ public class EC2ComputeStack : Stack
     {
         var ami = MachineImage.Lookup(new LookupMachineImageProps
         {
-            Name = "amzn2-x86_64-MATEDE_DOTNET-*",
+            Name = "al2023-ami-*-x86_64",
             Owners = new[] { "amazon" }
         });
 

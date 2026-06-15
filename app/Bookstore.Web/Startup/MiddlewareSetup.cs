@@ -46,11 +46,11 @@ namespace Bookstore.Web.Startup
                 pattern: "{controller=Home}/{action=Index}/{id?}");
 
             // Create/update the database
-            using (var scope = app.Services.CreateAsyncScope())
+            await using (var scope = app.Services.CreateAsyncScope())
             {
-                var context = scope.ServiceProvider.GetService<ApplicationDbContext>()!;
+                var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
                 await context.Database.EnsureCreatedAsync();
-                
+
                 // Check if RowVersion columns exist, if not recreate database
                 try
                 {

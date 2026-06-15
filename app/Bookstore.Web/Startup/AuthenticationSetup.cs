@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
 using System.Threading.Tasks;
 
 namespace Bookstore.Web.Startup
@@ -18,28 +17,28 @@ namespace Bookstore.Web.Startup
             switch (builder.Configuration["AWS:Service"])
             {
                 case "EC2":
-                    return builder.Configuration["Authentication:Cognito:EC2ClientId"];
+                    return builder.Configuration["Authentication:Cognito:EC2ClientId"]!;
 
                 case "AppRunner":
-                    return builder.Configuration["Authentication:Cognito:AppRunnerClientId"];
+                    return builder.Configuration["Authentication:Cognito:AppRunnerClientId"]!;
 
                 default:
-                    return builder.Configuration["Authentication:Cognito:LocalClientId"];
+                    return builder.Configuration["Authentication:Cognito:LocalClientId"]!;
             }
         }
     }
 
     public static class AuthenticationSetup
     {
-        private static string _cognitoDomain;
-        private static string _cognitoClientId;
-        private static string _cognitoAppSignOutUrl;
+        private static string _cognitoDomain = string.Empty;
+        private static string _cognitoClientId = string.Empty;
+        private static string _cognitoAppSignOutUrl = string.Empty;
 
         public static WebApplicationBuilder ConfigureAuthentication(this WebApplicationBuilder builder)
         {
-            _cognitoDomain = builder.Configuration["Authentication:Cognito:CognitoDomain"];
+            _cognitoDomain = builder.Configuration["Authentication:Cognito:CognitoDomain"] ?? string.Empty;
             _cognitoClientId = CognitoClientIdHelper.GetClientId(builder);
-            _cognitoAppSignOutUrl = builder.Configuration["Authentication:Cognito:AppSignOutUrl"];
+            _cognitoAppSignOutUrl = builder.Configuration["Authentication:Cognito:AppSignOutUrl"] ?? "/";
 
             // For the 'Development' profile we fake authentication. For 'Test' and 'Production'
             // profiles we use Amazon Cognito's Hosted UI
@@ -62,8 +61,6 @@ namespace Bookstore.Web.Startup
 
         private static WebApplicationBuilder ConfigureCognitoAuthentication(WebApplicationBuilder builder)
         {
-            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
-
             builder.Services
                 .AddAuthentication(x =>
                 {
@@ -74,9 +71,10 @@ namespace Bookstore.Web.Startup
                 .AddCookie()
                 .AddOpenIdConnect(x =>
                 {
-                    x.ResponseType = builder.Configuration["Authentication:Cognito:ResponseType"];
-                    x.MetadataAddress = builder.Configuration["Authentication:Cognito:MetadataAddress"];
+                    x.ResponseType = builder.Configuration["Authentication:Cognito:ResponseType"]!;
+                    x.MetadataAddress = builder.Configuration["Authentication:Cognito:MetadataAddress"]!;
                     x.ClientId = CognitoClientIdHelper.GetClientId(builder);
+                    x.MapInboundClaims = false;
                     x.TokenValidationParameters = new TokenValidationParameters
                     {
                         NameClaimType = "cognito:username",
@@ -108,13 +106,13 @@ namespace Bookstore.Web.Startup
 
         private static async Task SaveCustomerDetailsAsync(TokenValidatedContext context)
         {
-            var customerService = context.HttpContext.RequestServices.GetService<ICustomerService>();
+            var customerService = context.HttpContext.RequestServices.GetService<ICustomerService>()!;
 
             var dto = new CreateOrUpdateCustomerDto(
-                context.Principal.GetSub(),
-                context.Principal.Identity.Name,
-                context.Principal.FindFirst("given_name").Value,
-                context.Principal.FindFirst("family_name").Value);
+                context.Principal!.GetSub(),
+                context.Principal.Identity!.Name!,
+                context.Principal.FindFirst("given_name")!.Value,
+                context.Principal.FindFirst("family_name")!.Value);
 
             await customerService.CreateOrUpdateCustomerAsync(dto);
         }

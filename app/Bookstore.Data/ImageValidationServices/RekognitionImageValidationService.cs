@@ -46,7 +46,7 @@ namespace Bookstore.Data.ImageValidationServices
                 Image = new Image { Bytes = memoryStream }
             });
 
-            return !result.ModerationLabels.Any(x => BannedCategories.Contains(x.Name, StringComparer.OrdinalIgnoreCase));
+            return result.ModerationLabels is null || !result.ModerationLabels.Any(x => BannedCategories.Contains(x.Name, StringComparer.OrdinalIgnoreCase));
         }
     }
 }

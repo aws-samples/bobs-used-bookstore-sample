@@ -19,7 +19,7 @@ namespace Bookstore.Data.FileServices
             transferUtility = new TransferUtility(s3Client);
         }
 
-        public async Task DeleteAsync(string filePath)
+        public async Task DeleteAsync(string? filePath)
         {
             if (string.IsNullOrWhiteSpace(filePath)) return;
 
@@ -33,7 +33,7 @@ namespace Bookstore.Data.FileServices
             await transferUtility.S3Client.DeleteObjectAsync(request);
         }
 
-        public async Task<string> SaveAsync(Stream contents, string filename)
+        public async Task<string?> SaveAsync(Stream? contents, string? filename)
         {
             if (contents == null) return null;
 
