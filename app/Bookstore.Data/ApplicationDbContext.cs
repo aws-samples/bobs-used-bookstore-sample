@@ -8,6 +8,7 @@ using Bookstore.Domain.Orders;
 using Bookstore.Domain.ReferenceData;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Bookstore.Data
@@ -38,6 +39,23 @@ namespace Bookstore.Data
 
         // The Aurora PostgreSQL schema produced by the AWS Transform schema conversion.
         private const string TargetSchema = "bobsusedbookstore_dbo";
+
+        // The converted schema stores timestamps as TIMESTAMP(6) WITHOUT TIME ZONE, but the
+        // domain entities use DateTime.UtcNow, and Npgsql refuses to write a DateTime with
+        // Kind=Utc into a timestamp-without-time-zone column. Relabelling the Kind as
+        // Unspecified preserves the same wall-clock value while satisfying the driver.
+        //
+        // This is done with a value converter rather than relying only on the
+        // Npgsql.EnableLegacyTimestampBehavior AppContext switch, because that switch is
+        // process-wide: any host that builds this model without setting it first (tests,
+        // dotnet ef, a different entry point) would otherwise fail on the first insert.
+        private static readonly ValueConverter<DateTime, DateTime> UnspecifiedKindConverter =
+            new(v => DateTime.SpecifyKind(v, DateTimeKind.Unspecified),
+                v => DateTime.SpecifyKind(v, DateTimeKind.Unspecified));
+
+        private static readonly ValueConverter<DateTime?, DateTime?> NullableUnspecifiedKindConverter =
+            new(v => v.HasValue ? DateTime.SpecifyKind(v.Value, DateTimeKind.Unspecified) : v,
+                v => v.HasValue ? DateTime.SpecifyKind(v.Value, DateTimeKind.Unspecified) : v);
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -108,12 +126,16 @@ namespace Bookstore.Data
                     }
 
                     // The converted schema uses TIMESTAMP(6) WITHOUT TIME ZONE. Npgsql would
-                    // otherwise map DateTime to "timestamp with time zone". This is set on the
-                    // model rather than relying solely on the legacy-timestamp AppContext switch,
-                    // so the mapping holds for any host that builds this model.
-                    if (property.ClrType == typeof(DateTime) || property.ClrType == typeof(DateTime?))
+                    // otherwise map DateTime to "timestamp with time zone".
+                    if (property.ClrType == typeof(DateTime))
                     {
                         property.SetColumnType("timestamp(6) without time zone");
+                        property.SetValueConverter(UnspecifiedKindConverter);
+                    }
+                    else if (property.ClrType == typeof(DateTime?))
+                    {
+                        property.SetColumnType("timestamp(6) without time zone");
+                        property.SetValueConverter(NullableUnspecifiedKindConverter);
                     }
                 }
 
