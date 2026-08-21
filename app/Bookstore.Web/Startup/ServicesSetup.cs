@@ -5,8 +5,8 @@ using Amazon.SecretsManager;
 using Bookstore.Data;
 using Bookstore.Domain.AdminUser;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Npgsql;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Text.Json;
@@ -20,6 +20,13 @@ namespace Bookstore.Web.Startup
     {
         public static WebApplicationBuilder ConfigureServices(this WebApplicationBuilder builder)
         {
+            // The converted schema declares timestamp columns as TIMESTAMP(6) WITHOUT TIME ZONE,
+            // but Npgsql maps DateTime to "timestamp with time zone" by default and rejects
+            // writing a DateTime with Kind=Utc into a timestamp-without-time-zone column. The
+            // domain entities use DateTime.UtcNow, so opt into the legacy mapping where DateTime
+            // corresponds to "timestamp without time zone" and Kind is ignored.
+            AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+
             builder.Services.AddControllersWithViews(x =>
             {
                 x.Filters.Add(new AuthorizeFilter());
@@ -31,7 +38,7 @@ namespace Bookstore.Web.Startup
             builder.Services.AddAWSService<IAmazonRekognition>();
 
             var connString = GetDatabaseConnectionString(builder.Configuration);
-            builder.Services.AddDbContext<ApplicationDbContext>(option => option.UseSqlServer(connString));
+            builder.Services.AddDbContext<ApplicationDbContext>(option => option.UseNpgsql(connString));
             builder.Services.AddSession();
 
             return builder;
@@ -48,6 +55,12 @@ namespace Bookstore.Web.Startup
             // randomly-named secret insulates the application from variability in the name of
             // the secret.
             const string DbSecretsParameterName = "dbsecretsname";
+
+            // Optional override for the target Aurora PostgreSQL database name. The converted
+            // schema (bobsusedbookstore_dbo) lives inside this database, so the database itself
+            // is the cluster's default "postgres" database rather than a per-application one.
+            const string DbNameParameterName = "dbname";
+            const string DefaultDatabaseName = "postgres";
 
             var connString = configuration.GetConnectionString("BookstoreDbDefaultConnection");
             if (!string.IsNullOrEmpty(connString))
@@ -88,12 +101,26 @@ namespace Bookstore.Web.Startup
                     PropertyNameCaseInsensitive = true
                 });
 
-                var partialConnString = $"Server={dbSecrets.Host},{dbSecrets.Port}; Initial Catalog=BobsUsedBookStore;MultipleActiveResultSets=true; Integrated Security=false;TrustServerCertificate=true;";
-
-                var builder = new SqlConnectionStringBuilder(partialConnString)
+                // The secret provides host, port, username and password, but not the database
+                // name. The converted schema (bobsusedbookstore_dbo) lives inside the database
+                // named below; override it with the "dbname" configuration value if the target
+                // Aurora PostgreSQL cluster uses a different database name.
+                var databaseName = configuration[DbNameParameterName];
+                if (string.IsNullOrEmpty(databaseName))
                 {
-                    UserID = dbSecrets.Username,
-                    Password = dbSecrets.Password
+                    databaseName = DefaultDatabaseName;
+                }
+
+                var builder = new NpgsqlConnectionStringBuilder
+                {
+                    Host = dbSecrets.Host,
+                    Port = dbSecrets.Port,
+                    Database = databaseName,
+                    Username = dbSecrets.Username,
+                    Password = dbSecrets.Password,
+                    // Encrypt the connection without requiring a locally trusted CA chain,
+                    // matching the previous TrustServerCertificate=true behaviour.
+                    SslMode = SslMode.Require
                 };
 
                 connString = builder.ConnectionString;
