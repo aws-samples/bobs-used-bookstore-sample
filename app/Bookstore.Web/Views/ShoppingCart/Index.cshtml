@@ -33,7 +33,7 @@
         <br />
 
         <form method="post">
-            @if (!User.Identity.IsAuthenticated)
+            @if (User.Identity?.IsAuthenticated != true)
             {
                 <p>Please log in to complete your order.</p>
                 <a class="btn" asp-action="Login" asp-controller="Authentication">Log In</a>

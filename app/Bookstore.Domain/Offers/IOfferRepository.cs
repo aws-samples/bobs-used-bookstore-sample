@@ -8,12 +8,12 @@ namespace Bookstore.Domain.Offers
 
         internal protected Task<IEnumerable<Offer>> ListAsync(string sub);
 
-        internal protected Task<Offer> GetAsync(int id);
+        internal protected Task<Offer?> GetAsync(int id);
 
         internal protected Task AddAsync(Offer offer);
 
         internal protected Task SaveChangesAsync();
 
-        Task<OfferStatistics> GetStatisticsAsync();
+        Task<OfferStatistics?> GetStatisticsAsync();
     }
 }

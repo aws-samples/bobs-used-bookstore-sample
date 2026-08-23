@@ -15,7 +15,7 @@ namespace Bookstore.Web.Helpers
             this.imageTypes = imageTypes;
         }
 
-        public override bool IsValid(object value)
+        public override bool IsValid(object? value)
         {
             if (value == null) return true;
 

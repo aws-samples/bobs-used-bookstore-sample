@@ -9,11 +9,11 @@
         int PublisherId,
         int? Year,
         string ISBN,
-        string Summary,
+        string? Summary,
         decimal Price,
         int Quantity,
-        Stream CoverImage,
-        string CoverImageFileName);
+        Stream? CoverImage,
+        string? CoverImageFileName);
 
     public record UpdateBookDto(
         int BookId,
@@ -25,9 +25,9 @@
         int PublisherId,
         int? Year,
         string ISBN,
-        string Summary,
+        string? Summary,
         decimal Price,
         int Quantity,
-        Stream CoverImage,
-        string CoverImageFileName);
+        Stream? CoverImage,
+        string? CoverImageFileName);
 }

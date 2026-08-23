@@ -41,7 +41,7 @@ namespace Bookstore.Web.Areas.Admin.Models.Offers
 
         public List<OfferIndexItemViewModel> Items { get; set; } = new List<OfferIndexItemViewModel>();
 
-        public OfferFilters Filters { get; set; }
+        public OfferFilters Filters { get; set; } = null!;
 
         public IEnumerable<SelectListItem> Genres { get; set; } = new List<SelectListItem>();
 
@@ -52,13 +52,13 @@ namespace Bookstore.Web.Areas.Admin.Models.Offers
     {
         public int OfferId { get; set; }
 
-        public string BookName { get; set; }
+        public string BookName { get; set; } = null!;
 
-        public string CustomerName { get; set; }
+        public string CustomerName { get; set; } = null!;
 
-        public string Author { get; set; }
+        public string Author { get; set; } = null!;
 
-        public string Genre { get; set; }
+        public string Genre { get; set; } = null!;
 
         public OfferStatus OfferStatus { get; set; }
 
@@ -66,6 +66,6 @@ namespace Bookstore.Web.Areas.Admin.Models.Offers
 
         public decimal OfferPrice { get; internal set; }
 
-        public string Condition { get; internal set; }
+        public string Condition { get; internal set; } = null!;
     }
 }

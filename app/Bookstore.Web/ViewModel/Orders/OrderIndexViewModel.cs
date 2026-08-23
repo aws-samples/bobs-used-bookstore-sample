@@ -30,6 +30,6 @@ namespace Bookstore.Web.ViewModel.Orders
 
         public DateTime DeliveryDate { get; set; }
 
-        public string OrderStatus { get; set; }
+        public string OrderStatus { get; set; } = null!;
     }
 }

@@ -14,19 +14,19 @@ namespace Bookstore.Web.Areas.Admin.Models.Orders
 
         public DateTime DeliveryDate { get; set; }
 
-        public string CustomerName { get; set; }
+        public string CustomerName { get; set; } = null!;
 
-        public string AddressLine1 { get; set; }
+        public string AddressLine1 { get; set; } = null!;
 
-        public string AddressLine2 { get; set; }
+        public string? AddressLine2 { get; set; }
 
-        public string City { get; set; }
+        public string City { get; set; } = null!;
 
-        public string State { get; set; }
+        public string State { get; set; } = null!;
 
-        public string ZipCode { get; set; }
+        public string ZipCode { get; set; } = null!;
 
-        public string Country { get; set; }
+        public string Country { get; set; } = null!;
 
         public decimal Subtotal { get; set; }
 
@@ -72,17 +72,17 @@ namespace Bookstore.Web.Areas.Admin.Models.Orders
 
     public class OrderDetailsItemViewModel
     {
-        public string Name { get; set; }
+        public string Name { get; set; } = null!;
 
-        public string Author { get; set; }
+        public string Author { get; set; } = null!;
 
-        public string Publisher { get; set; }
+        public string Publisher { get; set; } = null!;
 
-        public string Genre { get; set; }
+        public string Genre { get; set; } = null!;
 
-        public string BookType { get; set; }
+        public string BookType { get; set; } = null!;
 
-        public string Condition { get; set; }
+        public string Condition { get; set; } = null!;
 
         public decimal Price { get; set; }
     }

@@ -36,7 +36,8 @@ namespace Bookstore.Web.Startup
 
         public static WebApplicationBuilder ConfigureAuthentication(this WebApplicationBuilder builder)
         {
-            _cognitoDomain = builder.Configuration["Authentication:Cognito:CognitoDomain"] ?? string.Empty;
+            _cognitoDomain = builder.Configuration["Authentication:Cognito:CognitoDomain"]
+                ?? throw new InvalidOperationException("Authentication:Cognito:CognitoDomain configuration is missing.");
             _cognitoClientId = CognitoClientIdHelper.GetClientId(builder);
             _cognitoAppSignOutUrl = builder.Configuration["Authentication:Cognito:AppSignOutUrl"] ?? "/";
 
@@ -109,8 +110,8 @@ namespace Bookstore.Web.Startup
             var customerService = context.HttpContext.RequestServices.GetService<ICustomerService>()!;
 
             var dto = new CreateOrUpdateCustomerDto(
-                context.Principal!.GetSub(),
-                context.Principal.Identity!.Name!,
+                context.Principal!.GetSub()!,
+                context.Principal!.Identity!.Name!,
                 context.Principal.FindFirst("given_name")!.Value,
                 context.Principal.FindFirst("family_name")!.Value);
 

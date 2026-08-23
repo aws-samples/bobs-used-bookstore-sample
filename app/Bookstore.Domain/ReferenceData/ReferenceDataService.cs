@@ -34,7 +34,8 @@
 
         public async Task<ReferenceDataItem> GetReferenceDataItemAsync(int id)
         {
-            return await referenceDataRepository.GetAsync(id);
+            return await referenceDataRepository.GetAsync(id)
+                ?? throw new InvalidOperationException($"Reference data item {id} not found.");
         }
 
         public async Task CreateAsync(CreateReferenceDataItemDto dto)
@@ -48,7 +49,8 @@
 
         public async Task UpdateAsync(UpdateReferenceDataItemDto dto)
         {
-            var referenceDataItem = await referenceDataRepository.GetAsync(dto.Id);
+            var referenceDataItem = await referenceDataRepository.GetAsync(dto.Id)
+                ?? throw new InvalidOperationException($"Reference data item {dto.Id} not found.");
 
             referenceDataItem.DataType = dto.ReferenceDataType;
             referenceDataItem.Text = dto.Text;

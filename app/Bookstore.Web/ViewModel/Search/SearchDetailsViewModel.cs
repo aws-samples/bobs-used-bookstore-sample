@@ -14,27 +14,27 @@ namespace Bookstore.Web.ViewModel.Search
 
         [Display(Name = "Title")]
         [DefaultValue("Title")]
-        public string BookName { get; set; }
+        public string BookName { get; set; } = null!;
 
-        [DefaultValue("Publisher not found")] public string PublisherName { get; set; }
+        [DefaultValue("Publisher not found")] public string PublisherName { get; set; } = null!;
 
-        [DefaultValue("No Author")] public string Author { get; set; }
+        [DefaultValue("No Author")] public string Author { get; set; } = null!;
 
-        public string ISBN { get; set; }
+        public string ISBN { get; set; } = null!;
 
-        [Display(Name = "Genre")] public string GenreName { get; set; }
+        [Display(Name = "Genre")] public string GenreName { get; set; } = null!;
 
-        [Display(Name = "Type")] public string TypeName { get; set; }
+        [Display(Name = "Type")] public string TypeName { get; set; } = null!;
 
-        [Display(Name = "Condition")] public string ConditionName { get; set; }
+        [Display(Name = "Condition")] public string ConditionName { get; set; } = null!;
 
-        public string Url { get; set; }
+        public string? Url { get; set; }
 
         [Display(Name = "$$")] public decimal MinPrice { get; set; }
 
         public int Quantity { get; set; }
 
-        public string Summary { get; set; }
+        public string? Summary { get; set; }
 
         public SearchDetailsViewModel(Book book)
         {

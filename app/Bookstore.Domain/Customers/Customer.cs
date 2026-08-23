@@ -10,7 +10,7 @@
             Sub = sub;
         }
         
-        public string Sub { get; set; }
+        public string Sub { get; set; } = null!;
 
         public string? Username { get; set; }
 

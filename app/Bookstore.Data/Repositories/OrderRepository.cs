@@ -23,7 +23,7 @@ namespace Bookstore.Data.Repositories
             await dbContext.Orders.AddAsync(order);
         }
 
-        async Task<Order> IOrderRepository.GetAsync(int id)
+        async Task<Order?> IOrderRepository.GetAsync(int id)
         {
             return await dbContext.Orders
                 .Include(x => x.Customer)
@@ -35,7 +35,7 @@ namespace Bookstore.Data.Repositories
                 .SingleOrDefaultAsync(x => x.Id == id);
         }
 
-        async Task<Order> IOrderRepository.GetAsync(int id, string sub)
+        async Task<Order?> IOrderRepository.GetAsync(int id, string sub)
         {
             return await dbContext.Orders.SingleOrDefaultAsync(x => x.Id == id && x.Customer.Sub == sub);
         }
@@ -50,7 +50,7 @@ namespace Bookstore.Data.Repositories
                 .ToListAsync();
         }
 
-        async Task<OrderStatistics> IOrderRepository.GetStatisticsAsync()
+        async Task<OrderStatistics?> IOrderRepository.GetStatisticsAsync()
         {
             var startOfMonth = DateTime.UtcNow.StartOfMonth();
 

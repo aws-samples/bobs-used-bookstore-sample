@@ -4,9 +4,9 @@ namespace Bookstore.Domain.Orders
 {
     public interface IOrderRepository
     {
-        internal protected Task<Order> GetAsync(int id);
+        internal protected Task<Order?> GetAsync(int id);
 
-        internal protected Task<Order> GetAsync(int id, string sub);
+        internal protected Task<Order?> GetAsync(int id, string sub);
 
         internal protected Task<IEnumerable<Book>> ListBestSellingBooksAsync(int count);
 
@@ -16,7 +16,7 @@ namespace Bookstore.Domain.Orders
 
         internal protected Task AddAsync(Order order);
 
-        internal protected Task<OrderStatistics> GetStatisticsAsync();
+        internal protected Task<OrderStatistics?> GetStatisticsAsync();
 
         internal protected Task SaveChangesAsync();
     }

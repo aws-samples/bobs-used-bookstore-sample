@@ -10,7 +10,7 @@ namespace Bookstore.Web.ViewModel.Orders
     {
         public int OrderId { get; set; }
 
-        public string OrderStatus { get; set; }
+        public string OrderStatus { get; set; } = null!;
 
         public DateTime DeliveryDate { get; set; }
 
@@ -39,9 +39,9 @@ namespace Bookstore.Web.ViewModel.Orders
     {
         public int BookId { get; set; }
 
-        public string ImageUrl { get; set; }
+        public string? ImageUrl { get; set; }
 
-        public string BookName { get; set; }
+        public string BookName { get; set; } = null!;
 
         public decimal Price { get; set; }
     }

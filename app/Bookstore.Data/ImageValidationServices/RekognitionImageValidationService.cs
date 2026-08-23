@@ -31,7 +31,7 @@ namespace Bookstore.Data.ImageValidationServices
             this.rekognitionClient = rekognitionClient;
         }
 
-        public async Task<bool> IsSafeAsync(Stream image)
+        public async Task<bool> IsSafeAsync(Stream? image)
         {
             if (image == null) return true;
 

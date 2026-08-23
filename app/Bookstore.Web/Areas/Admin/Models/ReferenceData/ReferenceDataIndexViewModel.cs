@@ -38,8 +38,8 @@ namespace Bookstore.Web.Areas.Admin.Models.ReferenceData
     {
         public int Id { get; set; }
 
-        public string Text { get; set; }
+        public string Text { get; set; } = null!;
 
-        public string ReferenceDataType { get; set; }
+        public string ReferenceDataType { get; set; } = null!;
     }
 }

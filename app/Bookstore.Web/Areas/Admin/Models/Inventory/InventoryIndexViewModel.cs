@@ -63,19 +63,19 @@ namespace Bookstore.Web.Areas.Admin.Models.Inventory
     {
         public int Id { get; set; }
 
-        public string Name { get; set; }
+        public string Name { get; set; } = null!;
 
-        public string Author { get; set; }
+        public string Author { get; set; } = null!;
 
         public int Year { get; set; }
 
-        public string Publisher { get; set; }
+        public string Publisher { get; set; } = null!;
 
-        public string Genre { get; set; }
+        public string Genre { get; set; } = null!;
 
-        public string BookType { get; set; }
+        public string BookType { get; set; } = null!;
 
-        public string Condition { get; set; }
+        public string Condition { get; set; } = null!;
 
         public decimal Price { get; set; }
 

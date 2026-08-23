@@ -14,6 +14,6 @@
 
         Task SaveChangesAsync();
 
-        Task<BookStatistics> GetStatisticsAsync();
+        Task<BookStatistics?> GetStatisticsAsync();
     }
 }

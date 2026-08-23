@@ -9,9 +9,9 @@ namespace Bookstore.Web.ViewModel.Search
 {
     public class SearchIndexViewModel : PaginatedViewModel
     {
-        public string SearchString { get; set; }
+        public string? SearchString { get; set; }
 
-        public string SortBy { get; set; }
+        public string? SortBy { get; set; }
 
         public List<SearchIndexItemViewModel> Books { get; set; } = new List<SearchIndexItemViewModel>();
 
@@ -44,24 +44,24 @@ namespace Bookstore.Web.ViewModel.Search
 
         [Display(Name = "Title")]
         [DefaultValue("Title")]
-        public string BookName { get; set; }
+        public string BookName { get; set; } = null!;
 
         [DefaultValue("Publisher not found")]
-        public string PublisherName { get; set; }
+        public string PublisherName { get; set; } = null!;
 
         [DefaultValue("No Author")]
-        public string Author { get; set; }
+        public string Author { get; set; } = null!;
 
         [Display(Name = "Genre")]
-        public string GenreName { get; set; }
+        public string GenreName { get; set; } = null!;
 
         [Display(Name = "Type")]
-        public string TypeName { get; set; }
+        public string TypeName { get; set; } = null!;
 
         [Display(Name = "Condition")]
-        public string ConditionName { get; set; }
+        public string ConditionName { get; set; } = null!;
 
-        public string ImageUrl { get; set; }
+        public string? ImageUrl { get; set; }
 
         [Display(Name = "$$")]
         public decimal Price { get; set; }

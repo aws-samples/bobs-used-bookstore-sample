@@ -30,22 +30,22 @@ namespace Bookstore.Web.ViewModel.Resale
 
     public class ResaleIndexItemViewModel
     {
-        public string BookName { get; set; }
+        public string BookName { get; set; } = null!;
 
-        public string Author { get; set; }
+        public string Author { get; set; } = null!;
 
-        public string Genre { get; set; }
+        public string Genre { get; set; } = null!;
 
-        public string Publisher { get; set; }
+        public string Publisher { get; set; } = null!;
 
-        public string BookType { get; set; }
+        public string BookType { get; set; } = null!;
 
-        public string ISBN { get; set; }
+        public string ISBN { get; set; } = null!;
 
-        public string Condition { get; set; }
+        public string Condition { get; set; } = null!;
 
         public decimal Price { get; set; }
 
-        public string OfferStatus { get; set; }
+        public string OfferStatus { get; set; } = null!;
     }
 }

@@ -114,6 +114,8 @@ namespace Bookstore.Data.Repositories
         {
             var existing = await dbContext.Book.FindAsync(book.Id);
 
+            if (existing == null) return;
+
             dbContext.Entry(existing).CurrentValues.SetValues(book);
 
             if (string.IsNullOrWhiteSpace(book.CoverImageUrl))
@@ -127,7 +129,7 @@ namespace Bookstore.Data.Repositories
             await dbContext.SaveChangesAsync();
         }
 
-        async Task<BookStatistics> IBookRepository.GetStatisticsAsync()
+        async Task<BookStatistics?> IBookRepository.GetStatisticsAsync()
         {
             return await dbContext.Book
                 .GroupBy(x => 1)

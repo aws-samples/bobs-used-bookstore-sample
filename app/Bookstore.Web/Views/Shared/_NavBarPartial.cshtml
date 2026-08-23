@@ -10,7 +10,7 @@
 
             <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                 <ul class="navbar-nav flex-grow-1">
-                    @if (User.Identity.IsAuthenticated)
+                    @if (User.Identity?.IsAuthenticated == true)
                     {
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-controller="Orders" asp-action="Index">My Orders</a>
@@ -19,7 +19,7 @@
                     <li class="nav-item">
                         <a class="nav-link text-dark" asp-controller="Search" asp-action="Index">Search</a>
                     </li>
-                    @if (User.Identity.IsAuthenticated)
+                    @if (User.Identity?.IsAuthenticated == true)
                     {
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-controller="Resale" asp-action="Index">Resell my Books</a>

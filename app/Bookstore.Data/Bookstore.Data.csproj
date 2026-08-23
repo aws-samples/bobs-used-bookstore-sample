@@ -1,9 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-    <PropertyGroup>
-        <!-- TargetFramework, ImplicitUsings, Nullable, LangVersion inherited from Directory.Build.props -->
-    </PropertyGroup>
-
     <ItemGroup>
         <PackageReference Include="AWSSDK.Rekognition" Version="4.0.*" />
         <PackageReference Include="AWSSDK.S3" Version="4.0.*" />

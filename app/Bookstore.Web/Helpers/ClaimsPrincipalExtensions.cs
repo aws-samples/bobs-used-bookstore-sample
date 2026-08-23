@@ -4,7 +4,7 @@ namespace Bookstore.Web.Helpers
 {
     public static class ClaimsPrincipalExtensions
     {
-        public static string GetSub(this ClaimsPrincipal claimsPrincipal)
+        public static string? GetSub(this ClaimsPrincipal claimsPrincipal)
         {
             return claimsPrincipal.FindFirst("sub")?.Value;
         }

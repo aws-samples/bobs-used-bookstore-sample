@@ -1,7 +1,3 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <!-- TargetFramework, ImplicitUsings, Nullable, LangVersion inherited from Directory.Build.props -->
-  </PropertyGroup>
-
 </Project>

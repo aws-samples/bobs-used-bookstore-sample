@@ -18,12 +18,12 @@ namespace Bookstore.Data.Repositories
             await dbContext.Customer.AddAsync(customer);
         }
 
-        async Task<Customer> ICustomerRepository.GetAsync(int id)
+        async Task<Customer?> ICustomerRepository.GetAsync(int id)
         {
             return await dbContext.Customer.FindAsync(id);
         }
 
-        async Task<Customer> ICustomerRepository.GetAsync(string sub)
+        async Task<Customer?> ICustomerRepository.GetAsync(string sub)
         {
             return await dbContext.Customer.SingleOrDefaultAsync(x => x.Sub == sub);
         }
