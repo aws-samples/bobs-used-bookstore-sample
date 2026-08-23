@@ -7,9 +7,9 @@ using Constructs;
 
 public class NetworkStack : Stack
 {
-    public Vpc Vpc { get; private set; }
+    public Vpc Vpc { get; private set; } = null!;
 
-    internal NetworkStack(Construct scope, string id, IStackProps props = null) : base(scope, id, props)
+    internal NetworkStack(Construct scope, string id, IStackProps? props = null) : base(scope, id, props)
     {
         // Create a new vpc spanning two AZs and with public and private subnets
         // to host the application resources

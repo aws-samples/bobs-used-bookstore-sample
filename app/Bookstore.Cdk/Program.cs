@@ -39,7 +39,7 @@ internal sealed class Program
         app.Synth();
     }
 
-    private static Environment MakeEnv(string account = null, string region = null)
+    private static Environment MakeEnv(string? account = null, string? region = null)
     {
         return new Environment
         {
