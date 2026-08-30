@@ -27,9 +27,9 @@ namespace Bookstore.Web.ViewModel.Wishlist
     {
         public int ShoppingCartItemId { get; set; }
 
-        public string BookName { get; set; }
+        public string BookName { get; set; } = null!;
 
-        public string ImageUrl { get; set; }
+        public string? ImageUrl { get; set; }
 
         public decimal Price { get; set; }
     }

@@ -19,8 +19,8 @@ namespace Bookstore.Web.Areas.Admin.Models.ReferenceData
 
         public ReferenceDataType SelectedReferenceDataType { get; set; }
 
-        public string Text { get; set; }
+        public string Text { get; set; } = null!;
 
-        public IEnumerable<SelectListItem> DataTypes { get; set; }
+        public IEnumerable<SelectListItem> DataTypes { get; set; } = null!;
     }
 }

@@ -35,24 +35,33 @@ fi
 
 
 # Install latest updates
-yum update -y
+dnf update -y
+
+# Install .NET 10 runtime from Microsoft package feed
+rpm -Uvh https://packages.microsoft.com/config/fedora/40/packages-microsoft-prod.rpm || true
+dnf install -y aspnetcore-runtime-10.0
 
 # Install Apache
-sudo yum install -y httpd
-sudo systemctl start httpd
-sudo systemctl enable httpd
+dnf install -y httpd
+systemctl start httpd
+systemctl enable httpd
 
 # Add TLS Support
-sudo yum install -y mod_ssl
-cd /etc/pki/tls/certs
-sudo ./make-dummy-cert localhost.crt
+dnf install -y mod_ssl
+
+# Generate self-signed certificate (make-dummy-cert doesn't exist on AL2023)
+openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+  -keyout /etc/pki/tls/private/localhost.key \
+  -out /etc/pki/tls/certs/localhost.crt \
+  -subj "/C=US/ST=State/L=City/O=BobsBookstore/CN=localhost"
+
 cp $APACHE_SSL_CONFIG_FILE /etc/httpd/conf.d/ssl.conf
 
 # Add Bookstore Admin App Virtual Host Config
 cp $VIRTUAL_HOST_CONFIG /etc/httpd/conf.d/bobsbookstore.conf
 
 # Restart Apache
-sudo systemctl restart httpd
+systemctl restart httpd
 
 # Install bookstore admin app into the /var/www/bobsbookstore directory
 mkdir -p /var/www/bobsbookstore
@@ -60,13 +69,13 @@ cp $SAMPLE_APP /var/www/bobsbookstore/bobsbookstore.zip
 cd /var/www/bobsbookstore
 unzip bobsbookstore.zip
 rm bobsbookstore.zip
-sudo usermod -a -G apache ec2-user
-sudo chown ec2-user:apache /var/www
-sudo chmod 2775 /var/www && find /var/www -type d -exec sudo chmod 2775 {} \;
-find /var/www -type f -exec sudo chmod 0664 {} \;
+usermod -a -G apache ec2-user
+chown ec2-user:apache /var/www
+chmod 2775 /var/www && find /var/www -type d -exec chmod 2775 {} \;
+find /var/www -type f -exec chmod 0664 {} \;
 
 # Install the Kestrel Service 
 cp $KESTREL_SERVICE /etc/systemd/system/bobsbookstore.service
-sudo systemctl enable bobsbookstore.service
-sudo systemctl start bobsbookstore.service
-sudo systemctl status bobsbookstore.service
+systemctl enable bobsbookstore.service
+systemctl start bobsbookstore.service
+systemctl status bobsbookstore.service

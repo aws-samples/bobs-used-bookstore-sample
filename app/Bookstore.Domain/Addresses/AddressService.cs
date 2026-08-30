@@ -28,7 +28,8 @@ namespace Bookstore.Domain.Addresses
 
         public async Task<Address> GetAddressAsync(string sub, int id)
         {
-            return await addressRepository.GetAsync(sub, id);
+            return await addressRepository.GetAsync(sub, id)
+                ?? throw new InvalidOperationException($"Address {id} not found for the specified user.");
         }
 
         public async Task<IEnumerable<Address>> GetAddressesAsync(string sub)
@@ -55,7 +56,8 @@ namespace Bookstore.Domain.Addresses
 
         public async Task UpdateAddressAsync(UpdateAddressDto dto)
         {
-            var address = await addressRepository.GetAsync(dto.CustomerSub, dto.AddressId);
+            var address = await addressRepository.GetAsync(dto.CustomerSub, dto.AddressId)
+                ?? throw new InvalidOperationException($"Address {dto.AddressId} not found for the specified user.");
 
             address.AddressLine1 = dto.AddressLine1;
             address.AddressLine2 = dto.AddressLine2;

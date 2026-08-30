@@ -28,11 +28,11 @@ namespace Bookstore.Web.ViewModel.Home
     {
         public int BookId { get; set; }
 
-        public string BookName { get; set; }
+        public string BookName { get; set; } = null!;
 
         public decimal BookPrice { get; set; }
 
-        public string CoverImageUrl { get; set; }
+        public string? CoverImageUrl { get; set; }
 
         public bool HasLowStockLevels { get; set; }
 

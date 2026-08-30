@@ -14,24 +14,24 @@ using Constructs;
 
 public class EC2ComputeStackProps : StackProps
 {
-    public IVpc Vpc { get; set; }
+    public IVpc Vpc { get; set; } = null!;
 
-    public DatabaseInstance Database { get; set; }
+    public DatabaseInstance Database { get; set; } = null!;
 
-    public Bucket ImageBucket { get; set; }
+    public Bucket ImageBucket { get; set; } = null!;
 
-    public UserPool WebAppUserPool { get; set; }
+    public UserPool WebAppUserPool { get; set; } = null!;
 }
 
 public class EC2ComputeStack : Stack
 {
-    private Role Ec2Role;
-    private Asset ServerConfigScriptAsset;
-    private Asset WebAppAsset;
-    private Asset SslConfigAsset;
-    private Asset WebAppVirtualHostConfigAsset;
-    private Asset KestrelServiceAsset;
-    private Instance_ Instance;
+    private Role Ec2Role = null!;
+    private Asset ServerConfigScriptAsset = null!;
+    private Asset WebAppAsset = null!;
+    private Asset SslConfigAsset = null!;
+    private Asset WebAppVirtualHostConfigAsset = null!;
+    private Asset KestrelServiceAsset = null!;
+    private Instance_ Instance = null!;
 
     internal EC2ComputeStack(Construct scope, string id, EC2ComputeStackProps props) : base(scope, id, props)
     {
@@ -45,7 +45,7 @@ public class EC2ComputeStack : Stack
 
         this.CreateCognitoUserPoolClient(props);
 
-        _ = new CfnOutput(this, "EC2Url", new CfnOutputProps { Description = "The application URL", Value = $"https://{this.Instance.InstancePublicDnsName}" });
+        _ = new CfnOutput(this, "EC2Url", new CfnOutputProps { Description = "The application URL", Value = $"https://{this.Instance.InstancePublicDnsName!}" });
     }
 
     internal void CreateEc2Role(EC2ComputeStackProps props)
@@ -147,7 +147,7 @@ public class EC2ComputeStack : Stack
 
         this.WebAppAsset = new Asset(this, "WebAppAsset", new AssetProps
         {
-            Path = "app/Bookstore.Web/bin/Release/net6.0/publish"
+            Path = "app/Bookstore.Web/bin/Release/net10.0/publish"
         });
         this.WebAppAsset.GrantRead(this.Ec2Role);
 
@@ -174,7 +174,7 @@ public class EC2ComputeStack : Stack
     {
         var ami = MachineImage.Lookup(new LookupMachineImageProps
         {
-            Name = "amzn2-x86_64-MATEDE_DOTNET-*",
+            Name = "al2023-ami-*-x86_64",
             Owners = new[] { "amazon" }
         });
 

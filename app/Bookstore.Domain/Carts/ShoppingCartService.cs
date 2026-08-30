@@ -26,7 +26,8 @@
 
         public async Task<ShoppingCart> GetShoppingCartAsync(string shoppingCartCorrelationId)
         {
-            return await shoppingCartRepository.GetAsync(shoppingCartCorrelationId);
+            return await shoppingCartRepository.GetAsync(shoppingCartCorrelationId)
+                ?? throw new InvalidOperationException($"Shopping cart {shoppingCartCorrelationId} not found.");
         }
 
         public async Task AddToShoppingCartAsync(AddToShoppingCartDto dto)
@@ -64,7 +65,8 @@
 
         public async Task MoveWishlistItemToShoppingCartAsync(MoveWishlistItemToShoppingCartDto dto)
         {
-            var shoppingCart = await shoppingCartRepository.GetAsync(dto.CorrelationId);
+            var shoppingCart = await shoppingCartRepository.GetAsync(dto.CorrelationId)
+                ?? throw new InvalidOperationException($"Shopping cart {dto.CorrelationId} not found.");
 
             shoppingCart.MoveWishListItemToShoppingCart(dto.ShoppingCartItemId);
 
@@ -87,7 +89,8 @@
 
         public async Task DeleteShoppingCartItemAsync(DeleteShoppingCartItemDto dto)
         {
-            var shoppingCart = await shoppingCartRepository.GetAsync(dto.CorrelationId);
+            var shoppingCart = await shoppingCartRepository.GetAsync(dto.CorrelationId)
+                ?? throw new InvalidOperationException($"Shopping cart {dto.CorrelationId} not found.");
 
             shoppingCart.RemoveShoppingCartItemById(dto.ShoppingCartItemId);
 

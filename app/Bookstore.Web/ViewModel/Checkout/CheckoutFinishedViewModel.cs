@@ -23,13 +23,13 @@ namespace Bookstore.Web.ViewModel.Checkout
 
     public class CheckoutFinishedItemViewModel
     {
-        public string Bookname { get; set; }
+        public string Bookname { get; set; } = null!;
 
         public long BookId { get; set; }
 
         public int Quantity { get; set; }
 
-        public string Url { get; set; }
+        public string? Url { get; set; }
 
         public decimal Price { get; set; }
     }

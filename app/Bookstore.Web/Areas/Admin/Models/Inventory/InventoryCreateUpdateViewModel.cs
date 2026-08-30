@@ -39,15 +39,15 @@ namespace Bookstore.Web.Areas.Admin.Models.Inventory
         public int Id { get; set; }
 
         [Required]
-        public string Name { get; set; }
+        public string Name { get; set; } = null!;
 
         [Required]
-        public string Author { get; set; }
+        public string Author { get; set; } = null!;
 
         public int Year { get; set; }
 
         [Required]
-        public string ISBN { get; set; }
+        public string ISBN { get; set; } = null!;
 
         public IEnumerable<SelectListItem> Publishers { get; set; } = new List<SelectListItem>();
         
@@ -82,11 +82,11 @@ namespace Bookstore.Web.Areas.Admin.Models.Inventory
         [MaxFileSize(2 * 1024 * 1024)]
         [ImageTypes(new[] { ".png", ".jpg", ".jpeg" })]
         [DisplayName("Cover image")]
-        public IFormFile CoverImage { get; set; }
-        
-        public string CoverImageUrl { get; set; }
+        public IFormFile? CoverImage { get; set; }
 
-        public string Summary { get; set; }
+        public string? CoverImageUrl { get; set; }
+
+        public string? Summary { get; set; }
 
         public void AddReferenceData(IEnumerable<ReferenceDataItem> referenceDataItems)
         {

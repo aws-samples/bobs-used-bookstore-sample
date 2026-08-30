@@ -20,12 +20,14 @@
 
         public async Task<Customer> GetAsync(int id)
         {
-            return await customerRepository.GetAsync(id);
+            return await customerRepository.GetAsync(id)
+                ?? throw new InvalidOperationException($"Customer {id} not found.");
         }
 
         public async Task<Customer> GetAsync(string sub)
         {
-            return await customerRepository.GetAsync(sub);
+            return await customerRepository.GetAsync(sub)
+                ?? throw new InvalidOperationException($"Customer with sub {sub} not found.");
         }
        
         public async Task CreateOrUpdateCustomerAsync(CreateOrUpdateCustomerDto dto)

@@ -9,7 +9,7 @@ using Constructs;
 
 public class DatabaseStackProps : StackProps
 {
-    public Vpc Vpc { get; set; }
+    public Vpc Vpc { get; set; } = null!;
 }
 
 public class DatabaseStack : Stack
@@ -60,7 +60,7 @@ public class DatabaseStack : Stack
         _ = new StringParameter(this, $"{Constants.AppName}DbSecret", new StringParameterProps
         {
             ParameterName = $"/{Constants.AppName}/dbsecretsname",
-            StringValue = this.Database.Secret.SecretName
+            StringValue = this.Database.Secret!.SecretName
         });
     }
 }

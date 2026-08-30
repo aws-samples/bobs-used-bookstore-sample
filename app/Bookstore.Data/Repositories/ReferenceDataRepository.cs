@@ -21,7 +21,7 @@ namespace Bookstore.Data.Repositories
             await dbContext.ReferenceData.AddAsync(item);
         }
 
-        async Task<ReferenceDataItem> IReferenceDataRepository.GetAsync(int id)
+        async Task<ReferenceDataItem?> IReferenceDataRepository.GetAsync(int id)
         {
             return await dbContext.ReferenceData.FindAsync(id);
         }

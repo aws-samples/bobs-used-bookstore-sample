@@ -19,12 +19,14 @@ namespace Bookstore.Web.Helpers
 
             if (string.IsNullOrWhiteSpace(shoppingCartClientId))
             {
-                shoppingCartClientId = context.User.Identity.IsAuthenticated ? context.User.GetSub() : Guid.NewGuid().ToString();
+                shoppingCartClientId = context.User.Identity?.IsAuthenticated ?? false
+                    ? context.User.GetSub() ?? Guid.NewGuid().ToString()
+                    : Guid.NewGuid().ToString();
             }
 
-            context.Response.Cookies.Append(CookieKey, shoppingCartClientId, cookieOptions);
+            context.Response.Cookies.Append(CookieKey, shoppingCartClientId!, cookieOptions);
 
-            return shoppingCartClientId;
+            return shoppingCartClientId!;
         }
     }
 }

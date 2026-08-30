@@ -103,7 +103,7 @@ namespace Bookstore.Domain.Books
             return await SaveAsync(book, dto.CoverImage, dto.CoverImageFileName);
         }
 
-        private async Task<BookResult> SaveAsync(Book book, Stream? coverImage, string coverImageFileName)
+        private async Task<BookResult> SaveAsync(Book book, Stream? coverImage, string? coverImageFileName)
         {
             var resizedCoverImage = await ResizeImageAsync(coverImage);
 

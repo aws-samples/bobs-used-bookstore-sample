@@ -17,7 +17,7 @@ namespace Bookstore.Web.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var orders = await orderService.GetOrdersAsync(User.GetSub());
+            var orders = await orderService.GetOrdersAsync(User.GetSub()!);
 
             return View(new OrderIndexViewModel(orders));
         }
@@ -32,7 +32,7 @@ namespace Bookstore.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Delete(int id)
         {
-            var dto = new CancelOrderDto(User.GetSub(), id);
+            var dto = new CancelOrderDto(User.GetSub()!, id);
 
             await orderService.CancelOrderAsync(dto);
 

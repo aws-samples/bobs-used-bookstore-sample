@@ -88,7 +88,7 @@ namespace Bookstore.Web.Startup
                     PropertyNameCaseInsensitive = true
                 });
 
-                var partialConnString = $"Server={dbSecrets.Host},{dbSecrets.Port}; Initial Catalog=BobsUsedBookStore;MultipleActiveResultSets=true; Integrated Security=false;TrustServerCertificate=true;";
+                var partialConnString = $"Server={dbSecrets!.Host},{dbSecrets.Port}; Initial Catalog=BobsUsedBookStore;MultipleActiveResultSets=true; Integrated Security=false;TrustServerCertificate=true;";
 
                 var builder = new SqlConnectionStringBuilder(partialConnString)
                 {
@@ -100,11 +100,17 @@ namespace Bookstore.Web.Startup
             }
             catch (AmazonSecretsManagerException e)
             {
-                Console.WriteLine($"Failed to read secret {configuration[DbSecretsParameterName]}, error {e.Message}, inner {e.InnerException.Message}");
+                Console.WriteLine($"Failed to read secret {configuration[DbSecretsParameterName]}, error {e.Message}, inner {e.InnerException?.Message}");
             }
             catch (JsonException e)
             {
                 Console.WriteLine($"Failed to parse content for secret {configuration[DbSecretsParameterName]}, error {e.Message}");
+            }
+
+            if (string.IsNullOrEmpty(connString))
+            {
+                throw new InvalidOperationException(
+                    "Unable to determine the database connection string. Check connection string configuration or AWS Secrets Manager access.");
             }
 
             return connString;

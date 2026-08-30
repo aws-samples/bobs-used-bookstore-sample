@@ -6,7 +6,7 @@
 
         internal protected Task<IPaginatedList<ReferenceDataItem>> ListAsync(ReferenceDataFilters filters, int pageIndex, int pageSize);
 
-        internal protected Task<ReferenceDataItem> GetAsync(int id);
+        internal protected Task<ReferenceDataItem?> GetAsync(int id);
 
         internal protected Task AddAsync(ReferenceDataItem item);
 

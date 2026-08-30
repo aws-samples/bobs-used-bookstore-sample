@@ -18,7 +18,7 @@ namespace Bookstore.Web.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var addresses = await addressService.GetAddressesAsync(User.GetSub());
+            var addresses = await addressService.GetAddressesAsync(User.GetSub()!);
 
             return View(new AddressIndexViewModel(addresses));
         }
@@ -35,7 +35,7 @@ namespace Bookstore.Web.Controllers
         {
             if (!ModelState.IsValid) return View(model);
 
-            var dto = new CreateAddressDto(model.AddressLine1, model.AddressLine2, model.City, model.State, model.Country, model.ZipCode, User.GetSub());
+            var dto = new CreateAddressDto(model.AddressLine1, model.AddressLine2, model.City, model.State, model.Country, model.ZipCode, User.GetSub()!);
 
             await addressService.CreateAddressAsync(dto);
 
@@ -44,7 +44,7 @@ namespace Bookstore.Web.Controllers
 
         public async Task<IActionResult> Update(int id, string returnUrl)
         {
-            var address = await addressService.GetAddressAsync(User.GetSub(), id);
+            var address = await addressService.GetAddressAsync(User.GetSub()!, id);
 
             return View("CreateUpdate", new AddressCreateUpdateViewModel(address, returnUrl));
         }
@@ -54,7 +54,7 @@ namespace Bookstore.Web.Controllers
         {
             if (!ModelState.IsValid) return View(model);
 
-            var dto = new UpdateAddressDto(model.Id, model.AddressLine1, model.AddressLine2, model.City, model.State, model.Country, model.ZipCode, User.GetSub());
+            var dto = new UpdateAddressDto(model.Id, model.AddressLine1, model.AddressLine2, model.City, model.State, model.Country, model.ZipCode, User.GetSub()!);
 
             await addressService.UpdateAddressAsync(dto);
 
@@ -64,7 +64,7 @@ namespace Bookstore.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Delete(int id)
         {
-            var dto = new DeleteAddressDto(id, User.GetSub());
+            var dto = new DeleteAddressDto(id, User.GetSub()!);
 
             await addressService.DeleteAddressAsync(dto);
 

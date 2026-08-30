@@ -108,7 +108,7 @@ namespace Bookstore.Web.Areas.Admin.Controllers
             }
             else
             {
-                ModelState.AddModelError(nameof(model.CoverImage), result.ErrorMessage);
+                ModelState.AddModelError(nameof(model.CoverImage), result.ErrorMessage ?? string.Empty);
 
                 return await InvalidCreateUpdateView(model);
             }

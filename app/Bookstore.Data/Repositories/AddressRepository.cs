@@ -24,7 +24,7 @@ namespace Bookstore.Data.Repositories
             address.IsActive = false;
         }
 
-        async Task<Address> IAddressRepository.GetAsync(string sub, int id)
+        async Task<Address?> IAddressRepository.GetAsync(string sub, int id)
         {
             return await dbContext.Address.SingleOrDefaultAsync(x => x.Customer.Sub == sub && x.Id == id && x.IsActive == true);
         }

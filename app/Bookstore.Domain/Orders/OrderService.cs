@@ -47,7 +47,8 @@ namespace Bookstore.Domain.Orders
 
         public async Task<Order> GetOrderAsync(int id)
         {
-            return await orderRepository.GetAsync(id);
+            return await orderRepository.GetAsync(id)
+                ?? throw new InvalidOperationException($"Order {id} not found.");
         }
 
         public async Task<OrderStatistics> GetStatisticsAsync()
@@ -57,9 +58,11 @@ namespace Bookstore.Domain.Orders
 
         public async Task<int> CreateOrderAsync(CreateOrderDto dto)
         {
-            var shoppingCart = await shoppingCartRepository.GetAsync(dto.CorrelationId);
+            var shoppingCart = await shoppingCartRepository.GetAsync(dto.CorrelationId)
+                ?? throw new InvalidOperationException($"Shopping cart {dto.CorrelationId} not found.");
 
-            var customer = await customerRepository.GetAsync(dto.CustomerSub);
+            var customer = await customerRepository.GetAsync(dto.CustomerSub)
+                ?? throw new InvalidOperationException($"Customer with sub {dto.CustomerSub} not found.");
 
             var order = new Order(customer.Id, dto.AddressId);
 
@@ -83,7 +86,8 @@ namespace Bookstore.Domain.Orders
 
         public async Task UpdateOrderStatusAsync(UpdateOrderStatusDto dto)
         {
-            var order = await orderRepository.GetAsync(dto.OrderId);
+            var order = await orderRepository.GetAsync(dto.OrderId)
+                ?? throw new InvalidOperationException($"Order {dto.OrderId} not found.");
 
             order.OrderStatus = dto.OrderStatus;
 

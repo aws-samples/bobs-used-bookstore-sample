@@ -2,7 +2,7 @@
 {
     public interface IAddressRepository
     {
-        internal protected Task<Address> GetAsync(string sub, int id);
+        internal protected Task<Address?> GetAsync(string sub, int id);
 
         internal protected Task<IEnumerable<Address>> ListAsync(string sub);
 

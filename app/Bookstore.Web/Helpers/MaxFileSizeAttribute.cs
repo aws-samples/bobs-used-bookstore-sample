@@ -12,7 +12,7 @@ namespace Bookstore.Web.Helpers
             this.maxFileSize = maxFileSize;
         }
 
-        public override bool IsValid(object value)
+        public override bool IsValid(object? value)
         {
             if (value == null) return true;
 

@@ -41,12 +41,14 @@ namespace Bookstore.Domain.Offers
 
         public async Task<Offer> GetOfferAsync(int id)
         {
-            return await offerRepository.GetAsync(id);
+            return await offerRepository.GetAsync(id)
+                ?? throw new InvalidOperationException($"Offer {id} not found.");
         }
 
         public async Task CreateOfferAsync(CreateOfferDto dto)
         {
-            var customer = await customerRepository.GetAsync(dto.CustomerSub);
+            var customer = await customerRepository.GetAsync(dto.CustomerSub)
+                ?? throw new InvalidOperationException($"Customer with sub {dto.CustomerSub} not found.");
 
             var offer = new Offer(
                 customer.Id,

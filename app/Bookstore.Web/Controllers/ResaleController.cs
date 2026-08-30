@@ -20,7 +20,7 @@ namespace Bookstore.Web.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var offers = await offerService.GetOffersAsync(User.GetSub());
+            var offers = await offerService.GetOffersAsync(User.GetSub()!);
 
             return View(new ResaleIndexViewModel(offers));
         }
@@ -38,7 +38,7 @@ namespace Bookstore.Web.Controllers
             if (!ModelState.IsValid) return View();
 
             var dto = new CreateOfferDto(
-                User.GetSub(), 
+                User.GetSub()!,
                 resaleViewModel.BookName, 
                 resaleViewModel.Author, 
                 resaleViewModel.ISBN, 
