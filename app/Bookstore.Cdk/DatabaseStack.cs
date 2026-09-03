@@ -33,7 +33,7 @@ public class DatabaseStack : Stack
             {
                 SubnetType = SubnetType.PRIVATE_WITH_EGRESS
             },
-            // SQL Server 2017 Express Edition, in conjunction with a db.t2.micro instance type,
+            // SQL Server 2017 Express Edition, in conjunction with a db.t3.micro instance type,
             // fits inside the free tier for new accounts
             Engine = DatabaseInstanceEngine.SqlServerEx(new SqlServerExInstanceEngineProps
             {
